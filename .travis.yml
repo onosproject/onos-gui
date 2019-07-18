@@ -1,0 +1,27 @@
+sudo: false
+
+language: go
+
+go:
+  - '1.12.x'
+
+services:
+  - docker
+
+notifications:
+  email: false
+
+branches:
+  only:
+    - master
+    - 
+
+jobs:
+  include:
+    - stage: tests
+      script: docker container run --rm -it --entrypoint bash onosproject/onos-gui-build
+
+
+
+
+
