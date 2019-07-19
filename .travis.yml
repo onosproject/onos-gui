@@ -13,7 +13,7 @@ branches:
 jobs:
   include:
     - stage: tests
-      script: docker container run --rm -it -v $(pwd):/opt/web/onos-gui -w /opt teracy/angular-cli " npm init && cd .. && make"
+      script: docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli make coverage
 
 
 
