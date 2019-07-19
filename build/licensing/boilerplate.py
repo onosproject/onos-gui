@@ -79,12 +79,12 @@ def file_passes(filename, refs, regexs):
     data = f.read()
     f.close()
     # determine if the file is automatically generated
-    generated = is_generated_file(filename, data, regexs)
+
+    if is_generated_file(filename, data, regexs):
+        return True
+
     basename = os.path.basename(filename)
     extension = file_extension(filename)
-    if generated:
-        if extension == "go":
-            extension = "generatego"
 
     if extension != "":
         ref = refs[extension]
@@ -111,19 +111,15 @@ def file_passes(filename, refs, regexs):
     p = regexs["year"]
     for d in data:
         if p.search(d):
-            if generated:
-                print('File %s has the YEAR field, but it should not be in generated file' % filename, file=verbose_out)
-            else:
-                print('File %s has the YEAR field, but missing the year of date' % filename, file=verbose_out)
+            print('File %s has the YEAR field, but missing the year of date' % filename, file=verbose_out)
             return False
 
-    if not generated:
-        # Replace all occurrences of the regex "2014|2015|2016|2017|2018" with "YEAR"
-        p = regexs["date"]
-        for i, d in enumerate(data):
-            (data[i], found) = p.subn('YEAR', d)
-            if found != 0:
-                break
+    # Replace all occurrences of the regex "2014|2015|2016|2017|2018" with "YEAR"
+    p = regexs["date"]
+    for i, d in enumerate(data):
+        (data[i], found) = p.subn('YEAR', d)
+        if found != 0:
+            break
 
     # if we don't match the reference at this point, fail
     if ref != data:
