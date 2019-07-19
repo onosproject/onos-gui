@@ -15,7 +15,7 @@ test: # @HELP run the unit tests and source code validation
 test: build deps lint vet license_check gofmt cyclo misspell ineffassign
 
 coverage: # @HELP generate unit test coverage data
-coverage: deps build
+coverage: deps build license_check
 
 deps: # @HELP ensure that the required dependencies are in place
 	cd web/onos-gui && npm install
