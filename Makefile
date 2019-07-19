@@ -15,13 +15,10 @@ test: # @HELP run the unit tests and source code validation
 test: build deps lint vet license_check gofmt cyclo misspell ineffassign
 
 coverage: # @HELP generate unit test coverage data
-coverage: build deps lint vet license_check gofmt cyclo misspell ineffassign
-	./build/bin/coveralls-coverage
+coverage: deps build
 
 deps: # @HELP ensure that the required dependencies are in place
-	go build -v ./...
-	bash -c "diff -u <(echo -n) <(git diff go.mod)"
-	bash -c "diff -u <(echo -n) <(git diff go.sum)"
+	cd web/onos-gui && npm install
 
 lint: # @HELP run the linters for Go source code
 	golint -set_exit_status github.com/onosproject/onos-gui/pkg/...

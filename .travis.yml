@@ -1,0 +1,21 @@
+sudo: false
+
+services:
+  - docker
+
+notifications:
+  email: false
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - stage: tests
+      script: docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli make coverage
+
+
+
+
+
