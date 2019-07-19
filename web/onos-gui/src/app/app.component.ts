@@ -15,7 +15,14 @@
  */
 
 import { Component } from '@angular/core';
-import {DiagsService} from "./diags.service";
+import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
+import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
+import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
+import {
+  CapabilityRequest,
+  CapabilityResponse
+} from '../proto/github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
+import * as grpcWeb from 'grpc-web';
 
 @Component({
   selector: 'app-root',
@@ -24,14 +31,31 @@ import {DiagsService} from "./diags.service";
 })
 export class AppComponent {
   title = 'onos-gui';
+  capabilites: CapabilityResponse;
 
   constructor(
-    // diags: DiagsService
+    private diags: OnosConfigDiagsService,
+    private admin: OnosConfigAdminService,
+    private gnmi: OnosConfigGnmiService,
   ) {
-    console.log('Constructed AppComponent')
+    console.log('Constructed AppComponent');
   }
 
-  listModels() {
-    console.log('Listing models')
+  listChanges() {
+    this.diags.requestChanges();
+  }
+
+  listDeviceSummary() {
+    this.admin.requestSummary();
+  }
+
+  listGnmiCapabilities() {
+    this.gnmi.requestCapabilities((e: grpcWeb.Error, r: CapabilityResponse) => {
+      if (e != null) {
+        console.log('Error getting capabilities from onos-config');
+        console.log(e.code, e.message);
+      }
+      this.capabilites = r;
+    });
   }
 }

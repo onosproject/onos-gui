@@ -12,10 +12,7 @@ For the moment (Jul '19) the Configuration GUI is the main target, but generally
 the architecture will support UI extensions for any project, as libraries.
 
 ## Architecture
-The GUI is architected as a Cloud Native application to be run on Kubernetes
-accessing the back end modules through gRPC (and in the case of the Config GUI
-additionally through gNMI)
+See [architecture.md](./docs/architecture.md) for an architectural discussion.
 
-The front end technology is [Angular](https://angular.io) and [gRPC Web](https://github.com/grpc/grpc-web)
-is used to access the back end systems. [Nginx](https://nginx.org/) acts as a
-Proxy and al is deployed on [Docker](https://www.docker.com/community/open-source).
+## Running the GUI
+See [run.md](./docs/run.md) for how to run the GUI.

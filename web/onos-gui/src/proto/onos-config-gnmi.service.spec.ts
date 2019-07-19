@@ -16,13 +16,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { DiagsService } from './diags.service';
+import { OnosConfigGnmiService } from './onos-config-gnmi.service';
 
-describe('DiagsService', () => {
+describe('OnosConfigGnmiService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: DiagsService = TestBed.get(DiagsService);
+    const service: OnosConfigGnmiService = TestBed.get(OnosConfigGnmiService);
     expect(service).toBeTruthy();
   });
 });
