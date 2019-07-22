@@ -54,10 +54,18 @@ gofmt: # @HELP run the Go format validation
 	bash -c "diff -u <(echo -n) <(gofmt -d pkg/ cmd/ tests/)"
 
 protos: # @HELP compile the protobuf files (using protoc-go Docker)
+	docker run -it -v `pwd`:/go/src/github.com/onosproject/onos-gui \
+		-w /go/src/github.com/onosproject/onos-gui \
+		--entrypoint build/compile-protos-ts.sh \
+		onosproject/protoc-go:latest
 
 onos-gui-docker: build # @HELP build onos-gui Docker image
 	docker build . -f build/onos-gui/Dockerfile \
 		-t onosproject/onos-gui:${ONOS_GUI_VERSION}
+
+onos-gui-envoy-docker: # @HELP build onos-gui-envoy Docker image
+	docker build . -f build/envoy-proxy/Dockerfile \
+		-t onosproject/onos-gui-envoy:${ONOS_GUI_VERSION}
 
 images: # @HELP build all Docker images
 images: build onos-gui-docker
@@ -67,8 +75,10 @@ all: build images
 run-docker: # @HELP run onos-gui docker image
 run-docker: onos-gui-docker
 	docker stop onos-gui || echo "onos-gui was not running"
-	docker run -d --rm -p 5180:80 \
+	docker run -d --rm -p 5180:80 -p 51443:443 \
 		--name onos-gui onosproject/onos-gui
+	sensible-browser http://localhost:5180
+	echo "Please point your browser at http://localhost:5180"
 
 clean: # @HELP remove all the build artifacts
 	rm -rf ./web/onos-gui/dist

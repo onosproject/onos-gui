@@ -26,7 +26,7 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from './gnmi_pb';
+import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 
 import {
   DeviceInfo,
@@ -41,7 +41,7 @@ import {
   RegisterRequest,
   RegisterResponse,
   RollbackRequest,
-  RollbackResponse} from './admin_pb.d';
+  RollbackResponse} from './admin_pb';
 
 export class AdminServiceClient {
   client_: grpcWeb.AbstractClientBase;
@@ -54,7 +54,7 @@ export class AdminServiceClient {
                options?: null | { [index: string]: string; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'text';
+    options['format'] = 'binary';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname;
@@ -157,7 +157,7 @@ export class DeviceInventoryServiceClient {
                options?: null | { [index: string]: string; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'text';
+    options['format'] = 'binary';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname;

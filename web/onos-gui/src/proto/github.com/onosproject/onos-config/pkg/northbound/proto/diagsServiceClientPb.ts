@@ -44,7 +44,7 @@ export class ConfigDiagsClient {
                options?: null | { [index: string]: string; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'text';
+    options['format'] = 'binary';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname;

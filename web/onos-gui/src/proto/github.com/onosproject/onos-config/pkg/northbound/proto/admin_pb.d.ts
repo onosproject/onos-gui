@@ -17,7 +17,7 @@
 import * as jspb from "google-protobuf"
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from './gnmi_pb';
+import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 
 export class NetworkChangesRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -109,6 +109,11 @@ export class ModelInfo extends jspb.Message {
   clearSchemaentryList(): void;
   addSchemaentry(value?: SchemaEntry, index?: number): SchemaEntry;
 
+  getReadonlypathList(): Array<string>;
+  setReadonlypathList(value: Array<string>): void;
+  clearReadonlypathList(): void;
+  addReadonlypath(value: string, index?: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ModelInfo.AsObject;
   static toObject(includeInstance: boolean, msg: ModelInfo): ModelInfo.AsObject;
@@ -124,6 +129,7 @@ export namespace ModelInfo {
     modeldataList: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData.AsObject>,
     module: string,
     schemaentryList: Array<SchemaEntry.AsObject>,
+    readonlypathList: Array<string>,
   }
 }
 
@@ -190,6 +196,9 @@ export namespace RegisterResponse {
 }
 
 export class ListModelsRequest extends jspb.Message {
+  getVerbose(): boolean;
+  setVerbose(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListModelsRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListModelsRequest): ListModelsRequest.AsObject;
@@ -200,6 +209,7 @@ export class ListModelsRequest extends jspb.Message {
 
 export namespace ListModelsRequest {
   export type AsObject = {
+    verbose: boolean,
   }
 }
 

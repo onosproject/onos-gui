@@ -16,10 +16,13 @@
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { CommonModule } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {ReactiveFormsModule} from '@angular/forms';
+import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
+import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
+import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
 
 @NgModule({
   declarations: [
@@ -27,10 +30,15 @@ import {ReactiveFormsModule} from "@angular/forms";
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    {provide: OnosConfigDiagsService, useValue: new OnosConfigDiagsService(window.location.host)},
+    {provide: OnosConfigAdminService, useValue: new OnosConfigAdminService(window.location.host)},
+    {provide: OnosConfigGnmiService, useValue: new OnosConfigGnmiService(window.location.host)},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
