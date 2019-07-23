@@ -17,25 +17,29 @@
 import { Injectable } from '@angular/core';
 import {ConfigDiagsClient} from './github.com/onosproject/onos-config/pkg/northbound/proto/diagsServiceClientPb';
 import * as grpcWeb from 'grpc-web';
-import {ChangesRequest} from './github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {
+  Change,
+  ChangesRequest
+} from './github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+
+type ChangesCallback = (r: Change) => void;
 
 @Injectable({
   providedIn: 'root'
 })
 export class OnosConfigDiagsService {
-  onosConfigUrl: string;
   diagsService: ConfigDiagsClient;
   changesRequest: ChangesRequest;
 
-  constructor(onosConfigHostname: string) {
-    this.onosConfigUrl = 'https://' + onosConfigHostname;
-    this.diagsService = new ConfigDiagsClient(this.onosConfigUrl);
-    console.log('Connecting to ', this.onosConfigUrl);
+  constructor(private onosConfigUrl: string) {
+    this.diagsService = new ConfigDiagsClient(onosConfigUrl);
+    console.log('Connecting to ', onosConfigUrl);
     this.changesRequest = new ChangesRequest();
   }
 
-  requestChanges() {
+  requestChanges(callback: ChangesCallback) {
     console.log('ListChangesRequest Request sent to', this.onosConfigUrl);
     const stream = this.diagsService.getChanges(this.changesRequest, {});
+    stream.on('data', callback);
   }
 }

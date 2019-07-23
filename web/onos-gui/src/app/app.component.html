@@ -19,9 +19,19 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
 </div>
 
+<input type="button" value="List changes" (click)="listChanges()">
+<table id="changes">
+  <thead><td>ID</td><td>Description</td><td>#paths</td></thead>
+  <tbody>
+  <tr *ngFor="let c of changes"><td>{{c.getId()}}</td><td>{{c.getDesc()}}</td><td>{{c.getChangevaluesList().length}}</td></tr>
+  </tbody>
+</table>
+<br>
+<input type="button" value="List device summary" (click)="listDeviceSummary()">
+<p>Device count: {{deviceCount}}</p>
+<br>
 <input type="button" value="List onos-config capabilities" (click)="listGnmiCapabilities()">
 <p>onos-config capabilities: Version:{{capabilites?.getGnmiVersion()}}</p>
 <table id="capabilities">
@@ -31,5 +41,18 @@
   </tbody>
 </table>
 <p id="encodings" *ngFor="let enc of capabilites?.getSupportedEncodingsList()">Encoding: {{enc.valueOf()}}</p>
+
+<br>
+<input type="button" value="Get config localhost1" (click)="getConfigByDevice('localhost-1')">
+<table id="updates">
+  <thead><td>Path</td><td>Value</td></thead>
+  <tbody>
+    <tr *ngFor="let u of updates">
+      <td>{{u.path}}</td>
+      <td>{{u.value}}</td>
+    </tr>
+  </tbody>
+</table>
+
 
 <router-outlet></router-outlet>

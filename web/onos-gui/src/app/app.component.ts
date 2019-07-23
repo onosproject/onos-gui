@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
 import {
-  CapabilityRequest,
-  CapabilityResponse
+  CapabilityResponse,
+  GetResponse,
+  Notification,
+  Path,
+  TypedValue,
+  Update
 } from '../proto/github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 import * as grpcWeb from 'grpc-web';
+import {Change} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {DeviceSummaryResponse} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/admin_pb';
+
+export interface UpdateAsString {
+  path: string;
+  value: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -32,6 +43,9 @@ import * as grpcWeb from 'grpc-web';
 export class AppComponent {
   title = 'onos-gui';
   capabilites: CapabilityResponse;
+  deviceCount: number = 0;
+  changes: Change[] = [];
+  updates: UpdateAsString[] = [];
 
   constructor(
     private diags: OnosConfigDiagsService,
@@ -42,20 +56,63 @@ export class AppComponent {
   }
 
   listChanges() {
-    this.diags.requestChanges();
+    this.changes.length = 0;
+    this.diags.requestChanges((change: Change) => {
+      this.changes.push(change);
+    });
   }
 
   listDeviceSummary() {
-    this.admin.requestSummary();
+    this.admin.requestSummary((e: grpcWeb.Error, r: DeviceSummaryResponse) => {
+        if (e != null) {
+          console.warn(e.code, e.message);
+          return;
+        }
+        this.deviceCount = r.getCount();
+    });
   }
 
-  listGnmiCapabilities() {
+  listGnmiCapabilities(): void {
     this.gnmi.requestCapabilities((e: grpcWeb.Error, r: CapabilityResponse) => {
       if (e != null) {
-        console.log('Error getting capabilities from onos-config');
-        console.log(e.code, e.message);
+        console.warn('Error getting capabilities from onos-config');
+        console.warn(e.code, e.message);
       }
       this.capabilites = r;
     });
+  }
+
+  getConfigByDevice(deviceId: string): void {
+    this.gnmi.requestGetAllByDevice(deviceId, (e, r) => this.handleGetResponse(e, r));
+  }
+
+  /**
+   * Callback for handling the GetResponse
+   * @param e error
+   * @param r GetResponse
+   */
+  handleGetResponse(e: grpcWeb.Error, r: GetResponse): void {
+    if (e != null) {
+      console.warn('Error getting capabilities from onos-config', e.code, e.message);
+      return;
+    }
+    console.log('GetResponse received', r);
+    const notifications: Array<Notification> = r.getNotificationList();
+    this.updates.length = 0;
+    for (const n of notifications) {
+      for (const u of n.getUpdateList()) {
+        console.log('Update', u.getVal().getValueCase());
+        if (u.getVal().getValueCase() === TypedValue.ValueCase.JSON_VAL) {
+          const jsonValue = new TextDecoder('utf-8').decode(u.getVal().getJsonVal_asU8());
+          const jsonUpdate = <UpdateAsString>{
+            path: '/',
+            value: jsonValue,
+          };
+          this.updates.push(jsonUpdate);
+          console.log('Update', jsonUpdate);
+        }
+      }
+    }
+    console.log('GetResponse finished');
   }
 }

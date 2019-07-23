@@ -17,3 +17,5 @@
 export const environment = {
   production: true
 };
+
+export const grpc_web_proxy = 'http://' + window.location.host;

@@ -23,6 +23,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
+import {grpc_web_proxy} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -35,9 +36,9 @@ import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
     ReactiveFormsModule
   ],
   providers: [
-    {provide: OnosConfigDiagsService, useValue: new OnosConfigDiagsService(window.location.host)},
-    {provide: OnosConfigAdminService, useValue: new OnosConfigAdminService(window.location.host)},
-    {provide: OnosConfigGnmiService, useValue: new OnosConfigGnmiService(window.location.host)},
+    {provide: OnosConfigDiagsService, useValue: new OnosConfigDiagsService(grpc_web_proxy)},
+    {provide: OnosConfigAdminService, useValue: new OnosConfigAdminService(grpc_web_proxy)},
+    {provide: OnosConfigGnmiService, useValue: new OnosConfigGnmiService(grpc_web_proxy)},
   ],
   bootstrap: [AppComponent]
 })
