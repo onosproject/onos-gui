@@ -19,30 +19,37 @@ import * as grpcWeb from 'grpc-web';
 import {gNMIClient} from './github.com/openconfig/gnmi/proto/gnmi/gnmiServiceClientPb';
 import {
   CapabilityRequest,
-  CapabilityResponse
+  CapabilityResponse, GetRequest, GetResponse, Path, PathElem
 } from './github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 
 type CapabilityCallback = (e: grpcWeb.Error, r: CapabilityResponse) => void;
+type GnmiGetCallback = (e: grpcWeb.Error, r: GetResponse) => void;
 
 @Injectable({
   providedIn: 'root'
 })
 export class OnosConfigGnmiService {
 
-  onosConfigUrl: string;
   gnmiService: gNMIClient;
-  capabilitiesRequest: CapabilityRequest;
 
-  constructor(onosConfigHostname: string) {
-    this.onosConfigUrl = 'https://' + onosConfigHostname;
-
-    this.gnmiService = new gNMIClient(this.onosConfigUrl);
-    console.log('gNMI Client Connecting to ', this.onosConfigUrl);
-    this.capabilitiesRequest = new CapabilityRequest();
+  constructor(private onosConfigUrl: string) {
+    this.gnmiService = new gNMIClient(onosConfigUrl);
+    console.log('gNMI Client Connecting to ', onosConfigUrl);
   }
 
   requestCapabilities(cb: CapabilityCallback): void {
+    const capabilitiesRequest = new CapabilityRequest();
     console.log('capabilities Request sent to', this.onosConfigUrl);
-    this.gnmiService.capabilities(this.capabilitiesRequest, {}, cb);
+    this.gnmiService.capabilities(capabilitiesRequest, {}, cb);
+  }
+
+  requestGetAllByDevice(deviceId: string, cb: GnmiGetCallback): void {
+    const prefixPath = new Path();
+    prefixPath.setTarget(deviceId);
+
+    const wholeDeviceRequest = new GetRequest();
+    wholeDeviceRequest.setPrefix(prefixPath);
+    console.log('gNMI get Request sent to', this.onosConfigUrl, wholeDeviceRequest);
+    this.gnmiService.get(wholeDeviceRequest, {}, cb);
   }
 }

@@ -22,31 +22,24 @@ import {
 } from './github.com/onosproject/onos-config/pkg/northbound/proto/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
+type DeviceCountCallback = (e: grpcWeb.Error, r: DeviceSummaryResponse) => void;
+
 @Injectable({
   providedIn: 'root'
 })
 export class OnosConfigAdminService {
 
-  onosConfigUrl: string;
   deviceInventoryService: DeviceInventoryServiceClient;
   deviceSummaryRequest: DeviceSummaryRequest;
 
-  constructor(onosConfigHostname: string) {
-    this.onosConfigUrl = 'https://' + onosConfigHostname;
-    this.deviceInventoryService = new DeviceInventoryServiceClient(this.onosConfigUrl);
-    console.log('Device Inventory Service Connecting to ', this.onosConfigUrl);
+  constructor(private onosConfigUrl: string) {
+    this.deviceInventoryService = new DeviceInventoryServiceClient(onosConfigUrl);
+    console.log('Device Inventory Service Connecting to ', onosConfigUrl);
     this.deviceSummaryRequest = new DeviceSummaryRequest();
   }
 
-  requestSummary() {
+  requestSummary(cb: DeviceCountCallback) {
     console.log('ListChangesRequest Request sent to', this.onosConfigUrl);
-    this.deviceInventoryService.getDeviceSummary(this.deviceSummaryRequest,
-      {}, (e: grpcWeb.Error, r: DeviceSummaryResponse) => {
-      if (e != null) {
-        console.log(e.code, e.message);
-        return;
-      }
-      console.log('Grpc call success. Device count:', r.getCount());
-    });
+    this.deviceInventoryService.getDeviceSummary(this.deviceSummaryRequest, {}, cb);
   }
 }
