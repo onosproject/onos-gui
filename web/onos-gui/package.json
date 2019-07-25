@@ -1,6 +1,7 @@
 {
   "name": "onos-gui",
-  "version": "0.0.0",
+  "version": "3.0.0",
+  "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,9 +22,11 @@
     "@angular/platform-browser-dynamic": "~7.0.0",
     "@angular/router": "~7.0.0",
     "core-js": "^2.5.4",
+    "d3": "^5.9.7",
     "google-protobuf": "^3.9.0",
     "grpc-web": "^1.0.5",
-    "rxjs": "~6.3.3",
+    "gui2-fw-lib": "^2.1.1",
+    "rxjs": "^6.3.3",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
