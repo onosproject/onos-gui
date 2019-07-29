@@ -1,0 +1,14 @@
+[
+  {
+    "id": "topology",
+    "icon": "nav_topo",
+    "cat": "NETWORK",
+    "label": "Topology"
+  },
+  {
+    "id": "config",
+    "icon": "nav_config",
+    "cat": "NETWORK",
+    "label": "Network Changes"
+  }
+]

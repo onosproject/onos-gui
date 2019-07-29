@@ -7,7 +7,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "app",
+      "prefix": "onos",
       "schematics": {},
       "architect": {
         "build": {
@@ -20,7 +20,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/data",
+              "src/rs"
             ],
             "styles": [
               "src/styles.css"
@@ -84,7 +86,9 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/data",
+              "src/rs"
             ]
           }
         },
@@ -97,7 +101,7 @@
             ],
             "exclude": [
               "**/node_modules/**",
-              "src/proto/github.com/**"
+              "src/app/onos-config/proto/github.com/**"
             ]
           }
         }
@@ -126,7 +130,7 @@
             "tsConfig": "e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**",
-              "src/proto/github.com/**"
+              "src/app/onos-config/proto/github.com/**"
             ]
           }
         }
