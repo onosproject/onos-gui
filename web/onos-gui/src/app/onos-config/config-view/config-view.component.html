@@ -14,33 +14,34 @@
 ~ limitations under the License.
 -->
 
-<onos-config-layers-panel x="20" [layerList]="changeIds"
+<onos-config-layers-panel id="layers-panel" x="20" [layerList]="changeIds"
                           [configName]="device + '-' + version"
                           [deviceName]="device"
                           [version]="version"
                           [type]="type"
                           [updated]="updated"
                           [on]="true"
-                          [hasOperational]="hasOpData"
-                          [hasState]="hasStateData"
+                          [hasOpState]="hasOpStateData"
                           (visibilityChange)="visibilityChanged($event)">
 </onos-config-layers-panel>
 
+<onos-confirm title="{{ create_pending }}" message="{{ create_pending_confirm }}"
+              (chosen)="confirmedCreatePending($event)"></onos-confirm>
+
 <div id="onos-config">
-  <svg:svg #svgZoom xmlns:svg="http://www.w3.org/2000/svg"
-           viewBox="0 0 1000 1000" id="config-view"
-           preserveAspectRatio="xMaxYMax meet">
-    <svg:desc>This can contain many different layers - one for each change in
-      config,
-      and one for topology and one for the config edit
-    </svg:desc>
-    <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c" [visible]="changeIdsVisible[c]">
-    </svg:g>
-    <svg:g *ngIf="hasStateData" #stateLayer
-           onos-layer-svg [layerId]="'state'" [visible]="changeIdsVisible['state']">
-    </svg:g>
-    <svg:g *ngIf="hasOpData" #opLayer
-           onos-layer-svg [layerId]="'operational'" [visible]="changeIdsVisible['operational']">
-    </svg:g>
-  </svg:svg>
+    <svg:svg #svgZoom xmlns:svg="http://www.w3.org/2000/svg"
+             viewBox="0 0 1000 1000" id="config-view"
+             preserveAspectRatio="xMaxYMax meet">
+        <svg:desc>This can contain many different layers - one for each change
+            in config, and one for topology and one for the config edit
+        </svg:desc>
+        <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
+               [visible]="changeIdsVisible.get(c)"
+               (editRequestedLayer)="activatePendingLayer(device + '-' + version, $event)">
+        </svg:g>
+        <svg:g *ngIf="hasOpStateData" #opStateLayer
+               onos-layer-svg [layerId]="OPSTATE"
+               [visible]="changeIdsVisible.get(OPSTATE)">
+        </svg:g>
+    </svg:svg>
 </div>

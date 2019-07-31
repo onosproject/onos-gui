@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {
-    AdminServiceClient,
+    ConfigAdminServiceClient,
     DeviceInventoryServiceClient
 } from './github.com/onosproject/onos-config/pkg/northbound/proto/adminServiceClientPb';
 import {
@@ -34,11 +34,11 @@ type NetChangeCallback = (r: NetChange) => void;
 export class OnosConfigAdminService {
 
     deviceInventoryService: DeviceInventoryServiceClient;
-    adminServiceClient: AdminServiceClient;
+    adminServiceClient: ConfigAdminServiceClient;
 
-    constructor(private onosConfigUrl: string) {
+    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.deviceInventoryService = new DeviceInventoryServiceClient(onosConfigUrl);
-        this.adminServiceClient = new AdminServiceClient(onosConfigUrl);
+        this.adminServiceClient = new ConfigAdminServiceClient(onosConfigUrl);
 
         console.log('Device Inventory Service and Admin Service Connecting to ', onosConfigUrl);
     }

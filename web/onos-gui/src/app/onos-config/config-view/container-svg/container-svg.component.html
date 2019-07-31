@@ -1,0 +1,24 @@
+<!--
+~ Copyright 2019-present Open Networking Foundation
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<svg:g xmlns:svg="http://www.w3.org/2000/svg" width="160" height="80"
+         [attr.transform]="'translate(' + containerX + ',' + containerY + '), scale(' + containerScale + ')'">
+    <svg:rect stroke="black" stroke-width="2" width="160" height="20" fill-opacity="0.1" rx="5">
+    </svg:rect>
+    <svg:use [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" (click)="requestEdit(path)">
+    </svg:use>
+    <svg:text x="5" stroke="blue" text-anchor="start" baseline-shift="-1.0em">{{path}}</svg:text>
+</svg:g>

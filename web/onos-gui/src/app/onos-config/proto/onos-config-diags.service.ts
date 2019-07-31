@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {ConfigDiagsClient} from './github.com/onosproject/onos-config/pkg/northbound/proto/diagsServiceClientPb';
-import * as grpcWeb from 'grpc-web';
 import {
     Change,
     ChangesRequest, ConfigRequest, Configuration
@@ -31,7 +30,7 @@ type ConfigsCallback = (r: Configuration) => void;
 export class OnosConfigDiagsService {
     diagsService: ConfigDiagsClient;
 
-    constructor(private onosConfigUrl: string) {
+    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.diagsService = new ConfigDiagsClient(onosConfigUrl);
         console.log('Connecting to ', onosConfigUrl);
     }

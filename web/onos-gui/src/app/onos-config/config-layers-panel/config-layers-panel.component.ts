@@ -15,15 +15,20 @@
  */
 
 import {
-    AfterViewInit,
     Component,
     EventEmitter,
     Input, OnChanges,
-    OnDestroy,
-    OnInit,
     Output, SimpleChanges
 } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {
+    OPSTATE,
+    MEDIUM,
+    ACTIVE,
+    INACTIVE,
+    CONFIGNAME
+} from '../config-view/config-view.component';
+import {PENDING} from "../pending-net-change.service";
 
 export interface SelectedLayer {
     layerName: string;
@@ -52,43 +57,54 @@ export interface SelectedLayer {
 export class ConfigLayersPanelComponent implements OnChanges {
     @Input() layerList: string[];
     @Input() on: boolean = true;
-    @Input() configName: string;
+    @Input() configName: string; // Must be the same as the constant CONFIGNAME
     @Input() deviceName: string;
     @Input() type: string;
     @Input() version: string;
     @Input() updated: Date;
-    @Input() hasState: boolean;
-    @Input() hasOperational: boolean;
+    @Input() hasOpState: boolean;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
-    layerVisibility: Map<string, boolean>;
+    layerVisibility = new Map<string, boolean>();
     toggledOn: boolean = true;
 
+    // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
+    public OPSTATE = OPSTATE;
+    public MEDIUM = MEDIUM;
+    public ACTIVE = ACTIVE;
+    public INACTIVE = INACTIVE;
+
     constructor() {
-        this.layerVisibility = new Map();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['configName']) {
+        console.log('Change happened in config-layers-panel');
+        if (changes[CONFIGNAME]) {
             this.layerVisibility.clear();
             for (const l of this.layerList) {
-                this.layerVisibility[l] = true;
+                this.layerVisibility.set(l, true);
+            }
+        } else if (changes['layerList']) {
+            for (const l of this.layerList) {
+                if (l === PENDING) {
+                    this.layerVisibility.set(l, true);
+                }
             }
         }
     }
 
     toggleDisplay(changeId: string) {
-        this.layerVisibility[changeId] = !this.layerVisibility[changeId];
+        this.layerVisibility.set(changeId, !this.layerVisibility.get(changeId));
         this.visibilityChange.emit(<SelectedLayer>{
             layerName: changeId,
-            madeVisible: this.layerVisibility[changeId],
+            madeVisible: this.layerVisibility.get(changeId),
         });
     }
 
     toggleAll(on: boolean) {
         this.toggledOn = on;
         for (const l of this.layerList) {
-            this.layerVisibility[l] = on;
+            this.layerVisibility.set(l, on);
             this.visibilityChange.emit(<SelectedLayer>{
                 layerName: l,
                 madeVisible: on,

@@ -15,9 +15,21 @@
 -->
 
 <svg:g *ngIf="visible" xmlns:svg="http://www.w3.org/2000/svg">
-    <svg:rect width="1000" height="1000" fill-opacity="0.1"
-              fill="#f4f4f4"></svg:rect>
     <svg:text [attr.x]="500+offset" [attr.y]="300+offset" text-anchor="middle">
-        This is SVG
-        layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:text>
+        Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:text>
+    <svg:g *ngFor="let item of allPaths | keyvalue; let i = index">
+        <svg:g onos-container-svg
+               [path]="item.key"
+               [containerX]="20+offset+countParts(item.key)*160"
+               [containerY]="100+offset+i*30"
+               (containerEditRequested)="requestEditLayer(item.key, null, 'container')">
+        </svg:g>
+        <svg:g *ngFor="let l of item.value.split(','); let j=index" onos-leaf-svg
+               [leafName]="l"
+               [value]="'test'"
+               [leafX]="20+offset+countParts(item.key)*160+200"
+               [leafY]="100+offset+i*30+j*30"
+               (leafEditRequested)="requestEditLayer(item.key, l, 'leaf')">
+        </svg:g>
+    </svg:g>
 </svg:g>

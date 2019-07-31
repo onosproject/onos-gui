@@ -13,17 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#onos-config {
-    position: absolute;
-    top: 48px;
-    width: 100%;
-    z-index: 10;
-}
-
-#layers-panel {
-    position: absolute;
-    top: 58px;
-    left: 10px;
-    z-index: 20;
-}

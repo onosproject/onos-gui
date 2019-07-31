@@ -43,7 +43,7 @@ import {
   RollbackRequest,
   RollbackResponse} from './admin_pb';
 
-export class AdminServiceClient {
+export class ConfigAdminServiceClient {
   client_: grpcWeb.AbstractClientBase;
   hostname_: string;
   credentials_: null | { [index: string]: string; };
@@ -77,7 +77,7 @@ export class AdminServiceClient {
                response: RegisterResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/proto.AdminService/RegisterModel',
+        '/proto.ConfigAdminService/RegisterModel',
       request,
       metadata || {},
       this.methodInfoRegisterModel,
@@ -97,7 +97,7 @@ export class AdminServiceClient {
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/proto.AdminService/ListRegisteredModels',
+        '/proto.ConfigAdminService/ListRegisteredModels',
       request,
       metadata || {},
       this.methodInfoListRegisteredModels);
@@ -116,7 +116,7 @@ export class AdminServiceClient {
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/proto.AdminService/GetNetworkChanges',
+        '/proto.ConfigAdminService/GetNetworkChanges',
       request,
       metadata || {},
       this.methodInfoGetNetworkChanges);
@@ -137,7 +137,7 @@ export class AdminServiceClient {
                response: RollbackResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/proto.AdminService/RollbackNetworkChange',
+        '/proto.ConfigAdminService/RollbackNetworkChange',
       request,
       metadata || {},
       this.methodInfoRollbackNetworkChange,

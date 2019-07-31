@@ -24,6 +24,8 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
+import {PendingNetChangeService} from '../pending-net-change.service';
+import {PENDING_U} from '../pending-net-change.service';
 
 export interface NwChangeEntry {
     configId: string;
@@ -52,6 +54,9 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
     rollbackTip: string = 'Rollback';
     selectedChange: NwChangeEntry;
 
+    // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
+    public PENDING_U = PENDING_U;
+
     constructor(
         protected fs: FnService,
         protected log: LogService,
@@ -60,6 +65,7 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         private admin: OnosConfigAdminService,
+        private pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'nwchange', 'name');
 
@@ -100,6 +106,15 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
             console.debug('NetworkChange response for', netChange.getName(), 'received');
             this.tableData.push(nwChange);
         });
+        if (this.pending.hasPendingChange) {
+            const pendingChange = <NwChange>{
+                name: this.pending.pendingChangeName,
+                created: <unknown>Date.now(),
+                user: this.pending.pendingChangeUser,
+                configChanges: this.pending.pendingChangesMap,
+            };
+            this.tableData.push(pendingChange);
+        }
     }
 
     navto(path) {
@@ -109,8 +124,21 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         }
     }
 
-    rollback() {
+    rollback(selected: string): void {
+        if (selected == null || selected === PENDING_U) {
+            return;
+        }
         console.warn('Rollback for network change not yet implemented');
+    }
+
+    discardPending(selected: string): void {
+        if (selected !== PENDING_U) {
+            return;
+        }
+        this.pending.deletePendingChange();
+        const removed = this.tableData.splice(0, 1);
+        this.selId = null;
+        console.log('Pending change discarded', removed);
     }
 
 }

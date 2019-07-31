@@ -33,7 +33,7 @@
             </tr>
             <tr>
                 <td class="field-name">Updated:</td>
-                <td>{{updated | date: 'medium'}}</td>
+                <td>{{updated | date: MEDIUM}}</td>
             </tr>
             </tbody>
         </table>
@@ -41,18 +41,18 @@
     <hr>
     <div class="body">
     <span (click)="toggleAll(true)" class="layerItem">
-      <onos-icon [iconId]="'active'" [iconSize]="20"
-                 [classes]="'active'"></onos-icon>All</span>
+      <onos-icon [iconId]="ACTIVE" [iconSize]="20"
+                 [classes]="ACTIVE"></onos-icon>All</span>
         <span (click)="toggleAll(false)" class="layerItem">
-    <onos-icon [iconId]="'inactive'" [iconSize]="20"
-               [classes]="'inactive'"></onos-icon>None</span>
+    <onos-icon [iconId]="INACTIVE" [iconSize]="20"
+               [classes]="INACTIVE"></onos-icon>None</span>
         <table>
             <tbody>
             <tr id="layerItem" class="layerItem" *ngFor="let p of layerList"
                 (click)="toggleDisplay(p)">
-                <onos-icon [iconId]="layerVisibility[p]?'active':'inactive'"
+                <onos-icon [iconId]="layerVisibility.get(p)?ACTIVE:INACTIVE"
                            [iconSize]="20"
-                           [classes]="layerVisibility[p]?'active':'inactive'"></onos-icon>
+                           [classes]="layerVisibility.get(p)?ACTIVE:INACTIVE"></onos-icon>
                 <td>{{p}}</td>
             </tr>
             </tbody>
@@ -62,21 +62,13 @@
     <div class="footer">
         <table>
             <tbody>
-            <tr id="state-layer" class="layerItem" *ngIf="hasState"
-                (click)="toggleDisplay('state')">
+            <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"
+                (click)="toggleDisplay(OPSTATE)">
                 <onos-icon
-                    [iconId]="layerVisibility['state'] ? 'active' : 'inactive'"
+                    [iconId]="layerVisibility.get(OPSTATE) ? ACTIVE : INACTIVE"
                     [iconSize]="20"
-                    [classes]="layerVisibility['state'] ? 'active':'inactive'"></onos-icon>
+                    [classes]="layerVisibility.get(OPSTATE) ? ACTIVE:INACTIVE"></onos-icon>
                 <td>State</td>
-            </tr>
-            <tr id="operational-layer" class="layerItem" *ngIf="hasOperational"
-                (click)="toggleDisplay('operational')">
-                <onos-icon
-                    [iconId]="layerVisibility['operational'] ? 'active' : 'inactive'"
-                    [iconSize]="20"
-                    [classes]="layerVisibility['operational'] ? 'active':'inactive'"></onos-icon>
-                <td>Operational</td>
             </tr>
             </tbody>
         </table>
