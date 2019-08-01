@@ -27,10 +27,15 @@
                     toolTip="{{ autoRefreshTip }}"></onos-icon>
             </div>
             <div class="separator"></div>
-            <div (click)="rollback()">
-                <onos-icon classes="{{ selId ? 'active-rect' :undefined}}"
+            <div (click)="rollback(selId)">
+                <onos-icon classes="{{ selId && selId != PENDING_U ? 'active-rect' :undefined}}"
                            iconId="triangleLeft" iconSize="42"
                            toolTip="{{rollbackTip}}"></onos-icon>
+            </div>
+            <div (click)="discardPending(selId)">
+                <onos-icon classes="{{ selId == PENDING_U ? 'active-rect' :undefined}}"
+                           iconId="xMark" iconSize="42"
+                           toolTip="Discard pending"></onos-icon>
             </div>
         </div>
         <div class="search">

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import * as grpcWeb from 'grpc-web';
 import {gNMIClient} from './github.com/openconfig/gnmi/proto/gnmi/gnmiServiceClientPb';
 import {
@@ -32,7 +32,7 @@ export class OnosConfigGnmiService {
 
     gnmiService: gNMIClient;
 
-    constructor(private onosConfigUrl: string) {
+    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.gnmiService = new gNMIClient(onosConfigUrl);
         console.log('gNMI Client Connecting to ', onosConfigUrl);
     }

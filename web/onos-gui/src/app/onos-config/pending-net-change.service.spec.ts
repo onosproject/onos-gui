@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-#onos-config {
-    position: absolute;
-    top: 48px;
-    width: 100%;
-    z-index: 10;
-}
+import {TestBed} from '@angular/core/testing';
 
-#layers-panel {
-    position: absolute;
-    top: 58px;
-    left: 10px;
-    z-index: 20;
-}
+import {PendingNetChangeService} from './pending-net-change.service';
+
+describe('PendingNetChangeService', () => {
+    beforeEach(() => TestBed.configureTestingModule({}));
+
+    it('should be created', () => {
+        const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
+        expect(service).toBeTruthy();
+    });
+});

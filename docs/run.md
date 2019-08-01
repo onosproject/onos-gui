@@ -2,28 +2,26 @@
 
 To run onos-gui 3 docker instances are needed
 * onos-gui - contains the **nginx** proxy server and static html files and certs
-* onos-gui-envoy - contains the **envoy proxy** for converting grpc-web (HTTP 1.1)
+* onos-config-envoy - contains the **envoy proxy for onos-config** for converting grpc-web (HTTP 1.1)
 requests in to grpc requests (HTTP 2)
 * onos-config - the configuration management system exposing gRPC interfaces -
 admin, diags and gNMI
 
 ## Browser access
 When deployed the onos-gui is available to a browser at 
-https://onos-gui/index.html
+http://onos-gui/index.html
 
 > Adding **index.html** is mandatory. In future this will be accessible at
-> https://onos-gui - currently it gives an error *"upstream connect error or
+> http://onos-gui - currently it gives an error *"upstream connect error or
 > disconnect/reset before headers. reset reason: remote reset"* for this URL
 
-> Because onos-gui has a self signed certificate a security warning is given. It
-> is possible to get past this by onporting the onf.cacrt in to your browsers list
-> of trusted authorities - see https://www.accuweaver.com/2014/09/19/make-chrome-accept-a-self-signed-certificate-on-osx/
+> This requires adding onos-gui to your __/etc/hosts__ file
 
-The browser connects to onos-gui over HTTPS 1.1 to retrieve the Angular compiled files.
+The browser connects to onos-gui over HTTP 1.1 to retrieve the Angular compiled files.
 
 When the **List onos-config capabilities** button is pressed:
 1) A grpc-web request is formed and sent as a POST to https://onos-gui/gnmi.gNMI/Capabilities
-1) This is forwarded by a **proxy_pass** declaration in **nginx.conf** to http://onos-gui-envoy:8080
+1) This is forwarded by a **proxy_pass** declaration in **nginx.conf** to http://onos-config-envoy:8080
 1) This is converted in to a gRPC request by Envoy Proxy server's grpc-web filter
 1) and is forwarded to https://onos-config:5150 as a gRPC request
 1) onos-config sends back the response to envoy asynchronously as a gRPC response
@@ -39,10 +37,10 @@ To run the GUI locally on a development machine, follow the steps:
 make run-docker
 ```
 
-2) Run **onos-gui-envoy** in another docker container, but start it with a shell prompt
-like (it may be necessary to build it first with **make onos-gui-envoy-docker**):
+2) Run **onos-config-envoy** in another docker container, but start it with a shell prompt
+like (it may be necessary to build it first with **make onos-config-envoy-docker**):
 ```bash
-docker run -it -p 8080:8080 onosproject/onos-gui-envoy /bin/sh
+docker run -it -p 8080:8080 onosproject/onos-config-envoy /bin/sh
 ```
 Edit the hosts file to add the location of onos-config.
 ```bash
@@ -53,7 +51,7 @@ echo "<onos-config-ipaddr> onos-config" >> /etc/hosts
 
 Then run the envoy application:
 ```bash
-/usr/local/bin/envoy -c /etc/envoy.yaml
+/usr/local/bin/envoy -c /etc/envoy.yaml -l debug
 ```
 This will now listen on port 8080
 > When the GUI is run in **serve** mode its grpc-web target is set to point to

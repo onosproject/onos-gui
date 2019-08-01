@@ -31,6 +31,10 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     NwChange
 } from '../networkchanges/network-changes.component';
+import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
+import {PendingNetChangeService} from '../pending-net-change.service';
+import {PENDING_U} from "../pending-net-change.service";
 
 @Component({
     selector: 'onos-network-change-detail',
@@ -60,10 +64,17 @@ export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implement
     // Output closeEvent is inherited
     @Input() nwChangeDetail: NwChange;
 
+    otherConfigs: string[] = [];
+
+    // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
+    public PENDING_U = PENDING_U;
+
     constructor(protected fs: FnService,
                 protected log: LogService,
                 protected wss: WebSocketService,
-                protected is: IconService
+                protected is: IconService,
+                private diags: OnosConfigDiagsService,
+                private pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'device');
     }
@@ -77,6 +88,20 @@ export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implement
     ngOnChanges(changes: SimpleChanges) {
         if (changes['id']) {
             this.detailsData = this.nwChangeDetail;
+
+            // Get the list of other configs so they can be added
+            this.otherConfigs.length = 0;
+            if (this.id === PENDING_U) {
+                this.diags.requestConfigurations([], (config: Configuration) => {
+                    const configName = config.getDeviceid() + '-' + config.getVersion();
+                    this.nwChangeDetail.configChanges.forEach((ch) => {
+                        if (ch.configId !== configName) {
+                            this.otherConfigs.push(configName);
+                        }
+                    });
+                    console.log('Configuration response for ', configName, 'received');
+                });
+            }
         }
     }
 }

@@ -28,6 +28,8 @@ import {OnosConfigRoutingModule} from './onos-config-routing.module';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
 import {NetworkChangeDetailComponent} from './network-change-detail/network-change-detail.component';
 import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-panel.component';
+import { ContainerSvgComponent } from './config-view/container-svg/container-svg.component';
+import { LeafSvgComponent } from './config-view/leaf-svg/leaf-svg.component';
 
 @NgModule({
     declarations: [
@@ -36,6 +38,8 @@ import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-pa
         LayerSvgComponent,
         NetworkChangeDetailComponent,
         ConfigLayersPanelComponent,
+        ContainerSvgComponent,
+        LeafSvgComponent,
     ],
     imports: [
         CommonModule,

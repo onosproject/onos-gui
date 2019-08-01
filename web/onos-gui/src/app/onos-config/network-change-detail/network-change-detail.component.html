@@ -51,7 +51,7 @@
             </div>
             <hr>
         </div>
-        <div class="bottom">
+        <div class="middle">
             <h2 class="changes-title">Changes</h2>
             <table>
                 <thead>
@@ -69,6 +69,15 @@
                     <!--          <td><a [routerLink]="['/config','changeview', ch.changeId ]">{{ ch.changeId }}</a></td>-->
                 </tr>
                 </tbody>
+            </table>
+        </div>
+        <div id="bottom" *ngIf="id === PENDING_U">
+            <h2 class="changes-title">Other Configs to Add</h2>
+            <table>
+                <tr *ngFor="let o of otherConfigs">
+                    <td><a (click)="pending.addToPendingChange(o, '')"
+                        [routerLink]="['/config','configview', o ]">{{ o }}</a></td>
+                </tr>
             </table>
         </div>
     </div>

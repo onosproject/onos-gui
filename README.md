@@ -15,4 +15,6 @@ the architecture will support UI extensions for any project, as libraries.
 See [architecture.md](./docs/architecture.md) for an architectural discussion.
 
 ## Running the GUI
-See [run.md](./docs/run.md) for how to run the GUI.
+* [prerequisites.md](./docs/prerequisites.md) has instructions on how to install
+the necessary tools. 
+* [run.md](./docs/run.md) has instructions how to run the GUI.

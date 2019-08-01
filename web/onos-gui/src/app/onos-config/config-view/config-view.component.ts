@@ -26,6 +26,13 @@ import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/nor
 import {ActivatedRoute} from '@angular/router';
 import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
+import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
+
+export const OPSTATE = 'opstate';
+export const MEDIUM = 'medium';
+export const ACTIVE = 'active';
+export const INACTIVE = 'inactive';
+export const CONFIGNAME = 'configName';
 
 @Component({
     selector: 'onos-config-view',
@@ -39,23 +46,25 @@ export class ConfigViewComponent implements OnInit, OnChanges {
     type: string;
     updated: number = 0;
     changeIds: string[] = [];
-    changeIdsVisible: Map<string, boolean>;
-    hasStateData: boolean = true;
-    hasOpData: boolean;
+    changeIdsVisible = new Map<string, boolean>();
+    hasOpStateData: boolean = true;
+    create_pending: string = '';
+    create_pending_confirm: string = '';
+
+    // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
+    public OPSTATE = OPSTATE;
 
     constructor(
         private diags: OnosConfigDiagsService,
+        private pending: PendingNetChangeService,
         protected ar: ActivatedRoute,
         protected is: IconService,
     ) {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
-        this.changeIdsVisible = new Map();
-        if (this.hasStateData) {
-            this.changeIdsVisible['state'] = false;
-        }
-        if (this.hasOpData) {
-            this.changeIdsVisible['operational'] = false;
+        this.is.loadIconDef('plus');
+        if (this.hasOpStateData) {
+            this.changeIdsVisible.set(OPSTATE, false);
         }
         console.log('Constructed ConfigViewComponent');
     }
@@ -69,32 +78,58 @@ export class ConfigViewComponent implements OnInit, OnChanges {
             console.log('ConfigViewComponent param: configView', cn, deviceName);
             this.configName = deviceName;
             this.ngOnChanges({
-                'configName':
+                'configName': // Don't replace with constant
                     new SimpleChange({}, this.configName, true)
             });
         });
     }
 
-    // the config name can be changes any time
+    // the config name can be changed any time
     ngOnChanges(changes: SimpleChanges) {
-        if (changes['configName']) {
-            const cfgName = changes['configName'].currentValue;
+        if (changes[CONFIGNAME]) {
+            const cfgName = changes[CONFIGNAME].currentValue;
+            this.changeIds.length = 0;
             this.diags.requestConfigurations([cfgName], (config: Configuration) => {
                 this.device = config.getDeviceid();
                 this.version = config.getVersion();
                 this.type = config.getDevicetype();
                 this.updated = Number(config.getUpdated()) * 1000;
-                this.changeIds.length = 0;
                 for (const cid of config.getChangeidsList()) {
                     this.changeIds.push(cid);
-                    this.changeIdsVisible[cid] = true;
+                    this.changeIdsVisible.set(cid, true);
                 }
                 console.log('Configuration response for ', config, 'received');
             });
+            // Because the response above is async, the below happens first
+            if (this.pending.hasPendingChange) {
+                this.changeIds.push(PENDING);
+                this.changeIdsVisible.set(PENDING, true);
+            }
         }
     }
 
     visibilityChanged(event: SelectedLayer) {
-        this.changeIdsVisible[event.layerName] = event.madeVisible;
+        this.changeIdsVisible.set(event.layerName, event.madeVisible);
+    }
+
+    activatePendingLayer(configName: string, path: string): void {
+        if (!this.pending.hasPendingChange) {
+            this.create_pending = 'Network Change';
+            this.create_pending_confirm = 'Create a Pending (new) Network Change?';
+        } else {
+            this.pending.addToPendingChange(this.configName + '-' + this.version, 'new');
+        }
+    }
+
+    confirmedCreatePending(confirmed: boolean): void {
+        if (confirmed) {
+            this.pending.addToPendingChange(this.configName + '-' + this.version, 'new');
+            this.changeIds.push(PENDING);
+            this.changeIdsVisible.set(PENDING, true);
+        } else {
+            console.log('Create pending cancelled');
+        }
+        this.create_pending = '';
+        this.create_pending_confirm = '';
     }
 }

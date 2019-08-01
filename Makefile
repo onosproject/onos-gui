@@ -1,6 +1,3 @@
-export CGO_ENABLED=0
-export GO111MODULE=on
-
 .PHONY: build
 
 ONOS_GUI_VERSION := latest
@@ -9,10 +6,10 @@ ONOS_BUILD_VERSION := stable
 
 build: # @HELP build the Web GUI and run all validations (default)
 build:
-	cd web/onos-gui && ng build
+	cd web/onos-gui && ng build --prod
 
 test: # @HELP run the unit tests and source code validation
-test: build deps lint vet license_check gofmt cyclo misspell ineffassign
+test: build deps lint license_check
 
 coverage: # @HELP generate unit test coverage data
 coverage: deps build license_check
@@ -21,37 +18,10 @@ deps: # @HELP ensure that the required dependencies are in place
 	cd web/onos-gui && npm install
 
 lint: # @HELP run the linters for Go source code
-	golint -set_exit_status github.com/onosproject/onos-gui/pkg/...
-	golint -set_exit_status github.com/onosproject/onos-gui/cmd/...
-	golint -set_exit_status github.com/onosproject/onos-gui/test/...
 	cd web/onos-gui && ng lint
-
-vet: # @HELP examines Go source code and reports suspicious constructs
-	go vet github.com/onosproject/onos-gui/pkg/...
-	go vet github.com/onosproject/onos-gui/cmd/...
-	go vet github.com/onosproject/onos-gui/test/...
-
-cyclo: # @HELP examines Go source code and reports complex cycles in code
-	gocyclo -over 25 pkg/
-	gocyclo -over 25 cmd/
-	gocyclo -over 25 test/
-
-misspell: # @HELP examines Go source code and reports misspelled words
-	misspell -error -source=text pkg/
-	misspell -error -source=text cmd/
-	misspell -error -source=text test/
-	misspell -error docs/
-
-ineffassign: # @HELP examines Go source code and reports inefficient assignments
-	ineffassign pkg/
-	ineffassign cmd/
-	ineffassign test/
 
 license_check: # @HELP examine and ensure license headers exist
 	./build/licensing/boilerplate.py -v
-
-gofmt: # @HELP run the Go format validation
-	bash -c "diff -u <(echo -n) <(gofmt -d pkg/ cmd/ tests/)"
 
 protos: # @HELP compile the protobuf files (using protoc-go Docker)
 	docker run -it -v `pwd`:/go/src/github.com/onosproject/onos-gui \
@@ -63,9 +33,9 @@ onos-gui-docker: build # @HELP build onos-gui Docker image
 	docker build . -f build/onos-gui/Dockerfile \
 		-t onosproject/onos-gui:${ONOS_GUI_VERSION}
 
-onos-gui-envoy-docker: # @HELP build onos-gui-envoy Docker image
+onos-config-envoy-docker: # @HELP build onos-config-envoy Docker image
 	docker build . -f build/envoy-proxy/Dockerfile \
-		-t onosproject/onos-gui-envoy:${ONOS_GUI_VERSION}
+		-t onosproject/onos-config-envoy:${ONOS_GUI_VERSION}
 
 images: # @HELP build all Docker images
 images: build onos-gui-docker
