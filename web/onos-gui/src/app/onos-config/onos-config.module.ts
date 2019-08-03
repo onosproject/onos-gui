@@ -30,6 +30,7 @@ import {NetworkChangeDetailComponent} from './network-change-detail/network-chan
 import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-panel.component';
 import { ContainerSvgComponent } from './config-view/container-svg/container-svg.component';
 import { LeafSvgComponent } from './config-view/leaf-svg/leaf-svg.component';
+import {Gui2TopoLibModule} from 'gui2-topo-lib';
 
 @NgModule({
     declarations: [
@@ -47,6 +48,7 @@ import { LeafSvgComponent } from './config-view/leaf-svg/leaf-svg.component';
         ReactiveFormsModule,
         OnosConfigRoutingModule,
         Gui2FwLibModule,
+        Gui2TopoLibModule
     ],
     providers: [
         {

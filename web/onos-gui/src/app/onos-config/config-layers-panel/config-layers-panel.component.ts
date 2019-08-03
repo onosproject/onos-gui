@@ -28,7 +28,7 @@ import {
     INACTIVE,
     CONFIGNAME
 } from '../config-view/config-view.component';
-import {PENDING} from "../pending-net-change.service";
+import {PENDING} from '../pending-net-change.service';
 
 export interface SelectedLayer {
     layerName: string;

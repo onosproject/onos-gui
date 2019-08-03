@@ -7,6 +7,32 @@ requests in to grpc requests (HTTP 2)
 * onos-config - the configuration management system exposing gRPC interfaces -
 admin, diags and gNMI
 
+## Docker-compose
+These 3 systems can be run together using **[docker-compose](https://docs.docker.com/compose/)**.
+From the **onos-gui** base folder run it like:
+```bash
+docker-compose -f build/docker-compose-stable.yml up
+```
+> This depends on the stable version of each of the 3 VM, which may be pulled
+> from **Docker Hub** with the usual **docker pull** command.
+> Alternatively there is a **docker-compose-latest.yml** that runs the latest
+> version of each from a local set of docker images.
+
+This assigns IP addresses and hostnames to each of the 3 instance, so that onos-gui
+can connect to http://onos-config-envoy:8080 and it can in turn connect over gRPC
+to https://onos-config:5150 
+
+Port 80 of the onos-gui is mapped to the host machine's port 80. To allow the web
+interface to work fully in this mode the name **onos-gui** must be added to the
+first line of /etc/hosts like:
+```text
+127.0.0.1       localhost   onos-gui
+```
+> If this is not added it will be possible to see the GUI being loaded, but it
+> will not be able to access the backend services on **onos-config-envoy**. It
+> will be possible to see 404 error in the network panel of the browser console
+> for elements like http://localhost/proto.ConfigAdminService/GetNetworkChanges
+
 ## Browser access
 When deployed the onos-gui is available to a browser at 
 http://onos-gui/index.html
@@ -15,9 +41,8 @@ http://onos-gui/index.html
 > http://onos-gui - currently it gives an error *"upstream connect error or
 > disconnect/reset before headers. reset reason: remote reset"* for this URL
 
-> This requires adding onos-gui to your __/etc/hosts__ file
-
-The browser connects to onos-gui over HTTP 1.1 to retrieve the Angular compiled files.
+The browser connects to onos-gui over HTTP 1.1 to retrieve the Angular compiled
+static files.
 
 When the **List onos-config capabilities** button is pressed:
 1) A grpc-web request is formed and sent as a POST to https://onos-gui/gnmi.gNMI/Capabilities
@@ -31,33 +56,10 @@ When the **List onos-config capabilities** button is pressed:
 1) the binding in the app.component.html page is alerted to the updated value and refreshes the display
 
 ## Developer mode
-To run the GUI locally on a development machine, follow the steps:
-1) Run onos-config in a docker container (from the onos-config folder) with:
-```bash
-make run-docker
-```
+To run the GUI locally on a development machine - run docker-compose as above,
+and in addition:
 
-2) Run **onos-config-envoy** in another docker container, but start it with a shell prompt
-like (it may be necessary to build it first with **make onos-config-envoy-docker**):
-```bash
-docker run -it -p 8080:8080 onosproject/onos-config-envoy /bin/sh
-```
-Edit the hosts file to add the location of onos-config.
-```bash
-echo "<onos-config-ipaddr> onos-config" >> /etc/hosts
-```
-> To get the onos-config ipaddress when running in docker user the command
-> "docker network inspect bridge"
-
-Then run the envoy application:
-```bash
-/usr/local/bin/envoy -c /etc/envoy.yaml -l debug
-```
-This will now listen on port 8080
-> When the GUI is run in **serve** mode its grpc-web target is set to point to
-localhost:8080 for the onos-config-envoy proxy. See environment.ts
-
-3) Run the Angular CLI in 'serve' mode
+1) Run the Angular CLI in 'serve' mode
 First change directory to the web folder in onos-gui and test that Angular CLI is
 set up correctly:
 ```bash
@@ -67,8 +69,9 @@ ng version
 
 If Angular CLI does not show a version it may be necessary to set:
 1) Install Node JS version 10 or greater on your system
-2) Install Angular CLI globall on top of this
+2) Install Angular CLI globally on top of this
 3) Install all the project dependencies in this current folder with **npm install**
+> See [prerequisites.md](prerequisites.md) for details
 
 When Angular CLI version command shows is it running properly, start the **serve**
 mode with:

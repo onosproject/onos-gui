@@ -25,7 +25,8 @@
                           (visibilityChange)="visibilityChanged($event)">
 </onos-config-layers-panel>
 
-<onos-confirm title="{{ create_pending }}" message="{{ create_pending_confirm }}"
+<onos-confirm title="{{ create_pending }}"
+              message="{{ create_pending_confirm }}"
               (chosen)="confirmedCreatePending($event)"></onos-confirm>
 
 <div id="onos-config">
@@ -33,15 +34,21 @@
              viewBox="0 0 1000 1000" id="config-view"
              preserveAspectRatio="xMaxYMax meet">
         <svg:desc>This can contain many different layers - one for each change
-            in config, and one for topology and one for the config edit
+            in config, and one for operational state and if in editing mode one
+            for the "pending" edit
         </svg:desc>
-        <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
-               [visible]="changeIdsVisible.get(c)"
-               (editRequestedLayer)="activatePendingLayer(device + '-' + version, $event)">
-        </svg:g>
-        <svg:g *ngIf="hasOpStateData" #opStateLayer
-               onos-layer-svg [layerId]="OPSTATE"
-               [visible]="changeIdsVisible.get(OPSTATE)">
+        <svg:g id="topo-zoomlayer" onosZoomableOf [zoomableOf]="svgZoom">
+            <svg:desc>A logical layer that allows the main SVG canvas to be
+                zoomed and panned
+            </svg:desc>
+            <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
+                   [visible]="changeIdsVisible.get(c)"
+                   (editRequestedLayer)="activatePendingLayer(device + '-' + version, $event)">
+            </svg:g>
+            <svg:g *ngIf="hasOpStateData" #opStateLayer
+                   onos-layer-svg [layerId]="OPSTATE"
+                   [visible]="changeIdsVisible.get(OPSTATE)">
+            </svg:g>
         </svg:g>
     </svg:svg>
 </div>
