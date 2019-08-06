@@ -1,0 +1,27 @@
+version: "3.2"
+services:
+  onos-gui:
+    image: onosproject/onos-gui:latest
+    hostname: onos-gui
+    ports:
+      - "80:80"
+    labels:
+      description: "ONOS GUI"
+  onos-config-envoy:
+    hostname: onos-config-envoy
+    ports:
+      - "8080:8080"
+    image: onosproject/onos-config-envoy:latest
+  onos-config:
+    image: onosproject/onos-config:latest
+    hostname: onos-config
+    ports:
+      - "5150:5150"
+    volumes:
+      - type: bind
+        source: ~/go/src/github.com/onosproject/onos-config/configs
+        target: /etc/onos-config/
+      - type: bind
+        source: ~/go/src/github.com/onosproject/onos-config/pkg/northbound/testdata
+        target: /etc/certs/
+    command: -configStore=/etc/onos-config/configStore-sample.json -changeStore=/etc/onos-config/changeStore-sample.json -deviceStore=/etc/onos-config/deviceStore-sample.json -networkStore=/etc/onos-config/networkStore-sample.json -modelPlugin=/usr/local/lib/testdevice.so.1.0.0 -modelPlugin=/usr/local/lib/testdevice.so.2.0.0 -modelPlugin=/usr/local/lib/devicesim.so.1.0.0 -certPath=/etc/certs/onos-config.crt -keyPath=/etc/certs/onos-config.key

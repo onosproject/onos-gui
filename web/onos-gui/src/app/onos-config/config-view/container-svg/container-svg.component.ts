@@ -15,6 +15,8 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ConfigUtils} from '../../config-utils';
+import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
 
 @Component({
     selector: '[onos-container-svg]',
@@ -22,10 +24,14 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
     styleUrls: ['./container-svg.component.css']
 })
 export class ContainerSvgComponent implements OnInit {
-    @Input() path: string;
+    @Input() relpath: string;
+    @Input() abspath: string;
+    @Input() parentpath: string;
     @Input() containerX: number = 0;
     @Input() containerY: number = 0;
     @Input() containerScale: number = 1.0;
+    @Input() value: Uint8Array;
+    @Input() valueType: ChangeValueType;
     @Output() containerEditRequested = new EventEmitter<string>();
 
     constructor() {
@@ -36,5 +42,9 @@ export class ContainerSvgComponent implements OnInit {
 
     requestEdit(container: string): void {
         this.containerEditRequested.emit(container);
+    }
+
+    convertChangeValue(bytes: Uint8Array, valueType: ChangeValueType) {
+        return ConfigUtils.valueAsString(bytes, valueType);
     }
 }

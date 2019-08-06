@@ -34,7 +34,7 @@ import {
 import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {PendingNetChangeService} from '../pending-net-change.service';
-import {PENDING_U} from "../pending-net-change.service";
+import {PENDING_U} from '../pending-net-change.service';
 
 @Component({
     selector: 'onos-network-change-detail',

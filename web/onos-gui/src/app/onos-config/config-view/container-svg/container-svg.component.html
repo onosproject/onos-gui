@@ -13,12 +13,23 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
+<svg:defs xmlns:svg="http://www.w3.org/2000/svg">
+    <svg:filter id="drop-shadow" x="-25%" y="-25%" width="200%" height="200%">
+        <svg:feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur" />
+        <svg:feOffset in="blur" dx="4" dy="4" result="offsetBlur"/>
+        <svg:feMerge >
+            <svg:feMergeNode in="offsetBlur" />
+            <svg:feMergeNode in="SourceGraphic" />
+        </svg:feMerge>
+    </svg:filter>
+</svg:defs>
 
 <svg:g xmlns:svg="http://www.w3.org/2000/svg" width="160" height="80"
          [attr.transform]="'translate(' + containerX + ',' + containerY + '), scale(' + containerScale + ')'">
-    <svg:rect stroke="black" stroke-width="2" width="160" height="20" fill-opacity="0.1" rx="5">
+    <svg:rect fill="#00bfed" width="160" height="20" fill-opacity="0.1" rx="5" filter="url(#drop-shadow)">
     </svg:rect>
-    <svg:use [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" (click)="requestEdit(path)">
+    <svg:use [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" stroke="#007dc4" fill-opacity="0" (click)="requestEdit(abspath)">
     </svg:use>
-    <svg:text x="5" stroke="blue" text-anchor="start" baseline-shift="-1.0em">{{path}}</svg:text>
+    <svg:text x="5" y="17" stroke="#007dc4" text-anchor="start">{{relpath}}</svg:text>
+    <svg:text x="160" y="17" stroke="#007dc4" text-anchor="end" font-weight="bold">{{convertChangeValue(value, valueType)}}</svg:text>
 </svg:g>

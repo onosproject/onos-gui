@@ -15,22 +15,40 @@
  */
 
 import {
-    Component, EventEmitter,
+    Component,
+    EventEmitter,
     Input,
-    OnChanges, Output,
+    OnChanges,
+    Output,
     SimpleChanges
 } from '@angular/core';
 import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {
-    Change
+    Change,
+    ChangeValueType
 } from '../../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
-import {PENDING} from "../../pending-net-change.service";
+import {PENDING} from '../../pending-net-change.service';
+import {
+    ConfigLink,
+    ConfigLinkType,
+    ConfigNode,
+    ConfigNodeType,
+    TreeLayoutService
+} from '../../tree-layout.service';
 
 export interface ChangeValueObj {
-    path: string;
-    value: string;
+    relPath: string;
+    value: Uint8Array;
+    valueType: ChangeValueType;
     removed: boolean;
-    pathElems: string[];
+    parentPath: string;
+    node: ConfigNode;
+}
+
+export interface Branch {
+    parent: string;
+    child: string;
+    link: ConfigLink;
 }
 
 @Component({
@@ -42,16 +60,18 @@ export class LayerSvgComponent implements OnChanges {
     @Input() layerId: string = '';
     @Input() visible: boolean;
     @Output() editRequestedLayer = new EventEmitter<string>();
-    changeValues: ChangeValueObj[] = [];
     description: string;
     changeTime: number = 0;
+    nodelist: Map<string, ChangeValueObj>;
+    branchList: Map<string, Branch>;
     offset: number = Math.random() * 200;
-    allPaths: Map<string, string>;
 
     constructor(
         private diags: OnosConfigDiagsService,
+        private tree: TreeLayoutService,
     ) {
-        this.allPaths = new Map<string, string>();
+        this.nodelist = new Map<string, ChangeValueObj>();
+        this.branchList = new Map<string, Branch>();
         console.log('Constructed LayerSvgComponent');
     }
 
@@ -59,8 +79,13 @@ export class LayerSvgComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (changes['layerId']) {
             const layerIdNew = changes['layerId'].currentValue;
-            this.changeValues.length = 0;
-            this.allPaths.clear();
+            this.nodelist.clear();
+            const cvRoot = <ChangeValueObj>{
+                relPath: '',
+                node: this.addToForceGraph('')
+            };
+            this.nodelist.set('', cvRoot);
+
             if (String(layerIdNew).startsWith(PENDING)) {
                 console.log('Getting pending changes from service:', layerIdNew);
             } else {
@@ -69,27 +94,89 @@ export class LayerSvgComponent implements OnChanges {
                     this.description = change.getDesc();
                     this.changeTime = Number(change.getTime()) * 1000;
                     for (const c of change.getChangevaluesList()) {
-                        this.changeValues.push(<ChangeValueObj>{
-                            path: c.getPath(),
+                        const lastSlashIdx =  c.getPath().lastIndexOf('/');
+                        const parentPath = c.getPath().substr(0, lastSlashIdx);
+                        const relPath = c.getPath().substring(lastSlashIdx + 1);
+                        const cv = <ChangeValueObj>{
+                            relPath: relPath,
                             value: c.getValue(),
+                            valueType: c.getValuetype(),
                             removed: c.getRemoved(),
-                            pathElems: this.decomposePath(c.getPath())
-                        });
-                        let basePath = c.getPath().substr(0, c.getPath().lastIndexOf('/'));
-                        if (basePath === '') {
-                            basePath = 'undefined';
-                        }
-                        this.allPaths.set(basePath, this.allPaths.get(basePath) + ',' + c.getValuetype());
+                            parentPath: parentPath,
+                            node: this.addToForceGraph(c.getPath())
+                        };
+                        this.nodelist.set(c.getPath(), cv);
+
+                        this.checkParent(c.getPath(), parentPath);
                     }
-                    console.log('Change response for ', layerIdNew, 'received', this.allPaths);
+                    console.log('Change response for ', layerIdNew, 'received', this.nodelist);
+                    this.tree.reinitSimulation();
                 });
             }
         }
     }
 
-    decomposePath(path: string): string[] {
-        const pathElems = path.split('/');
-        return pathElems;
+    private addToForceGraph(abspath: string): ConfigNode {
+        // Search for node
+        for (const n of this.tree.nodes) {
+            if (n.id === abspath) {
+                return n;
+            }
+        }
+        const newNode = <ConfigNode>{
+            id: abspath,
+            x: 0,
+            y: 0,
+            nodeType: ConfigNodeType.CONFIG_LEAF
+        };
+        this.tree.nodes.push(newNode);
+        return newNode;
+    }
+
+    private checkParent(currentPath: string, parentPath: string): boolean {
+        if (this.nodelist.get(parentPath) !== undefined || parentPath === '') {
+            this.addBranch(currentPath, parentPath);
+            return true;
+        }
+        const idx = parentPath.lastIndexOf('/');
+        const nextPp = parentPath.substr(0, idx);
+        this.nodelist.set(parentPath, <ChangeValueObj>{
+            relPath: parentPath.substr(idx + 1),
+            parentPath: nextPp,
+            node: this.addToForceGraph(parentPath)
+        });
+        this.addBranch(currentPath, parentPath);
+        this.checkParent(parentPath, nextPp);
+        return false;
+    }
+
+    private addBranchToForceGraph(branchId, sourcePath, targetPath: string): ConfigLink {
+        // Search for link
+        for (const l of this.tree.links) {
+            if (l.id === branchId) {
+                return l;
+            }
+        }
+        // Else create it
+        const newLink = <ConfigLink>{
+            id: branchId,
+            source: this.nodelist.get(sourcePath).node,
+            target: this.nodelist.get(targetPath).node,
+            linkType: ConfigLinkType.CONFIG_DIRECT,
+        };
+        this.tree.links.push(newLink);
+        return newLink;
+    }
+
+    private addBranch(currentPath, parentPath: string): string {
+        const lastSlashIdx =  currentPath.lastIndexOf('/');
+        const branchId = currentPath.substring(lastSlashIdx) + '_' + parentPath;
+        this.branchList.set(branchId, <Branch>{
+            child: currentPath,
+            parent: parentPath,
+            link: this.addBranchToForceGraph(branchId, currentPath, parentPath),
+        });
+        return branchId;
     }
 
     countParts(path: string): number {
