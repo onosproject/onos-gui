@@ -2,6 +2,9 @@ sudo: false
 
 services:
   - docker
+language: node_js
+node_js:
+  - '10'
 
 notifications:
   email: false
@@ -15,4 +18,4 @@ jobs:
     - stage: tests
       script:
         - docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli make coverage
-        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./build/bin/push-images; fi'
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npm install -g @angular/cli && bash ./build/bin/push-images; fi'
