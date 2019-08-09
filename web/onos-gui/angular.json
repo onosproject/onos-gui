@@ -101,7 +101,8 @@
             ],
             "exclude": [
               "**/node_modules/**",
-              "src/app/onos-config/proto/github.com/**"
+              "src/app/onos-config/proto/github.com/**",
+              "src/app/onos-topo/proto/github.com/**"
             ]
           }
         }
@@ -130,7 +131,8 @@
             "tsConfig": "e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**",
-              "src/app/onos-config/proto/github.com/**"
+              "src/app/onos-config/proto/github.com/**",
+              "src/app/onos-topo/proto/github.com/**"
             ]
           }
         }

@@ -25,7 +25,6 @@ import {
 } from './github.com/onosproject/onos-config/pkg/northbound/proto/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
-type DeviceCountCallback = (e: grpcWeb.Error, r: DeviceSummaryResponse) => void;
 type NetChangeCallback = (r: NetChange) => void;
 
 @Injectable({
@@ -33,20 +32,12 @@ type NetChangeCallback = (r: NetChange) => void;
 })
 export class OnosConfigAdminService {
 
-    deviceInventoryService: DeviceInventoryServiceClient;
     adminServiceClient: ConfigAdminServiceClient;
 
     constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
-        this.deviceInventoryService = new DeviceInventoryServiceClient(onosConfigUrl);
         this.adminServiceClient = new ConfigAdminServiceClient(onosConfigUrl);
 
-        console.log('Device Inventory Service and Admin Service Connecting to ', onosConfigUrl);
-    }
-
-    requestSummary(cb: DeviceCountCallback) {
-        console.log('ListChangesRequest Request sent to', this.onosConfigUrl);
-        const deviceSummaryRequest = new DeviceSummaryRequest();
-        this.deviceInventoryService.getDeviceSummary(deviceSummaryRequest, {}, cb);
+        console.log('Config Admin Service Connecting to ', onosConfigUrl);
     }
 
     requestNetworkChanges(callback: NetChangeCallback) {
