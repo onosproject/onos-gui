@@ -1,19 +1,3 @@
-/*
- * Copyright 2019-present Open Networking Foundation
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 /**
  * @fileoverview gRPC-Web generated client stub for proto
  * @enhanceable
@@ -29,9 +13,11 @@ import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/t
 
 import {
   Change,
+  ChangeValue,
   ChangesRequest,
   ConfigRequest,
-  Configuration} from './diags_pb';
+  Configuration,
+  OpStateRequest} from './diags_pb';
 
 export class ConfigDiagsClient {
   client_: grpcWeb.AbstractClientBase;
@@ -88,6 +74,46 @@ export class ConfigDiagsClient {
       request,
       metadata || {},
       this.methodInfoGetConfigurations);
+  }
+
+}
+
+export class OpStateDiagsClient {
+  client_: grpcWeb.AbstractClientBase;
+  hostname_: string;
+  credentials_: null | { [index: string]: string; };
+  options_: null | { [index: string]: string; };
+
+  constructor (hostname: string,
+               credentials?: null | { [index: string]: string; },
+               options?: null | { [index: string]: string; }) {
+    if (!options) options = {};
+    if (!credentials) credentials = {};
+    options['format'] = 'binary';
+
+    this.client_ = new grpcWeb.GrpcWebClientBase(options);
+    this.hostname_ = hostname;
+    this.credentials_ = credentials;
+    this.options_ = options;
+  }
+
+  methodInfoGetOpState = new grpcWeb.AbstractClientBase.MethodInfo(
+    ChangeValue,
+    (request: OpStateRequest) => {
+      return request.serializeBinary();
+    },
+    ChangeValue.deserializeBinary
+  );
+
+  getOpState(
+    request: OpStateRequest,
+    metadata?: grpcWeb.Metadata) {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/proto.OpStateDiags/GetOpState',
+      request,
+      metadata || {},
+      this.methodInfoGetOpState);
   }
 
 }

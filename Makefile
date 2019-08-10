@@ -24,10 +24,10 @@ license_check: # @HELP examine and ensure license headers exist
 	./build/licensing/boilerplate.py -v
 
 protos: # @HELP compile the protobuf files (using protoc-go Docker)
-	docker run -it -v `pwd`:/go/src/github.com/onosproject/onos-gui \
+	docker run -it -v `pwd`/..:/go/src/github.com/onosproject \
 		-w /go/src/github.com/onosproject/onos-gui \
-		--entrypoint build/compile-protos-ts.sh \
-		onosproject/protoc-go:latest
+		--entrypoint build/bin/compile-protos-ts.sh \
+		onosproject/protoc-go:stable
 
 onos-gui-docker: # @HELP build onos-gui Docker image
 	docker build . -f build/onos-gui/Dockerfile \
