@@ -25,9 +25,6 @@ import {
 type CapabilityCallback = (e: grpcWeb.Error, r: CapabilityResponse) => void;
 type GnmiGetCallback = (e: grpcWeb.Error, r: GetResponse) => void;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class OnosConfigGnmiService {
 
     gnmiService: gNMIClient;

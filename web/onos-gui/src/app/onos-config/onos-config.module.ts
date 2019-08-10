@@ -16,7 +16,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {grpc_web_proxy} from '../../environments/environment';
+import {grpc_web_config_proxy} from '../../environments/environment';
 import {NetworkChangesComponent} from './networkchanges/network-changes.component';
 import {ConfigViewComponent} from './config-view/config-view.component';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
@@ -53,15 +53,15 @@ import {Gui2TopoLibModule} from 'gui2-topo-lib';
     providers: [
         {
             provide: OnosConfigDiagsService,
-            useValue: new OnosConfigDiagsService(grpc_web_proxy)
+            useValue: new OnosConfigDiagsService(grpc_web_config_proxy)
         },
         {
             provide: OnosConfigAdminService,
-            useValue: new OnosConfigAdminService(grpc_web_proxy)
+            useValue: new OnosConfigAdminService(grpc_web_config_proxy)
         },
         {
             provide: OnosConfigGnmiService,
-            useValue: new OnosConfigGnmiService(grpc_web_proxy)
+            useValue: new OnosConfigGnmiService(grpc_web_config_proxy)
         },
     ],
     exports: [

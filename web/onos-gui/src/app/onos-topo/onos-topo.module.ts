@@ -17,13 +17,26 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OnosTopoRoutingModule} from './onos-topo-routing.module';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Gui2FwLibModule} from 'gui2-fw-lib';
+import {grpc_web_topo_proxy} from '../../environments/environment';
+import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
 
 @NgModule({
     declarations: [],
     imports: [
         CommonModule,
-        OnosTopoRoutingModule
-    ]
+        FormsModule,
+        ReactiveFormsModule,
+        OnosTopoRoutingModule,
+        Gui2FwLibModule,
+    ],
+    providers: [
+        {
+            provide: OnosTopoDeviceService,
+            useValue: new OnosTopoDeviceService(grpc_web_topo_proxy)
+        },
+    ],
 })
 export class OnosTopoModule {
 }
