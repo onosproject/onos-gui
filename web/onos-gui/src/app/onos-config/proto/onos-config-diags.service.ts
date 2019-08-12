@@ -24,9 +24,6 @@ import {
 type ChangesCallback = (r: Change) => void;
 type ConfigsCallback = (r: Configuration) => void;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class OnosConfigDiagsService {
     diagsService: ConfigDiagsClient;
 

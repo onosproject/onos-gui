@@ -27,9 +27,6 @@ import * as grpcWeb from 'grpc-web';
 
 type NetChangeCallback = (r: NetChange) => void;
 
-@Injectable({
-    providedIn: 'root'
-})
 export class OnosConfigAdminService {
 
     adminServiceClient: ConfigAdminServiceClient;

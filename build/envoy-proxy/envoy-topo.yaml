@@ -42,11 +42,11 @@ static_resources:
       http2_protocol_options: {}
       lb_policy: round_robin
       # win/mac hosts: Use address: host.docker.internal instead of address: localhost in the line below
-      hosts: [{ socket_address: { address: onos-config, port_value: 5150 }}]
+      hosts: [{ socket_address: { address: onos-topo, port_value: 5150 }}]
       tls_context:
         common_tls_context:
           tls_certificates:
-            certificate_chain: { "filename": "/etc/ssl/certs/localhost.crt" }
-            private_key: { "filename": "/etc/ssl/certs/localhost.key" }
+            certificate_chain: { "filename": "/etc/envoy-proxy/client1.crt" }
+            private_key: { "filename": "/etc/envoy-proxy/client1.key" }
           validation_context:
-            trusted_ca: { filename: "/etc/ssl/certs/onfca.crt" }
+            trusted_ca: { filename: "/etc/envoy-proxy/onfca.crt" }

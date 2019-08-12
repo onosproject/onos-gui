@@ -10,6 +10,7 @@ protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.c
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/pkg/northbound/device/device.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/pkg/northbound/admin/admin.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/pkg/northbound/diags/diags.proto
+protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/gogo/protobuf/gogoproto/gogo.proto
 
 # Currently a bug in the below command outputs to "Github.com" (uppercase G)
 protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcweb:. ${GOPATH}/src/github.com/onosproject/onos-config/pkg/northbound/proto/admin.proto
@@ -24,6 +25,8 @@ cp -r github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/prot
 cp -r github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
 cp -r github.com/onosproject/onos-topo/* web/onos-gui/src/app/onos-topo/proto/github.com/onosproject/onos-topo/
 rm -rf github.com
+cp -r gogoproto/* web/onos-gui/src/app/onos-topo/proto/gogoproto/
+rm -rf gogoproto
 cp -r Github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/proto/github.com/onosproject/onos-config/
 cp -r Github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
 cp -r Github.com/onosproject/onos-topo/* web/onos-gui/src/app/onos-topo/proto/github.com/onosproject/onos-topo/

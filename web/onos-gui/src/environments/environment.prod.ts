@@ -18,4 +18,5 @@ export const environment = {
   production: true
 };
 
-export const grpc_web_proxy = 'http://' + window.location.host;
+export const grpc_web_config_proxy = 'http://' + window.location.host + '/onos-config';
+export const grpc_web_topo_proxy = 'http://' + window.location.host + '/onos-topo';
