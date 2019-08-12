@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import {TreeLayoutService} from './tree-layout.service';
+import { ModelService } from './model.service';
 
-describe('TreeLayoutService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+describe('ModelService', () => {
+  beforeEach(() => TestBed.configureTestingModule({}));
 
-    it('should be created', () => {
-        const service: TreeLayoutService = TestBed.get(TreeLayoutService);
-        expect(service).toBeTruthy();
-    });
+  it('should be created', () => {
+    const service: ModelService = TestBed.get(ModelService);
+    expect(service).toBeTruthy();
+  });
 });

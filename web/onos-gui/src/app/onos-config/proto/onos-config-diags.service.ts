@@ -15,15 +15,16 @@
  */
 
 import {Inject, Injectable} from '@angular/core';
-import {ConfigDiagsClient} from './github.com/onosproject/onos-config/pkg/northbound/proto/diagsServiceClientPb';
+import {ConfigDiagsClient} from './github.com/onosproject/onos-config/pkg/northbound/diags/diagsServiceClientPb';
 import {
-    Change,
     ChangesRequest, ConfigRequest, Configuration
-} from './github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+} from './github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
+import {Change} from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 type ChangesCallback = (r: Change) => void;
 type ConfigsCallback = (r: Configuration) => void;
 
+@Injectable()
 export class OnosConfigDiagsService {
     diagsService: ConfigDiagsClient;
 
@@ -37,7 +38,7 @@ export class OnosConfigDiagsService {
         const changesRequest = new ChangesRequest();
         let idx = 0;
         for (const ch of changeIds) {
-            changesRequest.addChangeids(ch, idx);
+            changesRequest.addChangeIds(ch, idx);
             idx++;
         }
         const stream = this.diagsService.getChanges(changesRequest, {});
@@ -48,7 +49,7 @@ export class OnosConfigDiagsService {
         const configRequest = new ConfigRequest();
         let idx = 0;
         for (const cfg of configNames) {
-            configRequest.addDeviceids(cfg, idx);
+            configRequest.addDeviceIds(cfg, idx);
             idx++;
         }
         const stream = this.diagsService.getConfigurations(configRequest, {});

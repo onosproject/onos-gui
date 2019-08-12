@@ -23,6 +23,7 @@ import * as grpcWeb from 'grpc-web';
 
 type ListDeviceCallback = (r: ListResponse) => void;
 
+@Injectable()
 export class OnosTopoDeviceService {
 
     deviceServiceClient: DeviceServiceClient;

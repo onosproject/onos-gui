@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 export class ConfigUtils {
     static valueAsString(bytes: Uint8Array, valueType: ChangeValueType): string {

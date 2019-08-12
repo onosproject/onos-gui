@@ -31,6 +31,10 @@ import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-pa
 import { ContainerSvgComponent } from './config-view/container-svg/container-svg.component';
 import { LeafSvgComponent } from './config-view/leaf-svg/leaf-svg.component';
 import {Gui2TopoLibModule} from 'gui2-topo-lib';
+import { ConfigsListComponent } from './configs-list/configs-list.component';
+import { ModelsListComponent } from './models-list/models-list.component';
+import {ModelService} from './model.service';
+import { ModelDetailComponent } from './model-detail/model-detail.component';
 
 @NgModule({
     declarations: [
@@ -41,6 +45,9 @@ import {Gui2TopoLibModule} from 'gui2-topo-lib';
         ConfigLayersPanelComponent,
         ContainerSvgComponent,
         LeafSvgComponent,
+        ConfigsListComponent,
+        ModelsListComponent,
+        ModelDetailComponent,
     ],
     imports: [
         CommonModule,
@@ -63,6 +70,10 @@ import {Gui2TopoLibModule} from 'gui2-topo-lib';
             provide: OnosConfigGnmiService,
             useValue: new OnosConfigGnmiService(grpc_web_config_proxy)
         },
+        {
+            provide: ModelService,
+            useClass: ModelService
+        }
     ],
     exports: [
         ConfigViewComponent

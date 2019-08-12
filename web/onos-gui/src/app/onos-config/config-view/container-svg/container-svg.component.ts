@@ -16,7 +16,7 @@
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ConfigUtils} from '../../config-utils';
-import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 @Component({
     selector: '[onos-container-svg]',

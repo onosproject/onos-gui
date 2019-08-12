@@ -12,7 +12,7 @@ services:
       - type: bind
         source: ~/go/src/github.com/onosproject/onos-config/pkg/northbound/testdata
         target: /etc/certs/
-    command: -configStore=/etc/onos-config/configStore-sample.json -changeStore=/etc/onos-config/changeStore-sample.json -deviceStore=/etc/onos-config/deviceStore-sample.json -networkStore=/etc/onos-config/networkStore-sample.json -modelPlugin=/usr/local/lib/testdevice.so.1.0.0 -modelPlugin=/usr/local/lib/testdevice.so.2.0.0 -modelPlugin=/usr/local/lib/devicesim.so.1.0.0 -certPath=/etc/certs/onos-config.crt -keyPath=/etc/certs/onos-config.key
+    command: -configStore=/etc/onos-config/configStore-sample.json -changeStore=/etc/onos-config/changeStore-sample.json -deviceStore=/etc/onos-config/deviceStore-sample.json -networkStore=/etc/onos-config/networkStore-sample.json -modelPlugin=/usr/local/lib/testdevice.so.1.0.0 -modelPlugin=/usr/local/lib/testdevice.so.2.0.0 -modelPlugin=/usr/local/lib/devicesim.so.1.0.0 -modelPlugin=/usr/local/lib/stratum.so.1.0.0 -certPath=/etc/certs/onos-config.crt -keyPath=/etc/certs/onos-config.key
 #  onos-topo:
 #    image: onosproject/onos-topo:latest
 #    hostname: onos-topo

@@ -10,8 +10,8 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
+
 import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
-import * as pkg_northbound_proto_diags_pb from '../../../pkg/northbound/proto/diags_pb';
 
 import {
   DeviceInfo,

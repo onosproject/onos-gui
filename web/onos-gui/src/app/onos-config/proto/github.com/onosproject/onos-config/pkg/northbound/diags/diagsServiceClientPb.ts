@@ -11,9 +11,9 @@ import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
 
+import * as github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb from '../../../../../../github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+
 import {
-  Change,
-  ChangeValue,
   ChangesRequest,
   ConfigRequest,
   Configuration,
@@ -39,11 +39,11 @@ export class ConfigDiagsClient {
   }
 
   methodInfoGetChanges = new grpcWeb.AbstractClientBase.MethodInfo(
-    Change,
+    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Change,
     (request: ChangesRequest) => {
       return request.serializeBinary();
     },
-    Change.deserializeBinary
+    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Change.deserializeBinary
   );
 
   getChanges(
@@ -98,11 +98,11 @@ export class OpStateDiagsClient {
   }
 
   methodInfoGetOpState = new grpcWeb.AbstractClientBase.MethodInfo(
-    ChangeValue,
+    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue,
     (request: OpStateRequest) => {
       return request.serializeBinary();
     },
-    ChangeValue.deserializeBinary
+    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue.deserializeBinary
   );
 
   getOpState(

@@ -16,11 +16,11 @@
 
 import {Component, OnInit, SimpleChanges} from '@angular/core';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
-import {NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/admin_pb';
+import {NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,
-    TableBaseImpl,
+    TableBaseImpl, TableFilter,
     WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -52,7 +52,7 @@ export interface NwChange {
 export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
 
     rollbackTip: string = 'Rollback';
-    selectedChange: NwChangeEntry;
+    selectedChange: NwChangeEntry; // The complete row - not just the selId
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
     public PENDING_U = PENDING_U;
@@ -75,8 +75,13 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         this.sortParams = {
             firstCol: 'name',
             firstDir: SortDir.asc,
-            secondCol: 'name',
+            secondCol: 'user',
             secondDir: SortDir.desc,
+        };
+
+        this.tableDataFilter = <TableFilter>{ // This is here until table pipe bug is fixed
+            queryStr: '',
+            queryBy: 'name', // Default should be $ all fields
         };
 
         this.annots = <TableAnnots>{
@@ -118,7 +123,7 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
     }
 
     navto(path) {
-        this.log.debug('navigate');
+        this.log.debug('navigate to', path);
         if (this.selId) {
             this.router.navigate([path], {queryParams: {devId: this.selId}});
         }

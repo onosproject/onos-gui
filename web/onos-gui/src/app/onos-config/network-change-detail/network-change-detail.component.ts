@@ -31,7 +31,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     NwChange
 } from '../networkchanges/network-changes.component';
-import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {PendingNetChangeService} from '../pending-net-change.service';
 import {PENDING_U} from '../pending-net-change.service';
@@ -93,7 +93,7 @@ export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implement
             this.otherConfigs.length = 0;
             if (this.id === PENDING_U) {
                 this.diags.requestConfigurations([], (config: Configuration) => {
-                    const configName = config.getDeviceid() + '-' + config.getVersion();
+                    const configName = config.getDeviceId() + '-' + config.getVersion();
                     this.nwChangeDetail.configChanges.forEach((ch) => {
                         if (ch.configId !== configName) {
                             this.otherConfigs.push(configName);
