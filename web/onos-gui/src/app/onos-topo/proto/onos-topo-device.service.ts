@@ -28,15 +28,15 @@ export class OnosTopoDeviceService {
 
     deviceServiceClient: DeviceServiceClient;
 
-    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
-        this.deviceServiceClient = new DeviceServiceClient(onosConfigUrl);
+    constructor(@Inject('onosTopoUrl') private onosTopoUrl: string) {
+        this.deviceServiceClient = new DeviceServiceClient(onosTopoUrl);
 
-        console.log('Device Inventory Service and Admin Service Connecting to ', onosConfigUrl);
+        console.log('Device Service Connecting to ', onosTopoUrl);
     }
 
     requestListDevices(callback: ListDeviceCallback) {
         const stream = this.deviceServiceClient.list(new ListRequest(), {});
-        console.log('ListDevices sent to', this.onosConfigUrl);
+        console.log('ListDevices sent to', this.onosTopoUrl);
         stream.on('data', callback);
     }
 }

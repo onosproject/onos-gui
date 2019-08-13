@@ -21,9 +21,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
 import {grpc_web_topo_proxy} from '../../environments/environment';
 import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
+import { DevicesListComponent } from './devices-list/devices-list.component';
+import { DeviceDetailComponent } from './device-detail/device-detail.component';
 
 @NgModule({
-    declarations: [],
+    declarations: [DevicesListComponent, DeviceDetailComponent],
     imports: [
         CommonModule,
         FormsModule,
