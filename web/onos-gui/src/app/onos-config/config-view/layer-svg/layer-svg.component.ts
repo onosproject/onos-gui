@@ -26,7 +26,7 @@ import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {
     Change,
     ChangeValueType
-} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {PENDING} from '../../pending-net-change.service';
 import {
     ConfigLink,
@@ -50,6 +50,8 @@ export interface Branch {
     child: string;
     link: ConfigLink;
 }
+
+const ControlPointX = 40;
 
 @Component({
     selector: '[onos-layer-svg]',
@@ -93,14 +95,14 @@ export class LayerSvgComponent implements OnChanges {
                     // We're only expecting the 1 change as we only asked for 1
                     this.description = change.getDesc();
                     this.changeTime = Number(change.getTime()) * 1000;
-                    for (const c of change.getChangevaluesList()) {
+                    for (const c of change.getChangeValuesList()) {
                         const lastSlashIdx =  c.getPath().lastIndexOf('/');
                         const parentPath = c.getPath().substr(0, lastSlashIdx);
                         const relPath = c.getPath().substring(lastSlashIdx + 1);
                         const cv = <ChangeValueObj>{
                             relPath: relPath,
                             value: c.getValue(),
-                            valueType: c.getValuetype(),
+                            valueType: c.getValueType(),
                             removed: c.getRemoved(),
                             parentPath: parentPath,
                             node: this.addToForceGraph(c.getPath())
@@ -186,6 +188,22 @@ export class LayerSvgComponent implements OnChanges {
     requestEditLayer(path: string, leaf: string, l1: string) {
         this.editRequestedLayer.emit(path + ',' + leaf + ',' + l1);
         console.log('Edit requested on layer', this.layerId, path, leaf, l1);
+    }
+
+    // Calculates an SVG path for the branch
+    // Start in the middle and draw path to source end with curve (control point is x+ControlPointX)
+    // Move back to middle and draw path to target end with curve (control point is x-ControlPointX)
+    curveCalculator(link: ConfigLink): string {
+        const halfWayX = (link.target.x + 160 + link.source.x) / 2;
+        const halfWayY = (link.target.y + 10 + link.source.y + 10) / 2;
+
+        const mm = 'M ' + halfWayX + ' ' + halfWayY;
+        const cp1 =  'Q ' + (link.target.x + 160 + ControlPointX) + ' ' + (link.target.y + 10);
+        const ep1 = (link.target.x + 160) + ' ' + (link.target.y + 10);
+        const cp2 = 'Q ' + (link.source.x - ControlPointX) + ' ' + (link.source.y + 10);
+        const ep2 = link.source.x + ' ' + (link.source.y + 10);
+
+        return mm + ' ' + cp1 + ', ' + ep1 + ' ' + mm + ' ' + cp2 + ', ' + ep2;
     }
 }
 

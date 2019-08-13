@@ -28,9 +28,8 @@
                (containerEditRequested)="requestEditLayer(node.key, null, 'container')">
         </svg:g>
     </svg:g>
-    <svg:line *ngFor="let branch of branchList | keyvalue" stroke-width="2" stroke="#a9aba0"
-              [attr.x1]="branch.value.link.source.x" [attr.y1]="branch.value.link.source.y+10"
-              [attr.x2]="branch.value.link.target.x+160" [attr.y2]="branch.value.link.target.y+10">
+    <svg:path *ngFor="let branch of branchList | keyvalue" stroke-width="2" stroke="#a9aba0" fill-opacity="0"
+              [attr.d]="curveCalculator(branch.value.link)">
         <svg:desc>{{branch.key}}</svg:desc>
-    </svg:line>
+    </svg:path>
 </svg:g>

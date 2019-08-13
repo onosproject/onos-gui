@@ -16,17 +16,18 @@
 
 import {Inject, Injectable} from '@angular/core';
 import {
-    ConfigAdminServiceClient,
-    DeviceInventoryServiceClient
-} from './github.com/onosproject/onos-config/pkg/northbound/proto/adminServiceClientPb';
+    ConfigAdminServiceClient
+} from './github.com/onosproject/onos-config/pkg/northbound/admin/adminServiceClientPb';
 import {
-    DeviceSummaryRequest,
-    DeviceSummaryResponse, NetChange, NetworkChangesRequest
-} from './github.com/onosproject/onos-config/pkg/northbound/proto/admin_pb';
+    ListModelsRequest, ModelInfo,
+    NetChange, NetworkChangesRequest
+} from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
 type NetChangeCallback = (r: NetChange) => void;
+type ModelInfoCallback = (r: ModelInfo) => void;
 
+@Injectable()
 export class OnosConfigAdminService {
 
     adminServiceClient: ConfigAdminServiceClient;
@@ -40,6 +41,14 @@ export class OnosConfigAdminService {
     requestNetworkChanges(callback: NetChangeCallback) {
         const stream = this.adminServiceClient.getNetworkChanges(new NetworkChangesRequest(), {});
         console.log('NetworkChangesRequest sent to', this.onosConfigUrl);
+        stream.on('data', callback);
+    }
+
+    requestListRegisteredModels(callback: ModelInfoCallback) {
+        const modelRequest = new ListModelsRequest();
+        modelRequest.setVerbose(true);
+        const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
+        console.log('ListRegisteredModels sent to', this.onosConfigUrl);
         stream.on('data', callback);
     }
 }

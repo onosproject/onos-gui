@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Inject, Injectable} from '@angular/core';
 import * as d3 from 'd3-force';
 
-const FORCES = {
-    COLLISION: 1,
-    GRAVITY: 0.4,
-    FRICTION: 0.7
-};
-
 const CHARGES = {
-    container: -800,
-    leaf: -2000,
-    list: -800,
-    _def_: -1200
+    container: -600,
+    leaf: -800,
+    list: -600,
+    _def_: -1000
 };
 
 const LINK_DISTANCE = {
@@ -53,7 +47,7 @@ export interface Options {
 const SVGCANVAS = <Options>{
     width: 1000,
     height: 1000,
-    column: 1000
+    column: 500
 };
 
 export enum ConfigNodeType {
@@ -90,9 +84,7 @@ export interface ConfigLink {
  *
  * Do yourself a favour and read https://d3indepth.com/force-layout/
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class TreeLayoutService {
     public ticker: EventEmitter<d3.Simulation<ConfigNode, ConfigLink>> = new EventEmitter();
     public simulation: d3.Simulation<any, any>;
@@ -101,6 +93,9 @@ export class TreeLayoutService {
     public links: ConfigLink[];
 
     constructor(
+        @Inject('COLLISION') private COLLISION: number = 1,
+        @Inject('GRAVITY') private GRAVITY: number = 0.4,
+        @Inject('FRICTION') private FRICTION: number = 0.7
     ) {
         this.nodes = [];
         this.links = [];
@@ -113,9 +108,9 @@ export class TreeLayoutService {
                 d3.forceManyBody().strength(this.charges.bind(this)))
             // .distanceMin(100).distanceMax(500))
             .force('gravity',
-                d3.forceManyBody().strength(FORCES.GRAVITY))
+                d3.forceManyBody().strength(GRAVITY))
             .force('friction',
-                d3.forceManyBody().strength(FORCES.FRICTION))
+                d3.forceManyBody().strength(FRICTION))
             .force('center',
                 d3.forceCenter(this.canvasOptions.width / 2, this.canvasOptions.height / 2))
             .force('x', d3.forceX().x((d) => this.offsetX(d)))

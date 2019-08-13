@@ -3,8 +3,8 @@
 import * as jspb from "google-protobuf"
 
 import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
+
 import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
-import * as pkg_northbound_proto_diags_pb from '../../../pkg/northbound/proto/diags_pb';
 
 export class NetworkChangesRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
@@ -39,6 +39,78 @@ export namespace ConfigChange {
   export type AsObject = {
     id: string,
     hash: string,
+  }
+}
+
+export class ChangeValue extends jspb.Message {
+  getPath(): string;
+  setPath(value: string): void;
+
+  getValue(): Uint8Array | string;
+  getValue_asU8(): Uint8Array;
+  getValue_asB64(): string;
+  setValue(value: Uint8Array | string): void;
+
+  getValueType(): ChangeValueType;
+  setValueType(value: ChangeValueType): void;
+
+  getTypeOptsList(): Array<number>;
+  setTypeOptsList(value: Array<number>): void;
+  clearTypeOptsList(): void;
+  addTypeOpts(value: number, index?: number): void;
+
+  getRemoved(): boolean;
+  setRemoved(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ChangeValue.AsObject;
+  static toObject(includeInstance: boolean, msg: ChangeValue): ChangeValue.AsObject;
+  static serializeBinaryToWriter(message: ChangeValue, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ChangeValue;
+  static deserializeBinaryFromReader(message: ChangeValue, reader: jspb.BinaryReader): ChangeValue;
+}
+
+export namespace ChangeValue {
+  export type AsObject = {
+    path: string,
+    value: Uint8Array | string,
+    valueType: ChangeValueType,
+    typeOptsList: Array<number>,
+    removed: boolean,
+  }
+}
+
+export class Change extends jspb.Message {
+  getTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setTime(value?: google_protobuf_timestamp_pb.Timestamp): void;
+  hasTime(): boolean;
+  clearTime(): void;
+
+  getId(): string;
+  setId(value: string): void;
+
+  getDesc(): string;
+  setDesc(value: string): void;
+
+  getChangeValuesList(): Array<ChangeValue>;
+  setChangeValuesList(value: Array<ChangeValue>): void;
+  clearChangeValuesList(): void;
+  addChangeValues(value?: ChangeValue, index?: number): ChangeValue;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Change.AsObject;
+  static toObject(includeInstance: boolean, msg: Change): Change.AsObject;
+  static serializeBinaryToWriter(message: Change, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Change;
+  static deserializeBinaryFromReader(message: Change, reader: jspb.BinaryReader): Change;
+}
+
+export namespace Change {
+  export type AsObject = {
+    time?: google_protobuf_timestamp_pb.Timestamp.AsObject,
+    id: string,
+    desc: string,
+    changeValuesList: Array<ChangeValue.AsObject>,
   }
 }
 
@@ -77,11 +149,11 @@ export namespace NetChange {
 }
 
 export class ReadOnlySubPath extends jspb.Message {
-  getSubpath(): string;
-  setSubpath(value: string): void;
+  getSubPath(): string;
+  setSubPath(value: string): void;
 
-  getValuetype(): pkg_northbound_proto_diags_pb.ChangeValueType;
-  setValuetype(value: pkg_northbound_proto_diags_pb.ChangeValueType): void;
+  getValueType(): ChangeValueType;
+  setValueType(value: ChangeValueType): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ReadOnlySubPath.AsObject;
@@ -93,8 +165,8 @@ export class ReadOnlySubPath extends jspb.Message {
 
 export namespace ReadOnlySubPath {
   export type AsObject = {
-    subpath: string,
-    valuetype: pkg_northbound_proto_diags_pb.ChangeValueType,
+    subPath: string,
+    valueType: ChangeValueType,
   }
 }
 
@@ -102,10 +174,10 @@ export class ReadOnlyPath extends jspb.Message {
   getPath(): string;
   setPath(value: string): void;
 
-  getSubpathList(): Array<ReadOnlySubPath>;
-  setSubpathList(value: Array<ReadOnlySubPath>): void;
-  clearSubpathList(): void;
-  addSubpath(value?: ReadOnlySubPath, index?: number): ReadOnlySubPath;
+  getSubPathList(): Array<ReadOnlySubPath>;
+  setSubPathList(value: Array<ReadOnlySubPath>): void;
+  clearSubPathList(): void;
+  addSubPath(value?: ReadOnlySubPath, index?: number): ReadOnlySubPath;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ReadOnlyPath.AsObject;
@@ -118,7 +190,7 @@ export class ReadOnlyPath extends jspb.Message {
 export namespace ReadOnlyPath {
   export type AsObject = {
     path: string,
-    subpathList: Array<ReadOnlySubPath.AsObject>,
+    subPathList: Array<ReadOnlySubPath.AsObject>,
   }
 }
 
@@ -126,8 +198,8 @@ export class ReadWritePath extends jspb.Message {
   getPath(): string;
   setPath(value: string): void;
 
-  getValuetype(): pkg_northbound_proto_diags_pb.ChangeValueType;
-  setValuetype(value: pkg_northbound_proto_diags_pb.ChangeValueType): void;
+  getValueType(): ChangeValueType;
+  setValueType(value: ChangeValueType): void;
 
   getUnits(): string;
   setUnits(value: string): void;
@@ -162,7 +234,7 @@ export class ReadWritePath extends jspb.Message {
 export namespace ReadWritePath {
   export type AsObject = {
     path: string,
-    valuetype: pkg_northbound_proto_diags_pb.ChangeValueType,
+    valueType: ChangeValueType,
     units: string,
     description: string,
     mandatory: boolean,
@@ -179,23 +251,23 @@ export class ModelInfo extends jspb.Message {
   getVersion(): string;
   setVersion(value: string): void;
 
-  getModeldataList(): Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData>;
-  setModeldataList(value: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData>): void;
-  clearModeldataList(): void;
-  addModeldata(value?: github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData, index?: number): github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData;
+  getModelDataList(): Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData>;
+  setModelDataList(value: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData>): void;
+  clearModelDataList(): void;
+  addModelData(value?: github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData, index?: number): github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData;
 
   getModule(): string;
   setModule(value: string): void;
 
-  getReadonlypathList(): Array<ReadOnlyPath>;
-  setReadonlypathList(value: Array<ReadOnlyPath>): void;
-  clearReadonlypathList(): void;
-  addReadonlypath(value?: ReadOnlyPath, index?: number): ReadOnlyPath;
+  getReadOnlyPathList(): Array<ReadOnlyPath>;
+  setReadOnlyPathList(value: Array<ReadOnlyPath>): void;
+  clearReadOnlyPathList(): void;
+  addReadOnlyPath(value?: ReadOnlyPath, index?: number): ReadOnlyPath;
 
-  getReadwritepathList(): Array<ReadWritePath>;
-  setReadwritepathList(value: Array<ReadWritePath>): void;
-  clearReadwritepathList(): void;
-  addReadwritepath(value?: ReadWritePath, index?: number): ReadWritePath;
+  getReadWritePathList(): Array<ReadWritePath>;
+  setReadWritePathList(value: Array<ReadWritePath>): void;
+  clearReadWritePathList(): void;
+  addReadWritePath(value?: ReadWritePath, index?: number): ReadWritePath;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ModelInfo.AsObject;
@@ -209,16 +281,16 @@ export namespace ModelInfo {
   export type AsObject = {
     name: string,
     version: string,
-    modeldataList: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData.AsObject>,
+    modelDataList: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData.AsObject>,
     module: string,
-    readonlypathList: Array<ReadOnlyPath.AsObject>,
-    readwritepathList: Array<ReadWritePath.AsObject>,
+    readOnlyPathList: Array<ReadOnlyPath.AsObject>,
+    readWritePathList: Array<ReadWritePath.AsObject>,
   }
 }
 
 export class RegisterRequest extends jspb.Message {
-  getSofile(): string;
-  setSofile(value: string): void;
+  getSoFile(): string;
+  setSoFile(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RegisterRequest.AsObject;
@@ -230,16 +302,16 @@ export class RegisterRequest extends jspb.Message {
 
 export namespace RegisterRequest {
   export type AsObject = {
-    sofile: string,
+    soFile: string,
   }
 }
 
 export class SchemaEntry extends jspb.Message {
-  getSchemapath(): string;
-  setSchemapath(value: string): void;
+  getSchemaPath(): string;
+  setSchemaPath(value: string): void;
 
-  getSchemajson(): string;
-  setSchemajson(value: string): void;
+  getSchemaJson(): string;
+  setSchemaJson(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SchemaEntry.AsObject;
@@ -251,8 +323,8 @@ export class SchemaEntry extends jspb.Message {
 
 export namespace SchemaEntry {
   export type AsObject = {
-    schemapath: string,
-    schemajson: string,
+    schemaPath: string,
+    schemaJson: string,
   }
 }
 
@@ -282,11 +354,11 @@ export class ListModelsRequest extends jspb.Message {
   getVerbose(): boolean;
   setVerbose(value: boolean): void;
 
-  getModelname(): string;
-  setModelname(value: string): void;
+  getModelName(): string;
+  setModelName(value: string): void;
 
-  getModelversion(): string;
-  setModelversion(value: string): void;
+  getModelVersion(): string;
+  setModelVersion(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListModelsRequest.AsObject;
@@ -299,8 +371,8 @@ export class ListModelsRequest extends jspb.Message {
 export namespace ListModelsRequest {
   export type AsObject = {
     verbose: boolean,
-    modelname: string,
-    modelversion: string,
+    modelName: string,
+    modelVersion: string,
   }
 }
 
@@ -363,14 +435,14 @@ export class DeviceInfo extends jspb.Message {
   getPassword(): string;
   setPassword(value: string): void;
 
-  getCapath(): string;
-  setCapath(value: string): void;
+  getCaPath(): string;
+  setCaPath(value: string): void;
 
-  getCertpath(): string;
-  setCertpath(value: string): void;
+  getCertPath(): string;
+  setCertPath(value: string): void;
 
-  getKeypath(): string;
-  setKeypath(value: string): void;
+  getKeyPath(): string;
+  setKeyPath(value: string): void;
 
   getPlain(): boolean;
   setPlain(value: boolean): void;
@@ -381,8 +453,8 @@ export class DeviceInfo extends jspb.Message {
   getTimeout(): number;
   setTimeout(value: number): void;
 
-  getDevicetype(): string;
-  setDevicetype(value: string): void;
+  getDeviceType(): string;
+  setDeviceType(value: string): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeviceInfo.AsObject;
@@ -400,13 +472,13 @@ export namespace DeviceInfo {
     version: string,
     user: string,
     password: string,
-    capath: string,
-    certpath: string,
-    keypath: string,
+    caPath: string,
+    certPath: string,
+    keyPath: string,
     plain: boolean,
     insecure: boolean,
     timeout: number,
-    devicetype: string,
+    deviceType: string,
   }
 }
 
@@ -470,3 +542,20 @@ export namespace DeviceSummaryResponse {
   }
 }
 
+export enum ChangeValueType { 
+  EMPTY = 0,
+  STRING = 1,
+  INT = 2,
+  UINT = 3,
+  BOOL = 4,
+  DECIMAL = 5,
+  FLOAT = 6,
+  BYTES = 7,
+  LEAFLIST_STRING = 8,
+  LEAFLIST_INT = 9,
+  LEAFLIST_UINT = 10,
+  LEAFLIST_BOOL = 11,
+  LEAFLIST_DECIMAL = 12,
+  LEAFLIST_FLOAT = 13,
+  LEAFLIST_BYTES = 14,
+}

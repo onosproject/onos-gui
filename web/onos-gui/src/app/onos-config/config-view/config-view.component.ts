@@ -17,16 +17,17 @@
 import {
     Component,
     Input,
-    OnChanges,
+    OnChanges, OnDestroy,
     OnInit, SimpleChange,
     SimpleChanges
 } from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
-import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/proto/diags_pb';
+import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {ActivatedRoute} from '@angular/router';
 import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
+import {TreeLayoutService} from '../tree-layout.service';
 
 export const OPSTATE = 'opstate';
 export const MEDIUM = 'medium';
@@ -37,9 +38,15 @@ export const CONFIGNAME = 'configName';
 @Component({
     selector: 'onos-config-view',
     templateUrl: './config-view.component.html',
-    styleUrls: ['./config-view.component.css']
+    styleUrls: ['./config-view.component.css'],
+    providers: [
+        {
+            provide: TreeLayoutService,
+            useValue: new TreeLayoutService()
+        }
+    ]
 })
-export class ConfigViewComponent implements OnInit, OnChanges {
+export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     @Input() configName: string;
     device: string;
     version: string;
@@ -57,6 +64,7 @@ export class ConfigViewComponent implements OnInit, OnChanges {
     constructor(
         private diags: OnosConfigDiagsService,
         private pending: PendingNetChangeService,
+        private tree: TreeLayoutService,
         protected ar: ActivatedRoute,
         protected is: IconService,
     ) {
@@ -84,17 +92,22 @@ export class ConfigViewComponent implements OnInit, OnChanges {
         });
     }
 
+    ngOnDestroy(): void {
+        this.tree.resetAll();
+        console.log('ConfigViewComponent destroyed and Tree Service reset');
+    }
+
     // the config name can be changed any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes[CONFIGNAME]) {
             const cfgName = changes[CONFIGNAME].currentValue;
             this.changeIds.length = 0;
             this.diags.requestConfigurations([cfgName], (config: Configuration) => {
-                this.device = config.getDeviceid();
+                this.device = config.getDeviceId();
                 this.version = config.getVersion();
-                this.type = config.getDevicetype();
+                this.type = config.getDeviceType();
                 this.updated = Number(config.getUpdated()) * 1000;
-                for (const cid of config.getChangeidsList()) {
+                for (const cid of config.getChangeIdsList()) {
                     this.changeIds.push(cid);
                     this.changeIdsVisible.set(cid, true);
                 }
