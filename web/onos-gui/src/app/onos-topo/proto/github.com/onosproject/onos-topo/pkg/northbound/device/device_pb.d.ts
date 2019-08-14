@@ -237,6 +237,15 @@ export class Device extends jspb.Message {
   hasTls(): boolean;
   clearTls(): void;
 
+  getType(): string;
+  setType(value: string): void;
+
+  getRole(): string;
+  setRole(value: string): void;
+
+  getAttributesMap(): jspb.Map<string, string>;
+  clearAttributesMap(): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Device.AsObject;
   static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
@@ -255,6 +264,9 @@ export namespace Device {
     timeout?: google_protobuf_duration_pb.Duration.AsObject,
     credentials?: Credentials.AsObject,
     tls?: TlsConfig.AsObject,
+    type: string,
+    role: string,
+    attributesMap: Array<[string, string]>,
   }
 }
 

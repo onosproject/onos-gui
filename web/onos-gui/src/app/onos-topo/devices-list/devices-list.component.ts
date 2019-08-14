@@ -51,6 +51,9 @@ export class DevicesListComponent extends TableBaseImpl implements OnInit {
     ) {
         super(fs, log, wss, 'devices', 'id');
 
+        this.is.loadIconDef('switch');
+        this.is.loadIconDef('xClose');
+
         this.sortParams = {
             firstCol: 'id',
             firstDir: SortDir.asc,
@@ -72,7 +75,7 @@ export class DevicesListComponent extends TableBaseImpl implements OnInit {
 
     ngOnInit() {
         this.tableData.length = 0;
-        this.onosTopoDeviceService.requestListDevices((deviceListItem: ListResponse) => {
+        this.onosTopoDeviceService.requestListDevices(true, (deviceListItem: ListResponse) => {
             console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
             deviceListItem['id'] = deviceListItem.getDevice().getId();
             deviceListItem['version'] = deviceListItem.getDevice().getVersion();

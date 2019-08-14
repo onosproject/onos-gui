@@ -47,7 +47,7 @@ export interface Options {
 const SVGCANVAS = <Options>{
     width: 1000,
     height: 1000,
-    column: 500
+    column: 600
 };
 
 export enum ConfigNodeType {

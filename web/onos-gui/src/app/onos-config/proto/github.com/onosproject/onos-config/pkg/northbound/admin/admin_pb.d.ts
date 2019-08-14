@@ -559,3 +559,9 @@ export enum ChangeValueType {
   LEAFLIST_FLOAT = 13,
   LEAFLIST_BYTES = 14,
 }
+export enum Type { 
+  NONE = 0,
+  ADDED = 1,
+  UPDATED = 2,
+  REMOVED = 3,
+}

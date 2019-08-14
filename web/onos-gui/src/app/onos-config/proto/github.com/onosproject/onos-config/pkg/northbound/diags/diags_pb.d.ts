@@ -50,6 +50,9 @@ export class OpStateRequest extends jspb.Message {
   getDeviceid(): string;
   setDeviceid(value: string): void;
 
+  getSubscribe(): boolean;
+  setSubscribe(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): OpStateRequest.AsObject;
   static toObject(includeInstance: boolean, msg: OpStateRequest): OpStateRequest.AsObject;
@@ -61,6 +64,31 @@ export class OpStateRequest extends jspb.Message {
 export namespace OpStateRequest {
   export type AsObject = {
     deviceid: string,
+    subscribe: boolean,
+  }
+}
+
+export class OpStateResponse extends jspb.Message {
+  getType(): github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Type;
+  setType(value: github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Type): void;
+
+  getPathvalue(): github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue | undefined;
+  setPathvalue(value?: github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue): void;
+  hasPathvalue(): boolean;
+  clearPathvalue(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): OpStateResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: OpStateResponse): OpStateResponse.AsObject;
+  static serializeBinaryToWriter(message: OpStateResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): OpStateResponse;
+  static deserializeBinaryFromReader(message: OpStateResponse, reader: jspb.BinaryReader): OpStateResponse;
+}
+
+export namespace OpStateResponse {
+  export type AsObject = {
+    type: github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Type,
+    pathvalue?: github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue.AsObject,
   }
 }
 

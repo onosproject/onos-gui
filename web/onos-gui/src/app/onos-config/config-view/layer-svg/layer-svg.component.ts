@@ -24,10 +24,8 @@ import {
 } from '@angular/core';
 import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {
-    Change,
-    ChangeValueType
+    Change, ChangeValueType
 } from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
-import {PENDING} from '../../pending-net-change.service';
 import {
     ConfigLink,
     ConfigLinkType,
@@ -35,11 +33,13 @@ import {
     ConfigNodeType,
     TreeLayoutService
 } from '../../tree-layout.service';
+import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 
 export interface ChangeValueObj {
     relPath: string;
-    value: Uint8Array;
+    value: Uint8Array | string;
     valueType: ChangeValueType;
+    valueTypeOpts: Array<number>;
     removed: boolean;
     parentPath: string;
     node: ConfigNode;
@@ -51,6 +51,14 @@ export interface Branch {
     link: ConfigLink;
 }
 
+export enum LayerType {
+    LAYERTYPE_CONFIG,
+    LAYERTYPE_OPSTATE,
+    LAYERTYPE_PENDING,
+    LAYERTYPE_RWPATHS,
+    LAYERTYPE_ROPATHS,
+}
+
 const ControlPointX = 40;
 
 @Component({
@@ -60,7 +68,9 @@ const ControlPointX = 40;
 })
 export class LayerSvgComponent implements OnChanges {
     @Input() layerId: string = '';
+    @Input() layerType: LayerType = LayerType.LAYERTYPE_CONFIG;
     @Input() visible: boolean;
+    @Input() classes: string[] = ['config'];
     @Output() editRequestedLayer = new EventEmitter<string>();
     description: string;
     changeTime: number = 0;
@@ -88,8 +98,36 @@ export class LayerSvgComponent implements OnChanges {
             };
             this.nodelist.set('', cvRoot);
 
-            if (String(layerIdNew).startsWith(PENDING)) {
+            if (this.layerType === LayerType.LAYERTYPE_PENDING) {
                 console.log('Getting pending changes from service:', layerIdNew);
+            } else if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
+                console.log('Display of Read Write Paths not yet supported');
+            } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
+                console.log('Display of Read Only Paths not yet supported');
+            } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
+                console.log('Getting opstate changes from service:', layerIdNew);
+                this.diags.requestOpStateCache(layerIdNew, true, (opState: OpStateResponse) => {
+                    this.description = 'OpState';
+                    this.changeTime = (new Date()).getMilliseconds();
+                    const p = opState.getPathvalue().getPath();
+                    const lastSlashIdx =  p.lastIndexOf('/');
+                    const parentPath = p.substr(0, lastSlashIdx);
+                    const relPath = p.substring(lastSlashIdx + 1);
+                    const cv = <ChangeValueObj>{
+                        relPath: relPath,
+                        parentPath: parentPath,
+                        value: opState.getPathvalue().getValue(),
+                        valueType: opState.getPathvalue().getValueType(),
+                        valueTypeOpts: opState.getPathvalue().getTypeOptsList(),
+                        node: this.addToForceGraph(p)
+                    };
+                    this.nodelist.set(p, cv);
+
+                    this.checkParent(p, parentPath);
+                    console.log('Change response for ', layerIdNew, 'received', p);
+                    this.tree.reinitSimulation();
+                });
+                console.log('Finished with subscribe to OpStateCache on', layerIdNew);
             } else {
                 this.diags.requestChanges([layerIdNew], (change: Change) => {
                     // We're only expecting the 1 change as we only asked for 1
@@ -103,6 +141,7 @@ export class LayerSvgComponent implements OnChanges {
                             relPath: relPath,
                             value: c.getValue(),
                             valueType: c.getValueType(),
+                            valueTypeOpts: c.getTypeOptsList(),
                             removed: c.getRemoved(),
                             parentPath: parentPath,
                             node: this.addToForceGraph(c.getPath())
@@ -185,7 +224,11 @@ export class LayerSvgComponent implements OnChanges {
         return path.split('/').length;
     }
 
-    requestEditLayer(path: string, leaf: string, l1: string) {
+    requestEditLayer(path: string, leaf: string, l1: string): void {
+        if (this.layerType === LayerType.LAYERTYPE_OPSTATE ||
+            this.layerType === LayerType.LAYERTYPE_ROPATHS) {
+            return;
+        }
         this.editRequestedLayer.emit(path + ',' + leaf + ',' + l1);
         console.log('Edit requested on layer', this.layerId, path, leaf, l1);
     }

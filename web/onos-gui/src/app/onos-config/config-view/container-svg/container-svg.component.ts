@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ConfigUtils} from '../../config-utils';
+import {
+    Component,
+    EventEmitter,
+    Input, OnChanges,
+    Output,
+    SimpleChanges
+} from '@angular/core';
 import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 @Component({
@@ -23,28 +28,43 @@ import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pk
     templateUrl: './container-svg.component.html',
     styleUrls: ['./container-svg.component.css']
 })
-export class ContainerSvgComponent implements OnInit {
+export class ContainerSvgComponent implements OnChanges {
     @Input() relpath: string;
     @Input() abspath: string;
     @Input() parentpath: string;
     @Input() containerX: number = 0;
     @Input() containerY: number = 0;
     @Input() containerScale: number = 1.0;
-    @Input() value: Uint8Array;
+    @Input() value: Uint8Array | string;
     @Input() valueType: ChangeValueType;
+    @Input() valueTypeOpts: Array<number>;
+    @Input() classes: string[] = ['config'];
     @Output() containerEditRequested = new EventEmitter<string>();
 
+    boxHeight: number = 20;
+    displayPath: string;
+    textEncoder: TextEncoder;
+
     constructor() {
+        this.textEncoder = new TextEncoder();
     }
 
-    ngOnInit() {
+    // the change name can be changes any time
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['relpath']) {
+            this.displayPath = this.relpath;
+            if (this.relpath.endsWith(']')) {
+                const wholeKey = this.relpath.substr(this.relpath.indexOf('['));
+                const keyNameList = wholeKey.substr(1, wholeKey.length - 2);
+                this.value = this.textEncoder.encode(keyNameList);
+                this.valueType = ChangeValueType.LEAFLIST_STRING;
+                this.displayPath = this.relpath.substr(0, this.relpath.indexOf('['));
+            }
+            this.boxHeight = 20 + (this.value === undefined ? 0 : 15);
+        }
     }
 
     requestEdit(container: string): void {
         this.containerEditRequested.emit(container);
-    }
-
-    convertChangeValue(bytes: Uint8Array, valueType: ChangeValueType) {
-        return ConfigUtils.valueAsString(bytes, valueType);
     }
 }

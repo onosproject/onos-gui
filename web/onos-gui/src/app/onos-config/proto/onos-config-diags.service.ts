@@ -15,21 +15,32 @@
  */
 
 import {Inject, Injectable} from '@angular/core';
-import {ConfigDiagsClient} from './github.com/onosproject/onos-config/pkg/northbound/diags/diagsServiceClientPb';
 import {
-    ChangesRequest, ConfigRequest, Configuration
+    ConfigDiagsClient,
+    OpStateDiagsClient
+} from './github.com/onosproject/onos-config/pkg/northbound/diags/diagsServiceClientPb';
+import {
+    ChangesRequest,
+    ConfigRequest,
+    Configuration,
+    OpStateRequest,
+    OpStateResponse
 } from './github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {Change} from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 type ChangesCallback = (r: Change) => void;
 type ConfigsCallback = (r: Configuration) => void;
+type OpStateCallback = (r: OpStateResponse) => void;
 
 @Injectable()
 export class OnosConfigDiagsService {
     diagsService: ConfigDiagsClient;
+    opStateService: OpStateDiagsClient;
 
     constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.diagsService = new ConfigDiagsClient(onosConfigUrl);
+        this.opStateService = new OpStateDiagsClient(onosConfigUrl);
+
         console.log('Connecting to ', onosConfigUrl);
     }
 
@@ -54,6 +65,16 @@ export class OnosConfigDiagsService {
         }
         const stream = this.diagsService.getConfigurations(configRequest, {});
         console.log('ListConfigsRequest sent to', this.onosConfigUrl, 'for', configNames.join(','));
+        stream.on('data', callback);
+    }
+
+    requestOpStateCache(deviceId: string, subscribe: boolean, callback: OpStateCallback ) {
+        const opStateRequest = new OpStateRequest();
+        opStateRequest.setDeviceid(deviceId);
+        opStateRequest.setSubscribe(subscribe);
+
+        const stream = this.opStateService.getOpState(opStateRequest, {});
+        console.log('GetOpStateRequest sent to', this.onosConfigUrl, 'for', deviceId);
         stream.on('data', callback);
     }
 }

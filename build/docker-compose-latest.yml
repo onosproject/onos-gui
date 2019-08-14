@@ -1,5 +1,13 @@
 version: "3.2"
 services:
+  device-1-device-simulator:
+    image: onosproject/device-simulator:latest
+    hostname: device-1-device-simulator
+    environment:
+      - GNMI_INSECURE_PORT=11161
+      - SIM_MODE=1
+    labels:
+      description: "gNMI Simulator Device 1"
   onos-config:
     image: onosproject/onos-config:latest
     hostname: onos-config
@@ -45,3 +53,7 @@ services:
       - "80:80" #Make sure to add 'onos-gui' to your /etc/hosts at 127.0.0.1 and access with http://onos-gui/index.html
     labels:
       description: "ONOS GUI"
+  onos-cli:
+    image: onosproject/onos-cli:latest
+    labels:
+      description: "ONOS CLI"

@@ -23,8 +23,10 @@
                [relpath]="node.value.relPath"
                [value]="node.value.value"
                [valueType]="node.value.valueType"
+               [valueTypeOpts]="node.value.valueTypeOpts"
                [parentpath]="node.value.parentPath"
                [abspath]="node.key"
+               [classes]="classes"
                (containerEditRequested)="requestEditLayer(node.key, null, 'container')">
         </svg:g>
     </svg:g>

@@ -17,7 +17,8 @@ import {
   ChangesRequest,
   ConfigRequest,
   Configuration,
-  OpStateRequest} from './diags_pb';
+  OpStateRequest,
+  OpStateResponse} from './diags_pb';
 
 export class ConfigDiagsClient {
   client_: grpcWeb.AbstractClientBase;
@@ -30,7 +31,7 @@ export class ConfigDiagsClient {
                options?: null | { [index: string]: string; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'binary';
+    options['format'] = 'text';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname;
@@ -89,7 +90,7 @@ export class OpStateDiagsClient {
                options?: null | { [index: string]: string; }) {
     if (!options) options = {};
     if (!credentials) credentials = {};
-    options['format'] = 'binary';
+    options['format'] = 'text';
 
     this.client_ = new grpcWeb.GrpcWebClientBase(options);
     this.hostname_ = hostname;
@@ -98,11 +99,11 @@ export class OpStateDiagsClient {
   }
 
   methodInfoGetOpState = new grpcWeb.AbstractClientBase.MethodInfo(
-    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue,
+    OpStateResponse,
     (request: OpStateRequest) => {
       return request.serializeBinary();
     },
-    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.ChangeValue.deserializeBinary
+    OpStateResponse.deserializeBinary
   );
 
   getOpState(

@@ -13,3 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/* Defaults when some new class is specified */
+rect#box {
+    fill: #00bfed;
+    fill-opacity: 0.6;
+}
+
+text#title {
+    stroke: #007dc4;
+    text-anchor:start;
+}
+
+text#value {
+    stroke: #007dc4;
+    font-weight: bold;
+    text-anchor:end;
+}
+
+use#editicon {
+    stroke: #007dc4;
+    fill-opacity: 0
+}
+
+/* For the config class */
+.config rect#box {
+    fill: #00bfed;
+}
+
+.config text#title {
+    stroke: #007dc4;
+}
+
+.config text#value {
+    stroke: #007dc4;
+}
+
+/* For the state class */
+.state rect#box  {
+    stroke: #e36457;
+    stroke-width: 1px;
+    fill: #ffffff;
+    fill-opacity: 0.8;
+}
+
+.state text#title {
+    stroke: #a9aba0;
+}
+
+.state text#value {
+    stroke: #e36457;
+    fill: #e36457;
+}
+
+/* For the pending class */
+.pending rect#box {
+    fill: #00bfed;
+    fill-opacity: 0.6;
+}
+
+/* Read Write paths */
+.rwpaths rect#box {
+    fill: #00bfed;
+    fill-opacity: 0.6;
+}
+
+/* Read only paths */
+.ropaths rect#box {
+    fill: #00bfed;
+    fill-opacity: 0.6;
+}

@@ -35,6 +35,7 @@ import { ConfigsListComponent } from './configs-list/configs-list.component';
 import { ModelsListComponent } from './models-list/models-list.component';
 import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
+import { ChangeValuePipe } from './change-value.pipe';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { ModelDetailComponent } from './model-detail/model-detail.component';
         ConfigsListComponent,
         ModelsListComponent,
         ModelDetailComponent,
+        ChangeValuePipe,
     ],
     imports: [
         CommonModule,
