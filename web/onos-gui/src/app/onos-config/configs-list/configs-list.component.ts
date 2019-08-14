@@ -30,7 +30,6 @@ import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/nor
     templateUrl: './configs-list.component.html',
     styleUrls: [
         './configs-list.component.css',
-        './configs-list.theme.css',
         '../../fw/widget/table.css',
         '../../fw/widget/table.theme.css'
     ]

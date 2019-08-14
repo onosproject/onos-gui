@@ -1,0 +1,113 @@
+<!--
+~ Copyright 2019-present Open Networking Foundation
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+
+<div id="device-detail-panel" class="floatpanel"
+     [@deviceDetailState]="id!=='' && !closed">
+    <div class="container">
+        <div class="top">
+            <div class="close-btn">
+                <onos-icon class="close-btn" classes="active-close"
+                           iconId="close" iconSize="20"
+                           (click)="close()"></onos-icon>
+            </div>
+            <div class="dev-icon">
+                <onos-icon classes="{{ 'details-icon'}}" iconId="'device'"
+                           [iconSize]="40"></onos-icon>
+            </div>
+            <h2 class="editable clickable">{{detailsData?.id}}</h2>
+            <div class="top-content">
+                <div class="top-tables">
+                    <div class="left">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="label" width="110">Version :</td>
+                                <td class="value"
+                                    width="80">{{detailsData?.getDevice().getVersion()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label" width="110">Address</td>
+                                <td class="value"
+                                    width="80">{{detailsData?.getDevice().getAddress()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label" width="110">Revision</td>
+                                <td class="value"
+                                    width="80">{{detailsData?.getDevice().getRevision()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label" width="110">Timeout</td>
+                                <td class="value"
+                                    width="80">{{detailsData?.getDevice().getTimeout()}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="middle">
+            <h2 class="changes-title">Credentials</h2>
+            <table>
+                <tbody>
+                <tr>
+                    <td class="label" width="110">User :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getCredentials().getUser()}}</td>
+                </tr>
+                <tr>
+                    <td class="label" width="110">Password :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getCredentials().getPassword()}}</td>
+                </tr>
+                </tbody>
+            </table>
+            <h2 class="changes-title">TLS Parameters</h2>
+            <table>
+                <tbody>
+                <tr>
+                    <td class="label" width="110">Cert Authority :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getTls().getCacert()}}</td>
+                </tr>
+                <tr>
+                    <td class="label" width="110">Client Cert :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getTls().getCert()}}</td>
+                </tr>
+                <tr>
+                    <td class="label" width="110">Client Key:</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getTls().getKey()}}</td>
+                </tr>
+                <tr>
+                    <td class="label" width="110">Plain connection :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getTls().getPlain()}}</td>
+                </tr>
+                <tr>
+                    <td class="label" width="110">Insecure connection :</td>
+                    <td class="value"
+                        width="80">{{detailsData?.getDevice().getTls().getInsecure()}}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
