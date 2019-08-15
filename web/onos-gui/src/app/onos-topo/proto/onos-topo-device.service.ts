@@ -34,8 +34,10 @@ export class OnosTopoDeviceService {
         console.log('Device Service Connecting to ', onosTopoUrl);
     }
 
-    requestListDevices(callback: ListDeviceCallback) {
-        const stream = this.deviceServiceClient.list(new ListRequest(), {});
+    requestListDevices(subscribe: boolean, callback: ListDeviceCallback) {
+        const listRequest = new ListRequest();
+        listRequest.setSubscribe(subscribe);
+        const stream = this.deviceServiceClient.list(listRequest, {});
         console.log('ListDevices sent to', this.onosTopoUrl);
         stream.on('data', callback);
     }

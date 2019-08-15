@@ -42,12 +42,12 @@
                 zoomed and panned
             </svg:desc>
             <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
-                   [visible]="changeIdsVisible.get(c)"
+                   [visible]="changeIdsVisible.get(c)" [layerType]="0"
                    (editRequestedLayer)="activatePendingLayer(device + '-' + version, $event)">
             </svg:g>
             <svg:g *ngIf="hasOpStateData" #opStateLayer
-                   onos-layer-svg [layerId]="OPSTATE"
-                   [visible]="changeIdsVisible.get(OPSTATE)">
+                   onos-layer-svg [layerId]="device" [classes]="['state']"
+                   [visible]="changeIdsVisible.get(OPSTATE)" [layerType]="1">
             </svg:g>
         </svg:g>
     </svg:svg>

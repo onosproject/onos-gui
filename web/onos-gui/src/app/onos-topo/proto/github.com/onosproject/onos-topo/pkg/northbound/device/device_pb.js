@@ -1763,7 +1763,10 @@ proto.topo.device.Device.toObject = function(includeInstance, msg) {
     version: jspb.Message.getFieldWithDefault(msg, 5, ""),
     timeout: (f = msg.getTimeout()) && google_protobuf_duration_pb.Duration.toObject(includeInstance, f),
     credentials: (f = msg.getCredentials()) && proto.topo.device.Credentials.toObject(includeInstance, f),
-    tls: (f = msg.getTls()) && proto.topo.device.TlsConfig.toObject(includeInstance, f)
+    tls: (f = msg.getTls()) && proto.topo.device.TlsConfig.toObject(includeInstance, f),
+    type: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    role: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    attributesMap: (f = msg.getAttributesMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -1834,6 +1837,20 @@ proto.topo.device.Device.deserializeBinaryFromReader = function(msg, reader) {
       var value = new proto.topo.device.TlsConfig;
       reader.readMessage(value,proto.topo.device.TlsConfig.deserializeBinaryFromReader);
       msg.setTls(value);
+      break;
+    case 9:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setType(value);
+      break;
+    case 10:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setRole(value);
+      break;
+    case 11:
+      var value = msg.getAttributesMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "");
+         });
       break;
     default:
       reader.skipField();
@@ -1922,6 +1939,24 @@ proto.topo.device.Device.serializeBinaryToWriter = function(message, writer) {
       f,
       proto.topo.device.TlsConfig.serializeBinaryToWriter
     );
+  }
+  f = message.getType();
+  if (f.length > 0) {
+    writer.writeString(
+      9,
+      f
+    );
+  }
+  f = message.getRole();
+  if (f.length > 0) {
+    writer.writeString(
+      10,
+      f
+    );
+  }
+  f = message.getAttributesMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(11, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -2097,6 +2132,57 @@ proto.topo.device.Device.prototype.clearTls = function() {
  */
 proto.topo.device.Device.prototype.hasTls = function() {
   return jspb.Message.getField(this, 8) != null;
+};
+
+
+/**
+ * optional string type = 9;
+ * @return {string}
+ */
+proto.topo.device.Device.prototype.getType = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/** @param {string} value */
+proto.topo.device.Device.prototype.setType = function(value) {
+  jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional string role = 10;
+ * @return {string}
+ */
+proto.topo.device.Device.prototype.getRole = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/** @param {string} value */
+proto.topo.device.Device.prototype.setRole = function(value) {
+  jspb.Message.setProto3StringField(this, 10, value);
+};
+
+
+/**
+ * map<string, string> attributes = 11;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.topo.device.Device.prototype.getAttributesMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 11, opt_noLazyCreate,
+      null));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ */
+proto.topo.device.Device.prototype.clearAttributesMap = function() {
+  this.getAttributesMap().clear();
 };
 
 
