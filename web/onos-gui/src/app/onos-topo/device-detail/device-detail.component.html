@@ -54,6 +54,12 @@
                                 <td class="value"
                                     width="80">{{detailsData?.getDevice().getTimeout()}}</td>
                             </tr>
+                            <tr>
+                                <td class="label" width="110">Configuration</td>
+                                <td class="value"
+                                    width="80"><a
+                                    [routerLink]="['/config','configview', detailsData?.id + '-' + detailsData?.getDevice().getVersion() ]">{{ detailsData?.id + '-' + detailsData?.getDevice().getVersion() }}</a></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

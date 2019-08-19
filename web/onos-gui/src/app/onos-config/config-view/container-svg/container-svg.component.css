@@ -36,6 +36,10 @@ use#editicon {
     fill-opacity: 0
 }
 
+#container {
+    cursor: grab;
+}
+
 /* For the config class */
 .config rect#box {
     fill: #00bfed;

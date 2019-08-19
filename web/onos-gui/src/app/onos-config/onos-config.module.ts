@@ -36,6 +36,7 @@ import { ModelsListComponent } from './models-list/models-list.component';
 import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
+import {DraggableDirective} from './config-view/draggable/draggable.directive';
 
 @NgModule({
     declarations: [
@@ -50,6 +51,7 @@ import { ChangeValuePipe } from './change-value.pipe';
         ModelsListComponent,
         ModelDetailComponent,
         ChangeValuePipe,
+        DraggableDirective
     ],
     imports: [
         CommonModule,

@@ -23,11 +23,36 @@ import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/no
 })
 export class ChangeValuePipe implements PipeTransform {
 
-    transform(value: Uint8Array, valueType: ChangeValueType, valueTypeOpts: Array<number>, maxLen: number = 15): string[] {
-        if (value === undefined || value.length === 0) {
-            return [''];
+    // Inspired by https://stackoverflow.com/questions/8482309/converting-javascript-integer-to-byte-array-and-back
+    public static longToByteArray (long: number): Uint8Array {
+        // we want to represent the input as a 8-bytes array
+        const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
+
+        for ( let index = 0; index < byteArray.length; index ++ ) {
+            const byte = long & 0xff;
+            byteArray [ index ] = byte;
+            long = (long - byte) / 256 ;
         }
-        const view1 = new DataView(value.buffer, 0, 8);
+
+        return new Uint8Array(byteArray);
+    }
+
+    public static byteArrayToLong(byteArray: Uint8Array): number {
+        let value = 0;
+        for ( let i = byteArray.length - 1; i >= 0; i--) {
+            value = (value * 256) + byteArray[i];
+        }
+
+        return value;
+    }
+
+    // transform is the main API to call a pipe with
+    transform(value: Uint8Array, valueType: ChangeValueType, valueTypeOpts: Array<number>, maxLen: number = 15): string[] {
+        const dec = new TextDecoder(); // always utf-8
+
+        if (value === undefined || value.length === 0) {
+            return [];
+        }
         let valueStrings: string[] = [];
         switch (valueType) {
             case ChangeValueType.BOOL:
@@ -35,22 +60,26 @@ export class ChangeValuePipe implements PipeTransform {
                 break;
             case ChangeValueType.INT:
                 // TODO fix this for Int
+                const view1 = new DataView(value.buffer, 0, 8);
                 valueStrings = [String(view1.getInt32(0))];
                 break;
             case ChangeValueType.UINT:
                 // TODO fix this for UInt
-                valueStrings = [String(view1.getUint32(0))];
+                const view2 = new DataView(value.buffer, 0, 8);
+                valueStrings = [String(view2.getUint32(0))];
                 break;
             case ChangeValueType.FLOAT:
                 // TODO fix this for Float
-                valueStrings = [String(view1.getFloat32(0))];
+                const view3 = new DataView(value.buffer, 0, 8);
+                valueStrings = [String(view3.getFloat32(0))];
                 break;
             case ChangeValueType.LEAFLIST_STRING:
-                const llStr: string = String.fromCharCode.apply(null, value);
-                valueStrings = llStr.split('\n');
+                const leafList = dec.decode(value);
+                valueStrings = leafList.split('\n');
                 break;
-            default:
-                valueStrings = [String.fromCharCode.apply(null, value)];
+            default: // Treat as string
+                const str = dec.decode(value);
+                valueStrings = [str.trim()];
         }
         for (const idx in valueStrings) {
             if (valueStrings[idx].length > maxLen) {

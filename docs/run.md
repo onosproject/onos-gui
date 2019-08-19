@@ -1,5 +1,12 @@
 # onos-gui
 
+> Note: this mechanism with docker-compose below is currently (Aug '19) broken as **onos-config** depends on
+> **onos-topo** which in turn depends on **atomix**. The doc has not removed as
+> it will hopefully be possible again soon. Instead the **onos-gui**
+> will have to be deployed to a Kubernetes cluster and run from there. The k8s
+> will need to expose the onos-gui port **80** through an **Ingress**.  
+
+
 To run onos-gui 3 docker instances are needed
 * onos-gui - contains the **nginx** proxy server and static html files and certs
 * onos-config-envoy - contains the **envoy proxy for onos-config** for converting grpc-web (HTTP 1.1)

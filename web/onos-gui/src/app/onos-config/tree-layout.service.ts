@@ -65,6 +65,10 @@ export interface ConfigNode {
     nodeType: ConfigNodeType;
     x: number;
     y: number;
+    vx?: number;
+    vy?: number;
+    fx?: number | null;
+    fy?: number | null;
 }
 
 export interface ConfigLink {
