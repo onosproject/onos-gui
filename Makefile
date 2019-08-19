@@ -1,8 +1,6 @@
 .PHONY: build
 
 ONOS_GUI_VERSION := latest
-ONOS_GUI_DEBUG_VERSION := debug
-ONOS_BUILD_VERSION := stable
 
 build: # @HELP build the Web GUI and run all validations (default)
 build:
@@ -35,6 +33,11 @@ onos-gui-docker: # @HELP build onos-gui Docker image
 
 images: # @HELP build all Docker images
 images: build onos-gui-docker
+
+kind: # @HELP build Docker images and add them to the currently configured kind cluster
+kind: images
+	@if [ `kind get clusters` = '' ]; then echo "no kind cluster found" && exit 1; fi
+	kind load docker-image onosproject/onos-gui:${ONOS_GUI_VERSION}
 
 all: build images
 

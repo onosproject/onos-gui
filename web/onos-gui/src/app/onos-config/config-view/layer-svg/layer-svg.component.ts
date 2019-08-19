@@ -34,6 +34,7 @@ import {
     TreeLayoutService
 } from '../../tree-layout.service';
 import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
+import {GridPosition} from '../draggable/draggable.directive';
 
 export interface ChangeValueObj {
     relPath: string;
@@ -61,6 +62,18 @@ export enum LayerType {
 
 const ControlPointX = 40;
 
+
+/**
+ * This component is repeated may times in the config view:
+ * 1) for each change in the configuration
+ * 2) Once for the pending change (if present)
+ * 3) Once for the Opstate list
+ * 4) Once for the Read Write paths (not yet done)
+ * 5) Once for the Read Only Paths (not yet done)
+ *
+ * The positioning is done through the tree layout service as the items in each
+ * layer have to overlay those on the layer below them
+ */
 @Component({
     selector: '[onos-layer-svg]',
     templateUrl: './layer-svg.component.html',
@@ -75,7 +88,7 @@ export class LayerSvgComponent implements OnChanges {
     description: string;
     changeTime: number = 0;
     nodelist: Map<string, ChangeValueObj>;
-    branchList: Map<string, Branch>;
+    linkList: Map<string, Branch>;
     offset: number = Math.random() * 200;
 
     constructor(
@@ -83,20 +96,36 @@ export class LayerSvgComponent implements OnChanges {
         private tree: TreeLayoutService,
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
-        this.branchList = new Map<string, Branch>();
+        this.linkList = new Map<string, Branch>();
         console.log('Constructed LayerSvgComponent');
+    }
+
+    // Watch out for a slash in an index name
+    public decomposePath(p: string): [string, string] {
+        let lastSlashIdx =  p.lastIndexOf('/');
+        const lastSqBrktIdx = p.lastIndexOf(']');
+        if (lastSqBrktIdx > lastSlashIdx) {
+           lastSlashIdx = p.substr(0, p.lastIndexOf('[')).lastIndexOf('/');
+        }
+        const parentPath = p.substr(0, lastSlashIdx);
+        const relPath = p.substring(lastSlashIdx + 1);
+        return [relPath, parentPath];
+    }
+
+    public reinitialize() {
+        this.nodelist.clear();
+        const cvRoot = <ChangeValueObj>{
+            relPath: '/',
+            node: this.addToForceGraph('')
+        };
+        this.nodelist.set('', cvRoot);
     }
 
     // the change name can be changes any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes['layerId']) {
             const layerIdNew = changes['layerId'].currentValue;
-            this.nodelist.clear();
-            const cvRoot = <ChangeValueObj>{
-                relPath: '',
-                node: this.addToForceGraph('')
-            };
-            this.nodelist.set('', cvRoot);
+            this.reinitialize();
 
             if (this.layerType === LayerType.LAYERTYPE_PENDING) {
                 console.log('Getting pending changes from service:', layerIdNew);
@@ -110,9 +139,7 @@ export class LayerSvgComponent implements OnChanges {
                     this.description = 'OpState';
                     this.changeTime = (new Date()).getMilliseconds();
                     const p = opState.getPathvalue().getPath();
-                    const lastSlashIdx =  p.lastIndexOf('/');
-                    const parentPath = p.substr(0, lastSlashIdx);
-                    const relPath = p.substring(lastSlashIdx + 1);
+                    const [relPath, parentPath] = this.decomposePath(p);
                     const cv = <ChangeValueObj>{
                         relPath: relPath,
                         parentPath: parentPath,
@@ -123,7 +150,7 @@ export class LayerSvgComponent implements OnChanges {
                     };
                     this.nodelist.set(p, cv);
 
-                    this.checkParent(p, parentPath);
+                    this.checkParentExists(p, parentPath);
                     console.log('Change response for ', layerIdNew, 'received', p);
                     this.tree.reinitSimulation();
                 });
@@ -134,9 +161,8 @@ export class LayerSvgComponent implements OnChanges {
                     this.description = change.getDesc();
                     this.changeTime = Number(change.getTime()) * 1000;
                     for (const c of change.getChangeValuesList()) {
-                        const lastSlashIdx =  c.getPath().lastIndexOf('/');
-                        const parentPath = c.getPath().substr(0, lastSlashIdx);
-                        const relPath = c.getPath().substring(lastSlashIdx + 1);
+                        const [relPath, parentPath] = this.decomposePath(c.getPath());
+                        const fgNode = this.addToForceGraph(c.getPath());
                         const cv = <ChangeValueObj>{
                             relPath: relPath,
                             value: c.getValue(),
@@ -144,11 +170,11 @@ export class LayerSvgComponent implements OnChanges {
                             valueTypeOpts: c.getTypeOptsList(),
                             removed: c.getRemoved(),
                             parentPath: parentPath,
-                            node: this.addToForceGraph(c.getPath())
+                            node: fgNode
                         };
                         this.nodelist.set(c.getPath(), cv);
 
-                        this.checkParent(c.getPath(), parentPath);
+                        this.checkParentExists(c.getPath(), parentPath);
                     }
                     console.log('Change response for ', layerIdNew, 'received', this.nodelist);
                     this.tree.reinitSimulation();
@@ -157,7 +183,7 @@ export class LayerSvgComponent implements OnChanges {
         }
     }
 
-    private addToForceGraph(abspath: string): ConfigNode {
+    public addToForceGraph(abspath: string): ConfigNode {
         // Search for node
         for (const n of this.tree.nodes) {
             if (n.id === abspath) {
@@ -174,24 +200,27 @@ export class LayerSvgComponent implements OnChanges {
         return newNode;
     }
 
-    private checkParent(currentPath: string, parentPath: string): boolean {
+    // recursive function to add parent to the list with a link if necessary
+    // If it was found no need to recurse.
+    // Add link from us to parent if necessary
+    public checkParentExists(currentPath: string, parentPath: string): boolean {
         if (this.nodelist.get(parentPath) !== undefined || parentPath === '') {
-            this.addBranch(currentPath, parentPath);
+            this.addLink(currentPath);
             return true;
         }
-        const idx = parentPath.lastIndexOf('/');
-        const nextPp = parentPath.substr(0, idx);
+        const [relpath, nextPp] = this.decomposePath(parentPath);
+        const fgNode = this.addToForceGraph(parentPath);
         this.nodelist.set(parentPath, <ChangeValueObj>{
-            relPath: parentPath.substr(idx + 1),
+            relPath: relpath,
             parentPath: nextPp,
-            node: this.addToForceGraph(parentPath)
+            node: fgNode
         });
-        this.addBranch(currentPath, parentPath);
-        this.checkParent(parentPath, nextPp);
+        this.addLink(currentPath);
+        this.checkParentExists(parentPath, nextPp);
         return false;
     }
 
-    private addBranchToForceGraph(branchId, sourcePath, targetPath: string): ConfigLink {
+    private addLinkToForceGraph(branchId, sourcePath, targetPath: string): ConfigLink {
         // Search for link
         for (const l of this.tree.links) {
             if (l.id === branchId) {
@@ -199,29 +228,33 @@ export class LayerSvgComponent implements OnChanges {
             }
         }
         // Else create it
+        if (sourcePath === undefined || sourcePath === '') {
+            sourcePath = '/';
+        }
+        const sourceNode = this.nodelist.get(sourcePath).node;
+        if (targetPath === undefined || targetPath === '') {
+            return null;
+        }
+        const targetNode = this.nodelist.get(targetPath).node;
         const newLink = <ConfigLink>{
             id: branchId,
-            source: this.nodelist.get(sourcePath).node,
-            target: this.nodelist.get(targetPath).node,
+            source: sourceNode,
+            target: targetNode,
             linkType: ConfigLinkType.CONFIG_DIRECT,
         };
         this.tree.links.push(newLink);
         return newLink;
     }
 
-    private addBranch(currentPath, parentPath: string): string {
-        const lastSlashIdx =  currentPath.lastIndexOf('/');
-        const branchId = currentPath.substring(lastSlashIdx) + '_' + parentPath;
-        this.branchList.set(branchId, <Branch>{
+    private addLink(currentPath: string): string {
+        const [relpath, parentPath] = this.decomposePath(currentPath);
+        const branchId = parentPath + '_' + relpath;
+        this.linkList.set(branchId, <Branch>{
             child: currentPath,
             parent: parentPath,
-            link: this.addBranchToForceGraph(branchId, currentPath, parentPath),
+            link: this.addLinkToForceGraph(branchId, currentPath, parentPath),
         });
         return branchId;
-    }
-
-    countParts(path: string): number {
-        return path.split('/').length;
     }
 
     requestEditLayer(path: string, leaf: string, l1: string): void {
@@ -247,6 +280,10 @@ export class LayerSvgComponent implements OnChanges {
         const ep2 = link.source.x + ' ' + (link.source.y + 10);
 
         return mm + ' ' + cp1 + ', ' + ep1 + ' ' + mm + ' ' + cp2 + ', ' + ep2;
+    }
+
+    configNodeMoved(node: ConfigNode, newPosition: GridPosition) {
+        console.log('Node', node.id, 'moved to', newPosition.x, newPosition.y);
     }
 }
 
