@@ -28,13 +28,10 @@ import {
     LogService, WebSocketService
 } from 'gui2-fw-lib';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {
-    NwChange
-} from '../networkchanges/network-changes.component';
 import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {PendingNetChangeService} from '../pending-net-change.service';
-import {PENDING_U} from '../pending-net-change.service';
+import {NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 @Component({
     selector: 'onos-network-change-detail',
@@ -45,7 +42,7 @@ import {PENDING_U} from '../pending-net-change.service';
         '../../fw/widget/panel-theme.css'
     ],
     animations: [
-        trigger('deviceDetailsState', [
+        trigger('nwchangeDetailsState', [
             state('true', style({
                 transform: 'translateX(-100%)',
                 opacity: '100'
@@ -62,12 +59,9 @@ import {PENDING_U} from '../pending-net-change.service';
 export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implements OnInit, OnChanges {
     @Input() id: string; // Has to be repeated from base class
     // Output closeEvent is inherited
-    @Input() nwChangeDetail: NwChange;
+    @Input() nwChangeDetail: NetChange;
 
     otherConfigs: string[] = [];
-
-    // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
-    public PENDING_U = PENDING_U;
 
     constructor(protected fs: FnService,
                 protected log: LogService,
@@ -76,7 +70,7 @@ export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implement
                 private diags: OnosConfigDiagsService,
                 private pending: PendingNetChangeService,
     ) {
-        super(fs, log, wss, 'device');
+        super(fs, log, wss, 'nwchange');
     }
 
     ngOnInit() {
@@ -87,19 +81,19 @@ export class NetworkChangeDetailComponent extends DetailsPanelBaseImpl implement
     // the config name can be changes any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes['id']) {
+            const id = changes['id'].currentValue;
             this.detailsData = this.nwChangeDetail;
-
+            this.closed = false;
             // Get the list of other configs so they can be added
             this.otherConfigs.length = 0;
-            if (this.id === PENDING_U) {
+            if (id !== undefined && this.nwChangeDetail && this.nwChangeDetail['pending']) {
                 this.diags.requestConfigurations([], (config: Configuration) => {
                     const configName = config.getDeviceId() + '-' + config.getVersion();
-                    this.nwChangeDetail.configChanges.forEach((ch) => {
-                        if (ch.configId !== configName) {
-                            this.otherConfigs.push(configName);
-                        }
-                    });
-                    console.log('Configuration response for ', configName, 'received');
+                    const idx = this.nwChangeDetail['changesList'].findIndex((ch) => ch.getId() === configName);
+                    if (idx < 0) {
+                        this.otherConfigs.push(configName);
+                    }
+                    console.log('Configuration response for ', configName, 'received', idx);
                 });
             }
         }

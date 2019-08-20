@@ -16,10 +16,24 @@
 
 <div id="ov-models">
     <onos-loading [theme]="'light'" [running]="loadingIconShown"></onos-loading>
+    <onos-flash id="appMsgFlash" message="{{ alertMsg }}" dwell="5000" warning="true" (closed)="alertMsg = ''"></onos-flash>
+    <onos-name-input [title]="newConfigTitle" [pattern]="'[a-zA-Z0-9\-:_]{40}'" (chosen)="newConfigCreate($event)"></onos-name-input>
     <div class="tabular-header">
         <h2>Models ({{ tableData.length }} total)</h2>
         <div class="ctrl-btns">
+            <div class="refresh" (click)="modelService.loadModelList()">
+                <!-- See icon.theme.css for the defintions of the classes active and refresh-->
+                <onos-icon
+                    classes="{{ autoRefresh?'active refresh':'refresh' }}"
+                    iconId="refresh" iconSize="42"
+                    toolTip="Refresh"></onos-icon>
+            </div>
             <div class="separator"></div>
+            <div (click)="newConfig(selectedChange)">
+                <onos-icon classes="{{ selId !== undefined && pending.hasPendingChange && pending.pendingNewConfigName === undefined ? 'active-rect':undefined}}"
+                           iconId="plus" iconSize="42"
+                           toolTip="Add config"></onos-icon>
+            </div>
         </div>
         <div class="search">
             <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"
@@ -76,8 +90,8 @@
                     <td>{{ model.name }}</td>
                     <td>{{ model.version }}</td>
                     <td>{{ model.getModule() }}</td>
-                    <td>{{ model.numropaths }}</td>
                     <td>{{ model.numrwpaths }}</td>
+                    <td>{{ model.numropaths }}</td>
                     <td>{{ model.numyangs }}</td>
                 </tr>
             </table>

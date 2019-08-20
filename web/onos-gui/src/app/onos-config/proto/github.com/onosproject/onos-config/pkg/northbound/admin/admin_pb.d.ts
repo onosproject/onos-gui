@@ -288,6 +288,30 @@ export namespace ModelInfo {
   }
 }
 
+export class Chunk extends jspb.Message {
+  getSoFile(): string;
+  setSoFile(value: string): void;
+
+  getContent(): Uint8Array | string;
+  getContent_asU8(): Uint8Array;
+  getContent_asB64(): string;
+  setContent(value: Uint8Array | string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Chunk.AsObject;
+  static toObject(includeInstance: boolean, msg: Chunk): Chunk.AsObject;
+  static serializeBinaryToWriter(message: Chunk, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Chunk;
+  static deserializeBinaryFromReader(message: Chunk, reader: jspb.BinaryReader): Chunk;
+}
+
+export namespace Chunk {
+  export type AsObject = {
+    soFile: string,
+    content: Uint8Array | string,
+  }
+}
+
 export class RegisterRequest extends jspb.Message {
   getSoFile(): string;
   setSoFile(value: string): void;
@@ -413,132 +437,6 @@ export class RollbackResponse extends jspb.Message {
 export namespace RollbackResponse {
   export type AsObject = {
     message: string,
-  }
-}
-
-export class DeviceInfo extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
-
-  getAddress(): string;
-  setAddress(value: string): void;
-
-  getTarget(): string;
-  setTarget(value: string): void;
-
-  getVersion(): string;
-  setVersion(value: string): void;
-
-  getUser(): string;
-  setUser(value: string): void;
-
-  getPassword(): string;
-  setPassword(value: string): void;
-
-  getCaPath(): string;
-  setCaPath(value: string): void;
-
-  getCertPath(): string;
-  setCertPath(value: string): void;
-
-  getKeyPath(): string;
-  setKeyPath(value: string): void;
-
-  getPlain(): boolean;
-  setPlain(value: boolean): void;
-
-  getInsecure(): boolean;
-  setInsecure(value: boolean): void;
-
-  getTimeout(): number;
-  setTimeout(value: number): void;
-
-  getDeviceType(): string;
-  setDeviceType(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeviceInfo.AsObject;
-  static toObject(includeInstance: boolean, msg: DeviceInfo): DeviceInfo.AsObject;
-  static serializeBinaryToWriter(message: DeviceInfo, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeviceInfo;
-  static deserializeBinaryFromReader(message: DeviceInfo, reader: jspb.BinaryReader): DeviceInfo;
-}
-
-export namespace DeviceInfo {
-  export type AsObject = {
-    id: string,
-    address: string,
-    target: string,
-    version: string,
-    user: string,
-    password: string,
-    caPath: string,
-    certPath: string,
-    keyPath: string,
-    plain: boolean,
-    insecure: boolean,
-    timeout: number,
-    deviceType: string,
-  }
-}
-
-export class DeviceResponse extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeviceResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: DeviceResponse): DeviceResponse.AsObject;
-  static serializeBinaryToWriter(message: DeviceResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeviceResponse;
-  static deserializeBinaryFromReader(message: DeviceResponse, reader: jspb.BinaryReader): DeviceResponse;
-}
-
-export namespace DeviceResponse {
-  export type AsObject = {
-  }
-}
-
-export class GetDevicesRequest extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetDevicesRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetDevicesRequest): GetDevicesRequest.AsObject;
-  static serializeBinaryToWriter(message: GetDevicesRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetDevicesRequest;
-  static deserializeBinaryFromReader(message: GetDevicesRequest, reader: jspb.BinaryReader): GetDevicesRequest;
-}
-
-export namespace GetDevicesRequest {
-  export type AsObject = {
-  }
-}
-
-export class DeviceSummaryRequest extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeviceSummaryRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: DeviceSummaryRequest): DeviceSummaryRequest.AsObject;
-  static serializeBinaryToWriter(message: DeviceSummaryRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeviceSummaryRequest;
-  static deserializeBinaryFromReader(message: DeviceSummaryRequest, reader: jspb.BinaryReader): DeviceSummaryRequest;
-}
-
-export namespace DeviceSummaryRequest {
-  export type AsObject = {
-  }
-}
-
-export class DeviceSummaryResponse extends jspb.Message {
-  getCount(): number;
-  setCount(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): DeviceSummaryResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: DeviceSummaryResponse): DeviceSummaryResponse.AsObject;
-  static serializeBinaryToWriter(message: DeviceSummaryResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): DeviceSummaryResponse;
-  static deserializeBinaryFromReader(message: DeviceSummaryResponse, reader: jspb.BinaryReader): DeviceSummaryResponse;
-}
-
-export namespace DeviceSummaryResponse {
-  export type AsObject = {
-    count: number,
   }
 }
 

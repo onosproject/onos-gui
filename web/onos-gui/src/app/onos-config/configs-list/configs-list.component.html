@@ -81,13 +81,13 @@
                 </tr>
                 <tr *ngFor="let config of tableData | filter : tableDataFilter"
                     (click)="selectCallback($event, config); selectedChange = config"
-                    [ngClass]="{selected: config.name === selId, 'data-change': isChanged(config.name)}">
+                    [ngClass]="{selected: config.name === selId, 'data-change': isChanged(config.name), 'pending':config.pending}">
                     <td>{{ config.getName() }}</td>
                     <td>{{ config.getDeviceId() }}</td>
                     <td>{{ config.getDeviceType() }}</td>
                     <td>{{ config.getVersion() }}</td>
                     <td>{{ config.getChangeIdsList().length }}</td>
-                    <td>{{ convertDate(config.getUpdated()) | date:'medium'}}</td>
+                    <td>{{ config.updated | date:'medium'}}</td>
                 </tr>
             </table>
         </div>

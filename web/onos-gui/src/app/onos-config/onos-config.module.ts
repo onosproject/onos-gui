@@ -37,6 +37,7 @@ import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
 import {DraggableDirective} from './config-view/draggable/draggable.directive';
+import {OnosUtilsModule} from '../utils/onos-utils.module';
 
 @NgModule({
     declarations: [
@@ -59,7 +60,8 @@ import {DraggableDirective} from './config-view/draggable/draggable.directive';
         ReactiveFormsModule,
         OnosConfigRoutingModule,
         Gui2FwLibModule,
-        Gui2TopoLibModule
+        Gui2TopoLibModule,
+        OnosUtilsModule
     ],
     providers: [
         {

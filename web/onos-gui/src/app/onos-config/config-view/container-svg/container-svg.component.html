@@ -26,9 +26,13 @@
 
 <svg:g id="container" [ngClass]="classes.join(' ')" xmlns:svg="http://www.w3.org/2000/svg" width="160" height="80"
          [attr.transform]="'translate(' + containerX + ',' + containerY + '), scale(' + containerScale + ')'">
-    <svg:rect id="box" width="160" [attr.height]="boxHeight" [attr.rx]="classes['leaf'] !== undefined?0:5" filter="url(#drop-shadow)">
+    <svg:rect id="box" width="160"
+              [attr.height]="boxHeight"
+              [attr.rx]="classes.includes('leaf')?0:5"
+              filter="url(#drop-shadow)">
     </svg:rect>
-    <svg:use id="editicon" *ngIf="classes['config'] !== undefined" [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" (click)="requestEdit(abspath)">
+    <svg:use id="editicon" *ngIf="classes.includes('config') || classes.includes('rwpaths')"
+             [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" (click)="requestEdit(abspath)">
     </svg:use>
     <svg:text id="title" x="5" y="17">{{displayPath}}</svg:text>
     <svg:text id="value" x="160" y="32">{{value | changeValue: valueType:valueTypeOpts:15}}</svg:text>

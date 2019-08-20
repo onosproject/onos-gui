@@ -20,12 +20,13 @@ import {
 } from './github.com/onosproject/onos-config/pkg/northbound/admin/adminServiceClientPb';
 import {
     ListModelsRequest, ModelInfo,
-    NetChange, NetworkChangesRequest
+    NetChange, NetworkChangesRequest, RegisterRequest, RegisterResponse
 } from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
 type NetChangeCallback = (r: NetChange) => void;
 type ModelInfoCallback = (r: ModelInfo) => void;
+type RegisterCallback = (e: grpcWeb.Error, r: RegisterResponse) => void;
 
 @Injectable()
 export class OnosConfigAdminService {
@@ -50,5 +51,12 @@ export class OnosConfigAdminService {
         const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
         stream.on('data', callback);
+    }
+
+    requestRegisterModel(pluginPathToFile: string, callback: RegisterCallback) {
+        const regRequest = new RegisterRequest();
+        regRequest.setSoFile(pluginPathToFile);
+        this.adminServiceClient.registerModel(regRequest, {}, callback);
+        console.log('RegisteredModel for', pluginPathToFile, 'sent to', this.onosConfigUrl);
     }
 }

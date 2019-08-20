@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-import {
-    Component,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges
-} from '@angular/core';
-import {
-    DetailsPanelBaseImpl, FnService,
-    IconService,
-    LogService,
-    WebSocketService
-} from 'gui2-fw-lib';
-import {ModelInfo} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
+export interface NameInputResult {
+    chosen: boolean;
+    name: string;
+}
+
 @Component({
-    selector: 'onos-model-detail',
-    templateUrl: './model-detail.component.html',
+    selector: 'onos-name-input',
+    templateUrl: './name-input.component.html',
     styleUrls: [
-        './model-detail.component.css',
+        './name-input.component.css',
+        './name-input.theme.css',
+        '../../fw/layer/dialog.css',
+        '../../fw/layer/dialog.theme.css',
         '../../fw/widget/panel.css',
         '../../fw/widget/panel-theme.css'
     ],
     animations: [
-        trigger('modelDetailState', [
+        trigger('niDlgState', [
             state('true', style({
                 transform: 'translateX(-100%)',
                 opacity: '100'
@@ -53,30 +48,31 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         ])
     ]
 })
-export class ModelDetailComponent extends DetailsPanelBaseImpl implements OnInit, OnChanges {
-    @Input() id: string; // Has to be repeated from base class
-    // Output closeEvent is inherited
-    @Input() modelInfo: ModelInfo;
+export class NameInputComponent implements OnInit {
+    @Input() warning: string;
+    @Input() title: string = '';
+    @Input() pattern;
+    @Input() minLen = 4;
+    @Input() maxLen = 40;
+    @Input() placeholder = 'name';
+    @Output() chosen: EventEmitter<NameInputResult> = new EventEmitter();
 
-    constructor(
-        protected fs: FnService,
-        protected log: LogService,
-        protected wss: WebSocketService,
-        protected is: IconService,
-    ) {
-        super(fs, log, wss, 'model');
+    constructor() {
     }
 
     ngOnInit() {
-        this.init();
-        console.debug('Model Detail Component initialized:', this.id);
     }
 
-    // the config name can be changes any time
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes['id']) {
-            this.closed = false;
-            this.detailsData = this.modelInfo;
+    /**
+     * When OK or Cancel is pressed, send an event to parent with choice
+     */
+    choice(chosen: boolean, newName: string): void {
+        if (chosen && (newName === undefined || newName === '')) {
+            return;
         }
+        this.chosen.emit(<NameInputResult>{
+            chosen: chosen,
+            name: newName
+        });
     }
 }

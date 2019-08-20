@@ -24,6 +24,8 @@ import {
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModelInfo} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {NameInputResult} from '../../utils/name-input/name-input.component';
+import {PendingNetChangeService} from '../pending-net-change.service';
 
 @Component({
     selector: 'onos-models-list',
@@ -37,6 +39,8 @@ import {ModelInfo} from '../proto/github.com/onosproject/onos-config/pkg/northbo
 })
 export class ModelsListComponent extends TableBaseImpl implements OnInit {
     selectedChange: ModelInfo; // The complete row - not just the selId
+    alertMsg: string;
+    newConfigTitle: string = '';
 
     constructor(
         protected fs: FnService,
@@ -45,9 +49,12 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
         protected router: Router,
         protected wss: WebSocketService,
         protected is: IconService,
-        private modelService: ModelService
+        public modelService: ModelService,
+        public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'models', 'id');
+        this.is.loadIconDef('plus');
+        this.is.loadIconDef('xClose');
 
         this.sortParams = {
             firstCol: 'name',
@@ -69,7 +76,22 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
     }
 
     ngOnInit() {
+        this.selId = undefined;
         this.tableData = this.modelService.modelInfoList;
+    }
+
+    newConfig(modelInfo: ModelInfo) {
+        this.newConfigTitle = 'Name for new ' + modelInfo.getName() + modelInfo.getVersion() + ' config?';
+    }
+
+    newConfigCreate(chosen: NameInputResult): void {
+        if (chosen.chosen === true) {
+            const configName = this.pending.addNewConfig(chosen.name, this.selectedChange.getVersion(), this.selectedChange.getName());
+            if (configName) {
+                this.router.navigate(['/config', 'configview', configName]);
+            }
+        }
+        this.newConfigTitle = '';
     }
 
 }

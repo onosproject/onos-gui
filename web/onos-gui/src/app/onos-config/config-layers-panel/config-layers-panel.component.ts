@@ -23,6 +23,7 @@ import {
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     OPSTATE,
+    RWPATHS,
     MEDIUM,
     ACTIVE,
     INACTIVE,
@@ -70,6 +71,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
+    public RWPATHS = RWPATHS;
     public MEDIUM = MEDIUM;
     public ACTIVE = ACTIVE;
     public INACTIVE = INACTIVE;

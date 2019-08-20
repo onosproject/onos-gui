@@ -15,20 +15,25 @@
  */
 
 /*
- ONOS GUI -- Network Changes View (layout) -- CSS file
+ ONOS GUI -- Name Input Component (layout) -- CSS file
  */
-#ov-nwchanges .tabular-header {
-    text-align: left;
+#name-input-dialog {
+    top: 140px;
+    padding: 12px;
 }
 
-#ov-nwchanges h2 {
+#name-input-dialog h3 {
     display: inline-block;
+    font-weight: bold;
+    font-size: 18pt;
 }
 
-#ov-nwchanges, div.ctrl-btns {
+#name-input-dialog p {
+    font-size: 12pt;
 }
 
-#summary-list .pending {
-    background-color: #e36457;
+#name-input-dialog p.strong {
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
 }
-

@@ -35,6 +35,7 @@ import {
 } from '../../tree-layout.service';
 import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {GridPosition} from '../draggable/draggable.directive';
+import {ModelService} from '../../model.service';
 
 export interface ChangeValueObj {
     relPath: string;
@@ -94,6 +95,7 @@ export class LayerSvgComponent implements OnChanges {
     constructor(
         private diags: OnosConfigDiagsService,
         private tree: TreeLayoutService,
+        private models: ModelService,
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
         this.linkList = new Map<string, Branch>();
@@ -114,11 +116,12 @@ export class LayerSvgComponent implements OnChanges {
 
     public reinitialize() {
         this.nodelist.clear();
+        const rootNode = this.addToForceGraph('');
         const cvRoot = <ChangeValueObj>{
             relPath: '/',
-            node: this.addToForceGraph('')
+            node: rootNode,
         };
-        this.nodelist.set('', cvRoot);
+        this.nodelist.set('/', cvRoot);
     }
 
     // the change name can be changes any time
@@ -130,7 +133,29 @@ export class LayerSvgComponent implements OnChanges {
             if (this.layerType === LayerType.LAYERTYPE_PENDING) {
                 console.log('Getting pending changes from service:', layerIdNew);
             } else if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
-                console.log('Display of Read Write Paths not yet supported');
+                console.log('Display of Read Write Paths for', layerIdNew);
+                for (const model of this.models.modelInfoList) {
+                    if (model['id'] === layerIdNew) {
+                        console.log('Getting RW paths for', layerIdNew);
+                        for (const path of model.getReadWritePathList()) {
+                            const [relPath, parentPath] = this.decomposePath(path.getPath());
+                            const fgnode = this.addToForceGraph(path.getPath());
+                            const cv = <ChangeValueObj>{
+                                relPath: relPath,
+                                parentPath: parentPath,
+                                value: new Uint8Array(),
+                                valueType: ChangeValueType.EMPTY,
+                                valueTypeOpts: {},
+                                node: fgnode
+                            };
+                            this.nodelist.set(path.getPath(), cv);
+
+                            this.checkParentExists(path.getPath(), parentPath);
+                            console.log('Read Write path', layerIdNew, 'processed', path.getPath());
+                        }
+                        this.tree.reinitSimulation();
+                    }
+                }
             } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
@@ -140,13 +165,14 @@ export class LayerSvgComponent implements OnChanges {
                     this.changeTime = (new Date()).getMilliseconds();
                     const p = opState.getPathvalue().getPath();
                     const [relPath, parentPath] = this.decomposePath(p);
+                    const fgNode = this.addToForceGraph(p);
                     const cv = <ChangeValueObj>{
                         relPath: relPath,
                         parentPath: parentPath,
                         value: opState.getPathvalue().getValue(),
                         valueType: opState.getPathvalue().getValueType(),
                         valueTypeOpts: opState.getPathvalue().getTypeOptsList(),
-                        node: this.addToForceGraph(p)
+                        node: fgNode
                     };
                     this.nodelist.set(p, cv);
 
@@ -233,7 +259,7 @@ export class LayerSvgComponent implements OnChanges {
         }
         const sourceNode = this.nodelist.get(sourcePath).node;
         if (targetPath === undefined || targetPath === '') {
-            return null;
+            targetPath = '/';
         }
         const targetNode = this.nodelist.get(targetPath).node;
         const newLink = <ConfigLink>{
@@ -269,7 +295,11 @@ export class LayerSvgComponent implements OnChanges {
     // Calculates an SVG path for the branch
     // Start in the middle and draw path to source end with curve (control point is x+ControlPointX)
     // Move back to middle and draw path to target end with curve (control point is x-ControlPointX)
-    curveCalculator(link: ConfigLink): string {
+    curveCalculator(link: ConfigLink, child?, parent?: string): string {
+        if (link === null) {
+            console.log('Warning Link is null for', child, parent);
+            return '';
+        }
         const halfWayX = (link.target.x + 160 + link.source.x) / 2;
         const halfWayY = (link.target.y + 10 + link.source.y + 10) / 2;
 
@@ -280,10 +310,6 @@ export class LayerSvgComponent implements OnChanges {
         const ep2 = link.source.x + ' ' + (link.source.y + 10);
 
         return mm + ' ' + cp1 + ', ' + ep1 + ' ' + mm + ' ' + cp2 + ', ' + ep2;
-    }
-
-    configNodeMoved(node: ConfigNode, newPosition: GridPosition) {
-        console.log('Node', node.id, 'moved to', newPosition.x, newPosition.y);
     }
 }
 
