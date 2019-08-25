@@ -30,6 +30,7 @@ import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
 import {TreeLayoutService} from '../tree-layout.service';
 
 export const OPSTATE = 'opstate';
+export const RWPATHS = 'rwpaths';
 export const MEDIUM = 'medium';
 export const ACTIVE = 'active';
 export const INACTIVE = 'inactive';
@@ -60,6 +61,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
+    public RWPATHS = RWPATHS;
 
     constructor(
         private diags: OnosConfigDiagsService,
@@ -74,20 +76,19 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         if (this.hasOpStateData) {
             this.changeIdsVisible.set(OPSTATE, false);
         }
+        this.changeIdsVisible.set(RWPATHS, false);
         console.log('Constructed ConfigViewComponent');
     }
 
     ngOnInit(): void {
         this.ar.params.subscribe(params => {
             const cn: string = params['configName'];
-            // this is a temporary hack to change the configName to a device name
-            // until the diags.proto can be fixed in onos-config
-            const deviceName = cn.substr(0, cn.lastIndexOf('-'));
-            console.log('ConfigViewComponent param: configView', cn, deviceName);
-            this.configName = deviceName;
+
+            console.log('ConfigViewComponent param: configView', cn);
+            this.configName = cn;
             this.ngOnChanges({
                 'configName': // Don't replace with constant
-                    new SimpleChange({}, this.configName, true)
+                    new SimpleChange({}, cn, true)
             });
         });
     }
@@ -102,22 +103,35 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         if (changes[CONFIGNAME]) {
             const cfgName = changes[CONFIGNAME].currentValue;
             this.changeIds.length = 0;
-            this.diags.requestConfigurations([cfgName], (config: Configuration) => {
+            console.log('Configuration view changed to', cfgName);
+
+            // Check to see if this is a pending change first
+            if (this.pending.pendingNewConfigName === cfgName) {
+                this.device = this.pending.pendingNewConfiguration.getDeviceId();
+                this.version = this.pending.pendingNewConfiguration.getVersion();
+                this.type = this.pending.pendingNewConfiguration.getDeviceType();
+                this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
+                for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
+                    this.changeIds.push(cid);
+                    this.changeIdsVisible.set(cid, true);
+                }
+                return;
+            }
+
+            // this is a temporary hack to change the configName to a device name
+            // until the diags.proto can be fixed in onos-config
+            const deviceName = cfgName.substr(0, cfgName.lastIndexOf('-'));
+            this.diags.requestConfigurations([deviceName], (config: Configuration) => {
                 this.device = config.getDeviceId();
                 this.version = config.getVersion();
                 this.type = config.getDeviceType();
-                this.updated = Number(config.getUpdated()) * 1000;
+                this.updated = (new Date()).setTime(config.getUpdated().getSeconds() * 1000);
                 for (const cid of config.getChangeIdsList()) {
                     this.changeIds.push(cid);
                     this.changeIdsVisible.set(cid, true);
                 }
-                console.log('Configuration response for ', config, 'received');
+                console.log('Configuration response for ', deviceName, 'received');
             });
-            // Because the response above is async, the below happens first
-            if (this.pending.hasPendingChange) {
-                this.changeIds.push(PENDING);
-                this.changeIdsVisible.set(PENDING, true);
-            }
         }
     }
 

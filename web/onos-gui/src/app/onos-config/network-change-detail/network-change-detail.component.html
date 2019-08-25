@@ -15,8 +15,8 @@
 -->
 
 
-<div id="device-details-panel" class="floatpanel"
-     [@deviceDetailsState]="id!=='' && !closed">
+<div id="nwchange-details-panel" class="floatpanel"
+     [@nwchangeDetailsState]="id!=='' && !closed">
     <div class="container">
         <div class="top">
             <div class="close-btn">
@@ -61,22 +61,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let ch of detailsData?.configChanges">
+                <tr *ngFor="let ch of detailsData?.changesList">
                     <td><a
-                        [routerLink]="['/config','configview', ch.configId ]">{{ ch.configId }}</a>
+                        [routerLink]="['/config','configview', ch.getId() ]">{{ ch.getId() }}</a>
                     </td>
-                    <td>{{ ch.changeId }}</td>
+                    <td>{{ ch.getHash() }}</td>
                     <!--          <td><a [routerLink]="['/config','changeview', ch.changeId ]">{{ ch.changeId }}</a></td>-->
                 </tr>
                 </tbody>
             </table>
         </div>
-        <div id="bottom" *ngIf="id === PENDING_U">
+        <div id="bottom">
             <h2 class="changes-title">Other Configs to Add</h2>
             <table>
                 <tr *ngFor="let o of otherConfigs">
-                    <td><a (click)="pending.addToPendingChange(o, '')"
-                        [routerLink]="['/config','configview', o ]">{{ o }}</a></td>
+                    <td><a [routerLink]="['/config','configview', o ]">{{ o }}</a></td>
                 </tr>
             </table>
         </div>

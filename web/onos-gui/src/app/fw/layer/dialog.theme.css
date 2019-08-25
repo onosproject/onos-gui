@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-present Open Networking Foundation
+ * Copyright 2018-present Open Networking Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 
 /*
- ONOS GUI -- Network Changes View (layout) -- CSS file
+ ONOS GUI -- Dialog Service (theme) -- CSS file
  */
-#ov-nwchanges .tabular-header {
-    text-align: left;
+
+/* temporarily removed .light */
+.dialog .dialog-button {
+    background-color: #518ecc;
+    color: white;
 }
 
-#ov-nwchanges h2 {
-    display: inline-block;
-}
 
-#ov-nwchanges, div.ctrl-btns {
-}
+/* ========== DARK Theme ========== */
 
-#summary-list .pending {
-    background-color: #e36457;
+.dark .dialog .dialog-button {
+    background-color: #345e85;
+    color: #cccccd;
 }
-

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
-import {NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ConfigChange, NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,
@@ -26,19 +26,13 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {PendingNetChangeService} from '../pending-net-change.service';
 import {PENDING_U} from '../pending-net-change.service';
+import {NameInputResult} from '../../utils/name-input/name-input.component';
 
-export interface NwChangeEntry {
-    configId: string;
-    changeId: string;
-}
-
-export interface NwChange {
-    name: string;
-    created: Date;
-    user: string;
-    configChanges: NwChangeEntry[];
-}
-
+/**
+ * Display the network changes from the onos-config server. This view is not
+ * updated dynamically at present because the underlying gRPC service does
+ * not have a watch option.
+ */
 @Component({
     selector: 'onos-network-changes',
     templateUrl: './network-changes.component.html',
@@ -52,7 +46,9 @@ export interface NwChange {
 export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
 
     rollbackTip: string = 'Rollback';
-    selectedChange: NwChangeEntry; // The complete row - not just the selId
+    selectedChange: NetChange; // The complete row - not just the selId
+    newNwchangeTitle: string = '';
+    alertMsg: string;
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
     public PENDING_U = PENDING_U;
@@ -65,7 +61,7 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         private admin: OnosConfigAdminService,
-        private pending: PendingNetChangeService,
+        public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'nwchange', 'name');
 
@@ -91,35 +87,29 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
     }
 
     ngOnInit() {
+        this.selId = undefined;
         this.tableData.length = 0;
         this.admin.requestNetworkChanges((netChange: NetChange) => {
-            const changes: NwChangeEntry[] = [];
-            const changesAsMap = netChange.getChangesList();
-            for (const nc of changesAsMap) {
-                changes.push(<NwChangeEntry>{
-                    configId: nc.getId(),
-                    changeId: nc.getHash(),
-                });
-            }
-
-            const nwChange = <NwChange>{
-                name: netChange.getName(),
-                created: <unknown>(netChange.getTime() * 1000),
-                user: netChange.getUser(),
-                configChanges: changes,
-            };
             console.debug('NetworkChange response for', netChange.getName(), 'received');
-            this.tableData.push(nwChange);
+            netChange['name'] = netChange.getName();
+            netChange['user'] = netChange.getUser();
+            netChange['created'] = (new Date()).setTime(netChange.getTime().getSeconds() * 1000);
+            netChange['changesList'] = netChange.getChangesList();
+            this.tableData.push(netChange);
         });
         if (this.pending.hasPendingChange) {
-            const pendingChange = <NwChange>{
-                name: this.pending.pendingChangeName,
-                created: <unknown>Date.now(),
-                user: this.pending.pendingChangeUser,
-                configChanges: this.pending.pendingChangesMap,
-            };
-            this.tableData.push(pendingChange);
+            this.addPendingRow(this.pending.pendingNetChange.getName(), this.pending.pendingNetChange.getChangesList());
         }
+    }
+
+    addPendingRow(name: string, changesList: Array<ConfigChange>) {
+        const pendingChange = <NetChange>{};
+        pendingChange['name'] = name;
+        pendingChange['pending'] = true;
+        pendingChange['user'] = 'onos';
+        pendingChange['created'] = (new Date());
+        pendingChange['changesList'] = changesList;
+        this.tableData.push(pendingChange);
     }
 
     navto(path) {
@@ -136,14 +126,40 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         console.warn('Rollback for network change not yet implemented');
     }
 
-    discardPending(selected: string): void {
-        if (selected !== PENDING_U) {
+    createPending(selected: string): void {
+        this.newNwchangeTitle = 'Name for new Network Change?';
+    }
+
+    discardPending(): void {
+        if (this.pending.hasPendingChange) {
+            this.pending.deletePendingChange();
+            const removed = this.tableData.splice(0, 1);
+            this.selId = undefined;
+            console.log('Pending change discarded', removed);
+        }
+    }
+
+    newNwchangeCreate(chosen: NameInputResult): void {
+        if (chosen.chosen && chosen.name === '') {
+            console.log('Empty name when creating network change rejected!');
+        } else if (chosen.chosen === true && !this.pending.hasPendingChange) {
+            console.log('New nwChange created:', chosen.name);
+            this.pending.addPendingChange(chosen.name);
+            this.addPendingRow(chosen.name,  Array(0));
+            this.alertMsg = 'New PENDING Network Changes layer \"' + chosen.name + '\" created';
+        }
+        this.newNwchangeTitle = '';
+    }
+
+    commitPending() {
+        const numConfigs = this.pending.pendingNetChange.getChangesList().length;
+        if (numConfigs > 0) {
+            console.log('Committing network change', this.pending.pendingNetChange.getName(),
+                'to server for', numConfigs, 'configurations');
             return;
         }
-        this.pending.deletePendingChange();
-        const removed = this.tableData.splice(0, 1);
-        this.selId = null;
-        console.log('Pending change discarded', removed);
+        console.log('Not committing pending network change', this.pending.pendingNetChange.getName(),
+            'not enough changes', numConfigs);
     }
 
 }

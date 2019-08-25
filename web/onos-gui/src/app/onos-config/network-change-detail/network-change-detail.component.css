@@ -15,66 +15,66 @@
  */
 
 
-#device-details-panel.floatpanel {
+#nwchange-details-panel.floatpanel {
     z-index: 0;
     font-size: 10pt;
     top: 185px;
 }
 
-#device-details-panel.floatpanel a {
+#nwchange-details-panel.floatpanel a {
     font-weight: bold;
 }
 
-#device-details-panel .container {
+#nwchange-details-panel .container {
     padding: 0 30px;
 }
 
-#device-details-panel .close-btn {
+#nwchange-details-panel .close-btn {
     position: absolute;
     right: 5px;
     top: 5px;
     cursor: pointer;
 }
 
-#device-details-panel .dev-icon {
+#nwchange-details-panel .dev-icon {
     display: inline-block;
     padding: 0 6px 0 0;
     vertical-align: middle;
 }
 
-#device-details-panel h2 {
+#nwchange-details-panel h2 {
     display: inline-block;
     margin: 8px 0;
     font-weight: bold;
     font-size: 16pt;
 }
 
-#device-details-panel h2 input {
+#nwchange-details-panel h2 input {
     font-size: 0.90em;
     width: 106%;
 }
 
-#device-details-panel .actionBtns div {
+#nwchange-details-panel .actionBtns div {
     padding: 12px 6px;
 }
 
-#device-details-panel hr {
+#nwchange-details-panel hr {
     width: 100%;
     margin: 2px auto;
 }
 
-#device-details-panel .top-tables {
+#nwchange-details-panel .top-tables {
     font-size: 10pt;
     white-space: nowrap;
 }
 
-#device-details-panel td.label {
+#nwchange-details-panel td.label {
     font-weight: bold;
     text-align: right;
     padding-right: 6px;
 }
 
-#device-details-panel .bottom table {
+#nwchange-details-panel .bottom table {
     border-spacing: 0;
     height: 358px;
     width: 520px;
@@ -82,34 +82,34 @@
     display: block;
 }
 
-#device-details-panel .bottom th {
+#nwchange-details-panel .bottom th {
     letter-spacing: 0.02em;
 }
 
-#device-details-panel .bottom th,
-#device-details-panel .bottom td {
+#nwchange-details-panel .bottom th,
+#nwchange-details-panel .bottom td {
     padding: 6px 12px;
     text-align: center;
 }
 
-#device-details-panel .top div.left {
+#nwchange-details-panel .top div.left {
     float: left;
     text-align: left;
     padding: 0 10px 0 0;
 }
 
-#device-details-panel .top div.right {
+#nwchange-details-panel .top div.right {
     display: inline-block;
 }
 
-#device-details-panel .editable {
+#nwchange-details-panel .editable {
     border-bottom: 1px dashed #ca504b;
 }
 
-#device-details-panel .clickable {
+#nwchange-details-panel .clickable {
     cursor: pointer;
 }
 
-#device-details-panel .bottom thead tr {
+#nwchange-details-panel .bottom thead tr {
     background-color: #e5e5e6;
 }

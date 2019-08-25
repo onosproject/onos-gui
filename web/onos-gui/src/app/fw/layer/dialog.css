@@ -15,42 +15,22 @@
  */
 
 /*
- ONOS GUI -- Configurations View -- CSS file
+ ONOS GUI -- Dialog Service (layout) -- CSS file
  */
 
-#ov-configs .tabular-header {
-    text-align: left;
-}
-
-#ov-configs div.summary-list .table-header td {
-    font-weight: bold;
-    font-variant: small-caps;
-    text-transform: uppercase;
-    font-size: 10pt;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    background-color: #e5e5e6;
-    color: #3c3a3a;
-}
-
-#ov-configs div.summary-list .table-body {
-    overflow: scroll;
-}
-
-#ov-configs h2 {
+.dialog h2 {
+    margin: 0;
+    word-wrap: break-word;
     display: inline-block;
+    width: 210px;
+    vertical-align: middle;
 }
 
-#ov-configs, div.ctrl-btns {
-}
-
-#ov-configs th, td {
-    text-align: left;
-    padding: 8px;
-}
-
-#summary-list .pending {
-    background-color: #e36457;
+.dialog .dialog-button {
+    display: inline-block;
+    cursor: pointer;
+    height: 20px;
+    padding: 6px 8px 2px 8px;
+    margin: 4px;
+    float: right;
 }

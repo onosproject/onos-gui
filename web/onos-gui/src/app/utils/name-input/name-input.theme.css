@@ -15,20 +15,19 @@
  */
 
 /*
- ONOS GUI -- Network Changes View (layout) -- CSS file
+ ONOS GUI -- name-input-dialog Component (theme) -- CSS file
  */
-#ov-nwchanges .tabular-header {
-    text-align: left;
+/* temporarily removed .light */
+#name-input-dialog p.strong {
+    color: white;
+    background-color: #ce5b58;
 }
 
-#ov-nwchanges h2 {
-    display: inline-block;
+#name-input-dialog.floatpanel.dialog {
+    background-color: #ffffff;
 }
 
-#ov-nwchanges, div.ctrl-btns {
+#name-input-dialog p.strong {
+    color: white;
+    background-color: #ce5b58;
 }
-
-#summary-list .pending {
-    background-color: #e36457;
-}
-

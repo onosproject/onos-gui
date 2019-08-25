@@ -42,11 +42,14 @@ first line of /etc/hosts like:
 
 ## Browser access
 When deployed the onos-gui is available to a browser at 
-http://onos-gui/index.html
+http://onos-gui
 
-> Adding **index.html** is mandatory. In future this will be accessible at
-> http://onos-gui - currently it gives an error *"upstream connect error or
-> disconnect/reset before headers. reset reason: remote reset"* for this URL
+> Using the hostname **onos-gui** is mandatory - an IP address will not suffice.
+> This means that you may have to add an entry to your /etc/hosts file if the
+> name is not configured on a DNS server
+>
+>On the demo cluster the GUI is available at http://onos-gui:31214 where the entry
+> **10.128.100.91 onos-gui** is present in the /etc/hosts file 
 
 The browser connects to onos-gui over HTTP 1.1 to retrieve the Angular compiled
 static files.

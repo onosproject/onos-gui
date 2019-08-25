@@ -49,6 +49,10 @@
                    onos-layer-svg [layerId]="device" [classes]="['state']"
                    [visible]="changeIdsVisible.get(OPSTATE)" [layerType]="1">
             </svg:g>
+            <svg:g #readWriteLayer
+                   onos-layer-svg [layerId]="type + version + ''" [classes]="['rwpaths']"
+                   [visible]="changeIdsVisible.get(RWPATHS)" [layerType]="3">
+            </svg:g>
         </svg:g>
     </svg:svg>
 </div>

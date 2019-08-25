@@ -14,11 +14,7 @@ import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/t
 import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 
 import {
-  DeviceInfo,
-  DeviceResponse,
-  DeviceSummaryRequest,
-  DeviceSummaryResponse,
-  GetDevicesRequest,
+  Chunk,
   ListModelsRequest,
   ModelInfo,
   NetChange,
@@ -127,112 +123,6 @@ export class ConfigAdminServiceClient {
       metadata || {},
       this.methodInfoRollbackNetworkChange,
       callback);
-  }
-
-}
-
-export class DeviceInventoryServiceClient {
-  client_: grpcWeb.AbstractClientBase;
-  hostname_: string;
-  credentials_: null | { [index: string]: string; };
-  options_: null | { [index: string]: string; };
-
-  constructor (hostname: string,
-               credentials?: null | { [index: string]: string; },
-               options?: null | { [index: string]: string; }) {
-    if (!options) options = {};
-    if (!credentials) credentials = {};
-    options['format'] = 'text';
-
-    this.client_ = new grpcWeb.GrpcWebClientBase(options);
-    this.hostname_ = hostname;
-    this.credentials_ = credentials;
-    this.options_ = options;
-  }
-
-  methodInfoGetDeviceSummary = new grpcWeb.AbstractClientBase.MethodInfo(
-    DeviceSummaryResponse,
-    (request: DeviceSummaryRequest) => {
-      return request.serializeBinary();
-    },
-    DeviceSummaryResponse.deserializeBinary
-  );
-
-  getDeviceSummary(
-    request: DeviceSummaryRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.Error,
-               response: DeviceSummaryResponse) => void) {
-    return this.client_.rpcCall(
-      this.hostname_ +
-        '/proto.DeviceInventoryService/GetDeviceSummary',
-      request,
-      metadata || {},
-      this.methodInfoGetDeviceSummary,
-      callback);
-  }
-
-  methodInfoAddOrUpdateDevice = new grpcWeb.AbstractClientBase.MethodInfo(
-    DeviceResponse,
-    (request: DeviceInfo) => {
-      return request.serializeBinary();
-    },
-    DeviceResponse.deserializeBinary
-  );
-
-  addOrUpdateDevice(
-    request: DeviceInfo,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.Error,
-               response: DeviceResponse) => void) {
-    return this.client_.rpcCall(
-      this.hostname_ +
-        '/proto.DeviceInventoryService/AddOrUpdateDevice',
-      request,
-      metadata || {},
-      this.methodInfoAddOrUpdateDevice,
-      callback);
-  }
-
-  methodInfoRemoveDevice = new grpcWeb.AbstractClientBase.MethodInfo(
-    DeviceResponse,
-    (request: DeviceInfo) => {
-      return request.serializeBinary();
-    },
-    DeviceResponse.deserializeBinary
-  );
-
-  removeDevice(
-    request: DeviceInfo,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.Error,
-               response: DeviceResponse) => void) {
-    return this.client_.rpcCall(
-      this.hostname_ +
-        '/proto.DeviceInventoryService/RemoveDevice',
-      request,
-      metadata || {},
-      this.methodInfoRemoveDevice,
-      callback);
-  }
-
-  methodInfoGetDevices = new grpcWeb.AbstractClientBase.MethodInfo(
-    DeviceInfo,
-    (request: GetDevicesRequest) => {
-      return request.serializeBinary();
-    },
-    DeviceInfo.deserializeBinary
-  );
-
-  getDevices(
-    request: GetDevicesRequest,
-    metadata?: grpcWeb.Metadata) {
-    return this.client_.serverStreaming(
-      this.hostname_ +
-        '/proto.DeviceInventoryService/GetDevices',
-      request,
-      metadata || {},
-      this.methodInfoGetDevices);
   }
 
 }

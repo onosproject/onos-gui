@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
-import {ModelInfo} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {
+    ModelInfo,
+} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 @Injectable()
 export class ModelService {
     modelInfoList: ModelInfo[] = [];
 
     constructor(private configAdminService: OnosConfigAdminService) {
-        configAdminService.requestListRegisteredModels((modelInfo: ModelInfo) => {
+        this.loadModelList();
+    }
+
+    loadModelList(): void {
+        this.modelInfoList.length = 0;
+        this.configAdminService.requestListRegisteredModels((modelInfo: ModelInfo) => {
             modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
             modelInfo['name'] = modelInfo.getName(); // To make it selectable
             modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version

@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-/*
- ONOS GUI -- Network Changes View (layout) -- CSS file
- */
-#ov-nwchanges .tabular-header {
-    text-align: left;
-}
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NameInputComponent} from './name-input/name-input.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
-#ov-nwchanges h2 {
-    display: inline-block;
+@NgModule({
+    declarations: [NameInputComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+    ],
+    exports: [
+        NameInputComponent
+    ]
+})
+export class OnosUtilsModule {
 }
-
-#ov-nwchanges, div.ctrl-btns {
-}
-
-#summary-list .pending {
-    background-color: #e36457;
-}
-

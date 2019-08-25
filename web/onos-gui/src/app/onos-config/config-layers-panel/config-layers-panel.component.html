@@ -70,6 +70,14 @@
                     [classes]="layerVisibility.get(OPSTATE) ? ACTIVE:INACTIVE"></onos-icon>
                 <td>State</td>
             </tr>
+            <tr id="rwpaths-layer" class="layerItem"
+                (click)="toggleDisplay(RWPATHS)">
+                <onos-icon
+                    [iconId]="layerVisibility.get(RWPATHS) ? ACTIVE : INACTIVE"
+                    [iconSize]="20"
+                    [classes]="layerVisibility.get(RWPATHS) ? ACTIVE:INACTIVE"></onos-icon>
+                <td>ReadWrite paths</td>
+            </tr>
             </tbody>
         </table>
     </div>

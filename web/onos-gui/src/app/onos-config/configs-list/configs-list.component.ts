@@ -24,6 +24,7 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
+import {PendingNetChangeService} from '../pending-net-change.service';
 
 @Component({
     selector: 'onos-configs-list',
@@ -46,6 +47,7 @@ export class ConfigsListComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         private diags: OnosConfigDiagsService,
+        private pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'configs', 'name');
 
@@ -82,9 +84,14 @@ export class ConfigsListComponent extends TableBaseImpl implements OnInit {
             config['version'] = config.getVersion(); // Needed to search by version
             config['devicetype'] = config.getDeviceType(); // Needed to search by devicetype
             config['deviceid'] = config.getDeviceId(); // Needed to search by deviceid
+            config['updated'] = (new Date()).setTime(config.getUpdated().getSeconds() * 1000);
             this.tableData.push(config);
         });
+        if (this.pending.pendingNewConfigName !== undefined) {
+            this.tableData.push(this.pending.pendingNewConfiguration);
+        }
     }
+
 
     navto(path) {
         console.log('navigate to', path);

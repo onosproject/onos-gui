@@ -28,7 +28,7 @@
                [abspath]="node.key"
                [classes]="classes"
                (containerEditRequested)="requestEditLayer(node.key, null, 'container')"
-                onosDraggableContainer [draggableNode]="node.value.node" (newLocation)="configNodeMoved(node.value.node, $event)">
+                onosDraggableContainer [draggableNode]="node.value.node">
         </svg:g>
     </svg:g>
     <svg:path *ngFor="let branch of linkList | keyvalue" stroke-width="2" stroke="#a9aba0" fill-opacity="0"

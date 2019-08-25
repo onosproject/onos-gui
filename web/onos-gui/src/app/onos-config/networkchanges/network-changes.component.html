@@ -15,27 +15,30 @@
 -->
 
 <div id="ov-nwchanges">
-    <onos-loading [theme]="'light'" [running]="loadingIconShown"></onos-loading>
+    <onos-flash id="nwChangeMsgFlash" message="{{ alertMsg }}" dwell="1800" (closed)="alertMsg = ''"></onos-flash>
+    <onos-name-input [title]="newNwchangeTitle" [pattern]="'[a-zA-Z0-9\-:_]{40}'" (chosen)="newNwchangeCreate($event)"></onos-name-input>
     <div class="tabular-header">
         <h2>Network changes ({{ tableData.length }} total)</h2>
         <div class="ctrl-btns">
-            <div class="refresh" (click)="toggleRefresh()">
-                <!-- See icon.theme.css for the defintions of the classes active and refresh-->
-                <onos-icon
-                    classes="{{ autoRefresh?'active refresh':'refresh' }}"
-                    iconId="refresh" iconSize="42"
-                    toolTip="{{ autoRefreshTip }}"></onos-icon>
-            </div>
-            <div class="separator"></div>
             <div (click)="rollback(selId)">
-                <onos-icon classes="{{ selId && selId != PENDING_U ? 'active-rect' :undefined}}"
+                <onos-icon classes="{{ pending.hasPendingChange || selId === undefined ? undefined:'active-rect'}}"
                            iconId="triangleLeft" iconSize="42"
                            toolTip="{{rollbackTip}}"></onos-icon>
             </div>
-            <div (click)="discardPending(selId)">
-                <onos-icon classes="{{ selId == PENDING_U ? 'active-rect' :undefined}}"
+            <div (click)="createPending(selId)">
+                <onos-icon classes="{{ pending.hasPendingChange ? undefined:'active-rect'}}"
+                           iconId="plus" iconSize="42"
+                           toolTip="Add network changes"></onos-icon>
+            </div>
+            <div (click)="discardPending()">
+                <onos-icon classes="{{ pending.hasPendingChange ? 'active-rect' :undefined}}"
                            iconId="xMark" iconSize="42"
                            toolTip="Discard pending"></onos-icon>
+            </div>
+            <div (click)="commitPending()">
+                <onos-icon classes="{{ pending.hasPendingChange && selId === pending.pendingNetChange.getName() ? 'active-rect' :undefined}}"
+                           iconId="triangleRight" iconSize="42"
+                           toolTip="Commit pending"></onos-icon>
             </div>
         </div>
         <div class="search">
@@ -81,12 +84,12 @@
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
                 <tr *ngFor="let nwchange of tableData | filter : tableDataFilter"
-                    (click)="selectCallback($event, nwchange); selectedChange = nwchange"
-                    [ngClass]="{selected: nwchange.name === selId, 'data-change': isChanged(nwchange.name)}">
+                    (click)="selectedChange = nwchange; selectCallback($event, nwchange)"
+                    [ngClass]="{selected: nwchange.name === selId, 'data-change': isChanged(nwchange.name), 'pending': nwchange.pending}">
                     <td>{{ nwchange.name }}</td>
                     <td>{{ nwchange.user }}</td>
                     <td>{{ nwchange.created | date:'medium' }}</td>
-                    <td>{{ nwchange.configChanges.length }}</td>
+                    <td>{{ nwchange.changesList.length }}</td>
                 </tr>
             </table>
         </div>
