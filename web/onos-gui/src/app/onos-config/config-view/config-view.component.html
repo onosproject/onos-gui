@@ -14,7 +14,8 @@
 ~ limitations under the License.
 -->
 
-<onos-config-layers-panel id="layers-panel" x="20" [layerList]="changeIds"
+<onos-config-layers-panel id="config-layers-panel" x="20"
+                          [layerList]="changeIds"
                           [configName]="device + '-' + version"
                           [deviceName]="device"
                           [version]="version"
@@ -22,8 +23,16 @@
                           [updated]="updated"
                           [on]="true"
                           [hasOpState]="hasOpStateData"
+                          [hasPending]="hasPending"
                           (visibilityChange)="visibilityChanged($event)">
 </onos-config-layers-panel>
+
+<onos-path-bar id="config-path-panel" [path]="selectedPath">
+</onos-path-bar>
+<onos-string-value *ngIf="selectedValue?.valueType === 1"
+                   [valueDetails]="selectedValue"
+                   (valueEdited)="addToEditedValues(selectedPath, selectedValue, $event)">
+</onos-string-value>
 
 <onos-confirm title="{{ create_pending }}"
               message="{{ create_pending_confirm }}"
@@ -43,14 +52,19 @@
             </svg:desc>
             <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
                    [visible]="changeIdsVisible.get(c)" [layerType]="0"
-                   (editRequestedLayer)="activatePendingLayer(device + '-' + version, $event)">
+                   (editRequestedLayer)="pathSelected($event)">
             </svg:g>
             <svg:g *ngIf="hasOpStateData" #opStateLayer
                    onos-layer-svg [layerId]="device" [classes]="['state']"
                    [visible]="changeIdsVisible.get(OPSTATE)" [layerType]="1">
             </svg:g>
+            <svg:g *ngIf="hasPending" onos-layer-svg [layerId]="configName" [classes]="['pending']"
+                   [visible]="changeIdsVisible.get('pending')" [layerType]="2"
+                   (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">
+            </svg:g>
             <svg:g #readWriteLayer
-                   onos-layer-svg [layerId]="type + version + ''" [classes]="['rwpaths']"
+                   onos-layer-svg [layerId]="type + version + ''"
+                   [classes]="['rwpaths']"
                    [visible]="changeIdsVisible.get(RWPATHS)" [layerType]="3">
             </svg:g>
         </svg:g>

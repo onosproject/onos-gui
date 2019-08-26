@@ -18,21 +18,28 @@
  ONOS GUI -- Config Layers Panel -- CSS file
  */
 #layers-panel {
-    padding: 16px;
-    top: 100px;
-    left: 60px;
-    width: 300px;
+    padding: 8px;
+    width: 220px;
 }
 
 #layers-panel td.label {
     width: 50%;
 }
 
+#layers-panel td {
+    font-size: 0.8em;
+}
+
 .layerItem {
+    font-size: 0.8em;
     cursor: pointer;
 }
 
-#topo2-p div.header div.icon {
+#layers-panel .layerItem td {
+    font-size: 1.0em;
+}
+
+#layers-panel div.header div.icon {
     padding: 5px
 }
 
@@ -40,6 +47,7 @@
     padding: 5px;
     margin-block-end: auto;
     margin-block-start: auto;
+    font-size: 1.0em;
 }
 
 #layers-panel .field-name {

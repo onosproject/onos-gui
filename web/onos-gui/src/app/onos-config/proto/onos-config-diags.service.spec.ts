@@ -19,7 +19,15 @@ import {TestBed} from '@angular/core/testing';
 import {OnosConfigDiagsService} from './onos-config-diags.service';
 
 describe('OnosConfigDiagsService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+    beforeEach(() => TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: OnosConfigDiagsService,
+                    useValue: new OnosConfigDiagsService('http://localhost:8080')
+                }
+            ]
+        }
+    ));
 
     it('should be created', () => {
         const service: OnosConfigDiagsService = TestBed.get(OnosConfigDiagsService);

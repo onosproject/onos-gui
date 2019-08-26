@@ -19,7 +19,14 @@ import {TestBed} from '@angular/core/testing';
 import {OnosConfigAdminService} from './onos-config-admin.service';
 
 describe('OnosConfigAdminService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+    beforeEach(() => TestBed.configureTestingModule({
+        providers: [
+            {
+                provide: OnosConfigAdminService,
+                useValue: new OnosConfigAdminService('http://localhost:8080')
+            }
+        ]
+    }));
 
     it('should be created', () => {
         const service: OnosConfigAdminService = TestBed.get(OnosConfigAdminService);

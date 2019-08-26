@@ -64,6 +64,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     @Input() version: string;
     @Input() updated: Date;
     @Input() hasOpState: boolean;
+    @Input() hasPending: boolean;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
     layerVisibility = new Map<string, boolean>();
@@ -86,12 +87,10 @@ export class ConfigLayersPanelComponent implements OnChanges {
             for (const l of this.layerList) {
                 this.layerVisibility.set(l, true);
             }
-        } else if (changes['layerList']) {
-            for (const l of this.layerList) {
-                if (l === PENDING) {
-                    this.layerVisibility.set(l, true);
-                }
-            }
+        }
+
+        if (changes['hasPending']) {
+            this.layerVisibility.set('pending', changes['hasPending'].currentValue);
         }
     }
 

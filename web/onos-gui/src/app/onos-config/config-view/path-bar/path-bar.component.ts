@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
+import {Component, Input, OnInit} from '@angular/core';
 
-import {OnosConfigGnmiService} from './onos-config-gnmi.service';
+@Component({
+    selector: 'onos-path-bar',
+    templateUrl: './path-bar.component.html',
+    styleUrls: ['./path-bar.component.css']
+})
+export class PathBarComponent implements OnInit {
+    @Input() path: string = undefined;
 
-describe('OnosConfigGnmiService', () => {
-    beforeEach(() => TestBed.configureTestingModule({
-        providers: [
-            {
-                provide: OnosConfigGnmiService,
-                useValue: new OnosConfigGnmiService('http://localhost:8080')
-            }
-        ]
-    }));
+    constructor() {
+    }
 
-    it('should be created', () => {
-        const service: OnosConfigGnmiService = TestBed.get(OnosConfigGnmiService);
-        expect(service).toBeTruthy();
-    });
-});
+    ngOnInit() {
+    }
+
+}

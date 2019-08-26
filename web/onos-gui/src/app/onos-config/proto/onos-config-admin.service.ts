@@ -19,14 +19,20 @@ import {
     ConfigAdminServiceClient
 } from './github.com/onosproject/onos-config/pkg/northbound/admin/adminServiceClientPb';
 import {
-    ListModelsRequest, ModelInfo,
-    NetChange, NetworkChangesRequest, RegisterRequest, RegisterResponse
+    ListModelsRequest,
+    ModelInfo,
+    NetChange,
+    NetworkChangesRequest,
+    RegisterRequest,
+    RegisterResponse, RollbackRequest,
+    RollbackResponse
 } from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
 type NetChangeCallback = (r: NetChange) => void;
 type ModelInfoCallback = (r: ModelInfo) => void;
 type RegisterCallback = (e: grpcWeb.Error, r: RegisterResponse) => void;
+type RollbackCallback = (e: grpcWeb.Error, r: RollbackResponse) => void;
 
 @Injectable()
 export class OnosConfigAdminService {
@@ -43,6 +49,17 @@ export class OnosConfigAdminService {
         const stream = this.adminServiceClient.getNetworkChanges(new NetworkChangesRequest(), {});
         console.log('NetworkChangesRequest sent to', this.onosConfigUrl);
         stream.on('data', callback);
+    }
+
+    requestRollback(nwChangeName: string, callback: RollbackCallback, rollbackComment?: string) {
+        const rollbackReq = new RollbackRequest();
+        rollbackReq.setName(nwChangeName);
+        if (rollbackComment) {
+            rollbackReq.setComment('Rolled back from GUI');
+        }
+
+        this.adminServiceClient.rollbackNetworkChange(rollbackReq, {}, callback);
+        console.log('network change', nwChangeName, 'rolled back');
     }
 
     requestListRegisteredModels(callback: ModelInfoCallback) {

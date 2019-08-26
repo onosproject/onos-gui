@@ -87,7 +87,7 @@ export class ConfigsListComponent extends TableBaseImpl implements OnInit {
             config['updated'] = (new Date()).setTime(config.getUpdated().getSeconds() * 1000);
             this.tableData.push(config);
         });
-        if (this.pending.pendingNewConfigName !== undefined) {
+        if (this.pending.pendingNewConfiguration !== undefined) {
             this.tableData.push(this.pending.pendingNewConfiguration);
         }
     }

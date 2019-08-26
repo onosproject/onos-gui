@@ -19,7 +19,14 @@ import {TestBed} from '@angular/core/testing';
 import {TreeLayoutService} from './tree-layout.service';
 
 describe('TreeLayoutService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+    beforeEach(() => TestBed.configureTestingModule({
+        providers: [
+            {
+                provide: TreeLayoutService,
+                useValue: new TreeLayoutService()
+            }
+        ]
+    }));
 
     it('should be created', () => {
         const service: TreeLayoutService = TestBed.get(TreeLayoutService);

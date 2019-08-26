@@ -38,6 +38,8 @@ import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
 import {DraggableDirective} from './config-view/draggable/draggable.directive';
 import {OnosUtilsModule} from '../utils/onos-utils.module';
+import { PathBarComponent } from './config-view/path-bar/path-bar.component';
+import { StringValueComponent } from './config-view/string-value/string-value.component';
 
 @NgModule({
     declarations: [
@@ -52,7 +54,9 @@ import {OnosUtilsModule} from '../utils/onos-utils.module';
         ModelsListComponent,
         ModelDetailComponent,
         ChangeValuePipe,
-        DraggableDirective
+        DraggableDirective,
+        PathBarComponent,
+        StringValueComponent
     ],
     imports: [
         CommonModule,

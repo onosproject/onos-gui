@@ -27,7 +27,7 @@
                [parentpath]="node.value.parentPath"
                [abspath]="node.key"
                [classes]="classes"
-               (containerEditRequested)="requestEditLayer(node.key, null, 'container')"
+               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.valueType, node.value.valueTypeOpts)"
                 onosDraggableContainer [draggableNode]="node.value.node">
         </svg:g>
     </svg:g>

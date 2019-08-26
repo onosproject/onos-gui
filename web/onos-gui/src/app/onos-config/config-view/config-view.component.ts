@@ -28,6 +28,11 @@ import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
 import {TreeLayoutService} from '../tree-layout.service';
+import {PathDetails} from './layer-svg/layer-svg.component';
+import {ValueDetails} from '../change-value.util';
+import {
+    ChangeValue,
+} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -56,8 +61,12 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     changeIds: string[] = [];
     changeIdsVisible = new Map<string, boolean>();
     hasOpStateData: boolean = true;
+    hasPending: boolean = false;
+    pendingUdpateTime: Date;
     create_pending: string = '';
     create_pending_confirm: string = '';
+    selectedPath = '/';
+    selectedValue: ValueDetails = undefined;
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -106,7 +115,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             console.log('Configuration view changed to', cfgName);
 
             // Check to see if this is a pending change first
-            if (this.pending.pendingNewConfigName === cfgName) {
+            if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
                 this.device = this.pending.pendingNewConfiguration.getDeviceId();
                 this.version = this.pending.pendingNewConfiguration.getVersion();
                 this.type = this.pending.pendingNewConfiguration.getDeviceType();
@@ -132,6 +141,12 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 }
                 console.log('Configuration response for ', deviceName, 'received');
             });
+
+            this.hasPending = this.pending
+                .pendingNetChange
+                .getChangesList()
+                .findIndex((cfg) => cfg.getId() === this.configName) > -1;
+            this.changeIdsVisible.set('pending', this.hasPending);
         }
     }
 
@@ -139,18 +154,24 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.changeIdsVisible.set(event.layerName, event.madeVisible);
     }
 
+    pathSelected(pathDetails: PathDetails) {
+        this.selectedPath = pathDetails.abspath;
+        this.selectedValue = pathDetails.value;
+    }
+
     activatePendingLayer(configName: string, path: string): void {
+        this.selectedPath = path;
         if (!this.pending.hasPendingChange) {
             this.create_pending = 'Network Change';
             this.create_pending_confirm = 'Create a Pending (new) Network Change?';
         } else {
-            this.pending.addToPendingChange(this.configName + '-' + this.version, 'new');
+            this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
         }
     }
 
     confirmedCreatePending(confirmed: boolean): void {
         if (confirmed) {
-            this.pending.addToPendingChange(this.configName + '-' + this.version, 'new');
+            this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
             this.changeIds.push(PENDING);
             this.changeIdsVisible.set(PENDING, true);
         } else {
@@ -158,5 +179,24 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.create_pending = '';
         this.create_pending_confirm = '';
+    }
+
+    addToEditedValues(absPath: string, oldValue: ValueDetails, newValue: Uint8Array) {
+        console.log('Value has been edited', absPath);
+        const newChangeValue = new ChangeValue();
+        newChangeValue.setPath(absPath);
+        newChangeValue.setValue(newValue);
+        newChangeValue.setValueType(oldValue.valueType);
+        newChangeValue.setTypeOptsList(oldValue.valueTypeOpts);
+
+        const added = this.pending.addToPendingChange(this.configName, newChangeValue);
+        this.pendingUdpateTime = new Date();
+        if (added) {
+            this.visibilityChanged(<SelectedLayer>{
+                layerName: 'pending',
+                madeVisible: true,
+            });
+            this.hasPending = true;
+        }
     }
 }

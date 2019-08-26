@@ -19,11 +19,21 @@ import * as grpcWeb from 'grpc-web';
 import {gNMIClient} from './github.com/openconfig/gnmi/proto/gnmi/gnmiServiceClientPb';
 import {
     CapabilityRequest,
-    CapabilityResponse, GetRequest, GetResponse, Path, PathElem
+    CapabilityResponse,
+    GetRequest,
+    GetResponse,
+    Path,
+    SetRequest, SetResponse,
+    Update
 } from './github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
+import {
+    Extension,
+    RegisteredExtension
+} from './github.com/openconfig/gnmi/proto/gnmi_ext/gnmi_ext_pb';
 
 type CapabilityCallback = (e: grpcWeb.Error, r: CapabilityResponse) => void;
 type GnmiGetCallback = (e: grpcWeb.Error, r: GetResponse) => void;
+type GnmiSetCallback = (e: grpcWeb.Error, r: SetResponse) => void;
 
 @Injectable()
 export class OnosConfigGnmiService {
@@ -49,5 +59,35 @@ export class OnosConfigGnmiService {
         wholeDeviceRequest.setPrefix(prefixPath);
         console.log('gNMI get Request sent to', this.onosConfigUrl, wholeDeviceRequest);
         this.gnmiService.get(wholeDeviceRequest, {}, cb);
+    }
+
+    requestPushConfigToServer(updates: Array<Update>, nwChangeName: string, cb: GnmiSetCallback, version?: string, deviceType?: string) {
+        const gnmiSetRequest = new SetRequest();
+        for (const u of updates) {
+            gnmiSetRequest.addUpdate(u);
+        }
+        const nwChangeNameExt = this.generateExtension(nwChangeName, 100);
+        gnmiSetRequest.getExtensionList().push(nwChangeNameExt);
+
+        if (version) {
+            const versionExt = this.generateExtension(version, 101);
+            gnmiSetRequest.getExtensionList().push(versionExt);
+        }
+        if (deviceType) {
+            const deviceTypeExt = this.generateExtension(deviceType, 102);
+            gnmiSetRequest.getExtensionList().push(deviceTypeExt);
+        }
+
+        this.gnmiService.set(gnmiSetRequest, {}, cb);
+    }
+
+    private generateExtension(value: string, nbr: number): Extension {
+        const ext = new Extension();
+        const reg = new RegisteredExtension();
+        reg.setId(nbr);
+        const enc = new TextEncoder();
+        reg.setMsg(enc.encode(value));
+        ext.setRegisteredExt(reg);
+        return ext;
     }
 }

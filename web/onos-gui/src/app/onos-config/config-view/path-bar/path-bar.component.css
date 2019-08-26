@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
+#path-bar {
+    padding: 4px;
+    width: 800px;
+    height: 20px;
+}
 
-import {OnosConfigGnmiService} from './onos-config-gnmi.service';
-
-describe('OnosConfigGnmiService', () => {
-    beforeEach(() => TestBed.configureTestingModule({
-        providers: [
-            {
-                provide: OnosConfigGnmiService,
-                useValue: new OnosConfigGnmiService('http://localhost:8080')
-            }
-        ]
-    }));
-
-    it('should be created', () => {
-        const service: OnosConfigGnmiService = TestBed.get(OnosConfigGnmiService);
-        expect(service).toBeTruthy();
-    });
-});
+#path-bar input {
+    padding: 0px;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    border-style: none;
+    width: 100%;
+}

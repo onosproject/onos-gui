@@ -16,7 +16,11 @@
 
 import {Component, OnInit} from '@angular/core';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
-import {ConfigChange, NetChange} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {
+    ConfigChange,
+    NetChange,
+    RollbackResponse
+} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,
@@ -27,6 +31,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {PendingNetChangeService} from '../pending-net-change.service';
 import {PENDING_U} from '../pending-net-change.service';
 import {NameInputResult} from '../../utils/name-input/name-input.component';
+import {OnosConfigGnmiService} from '../proto/onos-config-gnmi.service';
+import * as grpcWeb from 'grpc-web';
+import {SetResponse} from '../proto/github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 
 /**
  * Display the network changes from the onos-config server. This view is not
@@ -44,7 +51,6 @@ import {NameInputResult} from '../../utils/name-input/name-input.component';
     ]
 })
 export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
-
     rollbackTip: string = 'Rollback';
     selectedChange: NetChange; // The complete row - not just the selId
     newNwchangeTitle: string = '';
@@ -61,6 +67,7 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         private admin: OnosConfigAdminService,
+        private gnmi: OnosConfigGnmiService,
         public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'nwchange', 'name');
@@ -88,6 +95,10 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
 
     ngOnInit() {
         this.selId = undefined;
+        this.updateTable();
+    }
+
+    updateTable() {
         this.tableData.length = 0;
         this.admin.requestNetworkChanges((netChange: NetChange) => {
             console.debug('NetworkChange response for', netChange.getName(), 'received');
@@ -120,10 +131,17 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
     }
 
     rollback(selected: string): void {
-        if (selected == null || selected === PENDING_U) {
+        if (selected === undefined || this.pending.hasPendingChange) {
             return;
         }
-        console.warn('Rollback for network change not yet implemented');
+        this.admin.requestRollback(selected, (e: grpcWeb.Error, r: RollbackResponse) => {
+            if (e) {
+                console.warn('Error on admin RequestRollback for', selected, e);
+                return false;
+            }
+            console.warn('Rolled back network change', selected, r.getMessage());
+            this.updateTable();
+        });
     }
 
     createPending(selected: string): void {
@@ -151,15 +169,26 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         this.newNwchangeTitle = '';
     }
 
-    commitPending() {
+    commitPending(): boolean {
         const numConfigs = this.pending.pendingNetChange.getChangesList().length;
         if (numConfigs > 0) {
+            const updates = this.pending.generateUpdates();
             console.log('Committing network change', this.pending.pendingNetChange.getName(),
-                'to server for', numConfigs, 'configurations');
-            return;
+                'to server for', numConfigs, 'configurations. Configs:', this.pending.pendingConfigValues.size,
+                'Updates:', updates.length);
+            this.gnmi.requestPushConfigToServer(updates, this.pending.pendingNetChange.getName(), (e: grpcWeb.Error, r: SetResponse) => {
+                if (e) {
+                    console.warn('Error on gnmi SetRequest', e);
+                    return false;
+                }
+                console.log('gNMI set sent to onos-config', r.getMessage());
+                this.pending.deletePendingChange();
+                this.updateTable();
+            });
+            return true;
         }
         console.log('Not committing pending network change', this.pending.pendingNetChange.getName(),
-            'not enough changes', numConfigs);
+            'No changes present');
     }
 
 }
