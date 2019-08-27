@@ -46,6 +46,18 @@
         <span (click)="toggleAll(false)" class="layerItem">
     <onos-icon [iconId]="INACTIVE" [iconSize]="20"
                [classes]="INACTIVE"></onos-icon>None</span>
+        <table *ngIf="hasPending">
+            <tbody>
+            <tr class="layerItem"
+                (click)="toggleDisplay('pending')">
+                <onos-icon
+                    [iconId]="layerVisibility.get('pending')?ACTIVE:INACTIVE"
+                    [iconSize]="20"
+                    [classes]="layerVisibility.get('pending')?ACTIVE:INACTIVE"></onos-icon>
+                <td>pending</td>
+            </tr>
+            </tbody>
+        </table>
         <table>
             <tbody>
             <tr id="layerItem" class="layerItem" *ngFor="let p of layerList"

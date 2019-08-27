@@ -81,7 +81,9 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
     }
 
     newConfig(modelInfo: ModelInfo) {
-        this.newConfigTitle = 'Name for new ' + modelInfo.getName() + modelInfo.getVersion() + ' config?';
+        if (this.selId !== undefined && this.pending.hasPendingChange && this.pending.pendingNewConfiguration === undefined) {
+            this.newConfigTitle = 'Name for new ' + modelInfo.getName() + modelInfo.getVersion() + ' config?';
+        }
     }
 
     newConfigCreate(chosen: NameInputResult): void {

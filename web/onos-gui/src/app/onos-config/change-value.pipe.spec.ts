@@ -16,10 +16,20 @@
 
 import {ChangeValuePipe} from './change-value.pipe';
 import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {async, TestBed} from '@angular/core/testing';
 
 describe('ChangeValuePipe', () => {
-    const enc = new TextEncoder();
-    const pipe = new ChangeValuePipe();
+
+    let pipe: ChangeValuePipe;
+
+    // synchronous beforeEach
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+        });
+
+        pipe = new ChangeValuePipe();
+    });
+
     it('create an instance', () => {
 
         expect(pipe).toBeTruthy();
@@ -28,55 +38,6 @@ describe('ChangeValuePipe', () => {
     it('Empty value', () => {
         const values = pipe.transform(new Uint8Array(), ChangeValueType.EMPTY, new Array<number>());
         expect(values.length).toBe(0);
-    });
-
-    it('String value', () => {
-        const ab = new ArrayBuffer(4);
-        const stringArray = new Uint8Array(ab);
-        stringArray[0] = 79;
-        stringArray[1] = 78;
-        stringArray[2] = 79;
-        stringArray[3] = 83;
-
-        const values = pipe.transform(stringArray, ChangeValueType.STRING, new Array<number>());
-        // We're expecting 'ONOS'
-        expect(values.length).toBe(1);
-        expect(values[0].length).toEqual(4);
-        expect(values[0]).toEqual('ONOS');
-    });
-
-    it('Long String value', () => {
-        const ab = new ArrayBuffer(40);
-        const stringArray = enc.encode('This is a test value that should be truncated'); // 45 long
-
-        const values = pipe.transform(stringArray, ChangeValueType.STRING, new Array<number>());
-        expect(values.length).toBe(1);
-        expect(values[0].length).toEqual(17);
-        expect(values[0]).toEqual('This is a test...');
-    });
-
-    it('Leaf list String value', () => {
-        const ab = new ArrayBuffer(40);
-        const stringArray = enc.encode('item1\nitem2\nitem3');
-
-        const values = pipe.transform(stringArray, ChangeValueType.LEAFLIST_STRING, new Array<number>());
-        expect(values.length).toBe(3);
-        expect(values[0].length).toEqual(5);
-        expect(values[0]).toEqual('item1');
-        expect(values[1].length).toEqual(5);
-        expect(values[1]).toEqual('item2');
-        expect(values[2].length).toEqual(5);
-        expect(values[2]).toEqual('item3');
-    });
-
-    it('Int value', () => {
-        const ab = new ArrayBuffer(8);
-        const intArr = new Uint8Array(ChangeValuePipe.longToByteArray(1234));
-
-        const values = pipe.transform(intArr, ChangeValueType.INT, new Array<number>());
-        expect(values.length).toBe(1);
-        expect(values[0].length).toBe(10);
-        expect(values[0]).toEqual('1234');
     });
 
 });

@@ -21,7 +21,10 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {
+    ChangeValueType,
+    ReadWritePath
+} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
 @Component({
     selector: '[onos-container-svg]',
@@ -64,7 +67,7 @@ export class ContainerSvgComponent implements OnChanges {
         }
     }
 
-    requestEdit(container: string): void {
-        this.containerEditRequested.emit(container);
+    requestEdit(abspath: string): void {
+        this.containerEditRequested.emit(abspath);
     }
 }

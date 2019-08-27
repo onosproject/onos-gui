@@ -73,8 +73,22 @@ use#editicon {
 
 /* For the pending class */
 .pending rect#box {
-    fill: #00bfed;
-    fill-opacity: 0.6;
+    fill: #C72930;
+    fill-opacity: 0.8;
+    stroke: #ffffff;
+    stroke-width: 1px;
+}
+
+.pending text#title {
+    stroke: #ffffff;
+    text-anchor:start;
+}
+
+.pending text#value {
+    fill: #ffffff;
+    stroke: #ffffff;
+    font-weight: bold;
+    text-anchor:end;
 }
 
 /* Read Write paths */

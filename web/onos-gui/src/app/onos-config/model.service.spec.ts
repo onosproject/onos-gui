@@ -14,15 +14,29 @@
  * limitations under the License.
  */
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { ModelService } from './model.service';
+import {ModelService} from './model.service';
+import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 
 describe('ModelService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+    const cas: OnosConfigAdminService = new OnosConfigAdminService('http://localhost:8080');
 
-  it('should be created', () => {
-    const service: ModelService = TestBed.get(ModelService);
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => TestBed.configureTestingModule({
+        providers: [
+            {
+                provide: OnosConfigAdminService,
+                useValue: cas
+            },
+            {
+                provide: ModelService,
+                useValue: new ModelService(cas)
+            }
+        ]
+    }));
+
+    it('should be created', () => {
+        const service: ModelService = TestBed.get(ModelService);
+        expect(service).toBeTruthy();
+    });
 });
