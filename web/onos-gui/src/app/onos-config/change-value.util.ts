@@ -42,17 +42,17 @@ export class ChangeValueUtil {
             case ChangeValueType.INT:
                 // TODO fix this for Int
                 const view1 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view1.getInt32(0))];
+                valueStrings = [String(view1.getInt32(0, true))];
                 break;
             case ChangeValueType.UINT:
                 // TODO fix this for UInt
                 const view2 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view2.getUint32(0))];
+                valueStrings = [String(view2.getUint32(0, true))];
                 break;
             case ChangeValueType.FLOAT:
                 // TODO fix this for Float
                 const view3 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view3.getFloat32(0))];
+                valueStrings = [String(view3.getFloat32(0, true))];
                 break;
             case ChangeValueType.LEAFLIST_STRING:
                 const leafList = dec.decode(value.value);

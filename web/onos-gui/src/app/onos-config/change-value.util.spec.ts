@@ -84,7 +84,7 @@ describe('ChangeValueService', () => {
 
     it('Int value', () => {
         const ab = new ArrayBuffer(8);
-        const intArr = new Uint8Array(ChangeValueUtil.longToByteArray(1234));
+        const intArr = new Uint8Array(ChangeValueUtil.longToByteArray(12345678));
         const value = <ValueDetails>{
             value: intArr,
             valueType: ChangeValueType.INT,
@@ -92,7 +92,7 @@ describe('ChangeValueService', () => {
         };
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(1);
-        expect(values[0].length).toBe(10);
-        expect(values[0]).toEqual('1234');
+        expect(values[0].length).toBe(8);
+        expect(values[0]).toEqual('12345678');
     });
 });
