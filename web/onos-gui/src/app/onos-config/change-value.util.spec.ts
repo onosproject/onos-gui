@@ -83,7 +83,6 @@ describe('ChangeValueService', () => {
     });
 
     it('Int value', () => {
-        const ab = new ArrayBuffer(8);
         const intArr = new Uint8Array(ChangeValueUtil.longToByteArray(12345678));
         const value = <ValueDetails>{
             value: intArr,
@@ -94,5 +93,18 @@ describe('ChangeValueService', () => {
         expect(values.length).toBe(1);
         expect(values[0].length).toBe(8);
         expect(values[0]).toEqual('12345678');
+    });
+
+    it('Float value', () => {
+        const intArr = new Uint8Array(ChangeValueUtil.floatToByteArray(2.1));
+        const value = <ValueDetails>{
+            value: intArr,
+            valueType: ChangeValueType.FLOAT,
+            valueTypeOpts: Array(0),
+        };
+        const values = ChangeValueUtil.transform(value);
+        expect(values.length).toBe(1);
+        expect(values[0].length).toBe(3);
+        expect(values[0]).toEqual('2.1');
     });
 });

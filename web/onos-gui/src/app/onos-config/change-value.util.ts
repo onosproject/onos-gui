@@ -35,22 +35,21 @@ export class ChangeValueUtil {
             return [];
         }
         let valueStrings: string[] = [];
-        const dataIsLittleEndian = true;
         switch (value.valueType) {
             case ChangeValueType.BOOL:
                 valueStrings = [value[0] ? 'true' : 'false'];
                 break;
             case ChangeValueType.INT:
-                const view1 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view1.getInt32(0, dataIsLittleEndian))];
+                const view1 = new DataView(value.value.buffer, 0, 4);
+                valueStrings = [String(view1.getInt32(0, true))];
                 break;
             case ChangeValueType.UINT:
-                const view2 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view2.getUint32(0, dataIsLittleEndian))];
+                const view2 = new DataView(value.value.buffer, 0, 4);
+                valueStrings = [String(view2.getUint32(0, true))];
                 break;
             case ChangeValueType.FLOAT:
                 const view3 = new DataView(value.value.buffer, 0, 8);
-                valueStrings = [String(view3.getFloat32(0, dataIsLittleEndian))];
+                valueStrings = [String(view3.getFloat64(0, true))];
                 break;
             case ChangeValueType.LEAFLIST_STRING:
                 const leafList = dec.decode(value.value);
@@ -71,23 +70,15 @@ export class ChangeValueUtil {
     // Inspired by https://stackoverflow.com/questions/8482309/converting-javascript-integer-to-byte-array-and-back
     public static longToByteArray (long: number): Uint8Array {
         // we want to represent the input as a 8-bytes array
-        const byteArray = [0, 0, 0, 0, 0, 0, 0, 0];
-
-        for ( let index = 0; index < byteArray.length; index ++ ) {
-            const byte = long & 0xff;
-            byteArray [ index ] = byte;
-            long = (long - byte) / 256 ;
-        }
-
-        return new Uint8Array(byteArray);
+        const intArray = new Int32Array(1);
+        intArray[0] = long;
+        return new Uint8Array(intArray.buffer, 0, 4);
     }
 
-    public static byteArrayToLong(byteArray: Uint8Array): number {
-        let value = 0;
-        for ( let i = byteArray.length - 1; i >= 0; i--) {
-            value = (value * 256) + byteArray[i];
-        }
-
-        return value;
+    public static floatToByteArray (float: number): Uint8Array {
+        // we want to represent the input as a 8-bytes array
+        const floatArray = new Float64Array(1);
+        floatArray[0] = float;
+        return new Uint8Array(floatArray.buffer, 0, floatArray.buffer.byteLength);
     }
 }
