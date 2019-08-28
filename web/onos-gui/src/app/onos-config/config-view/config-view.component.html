@@ -29,7 +29,7 @@
 
 <onos-path-bar id="config-path-panel" [path]="selectedPath">
 </onos-path-bar>
-<onos-string-value *ngIf="selectedValue?.valueType === 1"
+<onos-string-value *ngIf="selectedValue?.valueType === 1 || selectedRwPath?.getValueType() === 1"
                    [valueDetails]="selectedValue"
                    (valueEdited)="addToEditedValues(selectedPath, selectedValue, $event)">
 </onos-string-value>
@@ -65,7 +65,8 @@
             <svg:g #readWriteLayer
                    onos-layer-svg [layerId]="type + version + ''"
                    [classes]="['rwpaths']"
-                   [visible]="changeIdsVisible.get(RWPATHS)" [layerType]="3">
+                   [visible]="changeIdsVisible.get(RWPATHS)" [layerType]="3"
+                   (editRequestedLayer)="pathSelected($event)">
             </svg:g>
         </svg:g>
     </svg:svg>

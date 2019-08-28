@@ -31,8 +31,9 @@ import {TreeLayoutService} from '../tree-layout.service';
 import {PathDetails} from './layer-svg/layer-svg.component';
 import {ValueDetails} from '../change-value.util';
 import {
-    ChangeValue,
+    ChangeValue, ReadWritePath,
 } from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ModelTempIndexService} from './model-temp-index.service';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -49,6 +50,10 @@ export const CONFIGNAME = 'configName';
         {
             provide: TreeLayoutService,
             useValue: new TreeLayoutService()
+        },
+        {
+            provide: ModelTempIndexService,
+            useValue: new ModelTempIndexService()
         }
     ]
 })
@@ -67,6 +72,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     create_pending_confirm: string = '';
     selectedPath = '/';
     selectedValue: ValueDetails = undefined;
+    selectedRwPath: ReadWritePath;
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -78,6 +84,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         private tree: TreeLayoutService,
         protected ar: ActivatedRoute,
         protected is: IconService,
+        private modelTmpIndex: ModelTempIndexService,
     ) {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
@@ -104,6 +111,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnDestroy(): void {
         this.tree.resetAll();
+        this.modelTmpIndex.clearAll();
         console.log('ConfigViewComponent destroyed and Tree Service reset');
     }
 
@@ -157,6 +165,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     pathSelected(pathDetails: PathDetails) {
         this.selectedPath = pathDetails.abspath;
         this.selectedValue = pathDetails.value;
+        this.selectedRwPath = pathDetails.readWritePath;
     }
 
     activatePendingLayer(configName: string, path: string): void {

@@ -37,6 +37,7 @@ import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pk
 import {ModelService} from '../../model.service';
 import {ValueDetails} from '../../change-value.util';
 import {PendingNetChangeService} from '../../pending-net-change.service';
+import {ModelTempIndexService} from '../model-temp-index.service';
 
 export interface ChangeValueObj {
     relPath: string;
@@ -46,6 +47,7 @@ export interface ChangeValueObj {
     removed: boolean;
     parentPath: string;
     node: ConfigNode;
+    rwPath: ReadWritePath;
 }
 
 export interface Branch {
@@ -104,6 +106,7 @@ export class LayerSvgComponent implements OnChanges {
         private tree: TreeLayoutService,
         private models: ModelService,
         private pending: PendingNetChangeService,
+        private modelTempIdx: ModelTempIndexService,
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
         this.linkList = new Map<string, Branch>();
@@ -113,10 +116,10 @@ export class LayerSvgComponent implements OnChanges {
 
     // Watch out for a slash in an index name
     public decomposePath(p: string): [string, string] {
-        let lastSlashIdx =  p.lastIndexOf('/');
+        let lastSlashIdx = p.lastIndexOf('/');
         const lastSqBrktIdx = p.lastIndexOf(']');
         if (lastSqBrktIdx > lastSlashIdx) {
-           lastSlashIdx = p.substr(0, p.lastIndexOf('[')).lastIndexOf('/');
+            lastSlashIdx = p.substr(0, p.lastIndexOf('[')).lastIndexOf('/');
         }
         const parentPath = p.substr(0, lastSlashIdx);
         const relPath = p.substring(lastSlashIdx + 1);
@@ -150,22 +153,11 @@ export class LayerSvgComponent implements OnChanges {
                 for (const model of this.models.modelInfoList) {
                     if (model['id'] === layerIdNew) {
                         console.log('Getting RW paths for', layerIdNew);
-                        for (const path of model.getReadWritePathList()) {
-                            const [relPath, parentPath] = this.decomposePath(path.getPath());
-                            const fgnode = this.addToForceGraph(path.getPath());
-                            const cv = <ChangeValueObj>{
-                                relPath: relPath,
-                                parentPath: parentPath,
-                                value: new Uint8Array(),
-                                valueType: ChangeValueType.EMPTY,
-                                valueTypeOpts: {},
-                                node: fgnode
-                            };
-                            this.nodelist.set(path.getPath(), cv);
 
-                            this.checkParentExists(path.getPath(), parentPath);
-                            console.log('Read Write path', layerIdNew, 'processed', path.getPath());
+                        for (const path of model.getReadWritePathList()) {
+                            this.addRwPath(path);
                         }
+                        this.modelTempIdx.addModelInfo(model);
                         this.tree.reinitSimulation();
                     }
                 }
@@ -214,6 +206,10 @@ export class LayerSvgComponent implements OnChanges {
                         this.nodelist.set(c.getPath(), cv);
 
                         this.checkParentExists(c.getPath(), parentPath);
+
+                        if (c.getPath().indexOf('[') > -1) {
+                            this.modelTempIdx.addIndex(c.getPath());
+                        }
                     }
                     console.log('Change response for ', layerIdNew, 'received', this.nodelist);
                     this.tree.reinitSimulation();
@@ -230,6 +226,31 @@ export class LayerSvgComponent implements OnChanges {
                 }
             }
         }
+        if (changes['visible']) {
+            if (changes['visible'].currentValue && this.layerType === LayerType.LAYERTYPE_RWPATHS) {
+                this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
+                    this.addRwPath(ep);
+                });
+                this.tree.reinitSimulation();
+            }
+        }
+    }
+
+    private addRwPath(path: ReadWritePath) {
+        const [relPath, parentPath] = this.decomposePath(path.getPath());
+        const fgnode = this.addToForceGraph(path.getPath());
+        const cv = <ChangeValueObj>{
+            relPath: relPath,
+            parentPath: parentPath,
+            value: new Uint8Array(),
+            valueType: ChangeValueType.EMPTY,
+            valueTypeOpts: {},
+            node: fgnode,
+            rwPath: path
+        };
+        this.nodelist.set(path.getPath(), cv);
+
+        this.checkParentExists(path.getPath(), parentPath);
     }
 
     private updatePending(pendingChanges: Array<ChangeValue>, configName: string) {
@@ -328,20 +349,32 @@ export class LayerSvgComponent implements OnChanges {
         return branchId;
     }
 
-    requestEditLayer(abspath: string, value: Uint8Array, valueType: ChangeValueType, valueTypeOpts: Array<number>): void {
+    requestEditLayer(abspath: string, value: Uint8Array, valueType: ChangeValueType,
+                     valueTypeOpts: Array<number>, rwPath?: ReadWritePath): void {
         if (this.layerType === LayerType.LAYERTYPE_OPSTATE ||
             this.layerType === LayerType.LAYERTYPE_ROPATHS) {
             return;
         }
-        this.editRequestedLayer.emit(<PathDetails>{
-            abspath: abspath,
-            value: <ValueDetails> {
+        let valueObj: ValueDetails;
+        if (value !== undefined && value.length > 0) {
+            valueObj = <ValueDetails>{
                 value: value,
                 valueType: valueType,
                 valueTypeOpts: valueTypeOpts,
-            },
+            };
+        } else {
+            valueObj = <ValueDetails>{
+                value: new Uint8Array(),
+                valueType: rwPath.getValueType(),
+                valueTypeOpts: Array<number>(0), // TODO get number of decimal places from RW path
+            };
+        }
+        this.editRequestedLayer.emit(<PathDetails>{
+            abspath: abspath,
+            value: valueObj,
+            readWritePath: rwPath
         });
-        console.log('Edit requested on layer', this.layerId, abspath);
+        console.log('Edit requested on layer', this.layerId, abspath, valueObj.valueType);
     }
 
     // Calculates an SVG path for the branch
@@ -356,7 +389,7 @@ export class LayerSvgComponent implements OnChanges {
         const halfWayY = (link.target.y + 10 + link.source.y + 10) / 2;
 
         const mm = 'M ' + halfWayX + ' ' + halfWayY;
-        const cp1 =  'Q ' + (link.target.x + 160 + ControlPointX) + ' ' + (link.target.y + 10);
+        const cp1 = 'Q ' + (link.target.x + 160 + ControlPointX) + ' ' + (link.target.y + 10);
         const ep1 = (link.target.x + 160) + ' ' + (link.target.y + 10);
         const cp2 = 'Q ' + (link.source.x - ControlPointX) + ' ' + (link.source.y + 10);
         const ep2 = link.source.x + ' ' + (link.source.y + 10);

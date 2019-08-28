@@ -18,8 +18,7 @@
     <svg:desc>Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:desc>
     <svg:g *ngFor="let node of nodelist | keyvalue; let i = index">
         <svg:g onos-container-svg
-               [containerX]="node.value.node.x"
-               [containerY]="node.value.node.y"
+               [node]="node.value.node"
                [relpath]="node.value.relPath"
                [value]="node.value.value"
                [valueType]="node.value.valueType"
@@ -27,9 +26,13 @@
                [parentpath]="node.value.parentPath"
                [abspath]="node.key"
                [classes]="classes"
-               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.valueType, node.value.valueTypeOpts)"
-                onosDraggableContainer [draggableNode]="node.value.node">
+               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.valueType, node.value.valueTypeOpts, node.value.rwPath)"
+                >
         </svg:g>
+        <svg:rect id="dragbox" width="100" height="20" [attr.transform]="'translate(' + node.value.node.x + ',' + node.value.node.y + ')'"
+                  onosDraggableContainer [draggableNode]="node.value.node">
+            <svg:desc>Using a separate invisible target for dragging</svg:desc>
+        </svg:rect>
     </svg:g>
     <svg:path *ngFor="let branch of linkList | keyvalue" stroke-width="2" stroke="#a9aba0" fill-opacity="0"
               [attr.d]="curveCalculator(branch.value.link)">

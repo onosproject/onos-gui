@@ -25,6 +25,7 @@ import {
     ChangeValueType,
     ReadWritePath
 } from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ConfigNode} from '../../tree-layout.service';
 
 @Component({
     selector: '[onos-container-svg]',
@@ -35,8 +36,7 @@ export class ContainerSvgComponent implements OnChanges {
     @Input() relpath: string;
     @Input() abspath: string;
     @Input() parentpath: string;
-    @Input() containerX: number = 0;
-    @Input() containerY: number = 0;
+    @Input() node: ConfigNode;
     @Input() containerScale: number = 1.0;
     @Input() value: Uint8Array | string;
     @Input() valueType: ChangeValueType;
