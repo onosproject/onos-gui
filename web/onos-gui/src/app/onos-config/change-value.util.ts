@@ -41,15 +41,15 @@ export class ChangeValueUtil {
                 valueStrings = [value[0] ? 'true' : 'false'];
                 break;
             case ChangeValueType.INT:
-                const view1 = new DataView(value.value.buffer, 0, 4);
+                const view1 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
                 valueStrings = [String(view1.getInt32(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.UINT:
-                const view2 = new DataView(value.value.buffer, 0, 4);
+                const view2 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
                 valueStrings = [String(view2.getUint32(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.FLOAT:
-                const view3 = new DataView(value.value.buffer, 0, 8);
+                const view3 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
                 valueStrings = [String(view3.getFloat64(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.LEAFLIST_STRING:
