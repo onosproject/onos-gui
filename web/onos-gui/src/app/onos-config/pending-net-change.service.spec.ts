@@ -106,10 +106,10 @@ describe('PendingNetChangeService', () => {
         expect(gnmiPaths[4].getKeyMap()['map_']['severity']['key']).toEqual('severity');
         expect(gnmiPaths[4].getKeyMap()['map_']['severity']['value']).toEqual('2');
 
-        console.log('KeyMap', Object.keys(gnmiPaths[4].getKeyMap()));
-        for (const k of Object.keys(gnmiPaths[4].getKeyMap())) {
-            console.log('item', k, gnmiPaths[4].getKeyMap()[k]);
-        }
+        // console.log('KeyMap', Object.keys(gnmiPaths[4].getKeyMap()));
+        // for (const k of Object.keys(gnmiPaths[4].getKeyMap())) {
+        //     console.log('item', k, gnmiPaths[4].getKeyMap()[k]);
+        // }
     });
 
 });

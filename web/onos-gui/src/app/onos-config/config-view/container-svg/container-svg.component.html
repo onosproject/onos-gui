@@ -25,7 +25,7 @@
 </svg:defs>
 
 <svg:g id="container" [ngClass]="classes.join(' ')" xmlns:svg="http://www.w3.org/2000/svg" width="160" height="80"
-         [attr.transform]="'translate(' + containerX + ',' + containerY + '), scale(' + containerScale + ')'">
+         [attr.transform]="'translate(' + node.x + ',' + node.y + '), scale(' + containerScale + ')'">
     <svg:rect id="box" width="160"
               [attr.height]="boxHeight"
               [attr.rx]="classes.includes('leaf')?0:5"
