@@ -95,6 +95,19 @@ describe('ChangeValueService', () => {
         expect(values[0]).toEqual('12345678');
     });
 
+    it('UInt value', () => {
+        const uint8Array = new Uint8Array([0xC, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
+        const value = <ValueDetails>{
+            value: uint8Array,
+            valueType: ChangeValueType.UINT,
+            valueTypeOpts: Array(0),
+        };
+        const values = ChangeValueUtil.transform(value);
+        expect(values.length).toBe(1);
+        expect(values[0].length).toBe(2);
+        expect(values[0]).toEqual('12');
+    });
+
     it('Float value', () => {
         const intArr = new Uint8Array(ChangeValueUtil.floatToByteArray(2.1));
         const value = <ValueDetails>{
