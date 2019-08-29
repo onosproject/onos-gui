@@ -19,7 +19,7 @@ import {TestBed} from '@angular/core/testing';
 import {ChangeValueUtil, ValueDetails} from './change-value.util';
 import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 
-describe('ChangeValueService', () => {
+describe('ChangeValueUtil', () => {
     const enc = new TextEncoder();
 
     beforeEach(() => {

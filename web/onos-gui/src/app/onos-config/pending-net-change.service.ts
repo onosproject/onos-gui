@@ -30,6 +30,7 @@ import {
     Update
 } from './proto/github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
 import {ChangeValueUtil, ValueDetails} from './change-value.util';
+import {PathUtil} from './path.util';
 
 export const PENDING = 'pending';
 export const PENDING_U = 'Pending';
@@ -150,7 +151,7 @@ export class PendingNetChangeService {
                 // have to extract the target name from the config name
                 const targetName = configName.slice(0, configName.lastIndexOf('-'));
                 gnmiPath.setTarget(targetName);
-                const elemList = this.strPathToParts(cv.getPath());
+                const elemList = PathUtil.strPathToParts(cv.getPath());
                 const gnmiElems = this.toGnmiPathElems(elemList);
                 gnmiPath.setElemList(gnmiElems);
 
@@ -190,63 +191,5 @@ export class PendingNetChangeService {
         }
 
         return gnmiElemList;
-    }
-
-    strPathToParts(path: string): string[] {
-        const result: string[] = [];
-        if (path.length > 0 && path[0] === '/') {
-            path = path.slice(1);
-        }
-        while (path.length > 0) {
-            const i = this.nextTokenIndex(path);
-            let part = path.slice(0, i);
-            const partsNs = part.split(':');
-            if (partsNs.length === 2) {
-                // We have to discard the namespace as gNMI doesn't handle it
-                part = partsNs[1];
-            }
-            result.push(part);
-            path = path.slice(i);
-            if (path.length > 0 && path[0] === '/') {
-                path = path.slice(1);
-            }
-        }
-        return result;
-    }
-
-    // nextTokenIndex returns the end index of the first token.
-    private nextTokenIndex(path: string): number {
-        let inBrackets: boolean = false;
-        let escape: boolean = false;
-
-        const letters = path.split('');
-        let i = 0;
-        for (const c of letters) {
-            switch (c) {
-                case '[':
-                    inBrackets = true;
-                    escape = false;
-                    break;
-                case ']':
-                    if (!escape) {
-                        inBrackets = false;
-                    }
-                    escape = false;
-                    break;
-                case '\\':
-                    escape = !escape;
-                    break;
-                case '/':
-                    if (!inBrackets && !escape) {
-                        return i;
-                    }
-                    escape = false;
-                    break;
-                default:
-                    escape = false;
-            }
-            i = i + 1;
-        }
-        return path.length;
     }
 }
