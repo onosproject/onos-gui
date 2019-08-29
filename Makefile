@@ -11,7 +11,7 @@ test: deps build lint license_check
 	cd web/onos-gui && ng test --browsers=ChromeHeadless --watch=false
 
 coverage: # @HELP generate unit test coverage data
-coverage: deps build license_check
+coverage: deps build license_check test
 
 deps: # @HELP ensure that the required dependencies are in place
 	cd web/onos-gui && npm install
