@@ -34,6 +34,7 @@ import {
     ChangeValue, ReadWritePath,
 } from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {ModelTempIndexService} from './model-temp-index.service';
+import {HierarchyLayoutService} from './hierarchy-layout.service';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -54,6 +55,10 @@ export const CONFIGNAME = 'configName';
         {
             provide: ModelTempIndexService,
             useValue: new ModelTempIndexService()
+        },
+        {
+            provide: HierarchyLayoutService,
+            useValue: new HierarchyLayoutService()
         }
     ]
 })
@@ -85,6 +90,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         protected ar: ActivatedRoute,
         protected is: IconService,
         private modelTmpIndex: ModelTempIndexService,
+        private hierarchy: HierarchyLayoutService
     ) {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
@@ -112,6 +118,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     ngOnDestroy(): void {
         this.tree.resetAll();
         this.modelTmpIndex.clearAll();
+        this.hierarchy.clearAll();
         console.log('ConfigViewComponent destroyed and Tree Service reset');
     }
 

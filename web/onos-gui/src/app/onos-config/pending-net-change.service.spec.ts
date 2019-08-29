@@ -33,39 +33,6 @@ describe('PendingNetChangeService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should convert path with no imdex', () => {
-        const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
-        const parts = service.strPathToParts('/a/b/c/d/e');
-
-        expect(parts.length).toEqual(5);
-        expect(parts).toEqual(['a', 'b', 'c', 'd', 'e']);
-    });
-
-    it('should convert path with 1 index', () => {
-        const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
-        const parts = service.strPathToParts('/a/b[name=foo]/c/d/e');
-
-        expect(parts.length).toEqual(5);
-        expect(parts).toEqual(['a', 'b[name=foo]', 'c', 'd', 'e']);
-    });
-
-    it('should convert path with 1 index slash', () => {
-        const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
-        const parts = service.strPathToParts('/a/b[name=1/0]/c/d/e');
-
-        expect(parts.length).toEqual(5);
-        expect(parts).toEqual(['a', 'b[name=1/0]', 'c', 'd', 'e']);
-    });
-
-    it('should convert path with 2 indices', () => {
-        const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
-        const parts = service.strPathToParts('/a/b[name=foo]/c/d/e[idx=bar]');
-
-        expect(parts.length).toEqual(5);
-        expect(parts).toEqual(['a', 'b[name=foo]', 'c', 'd', 'e[idx=bar]']);
-    });
-
-
     it('should create gnmiPath', () => {
         const service: PendingNetChangeService = TestBed.get(PendingNetChangeService);
         const gnmiPaths = service.toGnmiPathElems(['a', 'b', 'c', 'd', 'e']);
