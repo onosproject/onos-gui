@@ -4,6 +4,16 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+          base: 'ChromeHeadless',
+          flags: [
+              '--no-sandbox',
+              '--user-data-dir=/tmp/chrome-test-profile',
+              '--disable-web-security'
+          ]
+      }
+    },
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
