@@ -8,7 +8,7 @@ build:
 
 test: # @HELP run the unit tests and source code validation
 test: deps build lint license_check
-    #Waiting in Issue #20  cd web/onos-gui && ng test --browsers=ChromeHeadless --watch=false
+	cd web/onos-gui && ng test --browsers=ChromeHeadless --watch=false
 
 coverage: # @HELP generate unit test coverage data
 coverage: deps build license_check
