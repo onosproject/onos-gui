@@ -28,7 +28,7 @@ protos: # @HELP compile the protobuf files (using protoc-go Docker)
 		--entrypoint build/bin/compile-protos-ts.sh \
 		onosproject/protoc-go:stable
 
-onos-gui-docker: # @HELP build onos-gui Docker image
+onos-gui-docker: build # @HELP build onos-gui Docker image
 	docker build . -f build/onos-gui/Dockerfile \
 		-t onosproject/onos-gui:${ONOS_GUI_VERSION}
 
