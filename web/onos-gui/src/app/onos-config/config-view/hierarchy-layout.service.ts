@@ -21,6 +21,7 @@ import {PathUtil} from '../path.util';
 export interface HierarchyNode {
     id: string;
     absPath: string;
+    layerRefs: string[];
     children: Array<HierarchyNode>;
 }
 
@@ -32,6 +33,21 @@ export interface TreeLayoutNode {
     x: number;
     y: number;
     children: Array<TreeLayoutNode>;
+    parent: HierarchyNode;
+    links: () => ConfigLink[];
+}
+
+export interface ConfigNode {
+    id: string;
+    data: HierarchyNode;
+    x: number;
+    y: number;
+}
+
+export interface ConfigLink {
+    id: string;
+    source: ConfigNode;
+    target: ConfigNode;
 }
 
 /**
@@ -50,7 +66,8 @@ export class HierarchyLayoutService {
      * Set up the root node
      */
     constructor() {
-        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0), absPath: '/'};
+        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
+            absPath: '/', layerRefs: Array<String>(0)};
         this.flatMap = new Map<string, TreeLayoutNode>();
     }
 
@@ -59,7 +76,8 @@ export class HierarchyLayoutService {
      * exist, but needs to be cleaned for the next component.
      */
     clearAll() {
-        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0), absPath: '/'};
+        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
+            absPath: '/', layerRefs: Array<String>(0)};
         this.flatMap.clear();
         this.treeLayout = null;
     }
@@ -71,9 +89,8 @@ export class HierarchyLayoutService {
      */
     recalculate() {
         const hierarchyRoot = d3.hierarchy(this.root);
-        hierarchyRoot.dx = 10;
-        const width = 1000;
-        hierarchyRoot.dy = width / (hierarchyRoot.height + 1);
+        hierarchyRoot.dx = 60;
+        hierarchyRoot.dy = 240;
         this.treeLayout = d3.tree().nodeSize([hierarchyRoot.dx, hierarchyRoot.dy])(hierarchyRoot);
         this.generateFlatMap(this.treeLayout);
         return this.treeLayout;
@@ -91,7 +108,6 @@ export class HierarchyLayoutService {
      * in an SVG group
      */
     generateFlatMap(node: TreeLayoutNode) {
-        console.log('Node', node.data.id, node.height, node.width, node.x, node.y, node.data.absPath);
         this.flatMap.set(node.data.absPath, node);
         if (node.children && node.children.length > 0) {
             node.children.forEach((n) => {
@@ -101,15 +117,19 @@ export class HierarchyLayoutService {
     }
 
     /**
-     * Each layer should call this for every leaf or container to ensure its they
+     * Each layer should call this for every leaf or container to ensure they
      * and all of their parent nodes are added to the hierarchy.
      * @param abspath The absolute path of the node e.g. /a/b[n=*]/c/d
+     * @param layer the layer that this is referring to this node
      */
-    ensureNode(abspath: string): HierarchyNode {
+    ensureNode(abspath: string, layer: string): HierarchyNode {
         const parts = ['/'];
         parts.push(...PathUtil.strPathToParts(abspath));
+        if (!this.root.layerRefs.includes(layer)) {
+            this.root.layerRefs.push(layer);
+        }
 
-        return this.ensureChildren(parts, this.root, '');
+        return this.ensureChildren(parts, this.root, '', layer);
     }
 
     /**
@@ -118,11 +138,12 @@ export class HierarchyLayoutService {
      * @param pathParts an ordered array of string parts e.g. ['/','a','b[n=*']','c','d']
      * @param node the parent node
      * @param parent the absolute path of the parent
+     * @layer the layer that this is referring to this node
      */
-    private ensureChildren(pathParts: string[], node: HierarchyNode, parent: string): HierarchyNode {
+    private ensureChildren(pathParts: string[], node: HierarchyNode, parent: string, layer: string): HierarchyNode {
         const current = pathParts[0];
         if (node.id !== current) {
-            console.error('Mistmatch', node.id, current);
+            console.error('Mismatch', node.id, current);
             return null;
         }
         if (pathParts.length === 1) {
@@ -138,19 +159,22 @@ export class HierarchyLayoutService {
 
         for (const child of node.children) {
             if (child.id === next) {
-                return this.ensureChildren(pathParts.slice(1), child, newParent);
+                if (!child.layerRefs.includes(layer)) {
+                    child.layerRefs.push(layer);
+                }
+                return this.ensureChildren(pathParts.slice(1), child, newParent, layer);
             }
         }
         // If it got to here - then it wasn't found - create it
         const newNode = <HierarchyNode>{
             id: next,
             children: Array<HierarchyNode>(0),
-            absPath: newParent + (newParent === '/' ? '' : '/') + next
+            absPath: newParent + (newParent === '/' ? '' : '/') + next,
+            layerRefs: Array<String>(1).fill(layer)
         };
-        console.log('Added', newNode.absPath);
         node.children.push(newNode);
         if (pathParts.length > 2) {
-            return this.ensureChildren(pathParts.slice(1), newNode, newParent);
+            return this.ensureChildren(pathParts.slice(1), newNode, newParent, layer);
         }
         return newNode;
     }

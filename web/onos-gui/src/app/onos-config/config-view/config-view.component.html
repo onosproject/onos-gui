@@ -30,7 +30,7 @@
 <onos-path-bar id="config-path-panel" [path]="selectedPath">
 </onos-path-bar>
 <onos-string-value *ngIf="selectedValue?.valueType === 1 || selectedRwPath?.getValueType() === 1"
-                   [valueDetails]="selectedValue"
+                   [valueDetails]="selectedValue" [disabled]="!pending.hasPendingChange"
                    (valueEdited)="addToEditedValues(selectedPath, selectedValue, $event)">
 </onos-string-value>
 

@@ -27,7 +27,6 @@ import {ActivatedRoute} from '@angular/router';
 import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
-import {TreeLayoutService} from '../tree-layout.service';
 import {PathDetails} from './layer-svg/layer-svg.component';
 import {ValueDetails} from '../change-value.util';
 import {
@@ -48,10 +47,6 @@ export const CONFIGNAME = 'configName';
     templateUrl: './config-view.component.html',
     styleUrls: ['./config-view.component.css'],
     providers: [
-        {
-            provide: TreeLayoutService,
-            useValue: new TreeLayoutService()
-        },
         {
             provide: ModelTempIndexService,
             useValue: new ModelTempIndexService()
@@ -86,7 +81,6 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         private diags: OnosConfigDiagsService,
         private pending: PendingNetChangeService,
-        private tree: TreeLayoutService,
         protected ar: ActivatedRoute,
         protected is: IconService,
         private modelTmpIndex: ModelTempIndexService,
@@ -116,7 +110,6 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.tree.resetAll();
         this.modelTmpIndex.clearAll();
         this.hierarchy.clearAll();
         console.log('ConfigViewComponent destroyed and Tree Service reset');

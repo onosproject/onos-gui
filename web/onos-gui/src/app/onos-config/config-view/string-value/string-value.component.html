@@ -15,7 +15,7 @@
 -->
 
 <input type="text"
-       [(ngModel)]="stringValue">
+       [(ngModel)]="stringValue" [disabled]="disabled">
 <onos-icon [iconId]="'active'"
            [iconSize]="20"
            [classes]="stringValue===originalValue?'':'active'" (click)="makeChange(stringValue)"></onos-icon>
