@@ -14,5 +14,5 @@ jobs:
   include:
     - stage: tests
       script:
-        - docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli make coverage
+        - docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli ./build/bin/make-coverage
         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./build/bin/push-images; fi'
