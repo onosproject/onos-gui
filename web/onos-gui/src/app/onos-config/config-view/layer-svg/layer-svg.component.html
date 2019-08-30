@@ -16,26 +16,21 @@
 
 <svg:g *ngIf="visible" xmlns:svg="http://www.w3.org/2000/svg">
     <svg:desc>Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:desc>
-    <svg:g *ngFor="let node of nodelist | keyvalue; let i = index">
+    <svg:g *ngFor="let node of nodelist | keyvalue">
+        <svg:desc>Abs:{{node.key}} Val:{{node.value.value.value | changeValue:node.value.value.valueType:node.value.value.valueTypeOpts  }}</svg:desc>
         <svg:g onos-container-svg
-               [node]="node.value.node"
+               [containerX]="this.hierarchy.flatMap.get(node.key).y"
+               [containerY]="this.hierarchy.flatMap.get(node.key).x"
+               [hn]="this.hierarchy.flatMap.get(node.key)"
                [relpath]="node.value.relPath"
                [value]="node.value.value"
-               [valueType]="node.value.valueType"
-               [valueTypeOpts]="node.value.valueTypeOpts"
-               [parentpath]="node.value.parentPath"
                [abspath]="node.key"
                [classes]="classes"
-               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.valueType, node.value.valueTypeOpts, node.value.rwPath)"
+               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.rwPath)"
                 >
         </svg:g>
-        <svg:rect id="dragbox" width="100" height="20" [attr.transform]="'translate(' + node.value.node.x + ',' + node.value.node.y + ')'"
-                  onosDraggableContainer [draggableNode]="node.value.node">
-            <svg:desc>Using a separate invisible target for dragging</svg:desc>
-        </svg:rect>
     </svg:g>
-    <svg:path *ngFor="let branch of linkList | keyvalue" stroke-width="2" stroke="#a9aba0" fill-opacity="0"
-              [attr.d]="curveCalculator(branch.value.link)">
-        <svg:desc>{{branch.key}}</svg:desc>
+    <svg:path *ngFor="let l of hierarchy.treeLayout.links() | linkFilter:layerId" stroke-width="2" stroke="#a9aba0" fill-opacity="0"
+              [attr.d]="curveCalculator(l)">
     </svg:path>
 </svg:g>

@@ -36,10 +36,10 @@ import { ModelsListComponent } from './models-list/models-list.component';
 import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
-import {DraggableDirective} from './config-view/draggable/draggable.directive';
 import {OnosUtilsModule} from '../utils/onos-utils.module';
 import { PathBarComponent } from './config-view/path-bar/path-bar.component';
 import { StringValueComponent } from './config-view/string-value/string-value.component';
+import { LinkFilterPipe } from './config-view/link-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -54,9 +54,9 @@ import { StringValueComponent } from './config-view/string-value/string-value.co
         ModelsListComponent,
         ModelDetailComponent,
         ChangeValuePipe,
-        DraggableDirective,
         PathBarComponent,
-        StringValueComponent
+        StringValueComponent,
+        LinkFilterPipe
     ],
     imports: [
         CommonModule,

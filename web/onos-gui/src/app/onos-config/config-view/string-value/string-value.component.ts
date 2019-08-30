@@ -32,6 +32,7 @@ import {ChangeValueUtil, ValueDetails} from '../../change-value.util';
 export class StringValueComponent implements OnChanges {
     @Input() valueDetails: ValueDetails = undefined;
     @Input() readWritePath: ReadWritePath = undefined;
+    @Input() disabled: boolean = true;
     @Output() valueEdited = new EventEmitter<Uint8Array>();
     stringValue: string;
     originalValue: string;

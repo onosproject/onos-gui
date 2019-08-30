@@ -22,10 +22,10 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {
-    ChangeValueType,
-    ReadWritePath
+    ChangeValueType
 } from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
-import {ConfigNode} from '../../tree-layout.service';
+import {ChangeValueUtil, ValueDetails} from '../../change-value.util';
+import {HierarchyNode} from '../hierarchy-layout.service';
 
 @Component({
     selector: '[onos-container-svg]',
@@ -35,18 +35,18 @@ import {ConfigNode} from '../../tree-layout.service';
 export class ContainerSvgComponent implements OnChanges {
     @Input() relpath: string;
     @Input() abspath: string;
-    @Input() parentpath: string;
-    @Input() node: ConfigNode;
+    @Input() containerX: number = 0;
+    @Input() containerY: number = 0;
+    @Input() hn: HierarchyNode; // For debugging
     @Input() containerScale: number = 1.0;
-    @Input() value: Uint8Array | string;
-    @Input() valueType: ChangeValueType;
-    @Input() valueTypeOpts: Array<number>;
+    @Input() value: ValueDetails;
     @Input() classes: string[] = ['config'];
     @Output() containerEditRequested = new EventEmitter<string>();
 
     boxHeight: number = 20;
     displayPath: string;
     textEncoder: TextEncoder;
+    strvalue: string[];
 
     constructor() {
         this.textEncoder = new TextEncoder();
@@ -55,12 +55,18 @@ export class ContainerSvgComponent implements OnChanges {
     // the change name can be changes any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes['relpath']) {
+            // console.log(this.abspath, 'HN:', this.hn);
             this.displayPath = this.relpath;
-            if (this.relpath.endsWith(']')) {
+            if (this.relpath && this.relpath.endsWith(']')) {
                 const wholeKey = this.relpath.substr(this.relpath.indexOf('['));
                 const keyNameList = wholeKey.substr(1, wholeKey.length - 2);
-                this.value = this.textEncoder.encode(keyNameList);
-                this.valueType = ChangeValueType.LEAFLIST_STRING;
+                this.value = <ValueDetails>{
+                    value: this.textEncoder.encode(keyNameList),
+                    valueType: ChangeValueType.LEAFLIST_STRING
+                };
+                if (this.value) {
+                    this.strvalue = ChangeValueUtil.transform(this.value, 15);
+                }
                 this.displayPath = this.relpath.substr(0, this.relpath.indexOf('['));
             }
             this.boxHeight = 20 + (this.value === undefined ? 0 : 15);
@@ -68,6 +74,8 @@ export class ContainerSvgComponent implements OnChanges {
     }
 
     requestEdit(abspath: string): void {
-        this.containerEditRequested.emit(abspath);
+        if (this.classes.includes('config') || this.classes.includes('rwpaths')) {
+            this.containerEditRequested.emit(abspath);
+        }
     }
 }

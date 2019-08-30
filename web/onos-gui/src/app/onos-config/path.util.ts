@@ -21,6 +21,14 @@
  * and translated in to TypeScript
  */
 export class PathUtil {
+
+    static strPathToParentChild(path: string): [string, string] {
+        const parts: string[] = this.strPathToParts(path);
+        const lastNode = parts.pop();
+        const parentPath = '/' + parts.join('/');
+        return [parentPath, lastNode === undefined ? '' : lastNode];
+    }
+
     static strPathToParts(path: string): string[] {
         const result: string[] = [];
         if (path.length > 0 && path[0] === '/') {
