@@ -7,11 +7,11 @@ build:
 	cd web/onos-gui && ng build --prod
 
 test: # @HELP run the unit tests and source code validation
-test: deps lint license_check build
+test: deps build lint license_check
 	cd web/onos-gui && ng test --browsers=ChromeHeadlessNoSandbox --watch=false
 
 coverage: # @HELP generate unit test coverage data
-coverage: test
+coverage: deps build license_check test
 
 deps: # @HELP ensure that the required dependencies are in place
 	cd web/onos-gui && npm install
