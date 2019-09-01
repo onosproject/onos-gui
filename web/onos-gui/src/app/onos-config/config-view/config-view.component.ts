@@ -64,7 +64,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     type: string;
     updated: number = 0;
     changeIds: string[] = [];
-    changeIdsVisible = new Map<string, boolean>();
+    changeIdsVisible: string[] = [];
     hasOpStateData: boolean = true;
     hasPending: boolean = false;
     pendingUdpateTime: Date;
@@ -89,10 +89,6 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
         this.is.loadIconDef('plus');
-        if (this.hasOpStateData) {
-            this.changeIdsVisible.set(OPSTATE, false);
-        }
-        this.changeIdsVisible.set(RWPATHS, false);
         console.log('Constructed ConfigViewComponent');
     }
 
@@ -120,6 +116,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         if (changes[CONFIGNAME]) {
             const cfgName = changes[CONFIGNAME].currentValue;
             this.changeIds.length = 0;
+            this.changeIdsVisible.length = 0;
             console.log('Configuration view changed to', cfgName);
 
             // Check to see if this is a pending change first
@@ -130,7 +127,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
                 for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
                     this.changeIds.push(cid);
-                    this.changeIdsVisible.set(cid, true);
+                    this.changeIdsVisible.push(cid);
                 }
                 return;
             }
@@ -145,7 +142,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.updated = (new Date()).setTime(config.getUpdated().getSeconds() * 1000);
                 for (const cid of config.getChangeIdsList()) {
                     this.changeIds.push(cid);
-                    this.changeIdsVisible.set(cid, true);
+                    this.changeIdsVisible.push(cid);
                 }
                 console.log('Configuration response for ', deviceName, 'received');
             });
@@ -154,12 +151,20 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 .pendingNetChange
                 .getChangesList()
                 .findIndex((cfg) => cfg.getId() === this.configName) > -1;
-            this.changeIdsVisible.set('pending', this.hasPending);
+            if (this.hasPending) {
+                this.changeIdsVisible.push('pending');
+            }
         }
     }
 
     visibilityChanged(event: SelectedLayer) {
-        this.changeIdsVisible.set(event.layerName, event.madeVisible);
+        if (event.madeVisible && !this.changeIdsVisible.includes(event.layerName)) {
+            this.changeIdsVisible.push(event.layerName);
+        } else if (!event.madeVisible && this.changeIdsVisible.includes(event.layerName)) {
+            const idx = this.changeIdsVisible.indexOf(event.layerName);
+            this.changeIdsVisible.splice(idx, 1);
+            this.hierarchy.removeLayer(event.layerName);
+        }
     }
 
     pathSelected(pathDetails: PathDetails) {
@@ -182,7 +187,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         if (confirmed) {
             this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
             this.changeIds.push(PENDING);
-            this.changeIdsVisible.set(PENDING, true);
+            this.changeIdsVisible.push(PENDING);
         } else {
             console.log('Create pending cancelled');
         }

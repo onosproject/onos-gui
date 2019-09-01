@@ -24,7 +24,10 @@ import {
 } from '@angular/core';
 import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {
-    Change, ChangeValue, ChangeValueType, ReadWritePath
+    Change,
+    ChangeValue,
+    ChangeValueType,
+    ReadWritePath
 } from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {ModelService} from '../../model.service';
@@ -77,7 +80,6 @@ export interface PathDetails {
 export class LayerSvgComponent implements OnChanges {
     @Input() layerId: string = undefined;
     @Input() layerType: LayerType = LayerType.LAYERTYPE_CONFIG;
-    @Input() visible: boolean;
     @Input() classes: string[] = ['config'];
     @Input() updated: Date;
     @Output() editRequestedLayer = new EventEmitter<PathDetails>();
@@ -91,7 +93,7 @@ export class LayerSvgComponent implements OnChanges {
         private models: ModelService,
         private pending: PendingNetChangeService,
         private modelTempIdx: ModelTempIndexService,
-        private hierarchy: HierarchyLayoutService,
+        public hierarchy: HierarchyLayoutService,
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
         this.updated = new Date(); // now
@@ -127,6 +129,9 @@ export class LayerSvgComponent implements OnChanges {
                             this.addRwPath(path);
                         }
                         this.modelTempIdx.addModelInfo(model);
+                        this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
+                            this.addRwPath(ep);
+                        });
                     }
                 }
             } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
@@ -193,13 +198,6 @@ export class LayerSvgComponent implements OnChanges {
                 if (pendingChanges && pendingChanges.length > 0) {
                     this.updatePending(pendingChanges, this.layerId);
                 }
-            }
-        }
-        if (changes['visible']) {
-            if (changes['visible'].currentValue && this.layerType === LayerType.LAYERTYPE_RWPATHS) {
-                this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
-                    this.addRwPath(ep);
-                });
             }
         }
         this.hierarchy.recalculate();
@@ -277,15 +275,17 @@ export class LayerSvgComponent implements OnChanges {
                 valueTypeOpts: Array<number>(0), // TODO get number of decimal places from RW path
             };
         } else {
-            console.warn('No value of rwPath for', abspath);
-            return;
+            valueObj = <ValueDetails>{
+                value: new Uint8Array(),
+                valueType: ChangeValueType.EMPTY,
+            };
         }
         this.editRequestedLayer.emit(<PathDetails>{
             abspath: abspath,
             value: valueObj,
             readWritePath: rwPath
         });
-        console.log('Edit requested on layer', this.layerId, abspath, valueObj.valueType);
+        console.log('Selected on layer', this.layerId, abspath, valueObj.valueType);
     }
 
     // Calculates an SVG path for the branch

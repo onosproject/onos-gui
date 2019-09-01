@@ -14,23 +14,30 @@
 ~ limitations under the License.
 -->
 
-<svg:g *ngIf="visible" xmlns:svg="http://www.w3.org/2000/svg">
+<svg:g xmlns:svg="http://www.w3.org/2000/svg">
     <svg:desc>Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:desc>
-    <svg:g *ngFor="let node of nodelist | keyvalue">
-        <svg:desc>Abs:{{node.key}} Val:{{node.value.value.value | changeValue:node.value.value.valueType:node.value.value.valueTypeOpts  }}</svg:desc>
+    <svg:g *ngFor="let node of hierarchy.treeLayout.descendants() | nodeFilter: layerId">
+        <svg:desc>Abs:{{node}} Val:{{node.data.absPath}}</svg:desc>
+        <!-- Template explaination
+           For each container object - some of the data is held in the layer and the
+           rest of it is held in the Hierarchy layer's Flat Map
+           This is because many objects across these different layers must
+           have the same (shared) location
+           -->
         <svg:g onos-container-svg
-               [containerX]="this.hierarchy.flatMap.get(node.key).y"
-               [containerY]="this.hierarchy.flatMap.get(node.key).x"
-               [hn]="this.hierarchy.flatMap.get(node.key)"
-               [relpath]="node.value.relPath"
-               [value]="node.value.value"
-               [abspath]="node.key"
+               [containerX]="node.y"
+               [containerY]="node.x"
+               [hn]="node"
+               [relpath]="node.data.id"
+               [value]="nodelist.get(node.data.absPath)?.value"
+               [abspath]="node.data.absPath"
                [classes]="classes"
-               (containerEditRequested)="requestEditLayer($event, node.value.value, node.value.rwPath)"
+               (containerEditRequested)="requestEditLayer($event, nodelist.get(node.data.absPath).value, undefined)"
                 >
         </svg:g>
     </svg:g>
     <svg:path *ngFor="let l of hierarchy.treeLayout.links() | linkFilter:layerId" stroke-width="2" stroke="#a9aba0" fill-opacity="0"
               [attr.d]="curveCalculator(l)">
     </svg:path>
+    <svg:desc *ngFor="let d of this.hierarchy.treeLayout.descendants()">Descendant {{d}}</svg:desc>
 </svg:g>

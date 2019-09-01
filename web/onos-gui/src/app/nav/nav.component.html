@@ -14,7 +14,7 @@
 ~ limitations under the License.
 -->
 <nav id="nav" [@navState]="ns.showNav">
-    <div id="platform" class="nav-hdr">{{ lionFn('cat_platform') }}</div>
+    <div id="platform" class="nav-hdr">Platform</div>
     <div *ngFor="let uiView of ns.uiPlatformViews">
         <a id="{{uiView.id}}" (click)="ns.hideNav()"
            routerLink="/{{uiView.id}}">
@@ -22,7 +22,7 @@
             {{ uiView.label }}</a>
     </div>
 
-    <div id="network" class="nav-hdr">{{ lionFn('cat_network') }}</div>
+    <div id="network" class="nav-hdr">Network</div>
     <div *ngFor="let uiView of ns.uiNetworkViews">
         <a id="{{uiView.id}}" (click)="ns.hideNav()"
            routerLink="/{{uiView.id}}">
@@ -31,7 +31,7 @@
     </div>
 
     <div *ngIf="ns.uiOtherViews.length > 0" id="other"
-         class="nav-hdr">{{ lionFn('cat_other') }}</div>
+         class="nav-hdr">Config</div>
     <div *ngFor="let uiView of ns.uiOtherViews">
         <a id="{{uiView.id}}" (click)="ns.hideNav()"
            routerLink="/{{uiView.id}}">

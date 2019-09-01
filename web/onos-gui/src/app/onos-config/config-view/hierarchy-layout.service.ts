@@ -35,6 +35,7 @@ export interface TreeLayoutNode {
     children: Array<TreeLayoutNode>;
     parent: HierarchyNode;
     links: () => ConfigLink[];
+    descendants: () => Array<TreeLayoutNode>;
 }
 
 export interface ConfigNode {
@@ -60,15 +61,15 @@ export class HierarchyLayoutService {
 
     root: HierarchyNode;
     treeLayout: TreeLayoutNode;
-    flatMap: Map<string, TreeLayoutNode>; // A path driven version of the hierarchy
+    emptyRoot: HierarchyNode;
 
     /**
      * Set up the root node
      */
     constructor() {
-        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
+        this.emptyRoot = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
             absPath: '/', layerRefs: Array<String>(0)};
-        this.flatMap = new Map<string, TreeLayoutNode>();
+        this.root = this.emptyRoot;
     }
 
     /**
@@ -78,7 +79,6 @@ export class HierarchyLayoutService {
     clearAll() {
         this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
             absPath: '/', layerRefs: Array<String>(0)};
-        this.flatMap.clear();
         this.treeLayout = null;
     }
 
@@ -92,28 +92,7 @@ export class HierarchyLayoutService {
         hierarchyRoot.dx = 60;
         hierarchyRoot.dy = 240;
         this.treeLayout = d3.tree().nodeSize([hierarchyRoot.dx, hierarchyRoot.dy])(hierarchyRoot);
-        this.generateFlatMap(this.treeLayout);
         return this.treeLayout;
-    }
-
-    /**
-     * To drive the SVG layer view it is necessary to have the hierarchy represented
-     * as a flat structure. Here it is a map of absolute pathnames to Hierarchy Nodes.
-     *
-     * Because the tree layout has been calculated at this stage, the x and y values
-     * have been assigned to each of the hierarchy nodes.
-     *
-     * All the Layer component has to do is search for its nodes by their absolute path
-     * among all of the paths generated (from other layers also) and display these
-     * in an SVG group
-     */
-    generateFlatMap(node: TreeLayoutNode) {
-        this.flatMap.set(node.data.absPath, node);
-        if (node.children && node.children.length > 0) {
-            node.children.forEach((n) => {
-                this.generateFlatMap(n);
-            });
-        }
     }
 
     /**
@@ -177,5 +156,49 @@ export class HierarchyLayoutService {
             return this.ensureChildren(pathParts.slice(1), newNode, newParent, layer);
         }
         return newNode;
+    }
+
+    /**
+     * Remove all nodes that belong only to this given layer
+     * @param layer the name of a layer
+     */
+    removeLayer(layer: string): void {
+        const updatedRoot = this.removeChildWithOnlyLayer(layer, this.root);
+        if (updatedRoot !== null) {
+            this.root = updatedRoot;
+        } else {
+            this.root = this.emptyRoot;
+        }
+        // Then do the calculation again
+        this.recalculate();
+    }
+
+    /**
+     * Recursive function to remove child nodes that only belong to the given layer
+     * @param layer the layer to search for
+     * @param node the node to recurse on
+     */
+    private removeChildWithOnlyLayer(layer: string, node: HierarchyNode): HierarchyNode {
+        if (node.layerRefs.length === 1 && node.layerRefs.includes(layer)) {
+            return null;
+        }
+        if (node.layerRefs.includes(layer)) {
+            const i = node.layerRefs.indexOf(layer);
+            node.layerRefs.splice(i, 1);
+        }
+
+        const n1 = <HierarchyNode>{
+            absPath: node.absPath,
+            layerRefs: node.layerRefs,
+            id: node.id,
+            children: Array<HierarchyNode>(0)
+        };
+        for (const child of node.children) {
+            const n1c = this.removeChildWithOnlyLayer(layer, child);
+            if (n1c) {
+                n1.children.push(n1c);
+            }
+        }
+        return n1;
     }
 }

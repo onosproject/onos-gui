@@ -40,6 +40,7 @@ import {OnosUtilsModule} from '../utils/onos-utils.module';
 import { PathBarComponent } from './config-view/path-bar/path-bar.component';
 import { StringValueComponent } from './config-view/string-value/string-value.component';
 import { LinkFilterPipe } from './config-view/link-filter.pipe';
+import { NodeFilterPipe } from './config-view/node-filter.pipe';
 
 @NgModule({
     declarations: [
@@ -56,7 +57,8 @@ import { LinkFilterPipe } from './config-view/link-filter.pipe';
         ChangeValuePipe,
         PathBarComponent,
         StringValueComponent,
-        LinkFilterPipe
+        LinkFilterPipe,
+        NodeFilterPipe
     ],
     imports: [
         CommonModule,

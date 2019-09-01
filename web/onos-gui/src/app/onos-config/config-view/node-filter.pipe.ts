@@ -13,31 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Pipe, PipeTransform} from '@angular/core';
-import {ConfigLink} from './hierarchy-layout.service';
+
+import { Pipe, PipeTransform } from '@angular/core';
+import {TreeLayoutNode} from './hierarchy-layout.service';
 
 /**
- * A pipe used to filter out of the complete set of calculated links only the
+ * A pipe used to filter out of the complete set of calculated nodes only the
  * ones useful to this layer.
  */
-
 @Pipe({
-    name: 'linkFilter',
-    pure: false
+    name: 'nodeFilter'
 })
-export class LinkFilterPipe implements PipeTransform {
+export class NodeFilterPipe implements PipeTransform {
 
-    transform(links: ConfigLink[], layerId: string): ConfigLink[] {
-        if (links === undefined || links.length === 0) {
+    transform(nodes: TreeLayoutNode[], layerId: string): TreeLayoutNode[] {
+        if (nodes === undefined || nodes.length === 0) {
             return null;
         }
-        const returnedLinks = Array<ConfigLink>(0);
-        links.forEach((l) => {
-            if (l.source.data.layerRefs.includes(layerId) && l.target.data.layerRefs.includes(layerId)) {
-                returnedLinks.push(l);
+        const returnedNodes = Array<TreeLayoutNode>(0);
+        nodes.forEach((n) => {
+            if (n.data.layerRefs.includes(layerId)) {
+                returnedNodes.push(n);
             }
         });
 
-        return returnedLinks;
+        return returnedNodes;
     }
 }

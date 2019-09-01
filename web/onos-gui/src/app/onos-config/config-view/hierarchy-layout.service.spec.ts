@@ -57,21 +57,33 @@ describe('HierarchyLayoutService', () => {
         const rootNode = service.recalculate();
         expect(rootNode).toBeTruthy();
 
-        expect(service.flatMap).toBeTruthy();
-        expect(service.flatMap.size).toEqual(6);
-        expect(service.flatMap.get('/')).toBeTruthy();
-        expect(service.flatMap.get('/').x).toEqual(0);
-        expect(service.flatMap.get('/').y).toEqual(0);
-        expect(service.flatMap.get('/').data.layerRefs).toEqual(['l1', 'l2']);
+        expect(service.treeLayout.descendants()).toBeTruthy();
+        expect(service.treeLayout.descendants().length).toEqual(6);
 
-        expect(service.flatMap.get('/a')).toBeTruthy();
-        expect(service.flatMap.get('/a').x).toEqual(0);
-        expect(service.flatMap.get('/a').y).toEqual(240);
-        expect(service.flatMap.get('/a').data.layerRefs).toEqual(['l1', 'l2']);
+        const node_slash = service.treeLayout.descendants().find((d) => d.data.absPath === '/');
+        expect(node_slash).toBeTruthy();
+        expect(node_slash.x).toEqual(0);
+        expect(node_slash.y).toEqual(0);
+        expect(node_slash.data.layerRefs).toEqual(['l1', 'l2']);
 
-        expect(service.flatMap.get('/a/b').data.layerRefs).toEqual(['l1', 'l2']);
+        const node_a = service.treeLayout.descendants().find((d) => d.data.absPath === '/a');
+        expect(node_a).toBeTruthy();
+        expect(node_a.x).toEqual(0);
+        expect(node_a.y).toEqual(240);
+        expect(node_a.data.layerRefs).toEqual(['l1', 'l2']);
 
-        expect(service.flatMap.get('/a/b/c1').data.layerRefs).toEqual(['l1']);
-        expect(service.flatMap.get('/a/b/c2').data.layerRefs).toEqual(['l2']);
+        const node_a_b = service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b');
+        expect(node_a_b.data.layerRefs).toEqual(['l1', 'l2']);
+
+        const node_a_b_c1 = service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b/c1');
+        expect(node_a_b_c1.data.layerRefs).toEqual(['l1']);
+        const node_a_b_c2 = service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b/c2');
+        expect(node_a_b_c2.data.layerRefs).toEqual(['l2']);
+
+        service.removeLayer('l1');
+        expect(service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b/c1')).toBeFalsy();
+
+        expect(service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b/c2').data.layerRefs).toEqual(['l2']);
+        expect(service.treeLayout.descendants().find((d) => d.data.absPath === '/a/b').data.layerRefs).toEqual(['l2']);
     });
 });
