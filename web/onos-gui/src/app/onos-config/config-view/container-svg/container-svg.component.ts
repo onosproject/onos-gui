@@ -55,7 +55,7 @@ export class ContainerSvgComponent implements OnChanges {
     // the change name can be changes any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes['relpath']) {
-            // console.log(this.abspath, 'HN:', this.hn);
+            console.log(this.abspath, 'HN:', this.hn);
             this.displayPath = this.relpath;
             if (this.relpath && this.relpath.endsWith(']')) {
                 const wholeKey = this.relpath.substr(this.relpath.indexOf('['));

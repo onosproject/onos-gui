@@ -26,7 +26,7 @@ export class ChangeValuePipe implements PipeTransform {
 
     // transform is the main API to call a pipe with
     transform(value: Uint8Array, valueType: ChangeValueType, valueTypeOpts: Array<number>, maxLen: number = 15): string[] {
-        if (value === undefined || value.length === 0) {
+        if (value === null || value === undefined || value.length === 0) {
             return [];
         }
         return ChangeValueUtil.transform(<ValueDetails>{

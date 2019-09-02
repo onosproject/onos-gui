@@ -50,23 +50,23 @@
             <svg:desc>A logical layer that allows the main SVG canvas to be
                 zoomed and panned
             </svg:desc>
-            <svg:g *ngFor="let c of changeIds" onos-layer-svg [layerId]="c"
-                   [visible]="changeIdsVisible.get(c)" [layerType]="0"
+            <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
+                   [layerId]="c" [layerType]="0"
                    (editRequestedLayer)="pathSelected($event)">
             </svg:g>
-            <svg:g *ngIf="hasOpStateData" #opStateLayer
-                   onos-layer-svg [layerId]="device" [classes]="['state']"
-                   [visible]="changeIdsVisible.get(OPSTATE)" [layerType]="1">
-            </svg:g>
-            <svg:g *ngIf="hasPending" onos-layer-svg [layerId]="configName" [classes]="['pending']"
-                   [visible]="changeIdsVisible.get('pending')" [layerType]="2"
-                   (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">
-            </svg:g>
-            <svg:g #readWriteLayer
+            <svg:g #readWriteLayer *ngIf="changeIdsVisible.includes(RWPATHS)"
                    onos-layer-svg [layerId]="type + version + ''"
                    [classes]="['rwpaths']"
-                   [visible]="changeIdsVisible.get(RWPATHS)" [layerType]="3"
+                   [layerType]="3"
                    (editRequestedLayer)="pathSelected($event)">
+            </svg:g>
+            <svg:g *ngIf="changeIdsVisible.includes(OPSTATE)" #opStateLayer
+                   onos-layer-svg [layerId]="device" [classes]="['state']"
+                   [layerType]="1">
+            </svg:g>
+            <svg:g *ngIf="changeIdsVisible.includes('pending')" onos-layer-svg
+                   [layerId]="configName" [classes]="['pending']" [layerType]="2"
+                   (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">
             </svg:g>
         </svg:g>
     </svg:svg>

@@ -32,6 +32,10 @@ html[data-platform='iPad'] #nav {
     top: 60px;
 }
 
+#nav div {
+    text-align: start;
+}
+
 #nav .nav-hdr {
     font-weight: bold;
     font-variant: small-caps;

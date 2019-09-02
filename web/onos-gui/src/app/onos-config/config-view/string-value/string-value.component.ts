@@ -43,6 +43,9 @@ export class StringValueComponent implements OnChanges {
             if (allLines.length >= 1) {
                 this.originalValue = allLines[0];
                 this.stringValue = allLines[0];
+            } else {
+                this.originalValue = '';
+                this.stringValue = '';
             }
         }
     }
