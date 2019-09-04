@@ -49,7 +49,7 @@
         <table *ngIf="hasPending">
             <tbody>
             <tr class="layerItem"
-                (click)="toggleDisplay('pending')">
+                (click)="toggleDisplay('pending', 2)">
                 <onos-icon
                     [iconId]="layerVisibility.get('pending')?ACTIVE:INACTIVE"
                     [iconSize]="20"
@@ -61,7 +61,7 @@
         <table>
             <tbody>
             <tr id="layerItem" class="layerItem" *ngFor="let p of layerList"
-                (click)="toggleDisplay(p)">
+                (click)="toggleDisplay(p, 0)">
                 <onos-icon [iconId]="layerVisibility.get(p)?ACTIVE:INACTIVE"
                            [iconSize]="20"
                            [classes]="layerVisibility.get(p)?ACTIVE:INACTIVE"></onos-icon>
@@ -75,7 +75,7 @@
         <table>
             <tbody>
             <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"
-                (click)="toggleDisplay(OPSTATE)">
+                (click)="toggleDisplay(OPSTATE, 1)">
                 <onos-icon
                     [iconId]="layerVisibility.get(OPSTATE) ? ACTIVE : INACTIVE"
                     [iconSize]="20"
@@ -83,7 +83,7 @@
                 <td>State</td>
             </tr>
             <tr id="rwpaths-layer" class="layerItem"
-                (click)="toggleDisplay(RWPATHS)">
+                (click)="toggleDisplay(RWPATHS, 3)">
                 <onos-icon
                     [iconId]="layerVisibility.get(RWPATHS) ? ACTIVE : INACTIVE"
                     [iconSize]="20"
