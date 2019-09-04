@@ -36,21 +36,19 @@ export class ChangeValueUtil {
         }
         let valueStrings: string[] = [];
         const dataIsLittleEndian = true;
+        const view = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
         switch (value.valueType) {
             case ChangeValueType.BOOL:
-                valueStrings = [value[0] ? 'true' : 'false'];
+                valueStrings = (view.getInt8(0).valueOf() === 1) ? ['true'] : ['false'];
                 break;
             case ChangeValueType.INT:
-                const view1 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
-                valueStrings = [String(view1.getInt32(0, dataIsLittleEndian))];
+                valueStrings = [String(view.getInt32(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.UINT:
-                const view2 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
-                valueStrings = [String(view2.getUint32(0, dataIsLittleEndian))];
+                valueStrings = [String(view.getUint32(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.FLOAT:
-                const view3 = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
-                valueStrings = [String(view3.getFloat64(0, dataIsLittleEndian))];
+                valueStrings = [String(view.getFloat64(0, dataIsLittleEndian))];
                 break;
             case ChangeValueType.LEAFLIST_STRING:
                 const leafList = dec.decode(value.value);

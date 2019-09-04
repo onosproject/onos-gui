@@ -30,9 +30,11 @@ import {
     CONFIGNAME
 } from '../config-view/config-view.component';
 import {PENDING} from '../pending-net-change.service';
+import {LayerType} from '../config-view/layer-svg/layer-svg.component';
 
 export interface SelectedLayer {
     layerName: string;
+    layerType: LayerType;
     madeVisible: boolean;
 }
 
@@ -94,10 +96,11 @@ export class ConfigLayersPanelComponent implements OnChanges {
         }
     }
 
-    toggleDisplay(changeId: string) {
+    toggleDisplay(changeId: string, layerType: LayerType) {
         this.layerVisibility.set(changeId, !this.layerVisibility.get(changeId));
         this.visibilityChange.emit(<SelectedLayer>{
             layerName: changeId,
+            layerType: layerType,
             madeVisible: this.layerVisibility.get(changeId),
         });
     }

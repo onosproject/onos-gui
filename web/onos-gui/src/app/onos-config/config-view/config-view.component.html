@@ -54,17 +54,17 @@
                    [layerId]="c" [layerType]="0"
                    (editRequestedLayer)="pathSelected($event)">
             </svg:g>
-            <svg:g #readWriteLayer *ngIf="changeIdsVisible.includes(RWPATHS)"
+            <svg:g #readWriteLayer *ngIf="rwPathVisible"
                    onos-layer-svg [layerId]="type + version + ''"
                    [classes]="['rwpaths']"
                    [layerType]="3"
                    (editRequestedLayer)="pathSelected($event)">
             </svg:g>
-            <svg:g *ngIf="changeIdsVisible.includes(OPSTATE)" #opStateLayer
+            <svg:g *ngIf="opstateVisible" #opStateLayer
                    onos-layer-svg [layerId]="device" [classes]="['state']"
                    [layerType]="1">
             </svg:g>
-            <svg:g *ngIf="changeIdsVisible.includes('pending')" onos-layer-svg
+            <svg:g *ngIf="pendingVisible" onos-layer-svg
                    [layerId]="configName" [classes]="['pending']" [layerType]="2"
                    (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">
             </svg:g>

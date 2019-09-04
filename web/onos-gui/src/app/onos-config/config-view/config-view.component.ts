@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-import {
-    Component,
-    Input,
-    OnChanges, OnDestroy,
-    OnInit, SimpleChange,
-    SimpleChanges
-} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {ActivatedRoute} from '@angular/router';
 import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
-import {PathDetails} from './layer-svg/layer-svg.component';
+import {LayerType, PathDetails} from './layer-svg/layer-svg.component';
 import {ValueDetails} from '../change-value.util';
-import {
-    ChangeValue, ReadWritePath,
-} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ChangeValue, ReadWritePath} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
 
@@ -65,6 +57,9 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     updated: number = 0;
     changeIds: string[] = [];
     changeIdsVisible: string[] = [];
+    rwPathVisible: boolean;
+    pendingVisible: boolean = false;
+    opstateVisible = false;
     hasOpStateData: boolean = true;
     hasPending: boolean = false;
     pendingUdpateTime: Date;
@@ -119,14 +114,13 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             this.changeIdsVisible.length = 0;
             console.log('Configuration view changed to', cfgName);
 
-            // Check to see if this is a pending change first
+            // Check to see if this is a pending configuration first
             if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
                 this.device = this.pending.pendingNewConfiguration.getDeviceId();
                 this.version = this.pending.pendingNewConfiguration.getVersion();
                 this.type = this.pending.pendingNewConfiguration.getDeviceType();
                 this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
                 for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
-                    this.changeIds.push(cid);
                     this.changeIdsVisible.push(cid);
                 }
                 return;
@@ -158,8 +152,16 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     visibilityChanged(event: SelectedLayer) {
-        if (event.madeVisible && !this.changeIdsVisible.includes(event.layerName)) {
+        if (event.layerType === LayerType.LAYERTYPE_PENDING) {
+            this.pendingVisible = event.madeVisible;
+        } else if (event.layerType === LayerType.LAYERTYPE_OPSTATE) {
+            this.opstateVisible = event.madeVisible;
+        } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
+            this.rwPathVisible = event.madeVisible;
+
+        } else if (event.madeVisible && !this.changeIdsVisible.includes(event.layerName)) {
             this.changeIdsVisible.push(event.layerName);
+
         } else if (!event.madeVisible && this.changeIdsVisible.includes(event.layerName)) {
             const idx = this.changeIdsVisible.indexOf(event.layerName);
             this.changeIdsVisible.splice(idx, 1);
@@ -186,7 +188,6 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     confirmedCreatePending(confirmed: boolean): void {
         if (confirmed) {
             this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
-            this.changeIds.push(PENDING);
             this.changeIdsVisible.push(PENDING);
         } else {
             console.log('Create pending cancelled');
