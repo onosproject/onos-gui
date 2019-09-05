@@ -18,6 +18,9 @@ import {Injectable} from '@angular/core';
 import * as d3 from 'd3-hierarchy';
 import {PathUtil} from '../path.util';
 
+const nodeWidth = 60;
+const nodeHeight = 240;
+
 export interface HierarchyNode {
     id: string;
     absPath: string;
@@ -89,9 +92,7 @@ export class HierarchyLayoutService {
      */
     recalculate() {
         const hierarchyRoot = d3.hierarchy(this.root);
-        hierarchyRoot.dx = 60;
-        hierarchyRoot.dy = 240;
-        this.treeLayout = d3.tree().nodeSize([hierarchyRoot.dx, hierarchyRoot.dy])(hierarchyRoot);
+        this.treeLayout = d3.tree().nodeSize([nodeWidth, nodeHeight])(hierarchyRoot);
         return this.treeLayout;
     }
 
@@ -117,7 +118,7 @@ export class HierarchyLayoutService {
      * @param pathParts an ordered array of string parts e.g. ['/','a','b[n=*']','c','d']
      * @param node the parent node
      * @param parent the absolute path of the parent
-     * @layer the layer that this is referring to this node
+     * @param layer the layer that this is referring to this node
      */
     private ensureChildren(pathParts: string[], node: HierarchyNode, parent: string, layer: string): HierarchyNode {
         const current = pathParts[0];
@@ -163,6 +164,7 @@ export class HierarchyLayoutService {
      * @param layer the name of a layer
      */
     removeLayer(layer: string): void {
+        console.log('Removed layer', layer, 'from hierarchy');
         const updatedRoot = this.removeChildWithOnlyLayer(layer, this.root);
         if (updatedRoot !== null) {
             this.root = updatedRoot;

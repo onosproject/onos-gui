@@ -18,15 +18,15 @@
     <svg:desc>Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:desc>
     <svg:g *ngFor="let node of hierarchy.treeLayout.descendants() | nodeFilter: layerId">
         <svg:desc>Abs:{{node}} Val:{{node.data.absPath}}</svg:desc>
-        <!-- Template explaination
+        <!-- Template explanation
            For each container object - some of the data is held in the layer and the
-           rest of it is held in the Hierarchy layer's Flat Map
+           rest of it is held in the Hierarchy service's hierarchy tree
            This is because many objects across these different layers must
            have the same (shared) location
            -->
         <svg:g onos-container-svg
                [containerX]="node.y"
-               [containerY]="node.x"
+               [containerY]="node.x + offsetY"
                [hn]="node"
                [relpath]="node.data.id"
                [value]="nodelist.get(node.data.absPath)?.value"
