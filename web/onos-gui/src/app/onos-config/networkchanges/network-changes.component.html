@@ -16,26 +16,27 @@
 
 <div id="ov-nwchanges">
     <onos-flash id="nwChangeMsgFlash" message="{{ alertMsg }}" dwell="1800" (closed)="alertMsg = ''"></onos-flash>
+    <onos-confirm id="configChnages" [title]="titleMessage" [message]="confirmMessage" [warning]="warnMessage" (chosen)="handleConfirm($event)"></onos-confirm>
     <onos-name-input [title]="newNwchangeTitle" [pattern]="'[a-zA-Z0-9\-:_]{40}'" (chosen)="newNwchangeCreate($event)"></onos-name-input>
     <div class="tabular-header">
         <h2>Network changes ({{ tableData.length }} total)</h2>
         <div class="ctrl-btns">
-            <div (click)="rollback(selId)">
-                <onos-icon classes="{{ pending.hasPendingChange || selId === undefined ? undefined:'active-rect'}}"
+            <div (click)="rollbackConfirm()">
+                <onos-icon classes="{{ pending.hasPendingChange || selId !== lastNwChange ? undefined:'active-rect'}}"
                            iconId="triangleLeft" iconSize="42"
-                           toolTip="{{rollbackTip}}"></onos-icon>
+                           toolTip="Rollback"></onos-icon>
             </div>
             <div (click)="createPending(selId)">
                 <onos-icon classes="{{ pending.hasPendingChange ? undefined:'active-rect'}}"
                            iconId="plus" iconSize="42"
                            toolTip="Add network changes"></onos-icon>
             </div>
-            <div (click)="discardPending()">
+            <div (click)="discardPendingConfirm()">
                 <onos-icon classes="{{ pending.hasPendingChange ? 'active-rect' :undefined}}"
                            iconId="xMark" iconSize="42"
                            toolTip="Discard pending"></onos-icon>
             </div>
-            <div (click)="commitPending()">
+            <div (click)="commitPendingConfirm()">
                 <onos-icon classes="{{ pending.hasPendingChange && selId === pending.pendingNetChange.getName() ? 'active-rect' :undefined}}"
                            iconId="triangleRight" iconSize="42"
                            toolTip="Commit pending"></onos-icon>
@@ -85,11 +86,19 @@
                 </tr>
                 <tr *ngFor="let nwchange of tableData | filter : tableDataFilter"
                     (click)="selectedChange = nwchange; selectCallback($event, nwchange)"
-                    [ngClass]="{selected: nwchange.name === selId, 'data-change': isChanged(nwchange.name), 'pending': nwchange.pending}">
+                    [ngClass]="{selected: nwchange.name === selId, 'data-change': isChanged(nwchange.name)}">
                     <td>{{ nwchange.name }}</td>
                     <td>{{ nwchange.user }}</td>
                     <td>{{ nwchange.created | date:'medium' }}</td>
                     <td>{{ nwchange.changesList.length }}</td>
+                </tr>
+                <tr *ngIf="pending.hasPendingChange"
+                    (click)="selectedChange = pendingChange; selectCallback($event, pendingChange)"
+                    [ngClass]="{selected: pendingChange['name'] === selId, 'data-change': true, 'pending': true}">
+                    <td>{{ pendingChange['name'] }}</td>
+                    <td>{{ pendingChange['user'] }}</td>
+                    <td>{{ pendingChange['created'] | date:'medium' }}</td>
+                    <td>{{ pendingChange['changesList'].length }}</td>
                 </tr>
             </table>
         </div>
