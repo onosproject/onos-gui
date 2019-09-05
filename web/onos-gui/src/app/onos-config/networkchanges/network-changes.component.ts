@@ -51,10 +51,14 @@ import {SetResponse} from '../proto/github.com/openconfig/gnmi/proto/gnmi/gnmi_p
     ]
 })
 export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
-    rollbackTip: string = 'Rollback';
     selectedChange: NetChange; // The complete row - not just the selId
     newNwchangeTitle: string = '';
     alertMsg: string;
+    confirmMessage: string = '';
+    titleMessage: string = '';
+    warnMessage: string = '';
+    pendingChange: NetChange;
+    lastNwChange: string = undefined; // Only the last can be rolled back
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML (?!?!)
     public PENDING_U = PENDING_U;
@@ -107,6 +111,7 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
             netChange['created'] = (new Date()).setTime(netChange.getTime().getSeconds() * 1000);
             netChange['changesList'] = netChange.getChangesList();
             this.tableData.push(netChange);
+            this.lastNwChange = netChange.getName();
         });
         if (this.pending.hasPendingChange) {
             this.addPendingRow(this.pending.pendingNetChange.getName(), this.pending.pendingNetChange.getChangesList());
@@ -114,13 +119,12 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
     }
 
     addPendingRow(name: string, changesList: Array<ConfigChange>) {
-        const pendingChange = <NetChange>{};
-        pendingChange['name'] = name;
-        pendingChange['pending'] = true;
-        pendingChange['user'] = 'onos';
-        pendingChange['created'] = (new Date());
-        pendingChange['changesList'] = changesList;
-        this.tableData.push(pendingChange);
+        this.pendingChange = <NetChange>{};
+        this.pendingChange['name'] = name;
+        this.pendingChange['pending'] = true;
+        this.pendingChange['user'] = 'onos';
+        this.pendingChange['created'] = (new Date());
+        this.pendingChange['changesList'] = changesList;
     }
 
     navto(path) {
@@ -130,31 +134,40 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         }
     }
 
-    rollback(selected: string): void {
-        if (selected === undefined || this.pending.hasPendingChange) {
+    rollbackConfirm() {
+        if (this.pending.hasPendingChange || this.selId !== this.lastNwChange) {
             return;
         }
+        const numChanges = this.selectedChange.getChangesList().length;
+        this.titleMessage = 'Rollback network change?';
+        this.confirmMessage = 'Affects ' + numChanges + ' configuration(s)';
+        this.warnMessage = 'Rollback ' + this.selId + '?';
+    }
+
+    rollback(selected: string): void {
         this.admin.requestRollback(selected, (e: grpcWeb.Error, r: RollbackResponse) => {
             if (e) {
                 console.warn('Error on admin RequestRollback for', selected, e);
                 return false;
             }
             console.warn('Rolled back network change', selected, r.getMessage());
+            this.selId = undefined;
+            this.selectedChange = undefined;
             this.updateTable();
         });
     }
 
     createPending(selected: string): void {
+        if (this.pending.hasPendingChange) {
+            return;
+        }
         this.newNwchangeTitle = 'Name for new Network Change?';
     }
 
     discardPending(): void {
-        if (this.pending.hasPendingChange) {
-            this.pending.deletePendingChange();
-            const removed = this.tableData.splice(0, 1);
-            this.selId = undefined;
-            console.log('Pending change discarded', removed);
-        }
+        this.pending.deletePendingChange();
+        this.selId = undefined;
+        this.pendingChange = undefined;
     }
 
     newNwchangeCreate(chosen: NameInputResult): void {
@@ -163,10 +176,58 @@ export class NetworkChangesComponent extends TableBaseImpl implements OnInit {
         } else if (chosen.chosen === true && !this.pending.hasPendingChange) {
             console.log('New nwChange created:', chosen.name);
             this.pending.addPendingChange(chosen.name);
-            this.addPendingRow(chosen.name,  Array(0));
+            this.addPendingRow(chosen.name, Array(0));
             this.alertMsg = 'New PENDING Network Changes layer \"' + chosen.name + '\" created';
         }
         this.newNwchangeTitle = '';
+    }
+
+    discardPendingConfirm() {
+        if (!this.pending.hasPendingChange) {
+            return;
+        }
+        const numConfigs = this.pending.pendingNetChange.getChangesList().length;
+
+        this.titleMessage = 'Discard pending change?';
+        if (numConfigs > 0) {
+            this.confirmMessage = 'Discard changes to ' + numConfigs +
+                ' configuration(s) on ' + this.pending.pendingNetChange.getName() + '?';
+        } else {
+            this.confirmMessage = this.pending.pendingNetChange.getName() + ' is empty';
+        }
+    }
+
+    commitPendingConfirm() {
+        if (!this.pending.hasPendingChange || this.selId !== this.pending.pendingNetChange.getName()) {
+            return;
+        }
+        const numConfigs = this.pending.pendingNetChange.getChangesList().length;
+        if (numConfigs === 0) {
+            this.alertMsg = 'Not committing pending network change "' +
+                this.pending.pendingNetChange.getName() +
+                '". No changes present';
+            return;
+        }
+        this.titleMessage = 'Commit pending change?';
+        this.confirmMessage = 'Affects ' + numConfigs + ' configuration(s)';
+        this.warnMessage = 'Commit ' + this.pending.pendingNetChange.getName() + '?';
+    }
+
+    handleConfirm(choice: boolean) {
+        const title = this.titleMessage;
+        this.titleMessage = '';
+        this.confirmMessage = '';
+        this.warnMessage = '';
+        if (!choice) {
+            return;
+        }
+        if (title.startsWith('Commit')) {
+            this.commitPending();
+        } else if (title.startsWith('Discard')) {
+            this.discardPending();
+        } else if (title.startsWith('Rollback')) {
+            this.rollback(this.selId);
+        }
     }
 
     commitPending(): boolean {
