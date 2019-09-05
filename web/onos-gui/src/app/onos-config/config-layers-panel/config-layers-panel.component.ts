@@ -29,8 +29,7 @@ import {
     INACTIVE,
     CONFIGNAME
 } from '../config-view/config-view.component';
-import {PENDING} from '../pending-net-change.service';
-import {LayerType} from '../config-view/layer-svg/layer-svg.component';
+import {ChangeName, LayerType} from '../config-view/layer-svg/layer-svg.component';
 
 export interface SelectedLayer {
     layerName: string;
@@ -67,6 +66,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     @Input() updated: Date;
     @Input() hasOpState: boolean;
     @Input() hasPending: boolean;
+    @Input() changeNamesCache: Map<string, ChangeName>;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
     layerVisibility = new Map<string, boolean>();
@@ -80,6 +80,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     public INACTIVE = INACTIVE;
 
     constructor() {
+        this.changeNamesCache = new Map<string, ChangeName>();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -114,5 +115,14 @@ export class ConfigLayersPanelComponent implements OnChanges {
                 madeVisible: on,
             });
         }
+    }
+
+    formatChangeNameTooltip(hash: string, changeName: ChangeName): string {
+        const tooltip = Array<String>(1).fill('ID:' + hash);
+        if (changeName !== undefined) {
+            tooltip.push('Date:' + changeName.time.toLocaleString());
+            tooltip.push('Num changes:' + changeName.changes.toString());
+        }
+        return tooltip.join('\n');
     }
 }

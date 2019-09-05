@@ -21,7 +21,7 @@ import {ActivatedRoute} from '@angular/router';
 import {IconService} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
-import {LayerType, PathDetails} from './layer-svg/layer-svg.component';
+import {ChangeName, LayerType, PathDetails} from './layer-svg/layer-svg.component';
 import {ValueDetails} from '../change-value.util';
 import {ChangeValue, ReadWritePath} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {ModelTempIndexService} from './model-temp-index.service';
@@ -68,6 +68,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     selectedPath = '/';
     selectedValue: ValueDetails = undefined;
     selectedRwPath: ReadWritePath;
+    changeNamesCache: Map<string, ChangeName>;
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -84,6 +85,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
         this.is.loadIconDef('plus');
+        this.changeNamesCache = new Map<string, ChangeName>();
         console.log('Constructed ConfigViewComponent');
     }
 
@@ -212,6 +214,12 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 madeVisible: true,
             });
             this.hasPending = true;
+        }
+    }
+
+    addToChangeNameCache(event: ChangeName) {
+        if (this.changeNamesCache.get(event.hash) === undefined) {
+            this.changeNamesCache.set(event.hash, event);
         }
     }
 }
