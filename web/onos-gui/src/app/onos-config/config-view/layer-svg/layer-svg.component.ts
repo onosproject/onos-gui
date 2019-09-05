@@ -61,6 +61,13 @@ export interface PathDetails {
     readWritePath: ReadWritePath;
 }
 
+export interface ChangeName {
+    hash: string;
+    name: string;
+    time: Date;
+    changes: number;
+}
+
 /**
  * This component is repeated may times in the config view:
  * 1) for each change in the configuration
@@ -83,6 +90,7 @@ export class LayerSvgComponent implements OnChanges {
     @Input() classes: string[] = ['config'];
     @Input() updated: Date;
     @Output() editRequestedLayer = new EventEmitter<PathDetails>();
+    @Output() changeNameFound = new EventEmitter<ChangeName>();
     description: string;
     changeTime: number = 0;
     nodelist: Map<string, ChangeValueObj>;
@@ -183,6 +191,14 @@ export class LayerSvgComponent implements OnChanges {
                             this.modelTempIdx.addIndex(c.getPath());
                         }
                     }
+                    const d1 = new Date();
+                    d1.setTime(change.getTime().getSeconds() * 1000);
+                    this.changeNameFound.emit(<ChangeName>{
+                        hash: change.getId(),
+                        name: change.getDesc(),
+                        time: d1,
+                        changes: change.getChangeValuesList().length
+                    });
                     console.log('Change response for ', layerIdNew, 'received', this.nodelist);
                     // The response from the server can be delayed by any amount
                     // need to update after each one

@@ -24,6 +24,7 @@
                           [on]="true"
                           [hasOpState]="hasOpStateData"
                           [hasPending]="hasPending"
+                          [changeNamesCache]="changeNamesCache"
                           (visibilityChange)="visibilityChanged($event)">
 </onos-config-layers-panel>
 
@@ -52,7 +53,8 @@
             </svg:desc>
             <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
                    [layerId]="c" [layerType]="0"
-                   (editRequestedLayer)="pathSelected($event)">
+                   (editRequestedLayer)="pathSelected($event)"
+                   (changeNameFound)="addToChangeNameCache($event)">
             </svg:g>
             <svg:g #readWriteLayer *ngIf="rwPathVisible"
                    onos-layer-svg [layerId]="type + version + ''"

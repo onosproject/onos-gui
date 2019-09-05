@@ -65,7 +65,7 @@
                 <onos-icon [iconId]="layerVisibility.get(p)?ACTIVE:INACTIVE"
                            [iconSize]="20"
                            [classes]="layerVisibility.get(p)?ACTIVE:INACTIVE"></onos-icon>
-                <td>{{p}}</td>
+                <td [title]="formatChangeNameTooltip(p, changeNamesCache.get(p))">{{changeNamesCache.get(p) ? changeNamesCache.get(p).name : p}}</td>
             </tr>
             </tbody>
         </table>
