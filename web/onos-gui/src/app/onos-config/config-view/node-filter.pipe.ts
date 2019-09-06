@@ -28,7 +28,7 @@ export class NodeFilterPipe implements PipeTransform {
 
     transform(nodes: TreeLayoutNode[], layerId: string): TreeLayoutNode[] {
         if (nodes === undefined || nodes.length === 0) {
-            return null;
+            return undefined;
         }
         const returnedNodes = Array<TreeLayoutNode>(0);
         nodes.forEach((n) => {

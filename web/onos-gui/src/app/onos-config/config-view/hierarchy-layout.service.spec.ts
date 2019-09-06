@@ -35,6 +35,9 @@ describe('HierarchyLayoutService', () => {
 
     it('should find root', () => {
         const service: HierarchyLayoutService = TestBed.get(HierarchyLayoutService);
+        service.setResizeCallback((treeWidth) => {
+            expect(treeWidth).toBeGreaterThan(0);
+        });
 
         const nodeC1 = service.ensureNode('/a/b/c1', 'l1');
         expect(nodeC1).toBeTruthy();

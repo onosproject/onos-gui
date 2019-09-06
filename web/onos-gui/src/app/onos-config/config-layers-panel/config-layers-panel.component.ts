@@ -32,12 +32,10 @@ export interface SelectedLayer {
     animations: [
         trigger('layersPanelState', [
             state('true', style({
-                transform: 'translateX(0%)',
-                opacity: '1.0'
+                height: '30px'
             })),
             state('false', style({
-                transform: 'translateX(100%)',
-                opacity: '0'
+                height: '510px'
             })),
             transition('0 => 1', animate('100ms ease-in')),
             transition('1 => 0', animate('100ms ease-out'))
@@ -59,6 +57,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
 
     layerVisibility = new Map<string, boolean>();
     toggledOn: boolean = true;
+    rolledUp: boolean = false;
 
     // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -104,6 +103,10 @@ export class ConfigLayersPanelComponent implements OnChanges {
                 madeVisible: on,
             });
         }
+    }
+
+    toggleRollup() {
+        this.rolledUp = !this.rolledUp;
     }
 
     formatChangeNameTooltip(hash: string, changeName: ChangeName): string {
