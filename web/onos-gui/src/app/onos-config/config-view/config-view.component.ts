@@ -167,6 +167,9 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         } else if (!event.madeVisible && this.changeIdsVisible.includes(event.layerName)) {
             const idx = this.changeIdsVisible.indexOf(event.layerName);
             this.changeIdsVisible.splice(idx, 1);
+        }
+
+        if (!event.madeVisible) {
             this.hierarchy.removeLayer(event.layerName);
         }
     }
@@ -207,10 +210,13 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         newChangeValue.setTypeOptsList(oldValue.valueTypeOpts);
 
         const added = this.pending.addToPendingChange(this.configName, newChangeValue);
-        this.pendingUdpateTime = new Date();
+        const now = new Date();
+        now.setTime(Date.now());
+        this.pendingUdpateTime = now;
         if (added) {
             this.visibilityChanged(<SelectedLayer>{
                 layerName: 'pending',
+                layerType: LayerType.LAYERTYPE_PENDING,
                 madeVisible: true,
             });
             this.hasPending = true;

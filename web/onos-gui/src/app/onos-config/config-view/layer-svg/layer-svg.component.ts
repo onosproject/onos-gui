@@ -37,6 +37,8 @@ import {ModelTempIndexService} from '../model-temp-index.service';
 import {ConfigLink, HierarchyLayoutService} from '../hierarchy-layout.service';
 import {PathUtil} from '../../path.util';
 
+const OFFSETY = 500;
+
 export interface ChangeValueObj {
     relPath: string;
     value: ValueDetails;
@@ -95,6 +97,7 @@ export class LayerSvgComponent implements OnChanges {
     changeTime: number = 0;
     nodelist: Map<string, ChangeValueObj>;
     offset: number = Math.random() * 200;
+    offsetY = OFFSETY;
 
     constructor(
         private diags: OnosConfigDiagsService,
@@ -165,6 +168,7 @@ export class LayerSvgComponent implements OnChanges {
 
                     this.checkParentExists(p, parentPath);
                     console.log('Change response for ', layerIdNew, 'received', p);
+                    this.hierarchy.recalculate(); // Has to happen after each response
                 });
                 console.log('Finished with subscribe to OpStateCache on', layerIdNew);
             } else {
@@ -315,11 +319,12 @@ export class LayerSvgComponent implements OnChanges {
         const halfWayY = (link.target.y + link.source.y + 160) / 2;
         const halfWayX = (link.target.x + 10 + link.source.x + 10) / 2;
 
-        const mm = 'M ' + halfWayY + ' ' + halfWayX;
-        const cp1 = 'Q ' + (link.target.y + ControlPointX) + ' ' + (link.target.x + 10);
-        const ep1 = (link.target.y) + ' ' + (link.target.x + 10);
-        const cp2 = 'Q ' + (link.source.y + 160 - ControlPointX) + ' ' + (link.source.x + 10);
-        const ep2 = (link.source.y + 160) + ' ' + (link.source.x + 10);
+        // X and Y have been deliberately swapped to turn the diagram 90 degrees
+        const mm = 'M ' + halfWayY + ' ' + (halfWayX + OFFSETY);
+        const cp1 = 'Q ' + (link.target.y + ControlPointX) + ' ' + (link.target.x + 10 + OFFSETY);
+        const ep1 = (link.target.y) + ' ' + (link.target.x + 10 + OFFSETY);
+        const cp2 = 'Q ' + (link.source.y + 160 - ControlPointX) + ' ' + (link.source.x + 10 + OFFSETY);
+        const ep2 = (link.source.y + 160) + ' ' + (link.source.x + 10 + OFFSETY);
 
         return mm + ' ' + cp1 + ', ' + ep1 + ' ' + mm + ' ' + cp2 + ', ' + ep2;
     }

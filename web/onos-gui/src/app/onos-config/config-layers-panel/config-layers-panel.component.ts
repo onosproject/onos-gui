@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-import {
-    Component,
-    EventEmitter,
-    Input, OnChanges,
-    Output, SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {
-    OPSTATE,
-    RWPATHS,
-    MEDIUM,
-    ACTIVE,
-    INACTIVE,
-    CONFIGNAME
-} from '../config-view/config-view.component';
+import {ACTIVE, CONFIGNAME, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
 import {ChangeName, LayerType} from '../config-view/layer-svg/layer-svg.component';
 
 export interface SelectedLayer {
@@ -112,6 +100,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
             this.layerVisibility.set(l, on);
             this.visibilityChange.emit(<SelectedLayer>{
                 layerName: l,
+                layerType: LayerType.LAYERTYPE_CONFIG,
                 madeVisible: on,
             });
         }
