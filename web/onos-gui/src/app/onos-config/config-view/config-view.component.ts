@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges, ViewChild} from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {ActivatedRoute} from '@angular/router';
-import {IconService} from 'gui2-fw-lib';
+import {IconService, TopoZoomPrefs} from 'gui2-fw-lib';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
 import {ChangeName, LayerType, PathDetails} from './layer-svg/layer-svg.component';
@@ -26,6 +26,7 @@ import {ValueDetails} from '../change-value.util';
 import {ChangeValue, ReadWritePath} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
+import {ZoomableDirective} from 'gui2-topo-lib';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -51,6 +52,9 @@ export const CONFIGNAME = 'configName';
 })
 export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     @Input() configName: string;
+
+    @ViewChild(ZoomableDirective) zoomDirective: ZoomableDirective;
+
     device: string;
     version: string;
     type: string;
@@ -86,6 +90,15 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.is.loadIconDef('xMark');
         this.is.loadIconDef('plus');
         this.changeNamesCache = new Map<string, ChangeName>();
+        this.hierarchy.setResizeCallback((h) => {
+            const currentZoom = this.zoomDirective.zoomCached.sc;
+            const zoomLevel = <TopoZoomPrefs>{sc: 3 / h, tx: 0, ty: 0};
+            // Only change the pan location if zoom has changed
+            if (currentZoom !== zoomLevel.sc) {
+                this.zoomDirective.changeZoomLevel(zoomLevel);
+                console.log('resize cb called', h, 'Zooming to', zoomLevel, 'Old level', currentZoom);
+            }
+        });
         console.log('Constructed ConfigViewComponent');
     }
 
@@ -170,7 +183,13 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (!event.madeVisible) {
-            this.hierarchy.removeLayer(event.layerName);
+            let layerName = event.layerName;
+            if (layerName === 'rwpaths') {
+                layerName = this.type + this.version;
+            } else if (layerName === 'opstate') {
+                layerName = this.device;
+            }
+            this.hierarchy.removeLayer(layerName);
         }
     }
 

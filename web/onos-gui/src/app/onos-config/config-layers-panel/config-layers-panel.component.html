@@ -14,10 +14,12 @@
 ~ limitations under the License.
 -->
 
-<div id="layers-panel" class="floatpanel" [@layersPanelState]="on">
+<div id="layers-panel" class="floatpanel" [@layersPanelState]="rolledUp">
     <div class="header">
+        <onos-icon id="rollupBtn" [iconId]="rolledUp?'triangleDown':'triangleUp'" [iconSize]="20"
+                   (click)="toggleRollup()"></onos-icon>
         <h2>{{configName}}</h2>
-        <table id="layer-headings">
+        <table id="layer-headings" *ngIf="!rolledUp">
             <tbody>
             <tr>
                 <td class="field-name">Device:</td>
@@ -38,8 +40,8 @@
             </tbody>
         </table>
     </div>
-    <hr>
-    <div class="body">
+    <hr *ngIf="!rolledUp">
+    <div id="changes-list" class="body" *ngIf="!rolledUp">
     <span (click)="toggleAll(true)" class="layerItem">
       <onos-icon [iconId]="ACTIVE" [iconSize]="20"
                  [classes]="ACTIVE"></onos-icon>All</span>
@@ -70,8 +72,8 @@
             </tbody>
         </table>
     </div>
-    <hr>
-    <div class="footer">
+    <hr *ngIf="!rolledUp">
+    <div class="footer" *ngIf="!rolledUp">
         <table>
             <tbody>
             <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"

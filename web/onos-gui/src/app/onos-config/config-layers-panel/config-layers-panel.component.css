@@ -19,7 +19,7 @@
  */
 #layers-panel {
     padding: 8px;
-    width: 220px;
+    width: 250px;
 }
 
 #layers-panel td.label {
@@ -53,4 +53,15 @@
 #layers-panel .field-name {
     text-align: right;
     font-weight: bold;
+}
+
+#changes-list {
+    height: 300px;
+    overflow-y: auto;
+}
+
+#rollupBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }

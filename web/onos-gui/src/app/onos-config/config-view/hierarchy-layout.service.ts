@@ -32,7 +32,7 @@ export interface HierarchyNode {
 export interface TreeLayoutNode {
     data: HierarchyNode;
     height: number;
-    width: number;
+    depth: number;
     x: number;
     y: number;
     children: Array<TreeLayoutNode>;
@@ -64,15 +64,14 @@ export class HierarchyLayoutService {
 
     root: HierarchyNode;
     treeLayout: TreeLayoutNode;
-    emptyRoot: HierarchyNode;
+    resizeCb: (number) => void;
 
     /**
      * Set up the root node
      */
     constructor() {
-        this.emptyRoot = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
+        this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
             absPath: '/', layerRefs: Array<String>(0)};
-        this.root = this.emptyRoot;
     }
 
     /**
@@ -93,7 +92,16 @@ export class HierarchyLayoutService {
     recalculate() {
         const hierarchyRoot = d3.hierarchy(this.root);
         this.treeLayout = d3.tree().nodeSize([nodeWidth, nodeHeight])(hierarchyRoot);
+        console.log('Hierarchy has', this.treeLayout.descendants().length, ' nodes and',
+            this.treeLayout.links().length, ' links');
+        if (this.resizeCb) {
+            this.resizeCb(this.treeLayout.height);
+        }
         return this.treeLayout;
+    }
+
+    setResizeCallback(cb: (number) => void) {
+        this.resizeCb = cb;
     }
 
     /**
@@ -169,7 +177,8 @@ export class HierarchyLayoutService {
         if (updatedRoot !== null) {
             this.root = updatedRoot;
         } else {
-            this.root = this.emptyRoot;
+            this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
+                absPath: '/', layerRefs: Array<String>(0)};
         }
         // Then do the calculation again
         this.recalculate();
