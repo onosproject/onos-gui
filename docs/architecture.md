@@ -3,6 +3,8 @@ The GUI is architected as a Cloud Native application to be run on Kubernetes
 accessing the back end modules through gRPC (and in the case of the Config GUI
 mostly through gNMI).
 
+![onos-gui deployment](images/onos-gui-deployment.png)
+
 The main front end technology is [Angular](https://angular.io) and is
 supplemented by [gRPC Web](https://github.com/grpc/grpc-web) to access the back
 through a gRPC proxy.
@@ -26,7 +28,3 @@ There are some alternatives to using grpc-web to allow web browsers to access
 gRPC directly, but grpc-web is the recommended solution as per the gRPC [website](https://grpc.io/docs/tutorials/basic/web/).
 
 See also [this article on hacker noon](https://hackernoon.com/interface-grpc-with-web-using-grpc-web-and-envoy-possibly-the-best-way-forward-3ae9671af67).
-
-It could be possible to build a bespoke Go client that presents WebSockets to the
-browser and forward requests to gRPC, but this woould only be achieving the same
-effect as grpc-web and would have to be updated with every proto change. 
