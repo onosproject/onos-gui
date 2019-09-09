@@ -27,7 +27,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -54,7 +54,7 @@
                 }
               ]
             }
-          },
+          }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

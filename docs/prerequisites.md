@@ -22,6 +22,28 @@ The following command can be run from any folder:
 ```bash
 npm install -g @angular/cli
 ```
+
+## Checkout the onos-gui code from Git
+Using a process similar to that of [onos-config](https://github.com/onosproject/onos-config/blob/master/docs/contributing.md)
+the Git repo should be forked in your own name on 
+[github.com/onosproject/onos-gui](https://github.com/onosproject/onos-gui).
+
+git clone https://github.com/$GIT_USER/onos-config.git
+# or: git clone git@github.com:$GIT_USER/onos-config.git
+
+```bash
+cd $ONOS_ROOT/onos-config
+git remote add upstream https://github.com/onosproject/onos-gui.git
+# or: git remote add upstream git@github.com:onosproject/onos-gui.git
+
+# Never push to upstream master
+git remote set-url --push upstream no_push
+
+# Confirm that your remotes make sense:
+git remote -v
+```
+
+## Set up Angular for local development
 After this install (and after changing to the web/onos-gui folder) it should be
 possible to see the Angular CLI version:
 ```bash
@@ -56,7 +78,7 @@ Angular: 7.0.4
 ## Angular dependencies
 Staying inside the **web/onos-gui** folder, the Angular dependencies must be installed.
 This is as simple as running **npm install** in the folder. This takes the dependencies
-listed in **package.json** and installsthem in the temporary folder **node_modules**:
+listed in **package.json** and installs them in the temporary folder **node_modules**:
 ```bash
 npm install
 ```
@@ -66,11 +88,13 @@ npm install
 
 ## Local kubernetes environment
 Some form of local kubernetes development environment is also needed.
-The core team uses [Kind], but there are other options such as [Minikube].
+The core team uses [Kind], but there are other options such as [Minikube] and [Microk8s] for Ubuntu.
+The **[onit]** (ONOS Integration Test tool) should be used to set up the cluster,
+or [deploy] gives more details on a Helm installation.
 
 ## IDE
 Some form of an integrated development environment is also recommended.
-The core team uses the [Intellij WebStorm IDE] from JetBrains, but there are many other options. 
+The core team uses the Intellij [WebStorm IDE] from JetBrains, but there are many other options. 
 Microsoft's [Visual Studio Code] is one such option and is available as a free download.
 
 ## License
@@ -78,3 +102,15 @@ The project requires that all Typescript source files are properly annotated usi
 Since this requirement is enforced by the CI process, it is strongly recommended that developers
 setup their IDE to include the [license text](../build/licensing/boilerplate.ts.txt)
 automatically.
+
+[Docker]: https://docs.docker.com/install/
+[Kind]: https://github.com/kubernetes-sigs/kind
+[Minikube]: https://kubernetes.io/docs/tasks/tools/install-minikube/
+[MicroK8s]: https://microk8s.io/
+
+[WebStorm IDE]: https://www.jetbrains.com/webstorm/
+[Atom]: https://atom.io/
+[Visual Studio Code]: /https://code.visualstudio.com
+
+[onit]: https://github.com/onosproject/onos-test/blob/master/docs/setup.md
+[deploy]: https://github.com/onosproject/onos-config/blob/master/docs/deployment.md
