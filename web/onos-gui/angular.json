@@ -53,6 +53,14 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "kind": {
+              "fileReplacements": [
+                  {
+                      "replace": "src/environments/environment.ts",
+                      "with": "src/environments/environment.kind.ts"
+                  }
+              ]
             }
           }
         },
@@ -64,6 +72,9 @@
           "configurations": {
             "production": {
               "browserTarget": "onos-gui:build:production"
+            },
+            "kind": {
+              "browserTarget": "onos-gui:build:kind"
             }
           }
         },
