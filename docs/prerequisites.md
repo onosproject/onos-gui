@@ -80,9 +80,9 @@ Angular: 7.0.4
 ``` 
 
 ## Angular dependencies
-Staying inside the **web/onos-gui** folder, the Angular dependencies must be installed.
-This is as simple as running **npm install** in the folder. This takes the dependencies
-listed in **package.json** and installs them in the temporary folder **node_modules**:
+Staying inside the `web/onos-gui` folder, the Angular dependencies must be installed.
+This is as simple as running `npm install` in the folder. This takes the dependencies
+listed in `package.json` and installs them in the temporary folder `node_modules`:
 ```bash
 npm install
 ```
@@ -119,4 +119,4 @@ automatically.
 [Visual Studio Code]: https://code.visualstudio.com
 
 [onit]: ../../onos-test/docs/setup.md
-[deploy]: ../../onos-docs/docs/developers/deployment.md
+[deploy]: ../../onos-config/docs/deployment.md
