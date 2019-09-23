@@ -1,9 +1,10 @@
-# Development Prerequisites
+# GUI Development Prerequisites
 This document provides an overview of the tools and packages needed to work on and to build onos-gui.
 Developers are expected to have these tools installed on the machine where the project is built.
 
 ## NodeJS
 Install the latest Long Term Support version of NodeJS on your system.
+
 * Downloads are available from https://nodejs.org/en/download/
 * Instructions for installing on Linux are at https://github.com/nodejs/help/wiki/Installation
 
@@ -24,15 +25,18 @@ npm install -g @angular/cli
 ```
 
 ## Checkout the onos-gui code from Git
-Using a process similar to that of [onos-config](https://github.com/onosproject/onos-config/blob/master/docs/contributing.md)
+Using a process described [contributing.md](../../onos-docs/docs/developers/contributing.md)
 the Git repo should be forked in your own name on 
 [github.com/onosproject/onos-gui](https://github.com/onosproject/onos-gui).
 
-git clone https://github.com/$GIT_USER/onos-config.git
-# or: git clone git@github.com:$GIT_USER/onos-config.git
+```bash
+git clone https://github.com/$GIT_USER/onos-gui.git
+# or: 
+git clone git@github.com:$GIT_USER/onos-gui.git
+```
 
 ```bash
-cd $ONOS_ROOT/onos-config
+cd $ONOS_ROOT/onos-gui
 git remote add upstream https://github.com/onosproject/onos-gui.git
 # or: git remote add upstream git@github.com:onosproject/onos-gui.git
 
@@ -93,14 +97,16 @@ The **[onit]** (ONOS Integration Test tool) should be used to set up the cluster
 or [deploy] gives more details on a Helm installation.
 
 ## IDE
-Some form of an integrated development environment is also recommended.
-The core team uses the Intellij [WebStorm IDE] from JetBrains, but there are many other options. 
-Microsoft's [Visual Studio Code] is one such option and is available as a free download.
+Some form of an integrated development environment that supports Web Development
+with TypeScript is also recommended. The core team uses the Intellij
+[WebStorm IDE] from JetBrains, but there are many other options.
+The [Atom] editor is a lightweight solution supporting TypeScript and Git integration.
+[Visual Studio Code] is another option that supports TypeScript..
 
 ## License
 The project requires that all Typescript source files are properly annotated using the Apache 2.0 License.
 Since this requirement is enforced by the CI process, it is strongly recommended that developers
-setup their IDE to include the [license text](../build/licensing/boilerplate.ts.txt)
+setup their IDE to include the [license text](https://github.com/onosproject/onos-gui/blob/master/build/licensing/boilerplate.ts.txt)
 automatically.
 
 [Docker]: https://docs.docker.com/install/
@@ -110,7 +116,7 @@ automatically.
 
 [WebStorm IDE]: https://www.jetbrains.com/webstorm/
 [Atom]: https://atom.io/
-[Visual Studio Code]: /https://code.visualstudio.com
+[Visual Studio Code]: https://code.visualstudio.com
 
-[onit]: https://github.com/onosproject/onos-test/blob/master/docs/setup.md
-[deploy]: https://github.com/onosproject/onos-config/blob/master/docs/deployment.md
+[onit]: ../../onos-test/docs/setup.md
+[deploy]: ../../onos-docs/docs/developers/deployment.md
