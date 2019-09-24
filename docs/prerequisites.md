@@ -25,7 +25,7 @@ npm install -g @angular/cli
 ```
 
 ## Checkout the onos-gui code from Git
-Using a process described [contributing.md](../../onos-docs/docs/developers/contributing.md)
+Using a process described [contributing.md](../../developers/contributing.md)
 the Git repo should be forked in your own name on 
 [github.com/onosproject/onos-gui](https://github.com/onosproject/onos-gui).
 
