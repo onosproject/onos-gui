@@ -79,12 +79,12 @@ def file_passes(filename, refs, regexs):
     data = f.read()
     f.close()
     # determine if the file is automatically generated
-
-    if is_generated_file(filename, data, regexs):
-        return True
-
+    generated = is_generated_file(filename, data, regexs)
     basename = os.path.basename(filename)
     extension = file_extension(filename)
+    if generated:
+        if extension == "go":
+            extension = "generatego"
 
     if extension != "":
         ref = refs[extension]
@@ -111,15 +111,26 @@ def file_passes(filename, refs, regexs):
     p = regexs["year"]
     for d in data:
         if p.search(d):
-            print('File %s has the YEAR field, but missing the year of date' % filename, file=verbose_out)
+            if generated:
+                print('File %s has the YEAR field, but it should not be in generated file' % filename, file=verbose_out)
+            else:
+                print('File %s has the YEAR field, but missing the year of date' % filename, file=verbose_out)
             return False
 
-    # Replace all occurrences of the regex "2014|2015|2016|2017|2018" with "YEAR"
-    p = regexs["date"]
-    for i, d in enumerate(data):
-        (data[i], found) = p.subn('YEAR', d)
-        if found != 0:
-            break
+    if not generated:
+        # Replace all occurrences of the regex "2014|2015|2016|2017|2018" with "YEAR"
+        p = regexs["date"]
+        for i, d in enumerate(data):
+            (data[i], found) = p.subn('YEAR', d)
+            if found != 0:
+                break
+
+    if generated:
+        p = regexs["generator_name"]
+        for i, d in enumerate(data):
+            (data[i], found) = p.subn('GENERATOR', d)
+            if found != 0:
+                break
 
     # if we don't match the reference at this point, fail
     if ref != data:
@@ -137,7 +148,7 @@ def file_extension(filename):
     return os.path.splitext(filename)[1].split(".")[-1].lower()
 
 # list of the directories to skip during license check
-skipped_dirs = ['.git', "vendor", "node_modules", "dist"]
+skipped_dirs = ['.git', "vendor"]
 
 # list all the files contain 'DO NOT EDIT', but are not generated
 skipped_ungenerated_files = ['build/licensing/boilerplate.py']
@@ -184,6 +195,9 @@ def get_dates():
     years = datetime.datetime.now().year
     return '(%s)' % '|'.join((str(year) for year in range(2014, years+1)))
 
+def get_generator():
+    return re.compile(r"(?<=\bby\W)\b(\w+-)*\w*")
+
 def get_regexs():
     regexs = {}
     # Search for "YEAR" which exists in the boilerplate, but shouldn't in the real thing
@@ -197,6 +211,7 @@ def get_regexs():
     regexs["shebang"] = re.compile(r"^(#!.*\n)\n*", re.MULTILINE)
     # Search for generated files
     regexs["generated"] = re.compile( 'DO NOT EDIT' )
+    regexs["generator_name"] = get_generator()
     return regexs
 
 def main():
@@ -214,4 +229,4 @@ def main():
     return 0
 
 if __name__ == "__main__":
-  sys.exit(main())
+    sys.exit(main())
