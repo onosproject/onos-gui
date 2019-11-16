@@ -5,8 +5,8 @@ Developers are expected to have these tools installed on the machine where the p
 ## NodeJS
 Install the latest Long Term Support version of NodeJS on your system.
 
-* Downloads are available from https://nodejs.org/en/download/
-* Instructions for installing on Linux are at https://github.com/nodejs/help/wiki/Installation
+* Downloads are available from <https://nodejs.org/en/download/>
+* Instructions for installing on Linux are at <https://github.com/nodejs/help/wiki/Installation>
 
 After installing it should be possible to see the version of **node** and **npm**
 (which is bundled with it) that you installed with:
@@ -17,7 +17,7 @@ npm -v
 
 ## Angular CLI
 Angular CLI provides the **ng** tools. Installation instructions are at
-https://angular.io/guide/setup-local
+<https://angular.io/guide/setup-local>
 
 The following command can be run from any folder:
 ```bash
@@ -55,6 +55,7 @@ cd web/onos-gui
 ng version
 ```
 This should give a result like:
+
 ```bash
 Your global Angular CLI version (8.1.2) is greater than your local
 version (7.0.7). The local Angular CLI version is used.
