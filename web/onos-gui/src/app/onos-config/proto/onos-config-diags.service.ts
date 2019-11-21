@@ -16,57 +16,51 @@
 
 import {Inject, Injectable} from '@angular/core';
 import {
-    ConfigDiagsClient,
+    ChangeServiceClient,
     OpStateDiagsClient
-} from './github.com/onosproject/onos-config/pkg/northbound/diags/diagsServiceClientPb';
+} from './github.com/onosproject/onos-config/api/diags/diagsServiceClientPb';
 import {
-    ChangesRequest,
-    ConfigRequest,
-    Configuration,
     OpStateRequest,
     OpStateResponse
-} from './github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
-import {Change} from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+} from './github.com/onosproject/onos-config/api/diags/diags_pb';
 
-type ChangesCallback = (r: Change) => void;
-type ConfigsCallback = (r: Configuration) => void;
 type OpStateCallback = (r: OpStateResponse) => void;
 
 @Injectable()
 export class OnosConfigDiagsService {
-    diagsService: ConfigDiagsClient;
+    diagsService: ChangeServiceClient;
     opStateService: OpStateDiagsClient;
 
     constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
-        this.diagsService = new ConfigDiagsClient(onosConfigUrl);
+        this.diagsService = new ChangeServiceClient(onosConfigUrl);
         this.opStateService = new OpStateDiagsClient(onosConfigUrl);
 
         console.log('Connecting to ', onosConfigUrl);
     }
 
-    requestChanges(changeIds: string[], callback: ChangesCallback) {
-        console.log('ListChangesRequest sent to', this.onosConfigUrl);
-        const changesRequest = new ChangesRequest();
-        let idx = 0;
-        for (const ch of changeIds) {
-            changesRequest.addChangeIds(ch, idx);
-            idx++;
-        }
-        const stream = this.diagsService.getChanges(changesRequest, {});
-        stream.on('data', callback);
-    }
-
-    requestConfigurations(configNames: string[], callback: ConfigsCallback) {
-        const configRequest = new ConfigRequest();
-        let idx = 0;
-        for (const cfg of configNames) {
-            configRequest.addDeviceIds(cfg, idx);
-            idx++;
-        }
-        const stream = this.diagsService.getConfigurations(configRequest, {});
-        console.log('ListConfigsRequest sent to', this.onosConfigUrl, 'for', configNames.join(','));
-        stream.on('data', callback);
-    }
+    // requestChanges(changeIds: string[], callback: ChangesCallback) {
+    //     console.log('ListChangesRequest sent to', this.onosConfigUrl);
+    //     const changesRequest = new ChangesRequest();
+    //     let idx = 0;
+    //     for (const ch of changeIds) {
+    //         changesRequest.addChangeIds(ch, idx);
+    //         idx++;
+    //     }
+    //     const stream = this.diagsService.getChanges(changesRequest, {});
+    //     stream.on('data', callback);
+    // }
+    //
+    // requestConfigurations(configNames: string[], callback: ConfigsCallback) {
+    //     const configRequest = new ConfigRequest();
+    //     let idx = 0;
+    //     for (const cfg of configNames) {
+    //         configRequest.addDeviceIds(cfg, idx);
+    //         idx++;
+    //     }
+    //     const stream = this.diagsService.getConfigurations(configRequest, {});
+    //     console.log('ListConfigsRequest sent to', this.onosConfigUrl, 'for', configNames.join(','));
+    //     stream.on('data', callback);
+    // }
 
     requestOpStateCache(deviceId: string, subscribe: boolean, callback: OpStateCallback ) {
         const opStateRequest = new OpStateRequest();

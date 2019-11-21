@@ -19,7 +19,7 @@ import {OnosTopoDeviceService} from '../proto/onos-topo-device.service';
 import {
     Device,
     ListResponse
-} from '../proto/github.com/onosproject/onos-topo/pkg/northbound/device/device_pb';
+} from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,

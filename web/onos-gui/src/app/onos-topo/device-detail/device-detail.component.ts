@@ -27,7 +27,7 @@ import {
     LogService,
     WebSocketService
 } from 'gui2-fw-lib';
-import {Device} from '../proto/github.com/onosproject/onos-topo/pkg/northbound/device/device_pb';
+import {Device} from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({

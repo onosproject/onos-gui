@@ -23,9 +23,8 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ModelInfo} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 import {NameInputResult} from '../../utils/name-input/name-input.component';
-import {PendingNetChangeService} from '../pending-net-change.service';
 
 @Component({
     selector: 'onos-models-list',
@@ -50,7 +49,7 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         public modelService: ModelService,
-        public pending: PendingNetChangeService,
+        // public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'models', 'id');
         this.is.loadIconDef('plus');
@@ -81,17 +80,17 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
     }
 
     newConfig(modelInfo: ModelInfo) {
-        if (this.selId !== undefined && this.pending.hasPendingChange && this.pending.pendingNewConfiguration === undefined) {
-            this.newConfigTitle = 'Name for new ' + modelInfo.getName() + modelInfo.getVersion() + ' config?';
-        }
+        // if (this.selId !== undefined && this.pending.hasPendingChange && this.pending.pendingNewConfiguration === undefined) {
+        //     this.newConfigTitle = 'Name for new ' + modelInfo.getName() + modelInfo.getVersion() + ' config?';
+        // }
     }
 
     newConfigCreate(chosen: NameInputResult): void {
         if (chosen.chosen === true) {
-            const configName = this.pending.addNewConfig(chosen.name, this.selectedChange.getVersion(), this.selectedChange.getName());
-            if (configName) {
-                this.router.navigate(['/config', 'configview', configName]);
-            }
+            // const configName = this.pending.addNewConfig(chosen.name, this.selectedChange.getVersion(), this.selectedChange.getName());
+            // if (configName) {
+            //     this.router.navigate(['/config', 'configview', configName]);
+            // }
         }
         this.newConfigTitle = '';
     }

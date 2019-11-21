@@ -15,8 +15,8 @@
  */
 
 import {ChangeValuePipe} from './change-value.pipe';
-import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {async, TestBed} from '@angular/core/testing';
+import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 describe('ChangeValuePipe', () => {
 
@@ -36,7 +36,7 @@ describe('ChangeValuePipe', () => {
     });
 
     it('Empty value', () => {
-        const values = pipe.transform(new Uint8Array(), ChangeValueType.EMPTY, new Array<number>());
+        const values = pipe.transform(new Uint8Array(), ValueType.EMPTY, new Array<number>());
         expect(values.length).toBe(0);
     });
 

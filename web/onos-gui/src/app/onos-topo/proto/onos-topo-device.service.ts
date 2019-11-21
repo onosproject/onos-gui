@@ -15,10 +15,10 @@
  */
 
 import {Inject, Injectable} from '@angular/core';
-import {DeviceServiceClient} from './github.com/onosproject/onos-topo/pkg/northbound/device/deviceServiceClientPb';
+import {DeviceServiceClient} from './github.com/onosproject/onos-topo/api/device/deviceServiceClientPb';
 import {
     ListRequest, ListResponse
-} from './github.com/onosproject/onos-topo/pkg/northbound/device/device_pb';
+} from './github.com/onosproject/onos-topo/api/device/device_pb';
 import * as grpcWeb from 'grpc-web';
 
 type ListDeviceCallback = (r: ListResponse) => void;

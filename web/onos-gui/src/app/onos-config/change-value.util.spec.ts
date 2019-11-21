@@ -17,7 +17,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {ChangeValueUtil, ValueDetails} from './change-value.util';
-import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 describe('ChangeValueUtil', () => {
     const enc = new TextEncoder();
@@ -38,7 +38,7 @@ describe('ChangeValueUtil', () => {
 
         const value = <ValueDetails>{
             value: stringArray,
-            valueType: ChangeValueType.STRING,
+            valueType: ValueType.STRING,
             valueTypeOpts: Array(0),
         };
 
@@ -54,7 +54,7 @@ describe('ChangeValueUtil', () => {
         const stringArray = enc.encode('This is a test value that should be truncated'); // 45 long
         const value = <ValueDetails>{
             value: stringArray,
-            valueType: ChangeValueType.STRING,
+            valueType: ValueType.STRING,
             valueTypeOpts: Array(0),
         };
 
@@ -69,7 +69,7 @@ describe('ChangeValueUtil', () => {
         const stringArray = enc.encode('item1\nitem2\nitem3');
         const value = <ValueDetails>{
             value: stringArray,
-            valueType: ChangeValueType.LEAFLIST_STRING,
+            valueType: ValueType.LEAFLIST_STRING,
             valueTypeOpts: Array(0),
         };
         const values = ChangeValueUtil.transform(value);
@@ -86,7 +86,7 @@ describe('ChangeValueUtil', () => {
         const intArr = new Uint8Array(ChangeValueUtil.longToByteArray(12345678));
         const value = <ValueDetails>{
             value: intArr,
-            valueType: ChangeValueType.INT,
+            valueType: ValueType.INT,
             valueTypeOpts: Array(0),
         };
         const values = ChangeValueUtil.transform(value);
@@ -99,7 +99,7 @@ describe('ChangeValueUtil', () => {
         const uint8Array = new Uint8Array([0xC, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
         const value = <ValueDetails>{
             value: uint8Array,
-            valueType: ChangeValueType.UINT,
+            valueType: ValueType.UINT,
             valueTypeOpts: Array(0),
         };
         const values = ChangeValueUtil.transform(value);
@@ -112,7 +112,7 @@ describe('ChangeValueUtil', () => {
         const intArr = new Uint8Array(ChangeValueUtil.floatToByteArray(2.1));
         const value = <ValueDetails>{
             value: intArr,
-            valueType: ChangeValueType.FLOAT,
+            valueType: ValueType.FLOAT,
             valueTypeOpts: Array(0),
         };
         const values = ChangeValueUtil.transform(value);

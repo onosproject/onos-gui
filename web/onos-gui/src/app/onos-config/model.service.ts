@@ -18,7 +18,7 @@ import {Injectable} from '@angular/core';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {
     ModelInfo,
-} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+} from './proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 
 @Injectable()
 export class ModelService {

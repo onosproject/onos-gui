@@ -1,14 +1,20 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "types": []
-  },
-  "include": [
-    "**/*.ts"
-  ],
-  "exclude": [
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "types": []
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "test.ts",
+        "app/onos-config/config-view/**/*.ts",
+        "app/onos-config/config-layers-panel/**/*.ts",
+        "app/onos-config/configs-list/**/*.ts",
+        "app/onos-config/network-change-detail/**/*.ts",
+        "app/onos-config/networkchanges/**/*.ts",
+        "app/onos-config/pending-net-change.service*.ts",
+        "**/*.spec.ts"
+    ]
 }

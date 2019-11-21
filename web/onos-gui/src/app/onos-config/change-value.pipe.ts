@@ -15,7 +15,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {ChangeValueUtil, ValueDetails} from './change-value.util';
 
 @Pipe({
@@ -25,7 +25,7 @@ import {ChangeValueUtil, ValueDetails} from './change-value.util';
 export class ChangeValuePipe implements PipeTransform {
 
     // transform is the main API to call a pipe with
-    transform(value: Uint8Array, valueType: ChangeValueType, valueTypeOpts: Array<number>, maxLen: number = 15): string[] {
+    transform(value: Uint8Array, valueType: ValueType, valueTypeOpts: Array<number>, maxLen: number = 15): string[] {
         if (value === null || value === undefined || value.length === 0) {
             return [];
         }

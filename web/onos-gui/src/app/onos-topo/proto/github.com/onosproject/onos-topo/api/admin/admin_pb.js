@@ -1,4 +1,4 @@
-// source: github.com/onosproject/onos-topo/pkg/northbound/diags/diags.proto
+// source: github.com/onosproject/onos-topo/api/admin/admin.proto
 /**
  * @fileoverview
  * @enhanceable
