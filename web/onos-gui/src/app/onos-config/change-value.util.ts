@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {ChangeValueType} from './proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 export interface ValueDetails {
     value: Uint8Array;
-    valueType: ChangeValueType;
+    valueType: ValueType;
     valueTypeOpts: Array<number>;
 }
 
@@ -38,19 +38,19 @@ export class ChangeValueUtil {
         const dataIsLittleEndian = true;
         const view = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
         switch (value.valueType) {
-            case ChangeValueType.BOOL:
+            case ValueType.BOOL:
                 valueStrings = (view.getInt8(0).valueOf() === 1) ? ['true'] : ['false'];
                 break;
-            case ChangeValueType.INT:
+            case ValueType.INT:
                 valueStrings = [String(view.getInt32(0, dataIsLittleEndian))];
                 break;
-            case ChangeValueType.UINT:
+            case ValueType.UINT:
                 valueStrings = [String(view.getUint32(0, dataIsLittleEndian))];
                 break;
-            case ChangeValueType.FLOAT:
+            case ValueType.FLOAT:
                 valueStrings = [String(view.getFloat64(0, dataIsLittleEndian))];
                 break;
-            case ChangeValueType.LEAFLIST_STRING:
+            case ValueType.LEAFLIST_STRING:
                 const leafList = dec.decode(value.value);
                 valueStrings = leafList.split('\n');
                 break;

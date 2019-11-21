@@ -33,6 +33,6 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests.
 // WARNING for the moment we are only testing a select few, because we're not
 // ready to test everything - Aug '19
-const context = require.context('./app/onos-config', true, /\.(pipe|service|util)\.spec\.ts$/);
+const context = require.context('./app/onos-config', true, /\.(util)\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

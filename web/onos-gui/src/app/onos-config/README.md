@@ -1,6 +1,6 @@
 # onos-config view
 
-**onos-config** view is a set of Angular components for displaying and exiting
+**onos-config** view is a set of Angular components for displaying and editing
 the configuration of onos devices through the **onos-config** system.
 
 # Component hierarchy

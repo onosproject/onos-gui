@@ -2,158 +2,18 @@
 
 import * as jspb from "google-protobuf"
 
-import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-
-import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
-
-export class NetworkChangesRequest extends jspb.Message {
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): NetworkChangesRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: NetworkChangesRequest): NetworkChangesRequest.AsObject;
-  static serializeBinaryToWriter(message: NetworkChangesRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): NetworkChangesRequest;
-  static deserializeBinaryFromReader(message: NetworkChangesRequest, reader: jspb.BinaryReader): NetworkChangesRequest;
-}
-
-export namespace NetworkChangesRequest {
-  export type AsObject = {
-  }
-}
-
-export class ConfigChange extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
-
-  getHash(): string;
-  setHash(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ConfigChange.AsObject;
-  static toObject(includeInstance: boolean, msg: ConfigChange): ConfigChange.AsObject;
-  static serializeBinaryToWriter(message: ConfigChange, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ConfigChange;
-  static deserializeBinaryFromReader(message: ConfigChange, reader: jspb.BinaryReader): ConfigChange;
-}
-
-export namespace ConfigChange {
-  export type AsObject = {
-    id: string,
-    hash: string,
-  }
-}
-
-export class ChangeValue extends jspb.Message {
-  getPath(): string;
-  setPath(value: string): void;
-
-  getValue(): Uint8Array | string;
-  getValue_asU8(): Uint8Array;
-  getValue_asB64(): string;
-  setValue(value: Uint8Array | string): void;
-
-  getValueType(): ChangeValueType;
-  setValueType(value: ChangeValueType): void;
-
-  getTypeOptsList(): Array<number>;
-  setTypeOptsList(value: Array<number>): void;
-  clearTypeOptsList(): void;
-  addTypeOpts(value: number, index?: number): void;
-
-  getRemoved(): boolean;
-  setRemoved(value: boolean): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ChangeValue.AsObject;
-  static toObject(includeInstance: boolean, msg: ChangeValue): ChangeValue.AsObject;
-  static serializeBinaryToWriter(message: ChangeValue, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ChangeValue;
-  static deserializeBinaryFromReader(message: ChangeValue, reader: jspb.BinaryReader): ChangeValue;
-}
-
-export namespace ChangeValue {
-  export type AsObject = {
-    path: string,
-    value: Uint8Array | string,
-    valueType: ChangeValueType,
-    typeOptsList: Array<number>,
-    removed: boolean,
-  }
-}
-
-export class Change extends jspb.Message {
-  getTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setTime(value?: google_protobuf_timestamp_pb.Timestamp): void;
-  hasTime(): boolean;
-  clearTime(): void;
-
-  getId(): string;
-  setId(value: string): void;
-
-  getDesc(): string;
-  setDesc(value: string): void;
-
-  getChangeValuesList(): Array<ChangeValue>;
-  setChangeValuesList(value: Array<ChangeValue>): void;
-  clearChangeValuesList(): void;
-  addChangeValues(value?: ChangeValue, index?: number): ChangeValue;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Change.AsObject;
-  static toObject(includeInstance: boolean, msg: Change): Change.AsObject;
-  static serializeBinaryToWriter(message: Change, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Change;
-  static deserializeBinaryFromReader(message: Change, reader: jspb.BinaryReader): Change;
-}
-
-export namespace Change {
-  export type AsObject = {
-    time?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-    id: string,
-    desc: string,
-    changeValuesList: Array<ChangeValue.AsObject>,
-  }
-}
-
-export class NetChange extends jspb.Message {
-  getTime(): google_protobuf_timestamp_pb.Timestamp | undefined;
-  setTime(value?: google_protobuf_timestamp_pb.Timestamp): void;
-  hasTime(): boolean;
-  clearTime(): void;
-
-  getName(): string;
-  setName(value: string): void;
-
-  getUser(): string;
-  setUser(value: string): void;
-
-  getChangesList(): Array<ConfigChange>;
-  setChangesList(value: Array<ConfigChange>): void;
-  clearChangesList(): void;
-  addChanges(value?: ConfigChange, index?: number): ConfigChange;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): NetChange.AsObject;
-  static toObject(includeInstance: boolean, msg: NetChange): NetChange.AsObject;
-  static serializeBinaryToWriter(message: NetChange, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): NetChange;
-  static deserializeBinaryFromReader(message: NetChange, reader: jspb.BinaryReader): NetChange;
-}
-
-export namespace NetChange {
-  export type AsObject = {
-    time?: google_protobuf_timestamp_pb.Timestamp.AsObject,
-    name: string,
-    user: string,
-    changesList: Array<ConfigChange.AsObject>,
-  }
-}
+import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
+import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
+import * as github_com_openconfig_gnmi_proto_gnmi_gnmi_pb from '../../../../../github.com/openconfig/gnmi/proto/gnmi/gnmi_pb';
+import * as github_com_onosproject_onos$config_api_types_change_device_types_pb from '../../../../../github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import * as github_com_onosproject_onos$config_api_types_snapshot_device_types_pb from '../../../../../github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 export class ReadOnlySubPath extends jspb.Message {
   getSubPath(): string;
   setSubPath(value: string): void;
 
-  getValueType(): ChangeValueType;
-  setValueType(value: ChangeValueType): void;
+  getValueType(): github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType;
+  setValueType(value: github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ReadOnlySubPath.AsObject;
@@ -166,7 +26,7 @@ export class ReadOnlySubPath extends jspb.Message {
 export namespace ReadOnlySubPath {
   export type AsObject = {
     subPath: string,
-    valueType: ChangeValueType,
+    valueType: github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType,
   }
 }
 
@@ -198,8 +58,8 @@ export class ReadWritePath extends jspb.Message {
   getPath(): string;
   setPath(value: string): void;
 
-  getValueType(): ChangeValueType;
-  setValueType(value: ChangeValueType): void;
+  getValueType(): github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType;
+  setValueType(value: github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType): void;
 
   getUnits(): string;
   setUnits(value: string): void;
@@ -234,7 +94,7 @@ export class ReadWritePath extends jspb.Message {
 export namespace ReadWritePath {
   export type AsObject = {
     path: string,
-    valueType: ChangeValueType,
+    valueType: github_com_onosproject_onos$config_api_types_change_device_types_pb.ValueType,
     units: string,
     description: string,
     mandatory: boolean,
@@ -258,6 +118,9 @@ export class ModelInfo extends jspb.Message {
 
   getModule(): string;
   setModule(value: string): void;
+
+  getGetstatemode(): number;
+  setGetstatemode(value: number): void;
 
   getReadOnlyPathList(): Array<ReadOnlyPath>;
   setReadOnlyPathList(value: Array<ReadOnlyPath>): void;
@@ -283,6 +146,7 @@ export namespace ModelInfo {
     version: string,
     modelDataList: Array<github_com_openconfig_gnmi_proto_gnmi_gnmi_pb.ModelData.AsObject>,
     module: string,
+    getstatemode: number,
     readOnlyPathList: Array<ReadOnlyPath.AsObject>,
     readWritePathList: Array<ReadWritePath.AsObject>,
   }
@@ -309,46 +173,6 @@ export namespace Chunk {
   export type AsObject = {
     soFile: string,
     content: Uint8Array | string,
-  }
-}
-
-export class RegisterRequest extends jspb.Message {
-  getSoFile(): string;
-  setSoFile(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): RegisterRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: RegisterRequest): RegisterRequest.AsObject;
-  static serializeBinaryToWriter(message: RegisterRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): RegisterRequest;
-  static deserializeBinaryFromReader(message: RegisterRequest, reader: jspb.BinaryReader): RegisterRequest;
-}
-
-export namespace RegisterRequest {
-  export type AsObject = {
-    soFile: string,
-  }
-}
-
-export class SchemaEntry extends jspb.Message {
-  getSchemaPath(): string;
-  setSchemaPath(value: string): void;
-
-  getSchemaJson(): string;
-  setSchemaJson(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SchemaEntry.AsObject;
-  static toObject(includeInstance: boolean, msg: SchemaEntry): SchemaEntry.AsObject;
-  static serializeBinaryToWriter(message: SchemaEntry, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SchemaEntry;
-  static deserializeBinaryFromReader(message: SchemaEntry, reader: jspb.BinaryReader): SchemaEntry;
-}
-
-export namespace SchemaEntry {
-  export type AsObject = {
-    schemaPath: string,
-    schemaJson: string,
   }
 }
 
@@ -440,23 +264,76 @@ export namespace RollbackResponse {
   }
 }
 
-export enum ChangeValueType { 
-  EMPTY = 0,
-  STRING = 1,
-  INT = 2,
-  UINT = 3,
-  BOOL = 4,
-  DECIMAL = 5,
-  FLOAT = 6,
-  BYTES = 7,
-  LEAFLIST_STRING = 8,
-  LEAFLIST_INT = 9,
-  LEAFLIST_UINT = 10,
-  LEAFLIST_BOOL = 11,
-  LEAFLIST_DECIMAL = 12,
-  LEAFLIST_FLOAT = 13,
-  LEAFLIST_BYTES = 14,
+export class GetSnapshotRequest extends jspb.Message {
+  getDeviceId(): string;
+  setDeviceId(value: string): void;
+
+  getDeviceVersion(): string;
+  setDeviceVersion(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetSnapshotRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetSnapshotRequest): GetSnapshotRequest.AsObject;
+  static serializeBinaryToWriter(message: GetSnapshotRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetSnapshotRequest;
+  static deserializeBinaryFromReader(message: GetSnapshotRequest, reader: jspb.BinaryReader): GetSnapshotRequest;
 }
+
+export namespace GetSnapshotRequest {
+  export type AsObject = {
+    deviceId: string,
+    deviceVersion: string,
+  }
+}
+
+export class ListSnapshotsRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSnapshotsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSnapshotsRequest): ListSnapshotsRequest.AsObject;
+  static serializeBinaryToWriter(message: ListSnapshotsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSnapshotsRequest;
+  static deserializeBinaryFromReader(message: ListSnapshotsRequest, reader: jspb.BinaryReader): ListSnapshotsRequest;
+}
+
+export namespace ListSnapshotsRequest {
+  export type AsObject = {
+  }
+}
+
+export class CompactChangesRequest extends jspb.Message {
+  getRetentionPeriod(): google_protobuf_duration_pb.Duration | undefined;
+  setRetentionPeriod(value?: google_protobuf_duration_pb.Duration): void;
+  hasRetentionPeriod(): boolean;
+  clearRetentionPeriod(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompactChangesRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CompactChangesRequest): CompactChangesRequest.AsObject;
+  static serializeBinaryToWriter(message: CompactChangesRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompactChangesRequest;
+  static deserializeBinaryFromReader(message: CompactChangesRequest, reader: jspb.BinaryReader): CompactChangesRequest;
+}
+
+export namespace CompactChangesRequest {
+  export type AsObject = {
+    retentionPeriod?: google_protobuf_duration_pb.Duration.AsObject,
+  }
+}
+
+export class CompactChangesResponse extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CompactChangesResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CompactChangesResponse): CompactChangesResponse.AsObject;
+  static serializeBinaryToWriter(message: CompactChangesResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CompactChangesResponse;
+  static deserializeBinaryFromReader(message: CompactChangesResponse, reader: jspb.BinaryReader): CompactChangesResponse;
+}
+
+export namespace CompactChangesResponse {
+  export type AsObject = {
+  }
+}
+
 export enum Type { 
   NONE = 0,
   ADDED = 1,

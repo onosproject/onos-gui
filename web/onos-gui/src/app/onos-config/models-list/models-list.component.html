@@ -30,7 +30,8 @@
             </div>
             <div class="separator"></div>
             <div (click)="newConfig(selectedChange)">
-                <onos-icon classes="{{ selId !== undefined && pending.hasPendingChange && pending.pendingNewConfiguration === undefined ? 'active-rect':undefined}}"
+<!--                <onos-icon classes="{{ selId !== undefined && pending.hasPendingChange && pending.pendingNewConfiguration === undefined ? 'active-rect':undefined}}"-->
+                <onos-icon classes="{{ selId !== undefined }}"
                            iconId="plus" iconSize="42"
                            toolTip="Add config"></onos-icon>
             </div>

@@ -17,19 +17,16 @@
 import {Inject, Injectable} from '@angular/core';
 import {
     ConfigAdminServiceClient
-} from './github.com/onosproject/onos-config/pkg/northbound/admin/adminServiceClientPb';
+} from './github.com/onosproject/onos-config/api/admin/adminServiceClientPb';
 import {
     ListModelsRequest,
     ModelInfo,
-    NetChange,
-    NetworkChangesRequest,
-    RegisterRequest,
     RegisterResponse, RollbackRequest,
     RollbackResponse
-} from './github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+} from './github.com/onosproject/onos-config/api/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 
-type NetChangeCallback = (r: NetChange) => void;
+// type NetChangeCallback = (r: NetChange) => void;
 type ModelInfoCallback = (r: ModelInfo) => void;
 type RegisterCallback = (e: grpcWeb.Error, r: RegisterResponse) => void;
 type RollbackCallback = (e: grpcWeb.Error, r: RollbackResponse) => void;
@@ -45,11 +42,11 @@ export class OnosConfigAdminService {
         console.log('Config Admin Service Connecting to ', onosConfigUrl);
     }
 
-    requestNetworkChanges(callback: NetChangeCallback) {
-        const stream = this.adminServiceClient.getNetworkChanges(new NetworkChangesRequest(), {});
-        console.log('NetworkChangesRequest sent to', this.onosConfigUrl);
-        stream.on('data', callback);
-    }
+    // requestNetworkChanges(callback: NetChangeCallback) {
+    //     const stream = this.adminServiceClient.getNetworkChanges(new NetworkChangesRequest(), {});
+    //     console.log('NetworkChangesRequest sent to', this.onosConfigUrl);
+    //     stream.on('data', callback);
+    // }
 
     requestRollback(nwChangeName: string, callback: RollbackCallback, rollbackComment?: string) {
         const rollbackReq = new RollbackRequest();
@@ -68,12 +65,5 @@ export class OnosConfigAdminService {
         const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
         stream.on('data', callback);
-    }
-
-    requestRegisterModel(pluginPathToFile: string, callback: RegisterCallback) {
-        const regRequest = new RegisterRequest();
-        regRequest.setSoFile(pluginPathToFile);
-        this.adminServiceClient.registerModel(regRequest, {}, callback);
-        console.log('RegisteredModel for', pluginPathToFile, 'sent to', this.onosConfigUrl);
     }
 }

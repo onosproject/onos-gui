@@ -3,7 +3,7 @@
 import * as jspb from "google-protobuf"
 
 import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
-
+import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
 
 export class AddRequest extends jspb.Message {
   getDevice(): Device | undefined;
@@ -246,6 +246,11 @@ export class Device extends jspb.Message {
   getAttributesMap(): jspb.Map<string, string>;
   clearAttributesMap(): void;
 
+  getProtocolsList(): Array<ProtocolState>;
+  setProtocolsList(value: Array<ProtocolState>): void;
+  clearProtocolsList(): void;
+  addProtocols(value?: ProtocolState, index?: number): ProtocolState;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Device.AsObject;
   static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
@@ -267,6 +272,7 @@ export namespace Device {
     type: string,
     role: string,
     attributesMap: Array<[string, string]>,
+    protocolsList: Array<ProtocolState.AsObject>,
   }
 }
 
@@ -326,3 +332,55 @@ export namespace TlsConfig {
   }
 }
 
+export class ProtocolState extends jspb.Message {
+  getProtocol(): Protocol;
+  setProtocol(value: Protocol): void;
+
+  getConnectivitystate(): ConnectivityState;
+  setConnectivitystate(value: ConnectivityState): void;
+
+  getChannelstate(): ChannelState;
+  setChannelstate(value: ChannelState): void;
+
+  getServicestate(): ServiceState;
+  setServicestate(value: ServiceState): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ProtocolState.AsObject;
+  static toObject(includeInstance: boolean, msg: ProtocolState): ProtocolState.AsObject;
+  static serializeBinaryToWriter(message: ProtocolState, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ProtocolState;
+  static deserializeBinaryFromReader(message: ProtocolState, reader: jspb.BinaryReader): ProtocolState;
+}
+
+export namespace ProtocolState {
+  export type AsObject = {
+    protocol: Protocol,
+    connectivitystate: ConnectivityState,
+    channelstate: ChannelState,
+    servicestate: ServiceState,
+  }
+}
+
+export enum Protocol { 
+  UNKNOWN_PROTOCOL = 0,
+  GNMI = 1,
+  P4RUNTIME = 2,
+  GNOI = 3,
+}
+export enum ConnectivityState { 
+  UNKNOWN_CONNECTIVITY_STATE = 0,
+  REACHABLE = 1,
+  UNREACHABLE = 2,
+}
+export enum ChannelState { 
+  UNKNOWN_CHANNEL_STATE = 0,
+  CONNECTED = 1,
+  DISCONNECTED = 2,
+}
+export enum ServiceState { 
+  UNKNOWN_SERVICE_STATE = 0,
+  AVAILABLE = 1,
+  UNAVAILABLE = 2,
+  CONNECTING = 3,
+}

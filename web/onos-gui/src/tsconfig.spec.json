@@ -1,18 +1,26 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/spec",
-    "types": [
-      "jasmine",
-      "node"
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/spec",
+        "types": [
+            "jasmine",
+            "node"
+        ]
+    },
+    "files": [
+        "test.ts",
+        "polyfills.ts"
+    ],
+    "include": [
+        "**/*.spec.ts",
+        "**/*.d.ts"
+    ],
+    "exclude": [
+        "app/onos-config/config-view/**/*.spec.ts",
+        "app/onos-config/config-layers-panel/**/*.ts",
+        "app/onos-config/configs-list/**/*.ts",
+        "app/onos-config/network-change-detail/**/*.ts",
+        "app/onos-config/networkchanges/**/*.ts",
+        "app/onos-config/pending-net-change.service*.ts"
     ]
-  },
-  "files": [
-    "test.ts",
-    "polyfills.ts",
-  ],
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
 }

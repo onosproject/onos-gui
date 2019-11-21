@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for proto
+ * @fileoverview gRPC-Web generated client stub for onos.config.diags
  * @enhanceable
  * @public
  */
@@ -9,18 +9,20 @@
 
 import * as grpcWeb from 'grpc-web';
 
-import * as google_protobuf_timestamp_pb from 'google-protobuf/google/protobuf/timestamp_pb';
-
-import * as github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb from '../../../../../../github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
+import * as github_com_onosproject_onos$config_api_admin_admin_pb from '../../../../../github.com/onosproject/onos-config/api/admin/admin_pb';
+import * as github_com_onosproject_onos$config_api_types_change_device_types_pb from '../../../../../github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import * as github_com_onosproject_onos$config_api_types_change_network_types_pb from '../../../../../github.com/onosproject/onos-config/api/types/change/network/types_pb';
 
 import {
-  ChangesRequest,
-  ConfigRequest,
-  Configuration,
+  ListDeviceChangeRequest,
+  ListDeviceChangeResponse,
+  ListNetworkChangeRequest,
+  ListNetworkChangeResponse,
   OpStateRequest,
   OpStateResponse} from './diags_pb';
 
-export class ConfigDiagsClient {
+export class ChangeServiceClient {
   client_: grpcWeb.AbstractClientBase;
   hostname_: string;
   credentials_: null | { [index: string]: string; };
@@ -39,42 +41,42 @@ export class ConfigDiagsClient {
     this.options_ = options;
   }
 
-  methodInfoGetChanges = new grpcWeb.AbstractClientBase.MethodInfo(
-    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Change,
-    (request: ChangesRequest) => {
+  methodInfoListNetworkChanges = new grpcWeb.AbstractClientBase.MethodInfo(
+    ListNetworkChangeResponse,
+    (request: ListNetworkChangeRequest) => {
       return request.serializeBinary();
     },
-    github_com_onosproject_onos$config_pkg_northbound_admin_admin_pb.Change.deserializeBinary
+    ListNetworkChangeResponse.deserializeBinary
   );
 
-  getChanges(
-    request: ChangesRequest,
+  listNetworkChanges(
+    request: ListNetworkChangeRequest,
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/proto.ConfigDiags/GetChanges',
+        '/onos.config.diags.ChangeService/ListNetworkChanges',
       request,
       metadata || {},
-      this.methodInfoGetChanges);
+      this.methodInfoListNetworkChanges);
   }
 
-  methodInfoGetConfigurations = new grpcWeb.AbstractClientBase.MethodInfo(
-    Configuration,
-    (request: ConfigRequest) => {
+  methodInfoListDeviceChanges = new grpcWeb.AbstractClientBase.MethodInfo(
+    ListDeviceChangeResponse,
+    (request: ListDeviceChangeRequest) => {
       return request.serializeBinary();
     },
-    Configuration.deserializeBinary
+    ListDeviceChangeResponse.deserializeBinary
   );
 
-  getConfigurations(
-    request: ConfigRequest,
+  listDeviceChanges(
+    request: ListDeviceChangeRequest,
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/proto.ConfigDiags/GetConfigurations',
+        '/onos.config.diags.ChangeService/ListDeviceChanges',
       request,
       metadata || {},
-      this.methodInfoGetConfigurations);
+      this.methodInfoListDeviceChanges);
   }
 
 }
@@ -111,7 +113,7 @@ export class OpStateDiagsClient {
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/proto.OpStateDiags/GetOpState',
+        '/onos.config.diags.OpStateDiags/GetOpState',
       request,
       metadata || {},
       this.methodInfoGetOpState);

@@ -17,48 +17,36 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {grpc_web_config_proxy} from '../../environments/environment';
-import {NetworkChangesComponent} from './networkchanges/network-changes.component';
-import {ConfigViewComponent} from './config-view/config-view.component';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {OnosConfigGnmiService} from './proto/onos-config-gnmi.service';
-import {LayerSvgComponent} from './config-view/layer-svg/layer-svg.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OnosConfigRoutingModule} from './onos-config-routing.module';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
-import {NetworkChangeDetailComponent} from './network-change-detail/network-change-detail.component';
-import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-panel.component';
-import { ContainerSvgComponent } from './config-view/container-svg/container-svg.component';
-import { LeafSvgComponent } from './config-view/leaf-svg/leaf-svg.component';
 import {Gui2TopoLibModule} from 'gui2-topo-lib';
-import { ConfigsListComponent } from './configs-list/configs-list.component';
 import { ModelsListComponent } from './models-list/models-list.component';
 import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
 import {OnosUtilsModule} from '../utils/onos-utils.module';
-import { PathBarComponent } from './config-view/path-bar/path-bar.component';
-import { StringValueComponent } from './config-view/string-value/string-value.component';
-import { LinkFilterPipe } from './config-view/link-filter.pipe';
-import { NodeFilterPipe } from './config-view/node-filter.pipe';
 
 @NgModule({
     declarations: [
-        NetworkChangesComponent,
-        ConfigViewComponent,
-        LayerSvgComponent,
-        NetworkChangeDetailComponent,
-        ConfigLayersPanelComponent,
-        ContainerSvgComponent,
-        LeafSvgComponent,
-        ConfigsListComponent,
+        // NetworkChangesComponent,
+        // ConfigViewComponent,
+        // LayerSvgComponent,
+        // NetworkChangeDetailComponent,
+        // ConfigLayersPanelComponent,
+        // ContainerSvgComponent,
+        // LeafSvgComponent,
+        // ConfigsListComponent,
         ModelsListComponent,
         ModelDetailComponent,
         ChangeValuePipe,
-        PathBarComponent,
-        StringValueComponent,
-        LinkFilterPipe,
-        NodeFilterPipe
+        // PathBarComponent,
+        // StringValueComponent,
+        // LinkFilterPipe,
+        // NodeFilterPipe
     ],
     imports: [
         CommonModule,
@@ -88,7 +76,7 @@ import { NodeFilterPipe } from './config-view/node-filter.pipe';
         }
     ],
     exports: [
-        ConfigViewComponent
+        // ConfigViewComponent
     ]
 })
 export class OnosConfigModule {

@@ -16,31 +16,31 @@
 
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
-import {NetworkChangesComponent} from './networkchanges/network-changes.component';
-import {ConfigViewComponent} from './config-view/config-view.component';
-import {ConfigsListComponent} from './configs-list/configs-list.component';
+// import {NetworkChangesComponent} from './networkchanges/network-changes.component';
+// import {ConfigViewComponent} from './config-view/config-view.component';
+// import {ConfigsListComponent} from './configs-list/configs-list.component';
 import {ModelsListComponent} from './models-list/models-list.component';
 
 const routes: Routes = [
-    {
-        path: 'configview/:configName',
-        component: ConfigViewComponent
-    },
-    {
-        path: 'nwchanges',
-        component: NetworkChangesComponent
-    },
-    {
-        path: 'configs',
-        component: ConfigsListComponent
-    },
+    // {
+    //     path: 'configview/:configName',
+    //     component: ConfigViewComponent
+    // },
+    // {
+    //     path: 'nwchanges',
+    //     component: NetworkChangesComponent
+    // },
+    // {
+    //     path: 'configs',
+    //     component: ConfigsListComponent
+    // },
     {
         path: 'models',
         component: ModelsListComponent
     },
     {
         path: '',
-        redirectTo: 'nwchanges',
+        redirectTo: 'models',
         pathMatch: 'full'
     }
 ];

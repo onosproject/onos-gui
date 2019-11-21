@@ -10,7 +10,7 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
-
+import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
 
 import {
   AddRequest,
