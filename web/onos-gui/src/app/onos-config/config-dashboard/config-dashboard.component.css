@@ -1,0 +1,51 @@
+/*
+ * Copyright 2019-present Open Networking Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+#dashboard-grid {
+    margin: auto;
+    min-width: 60%;
+    min-height: 60%;
+    max-height: 90%;
+    overflow-y: scroll;
+}
+
+.dashboard-header {
+    background-color: #a9aba0;
+    color: white;
+}
+
+.nw-ch-hdr {
+    text-align: right;
+    padding-right: 4px;
+}
+
+.nw-ch-row {
+    background-color: lightskyblue;
+}
+
+.nw-ch-row__alternate {
+    background-color: #b3e9ff;
+}
+
+.nw-ss-row {
+    background-color: #ffc2da;
+}
+
+.device-hdr {
+    text-align: center;
+    border: 1px black solid;
+    background-color: white;
+    padding: 6px;
+}
