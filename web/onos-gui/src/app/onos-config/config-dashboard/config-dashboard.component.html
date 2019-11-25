@@ -1,0 +1,30 @@
+<!--
+~ Copyright 2019-present Open Networking Foundation
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<table id="dashboard-grid">
+    <thead><tr class="dashboard-header">
+        <td class="nw-ch-hdr">Network Changes</td>
+        <td class="device-hdr" *ngFor="let device of deviceService.deviceList | keyvalue">
+            <a [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
+        </td>
+    </tr></thead>
+    <tbody>
+    <tr class="nw-ch-row" [class.nw-ch-row__alternate]="i % 2" *ngFor="let nwchId of networkChanges | keyvalue:nwChangeIncreasingAge; let i = index"
+        onos-network-change [networkChange]="nwchId.value">
+    </tr>
+    <tr class="nw-ss-row" onos-network-snapshot></tr>
+    </tbody>
+</table>

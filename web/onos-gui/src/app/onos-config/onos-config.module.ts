@@ -16,7 +16,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {grpc_web_config_proxy} from '../../environments/environment';
+import {grpc_web_config_proxy, grpc_web_topo_proxy} from '../../environments/environment';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {OnosConfigGnmiService} from './proto/onos-config-gnmi.service';
@@ -29,24 +29,23 @@ import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
 import {OnosUtilsModule} from '../utils/onos-utils.module';
+import { ConfigDashboardComponent } from './config-dashboard/config-dashboard.component';
+import { NetworkChangeComponent } from './config-dashboard/network-change/network-change.component';
+import { DeviceChangeComponent } from './config-dashboard/device-change/device-change.component';
+import { DeviceSnapshotComponent } from './config-dashboard/device-snapshot/device-snapshot.component';
+import { NetworkSnapshotComponent } from './config-dashboard/network-snapshot/network-snapshot.component';
+import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 
 @NgModule({
     declarations: [
-        // NetworkChangesComponent,
-        // ConfigViewComponent,
-        // LayerSvgComponent,
-        // NetworkChangeDetailComponent,
-        // ConfigLayersPanelComponent,
-        // ContainerSvgComponent,
-        // LeafSvgComponent,
-        // ConfigsListComponent,
         ModelsListComponent,
         ModelDetailComponent,
         ChangeValuePipe,
-        // PathBarComponent,
-        // StringValueComponent,
-        // LinkFilterPipe,
-        // NodeFilterPipe
+        ConfigDashboardComponent,
+        NetworkChangeComponent,
+        DeviceChangeComponent,
+        DeviceSnapshotComponent,
+        NetworkSnapshotComponent,
     ],
     imports: [
         CommonModule,
@@ -69,6 +68,10 @@ import {OnosUtilsModule} from '../utils/onos-utils.module';
         {
             provide: OnosConfigGnmiService,
             useValue: new OnosConfigGnmiService(grpc_web_config_proxy)
+        },
+        {
+            provide: OnosTopoDeviceService,
+            useValue: new OnosTopoDeviceService(grpc_web_topo_proxy)
         },
         {
             provide: ModelService,

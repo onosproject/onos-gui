@@ -6,16 +6,10 @@
         "label": "Topology"
     },
     {
-        "id": "config/nwchanges",
-        "icon": "nav_config",
+        "id": "config/dashboard",
+        "icon": "nav_dashboard",
         "cat": "CONFIG",
-        "label": "Network Changes"
-    },
-    {
-        "id": "config/configs",
-        "icon": "nav_configs",
-        "cat": "CONFIG",
-        "label": "Configurations"
+        "label": "Dashboard"
     },
     {
         "id": "config/models",

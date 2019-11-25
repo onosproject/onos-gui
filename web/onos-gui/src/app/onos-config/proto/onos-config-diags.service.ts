@@ -20,10 +20,14 @@ import {
     OpStateDiagsClient
 } from './github.com/onosproject/onos-config/api/diags/diagsServiceClientPb';
 import {
+    ListDeviceChangeRequest, ListDeviceChangeResponse,
+    ListNetworkChangeRequest, ListNetworkChangeResponse,
     OpStateRequest,
     OpStateResponse
 } from './github.com/onosproject/onos-config/api/diags/diags_pb';
 
+type NetworkChangesCallback = (r: ListNetworkChangeResponse) => void;
+type DeviceChangesCallback = (r: ListDeviceChangeResponse) => void;
 type OpStateCallback = (r: OpStateResponse) => void;
 
 @Injectable()
@@ -49,7 +53,7 @@ export class OnosConfigDiagsService {
     //     const stream = this.diagsService.getChanges(changesRequest, {});
     //     stream.on('data', callback);
     // }
-    //
+
     // requestConfigurations(configNames: string[], callback: ConfigsCallback) {
     //     const configRequest = new ConfigRequest();
     //     let idx = 0;
@@ -61,6 +65,24 @@ export class OnosConfigDiagsService {
     //     console.log('ListConfigsRequest sent to', this.onosConfigUrl, 'for', configNames.join(','));
     //     stream.on('data', callback);
     // }
+
+    requestNetworkChanges(callback: NetworkChangesCallback) {
+        const listNetworkChangeRequest = new ListNetworkChangeRequest();
+        listNetworkChangeRequest.setSubscribe(true);
+        const stream = this.diagsService.listNetworkChanges(listNetworkChangeRequest, {});
+        console.log('ListNetworkChangeRequest sent to', this.onosConfigUrl);
+        stream.on('data', callback);
+    }
+
+    requestDeviceChanges(deviceId: string, version: string, callback: DeviceChangesCallback) {
+        const listDeviceChangesRequest = new ListDeviceChangeRequest();
+        listDeviceChangesRequest.setSubscribe(true);
+        listDeviceChangesRequest.setDeviceId(deviceId);
+        listDeviceChangesRequest.setDeviceVersion(version);
+        const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, {});
+        console.log('ListDeviceChangeRequest for', deviceId, version, 'sent to', this.onosConfigUrl);
+        stream.on('data', callback);
+    }
 
     requestOpStateCache(deviceId: string, subscribe: boolean, callback: OpStateCallback ) {
         const opStateRequest = new OpStateRequest();
