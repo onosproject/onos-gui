@@ -13,6 +13,6 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
-<div class="dev-change-div" [ngClass]="getStatusClass()">
+<div class="dev-change-div" [ngClass]="getStatusClass()" [title]="getTooltip()" (click)="selected.emit(true)">
     {{deviceService.deviceChangeMap.get(deviceChangeName())?.getChange().getValuesList().length}}
 </div>

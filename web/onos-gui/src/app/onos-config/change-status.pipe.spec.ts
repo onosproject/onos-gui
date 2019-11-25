@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-/*
- ONOS GUI -- Network Changes View (layout) -- CSS file
- */
-#ov-nwchanges .tabular-header {
-    text-align: left;
-}
+import { ChangeStatusPipe } from './change-status.pipe';
 
-#ov-nwchanges h2 {
-    display: inline-block;
-}
-
-#ov-nwchanges, div.ctrl-btns {
-}
-
-#summary-list .pending {
-    background-color: #e36457;
-}
-
+describe('ChangeStatusPipe', () => {
+  it('create an instance', () => {
+    const pipe = new ChangeStatusPipe();
+    expect(pipe).toBeTruthy();
+  });
+});

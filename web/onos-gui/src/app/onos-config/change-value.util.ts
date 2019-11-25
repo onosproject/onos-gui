@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-
-export interface ValueDetails {
-    value: Uint8Array;
-    valueType: ValueType;
-    valueTypeOpts: Array<number>;
-}
+import {
+    TypedValue,
+    ValueType
+} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 /**
  * Just a utility class that transforms Value type to strings
@@ -28,16 +25,16 @@ export interface ValueDetails {
 export class ChangeValueUtil {
 
     // transform is the main API to call a pipe with
-    public static transform(value: ValueDetails, maxLen: number = 15): string[] {
+    public static transform(value: TypedValue, maxLen: number = 15): string[] {
         const dec = new TextDecoder(); // always utf-8
 
-        if (value === undefined || value.value === undefined || value.value.length === 0) {
+        if (value === undefined || value.getBytes().length === 0) {
             return [];
         }
         let valueStrings: string[] = [];
         const dataIsLittleEndian = true;
-        const view = new DataView(value.value.buffer, value.value.byteOffset, value.value.byteLength);
-        switch (value.valueType) {
+        const view = new DataView(value.getBytes_asU8().buffer, value.getBytes_asU8().byteOffset, value.getBytes_asU8().byteLength);
+        switch (value.getType()) {
             case ValueType.BOOL:
                 valueStrings = (view.getInt8(0).valueOf() === 1) ? ['true'] : ['false'];
                 break;
@@ -51,11 +48,11 @@ export class ChangeValueUtil {
                 valueStrings = [String(view.getFloat64(0, dataIsLittleEndian))];
                 break;
             case ValueType.LEAFLIST_STRING:
-                const leafList = dec.decode(value.value);
+                const leafList = dec.decode(value.getBytes_asU8());
                 valueStrings = leafList.split('\n');
                 break;
             default: // Treat as string
-                const str = dec.decode(value.value);
+                const str = dec.decode(value.getBytes_asU8());
                 valueStrings = [str.trim()];
         }
         for (const idx in valueStrings) {

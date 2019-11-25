@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {NetworkChange} from '../../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
 import {DeviceService} from '../../device.service';
 import {Change} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {StatusUtil} from '../../status.util';
+import {formatDate} from '@angular/common';
 
 @Component({
     selector: '[onos-network-change]',
     templateUrl: './network-change.component.html',
-    styleUrls: ['./network-change.component.css']
+    styleUrls: ['./network-change.component.css', '../../status.styles.css']
 })
 export class NetworkChangeComponent implements OnInit {
     @Input() networkChange: NetworkChange;
+    @Output() dcSelected = new EventEmitter<string>();
     created: number;
 
     constructor(
@@ -47,4 +50,25 @@ export class NetworkChangeComponent implements OnInit {
         return false;
     }
 
+    getStatusClass(): string[] {
+        if (this.networkChange.getStatus() === undefined) {
+            return ['undefined'];
+        }
+        return StatusUtil.statusToStrings(this.networkChange.getStatus());
+    }
+
+    getTooltip(): string {
+        const created = (new Date()).setTime(this.networkChange.getCreated().getSeconds() * 1000);
+        const updated = (new Date()).setTime(this.networkChange.getUpdated().getSeconds() * 1000);
+
+        return 'Created:' + formatDate(created, 'medium', 'en_US') +
+            '\nUpdated:' + formatDate(updated, 'medium', 'en_US') +
+            '\nStatus: ' + this.getStatusClass().join(',') +
+            '\nIndex: ' + this.networkChange.getIndex() +
+            '\nRevision: ' + this.networkChange.getRevision();
+    }
+
+    itemSelected(nwChangeId: string, deviceId: string, version: string) {
+        this.dcSelected.emit(nwChangeId  + ':' + deviceId + ':' + version);
+    }
 }

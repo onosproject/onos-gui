@@ -14,10 +14,11 @@
 ~ limitations under the License.
 -->
 
-<td class="nw-ch-title">{{networkChange.getId()}}<br><small style="font-weight: lighter">{{created | date:'medium'}}</small></td>
+<td class="nw-ch-title" [ngClass]="getStatusClass()" [title]="getTooltip()">{{networkChange.getId()}}<br><small style="font-weight: lighter">{{created | date:'medium'}}</small></td>
 <td class="dev-change-cell"
     *ngFor="let device of deviceService.deviceList | keyvalue"
-    onos-device-change [deviceChangeId]="device.key"
+    onos-device-change [deviceChangeId]="device.value.getId()"
     [deviceVersion]="device.value.getVersion()"
-    [networkChangeId]="networkChange.getId()">
+    [networkChangeId]="networkChange.getId()"
+    (selected)="itemSelected(networkChange.getId(), device.value.getId(), device.value.getVersion())">
 </td>

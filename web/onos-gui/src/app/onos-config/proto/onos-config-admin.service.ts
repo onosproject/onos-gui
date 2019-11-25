@@ -19,17 +19,18 @@ import {
     ConfigAdminServiceClient
 } from './github.com/onosproject/onos-config/api/admin/adminServiceClientPb';
 import {
-    ListModelsRequest,
+    ListModelsRequest, ListSnapshotsRequest,
     ModelInfo,
     RegisterResponse, RollbackRequest,
     RollbackResponse
 } from './github.com/onosproject/onos-config/api/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
+import {Snapshot} from './github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 // type NetChangeCallback = (r: NetChange) => void;
 type ModelInfoCallback = (r: ModelInfo) => void;
-type RegisterCallback = (e: grpcWeb.Error, r: RegisterResponse) => void;
 type RollbackCallback = (e: grpcWeb.Error, r: RollbackResponse) => void;
+type SnapshotCallback = (r: Snapshot) => void;
 
 @Injectable()
 export class OnosConfigAdminService {
@@ -64,6 +65,12 @@ export class OnosConfigAdminService {
         modelRequest.setVerbose(true);
         const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
+        stream.on('data', callback);
+    }
+
+    requestNetworkSnapshot(callback: SnapshotCallback) {
+        const stream = this.adminServiceClient.listSnapshots(new ListSnapshotsRequest(), {});
+        console.log('ListSnapshots sent to', this.onosConfigUrl);
         stream.on('data', callback);
     }
 }

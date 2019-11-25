@@ -15,23 +15,29 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {
-    TypedValue,
-    ValueType
-} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-import {ChangeValueUtil} from './change-value.util';
+import {Status} from './proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {StatusUtil} from './status.util';
 
 @Pipe({
-    name: 'changeValue',
+    name: 'changeStatus',
     pure: false
 })
-export class ChangeValuePipe implements PipeTransform {
+export class ChangeStatusPipe implements PipeTransform {
 
-    // transform is the main API to call a pipe with
-    transform(value: TypedValue, maxLen: number = 15): string[] {
-        if (value === null || value === undefined || value.getBytes().length === 0) {
-            return [];
+    transform(status: Status, args?: number[]): string[] {
+        if (status === undefined || status === null) {
+            return undefined;
         }
-        return ChangeValueUtil.transform(value, maxLen);
+        const statusStrings =  StatusUtil.statusToStrings(status);
+
+        if (args === undefined) {
+            return statusStrings;
+        }
+        const result = new Array<string>();
+        args.forEach((n: number) => {
+            result.push(statusStrings[n]);
+        });
+        return result;
     }
+
 }

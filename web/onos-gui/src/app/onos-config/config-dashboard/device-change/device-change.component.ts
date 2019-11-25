@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DeviceService} from '../../device.service';
 import {
     Phase,
     Reason,
     State
 } from '../../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {StatusUtil} from '../../status.util';
 
 @Component({
     selector: '[onos-device-change]',
     templateUrl: './device-change.component.html',
-    styleUrls: ['./device-change.component.css']
+    styleUrls: ['./device-change.component.css', '../../status.styles.css']
 })
 export class DeviceChangeComponent {
     @Input() deviceChangeId: string;
     @Input() deviceVersion: string;
     @Input() networkChangeId: string;
+    @Output() selected  = new EventEmitter<boolean>();
 
     constructor(
         public deviceService: DeviceService
@@ -46,42 +48,13 @@ export class DeviceChangeComponent {
         if (deviceChange === undefined) {
             return ['undefined'];
         }
-        let status = '';
-        let phase = '';
-        let reason = '';
+        return StatusUtil.statusToStrings(deviceChange.getStatus());
+    }
 
-        switch (deviceChange.getStatus().getState()) {
-            case State.RUNNING:
-                status = 'running';
-                break;
-            case State.PENDING:
-                status = 'pending';
-                break;
-            case State.COMPLETE:
-                status = 'complete';
-                break;
-            case State.FAILED:
-                status = 'failed';
-                break;
+    getTooltip(): string[] {
+        const deviceChange = this.deviceService.deviceChangeMap.get(this.deviceChangeName());
+        if (deviceChange !== undefined) {
+            return StatusUtil.statusToStrings(deviceChange.getStatus());
         }
-
-        switch (deviceChange.getStatus().getPhase()) {
-            case Phase.CHANGE:
-                phase = 'change';
-                break;
-            case Phase.ROLLBACK:
-                phase = 'rollback';
-                break;
-        }
-
-        switch (deviceChange.getStatus().getReason()) {
-            case Reason.ERROR:
-                reason = 'error';
-                break;
-            case Reason.NONE:
-                break;
-        }
-
-        return [status, phase, reason];
     }
 }

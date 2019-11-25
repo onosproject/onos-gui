@@ -14,67 +14,68 @@
  * limitations under the License.
  */
 
-
-#nwchange-details-panel.floatpanel {
+#device-change-detail-panel.floatpanel {
     z-index: 0;
     font-size: 10pt;
     top: 185px;
+    max-height: 65%;
+    overflow-y: auto;
 }
 
-#nwchange-details-panel.floatpanel a {
+#device-change-detail-panel.floatpanel a {
     font-weight: bold;
 }
 
-#nwchange-details-panel .container {
+#device-change-detail-panel .container {
     padding: 0 30px;
 }
 
-#nwchange-details-panel .close-btn {
+#device-change-detail-panel .close-btn {
     position: absolute;
     right: 5px;
     top: 5px;
     cursor: pointer;
 }
 
-#nwchange-details-panel .dev-icon {
+#device-change-detail-panel .dev-icon {
     display: inline-block;
     padding: 0 6px 0 0;
     vertical-align: middle;
 }
 
-#nwchange-details-panel h2 {
+#device-change-detail-panel h2 {
     display: inline-block;
     margin: 8px 0;
     font-weight: bold;
     font-size: 16pt;
 }
 
-#nwchange-details-panel h2 input {
+#device-change-detail-panel h2 input {
     font-size: 0.90em;
     width: 106%;
 }
 
-#nwchange-details-panel .actionBtns div {
+#device-change-detail-panel .actionBtns div {
     padding: 12px 6px;
 }
 
-#nwchange-details-panel hr {
+#device-change-detail-panel hr {
     width: 100%;
     margin: 2px auto;
 }
 
-#nwchange-details-panel .top-tables {
+#device-change-detail-panel .top-tables {
     font-size: 10pt;
     white-space: nowrap;
 }
 
-#nwchange-details-panel td.label {
+#device-change-detail-panel td.label {
     font-weight: bold;
     text-align: right;
     padding-right: 6px;
 }
 
-#nwchange-details-panel .bottom table {
+#device-change-detail-panel .bottom table {
     border-spacing: 0;
     height: 358px;
     width: 520px;
@@ -82,34 +83,34 @@
     display: block;
 }
 
-#nwchange-details-panel .bottom th {
+#device-change-detail-panel .bottom th {
     letter-spacing: 0.02em;
 }
 
-#nwchange-details-panel .bottom th,
-#nwchange-details-panel .bottom td {
+#device-change-detail-panel .bottom th,
+#device-change-detail-panel .bottom td {
     padding: 6px 12px;
     text-align: center;
 }
 
-#nwchange-details-panel .top div.left {
+#device-change-detail-panel .top div.left {
     float: left;
     text-align: left;
     padding: 0 10px 0 0;
 }
 
-#nwchange-details-panel .top div.right {
+#device-change-detail-panel .top div.right {
     display: inline-block;
 }
 
-#nwchange-details-panel .editable {
+#device-change-detail-panel .editable {
     border-bottom: 1px dashed #ca504b;
 }
 
-#nwchange-details-panel .clickable {
+#device-change-detail-panel .clickable {
     cursor: pointer;
 }
 
-#nwchange-details-panel .bottom thead tr {
+#device-change-detail-panel .bottom thead tr {
     background-color: #e5e5e6;
 }

@@ -16,8 +16,11 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {ChangeValueUtil, ValueDetails} from './change-value.util';
-import {ValueType} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {ChangeValueUtil} from './change-value.util';
+import {
+    TypedValue,
+    ValueType
+} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 describe('ChangeValueUtil', () => {
     const enc = new TextEncoder();
@@ -36,12 +39,10 @@ describe('ChangeValueUtil', () => {
         stringArray[2] = 79;
         stringArray[3] = 83;
 
-        const value = <ValueDetails>{
-            value: stringArray,
-            valueType: ValueType.STRING,
-            valueTypeOpts: Array(0),
-        };
-
+        const value = new TypedValue();
+        value.setBytes(stringArray);
+        value.setType(ValueType.STRING);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         // We're expecting 'ONOS'
         expect(values.length).toBe(1);
@@ -52,12 +53,10 @@ describe('ChangeValueUtil', () => {
     it('Long String value', () => {
         const ab = new ArrayBuffer(40);
         const stringArray = enc.encode('This is a test value that should be truncated'); // 45 long
-        const value = <ValueDetails>{
-            value: stringArray,
-            valueType: ValueType.STRING,
-            valueTypeOpts: Array(0),
-        };
-
+        const value = new TypedValue();
+        value.setBytes(stringArray);
+        value.setType(ValueType.STRING);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(1);
         expect(values[0].length).toEqual(17);
@@ -67,11 +66,10 @@ describe('ChangeValueUtil', () => {
     it('Leaf list String value', () => {
         const ab = new ArrayBuffer(40);
         const stringArray = enc.encode('item1\nitem2\nitem3');
-        const value = <ValueDetails>{
-            value: stringArray,
-            valueType: ValueType.LEAFLIST_STRING,
-            valueTypeOpts: Array(0),
-        };
+        const value = new TypedValue();
+        value.setBytes(stringArray);
+        value.setType(ValueType.LEAFLIST_STRING);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(3);
         expect(values[0].length).toEqual(5);
@@ -84,11 +82,10 @@ describe('ChangeValueUtil', () => {
 
     it('Int value', () => {
         const intArr = new Uint8Array(ChangeValueUtil.longToByteArray(12345678));
-        const value = <ValueDetails>{
-            value: intArr,
-            valueType: ValueType.INT,
-            valueTypeOpts: Array(0),
-        };
+        const value = new TypedValue();
+        value.setBytes(intArr);
+        value.setType(ValueType.INT);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(1);
         expect(values[0].length).toBe(8);
@@ -97,11 +94,10 @@ describe('ChangeValueUtil', () => {
 
     it('UInt value', () => {
         const uint8Array = new Uint8Array([0xC, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
-        const value = <ValueDetails>{
-            value: uint8Array,
-            valueType: ValueType.UINT,
-            valueTypeOpts: Array(0),
-        };
+        const value = new TypedValue();
+        value.setBytes(uint8Array);
+        value.setType(ValueType.UINT);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(1);
         expect(values[0].length).toBe(2);
@@ -110,11 +106,10 @@ describe('ChangeValueUtil', () => {
 
     it('Float value', () => {
         const intArr = new Uint8Array(ChangeValueUtil.floatToByteArray(2.1));
-        const value = <ValueDetails>{
-            value: intArr,
-            valueType: ValueType.FLOAT,
-            valueTypeOpts: Array(0),
-        };
+        const value = new TypedValue();
+        value.setBytes(intArr);
+        value.setType(ValueType.FLOAT);
+        value.setTypeOptsList(Array(0));
         const values = ChangeValueUtil.transform(value);
         expect(values.length).toBe(1);
         expect(values[0].length).toBe(3);
