@@ -16,17 +16,19 @@
 
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges, ViewChild} from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
-import {Configuration} from '../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
-import {ActivatedRoute} from '@angular/router';
-import {IconService, TopoZoomPrefs} from 'gui2-fw-lib';
-import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
-import {PENDING, PendingNetChangeService} from '../pending-net-change.service';
-import {ChangeName, LayerType, PathDetails} from './layer-svg/layer-svg.component';
-import {ValueDetails} from '../change-value.util';
-import {ChangeValue, ReadWritePath} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
 import {ZoomableDirective} from 'gui2-topo-lib';
+import {ActivatedRoute} from '@angular/router';
+import {IconService, TopoZoomPrefs} from 'gui2-fw-lib';
+import {DeviceService} from '../device.service';
+import {
+    DeviceChange,
+    TypedValue
+} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
+import {LayerType, PathDetails} from './layer-svg/layer-svg.component';
+import {ReadWritePath} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -58,38 +60,38 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     device: string;
     version: string;
     type: string;
-    updated: number = 0;
-    changeIds: string[] = [];
+    // changeIds: string[] = [];
     changeIdsVisible: string[] = [];
     rwPathVisible: boolean;
-    pendingVisible: boolean = false;
+    // pendingVisible: boolean = false;
     opstateVisible = false;
     hasOpStateData: boolean = true;
-    hasPending: boolean = false;
-    pendingUdpateTime: Date;
+    // hasPending: boolean = false;
+    // pendingUdpateTime: Date;
     create_pending: string = '';
     create_pending_confirm: string = '';
     selectedPath = '/';
-    selectedValue: ValueDetails = undefined;
+    selectedValue: TypedValue = undefined;
     selectedRwPath: ReadWritePath;
-    changeNamesCache: Map<string, ChangeName>;
+    deviceChanges: Map<string, DeviceChange>;
 
-    // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
+    // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
     public RWPATHS = RWPATHS;
 
     constructor(
         private diags: OnosConfigDiagsService,
-        private pending: PendingNetChangeService,
+    //     private pending: PendingNetChangeService,
         protected ar: ActivatedRoute,
         protected is: IconService,
-        private modelTmpIndex: ModelTempIndexService,
+        private deviceService: DeviceService,
+    //     private modelTmpIndex: ModelTempIndexService,
         private hierarchy: HierarchyLayoutService
     ) {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
         this.is.loadIconDef('plus');
-        this.changeNamesCache = new Map<string, ChangeName>();
+        this.deviceChanges = new Map<string, DeviceChange>();
         this.hierarchy.setResizeCallback((h) => {
             const currentZoom = this.zoomDirective.zoomCached.sc;
             const zoomLevel = <TopoZoomPrefs>{sc: 3 / h, tx: 0, ty: 0};
@@ -116,7 +118,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.modelTmpIndex.clearAll();
+    //     this.modelTmpIndex.clearAll();
         this.hierarchy.clearAll();
         console.log('ConfigViewComponent destroyed and Tree Service reset');
     }
@@ -125,50 +127,50 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         if (changes[CONFIGNAME]) {
             const cfgName = changes[CONFIGNAME].currentValue;
-            this.changeIds.length = 0;
+            // this.changeIds.length = 0;
             this.changeIdsVisible.length = 0;
             console.log('Configuration view changed to', cfgName);
-
-            // Check to see if this is a pending configuration first
-            if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
-                this.device = this.pending.pendingNewConfiguration.getDeviceId();
-                this.version = this.pending.pendingNewConfiguration.getVersion();
-                this.type = this.pending.pendingNewConfiguration.getDeviceType();
-                this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
-                for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
-                    this.changeIdsVisible.push(cid);
-                }
+            const device = this.deviceService.deviceList.get(cfgName);
+            if (device === undefined) {
+                console.warn('No config', cfgName, 'found');
                 return;
             }
+            this.device = device.getId();
+            this.version = device.getVersion();
+            this.type = device.getType();
 
-            // this is a temporary hack to change the configName to a device name
-            // until the diags.proto can be fixed in onos-config
-            const deviceName = cfgName.substr(0, cfgName.lastIndexOf('-'));
-            this.diags.requestConfigurations([deviceName], (config: Configuration) => {
-                this.device = config.getDeviceId();
-                this.version = config.getVersion();
-                this.type = config.getDeviceType();
-                this.updated = (new Date()).setTime(config.getUpdated().getSeconds() * 1000);
-                for (const cid of config.getChangeIdsList()) {
-                    this.changeIds.push(cid);
-                    this.changeIdsVisible.push(cid);
+            // Check to see if this is a pending configuration first
+    //         if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
+    //             this.device = this.pending.pendingNewConfiguration.getDeviceId();
+    //             this.version = this.pending.pendingNewConfiguration.getVersion();
+    //             this.type = this.pending.pendingNewConfiguration.getDeviceType();
+    //             this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
+    //             for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
+    //                 this.changeIdsVisible.push(cid);
+    //             }
+    //             return;
+    //         }
+
+            this.deviceService.deviceChangeMap.forEach((deviceChange: DeviceChange, dcName: string) => {
+                if (dcName.endsWith(cfgName)) {
+                    this.deviceChanges.set(dcName, deviceChange);
+                    this.changeIdsVisible.push(dcName);
                 }
-                console.log('Configuration response for ', deviceName, 'received');
             });
 
-            this.hasPending = this.pending
-                .pendingNetChange
-                .getChangesList()
-                .findIndex((cfg) => cfg.getId() === this.configName) > -1;
-            if (this.hasPending) {
-                this.changeIdsVisible.push('pending');
-            }
+    //         this.hasPending = this.pending
+    //             .pendingNetChange
+    //             .getChangesList()
+    //             .findIndex((cfg) => cfg.getId() === this.configName) > -1;
+    //         if (this.hasPending) {
+    //             this.changeIdsVisible.push('pending');
+    //         }
         }
     }
 
     visibilityChanged(event: SelectedLayer) {
         if (event.layerType === LayerType.LAYERTYPE_PENDING) {
-            this.pendingVisible = event.madeVisible;
+    //         this.pendingVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_OPSTATE) {
             this.opstateVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
@@ -182,15 +184,15 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             this.changeIdsVisible.splice(idx, 1);
         }
 
-        if (!event.madeVisible) {
-            let layerName = event.layerName;
-            if (layerName === 'rwpaths') {
-                layerName = this.type + this.version;
-            } else if (layerName === 'opstate') {
-                layerName = this.device;
-            }
-            this.hierarchy.removeLayer(layerName);
-        }
+    //     if (!event.madeVisible) {
+    //         let layerName = event.layerName;
+    //         if (layerName === 'rwpaths') {
+    //             layerName = this.type + this.version;
+    //         } else if (layerName === 'opstate') {
+    //             layerName = this.device;
+    //         }
+    //         this.hierarchy.removeLayer(layerName);
+    //     }
     }
 
     pathSelected(pathDetails: PathDetails) {
@@ -199,20 +201,20 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedRwPath = pathDetails.readWritePath;
     }
 
-    activatePendingLayer(configName: string, path: string): void {
-        this.selectedPath = path;
-        if (!this.pending.hasPendingChange) {
-            this.create_pending = 'Network Change';
-            this.create_pending_confirm = 'Create a Pending (new) Network Change?';
-        } else {
-            this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
-        }
-    }
+    // activatePendingLayer(configName: string, path: string): void {
+    //     this.selectedPath = path;
+    //     if (!this.pending.hasPendingChange) {
+    //         this.create_pending = 'Network Change';
+    //         this.create_pending_confirm = 'Create a Pending (new) Network Change?';
+    //     } else {
+    //         this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
+    //     }
+    // }
 
     confirmedCreatePending(confirmed: boolean): void {
         if (confirmed) {
-            this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
-            this.changeIdsVisible.push(PENDING);
+    //         this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
+    //         this.changeIdsVisible.push(PENDING);
         } else {
             console.log('Create pending cancelled');
         }
@@ -220,31 +222,25 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.create_pending_confirm = '';
     }
 
-    addToEditedValues(absPath: string, oldValue: ValueDetails, newValue: Uint8Array) {
-        console.log('Value has been edited', absPath);
-        const newChangeValue = new ChangeValue();
-        newChangeValue.setPath(absPath);
-        newChangeValue.setValue(newValue);
-        newChangeValue.setValueType(oldValue.valueType);
-        newChangeValue.setTypeOptsList(oldValue.valueTypeOpts);
-
-        const added = this.pending.addToPendingChange(this.configName, newChangeValue);
-        const now = new Date();
-        now.setTime(Date.now());
-        this.pendingUdpateTime = now;
-        if (added) {
-            this.visibilityChanged(<SelectedLayer>{
-                layerName: 'pending',
-                layerType: LayerType.LAYERTYPE_PENDING,
-                madeVisible: true,
-            });
-            this.hasPending = true;
-        }
-    }
-
-    addToChangeNameCache(event: ChangeName) {
-        if (this.changeNamesCache.get(event.hash) === undefined) {
-            this.changeNamesCache.set(event.hash, event);
-        }
-    }
+    // addToEditedValues(absPath: string, oldValue: ValueDetails, newValue: Uint8Array) {
+    //     console.log('Value has been edited', absPath);
+    //     const newChangeValue = new ChangeValue();
+    //     newChangeValue.setPath(absPath);
+    //     newChangeValue.setValue(newValue);
+    //     newChangeValue.setValueType(oldValue.valueType);
+    //     newChangeValue.setTypeOptsList(oldValue.valueTypeOpts);
+    //
+    //     const added = this.pending.addToPendingChange(this.configName, newChangeValue);
+    //     const now = new Date();
+    //     now.setTime(Date.now());
+    //     this.pendingUdpateTime = now;
+    //     if (added) {
+    //         this.visibilityChanged(<SelectedLayer>{
+    //             layerName: 'pending',
+    //             layerType: LayerType.LAYERTYPE_PENDING,
+    //             madeVisible: true,
+    //         });
+    //         this.hasPending = true;
+    //     }
+    // }
 }

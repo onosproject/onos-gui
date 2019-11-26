@@ -15,25 +15,23 @@
 -->
 
 <onos-config-layers-panel id="config-layers-panel" x="20"
-                          [layerList]="changeIds"
                           [configName]="device + '-' + version"
                           [deviceName]="device"
                           [version]="version"
                           [type]="type"
-                          [updated]="updated"
+                          [layerList]="deviceChanges"
                           [on]="true"
                           [hasOpState]="hasOpStateData"
-                          [hasPending]="hasPending"
-                          [changeNamesCache]="changeNamesCache"
-                          (visibilityChange)="visibilityChanged($event)">
+                            (visibilityChange)="visibilityChanged($event)">
+<!--                          [hasPending]="hasPending"-->
 </onos-config-layers-panel>
 
-<onos-path-bar id="config-path-panel" [path]="selectedPath">
-</onos-path-bar>
-<onos-string-value *ngIf="selectedValue?.valueType === 1 || selectedRwPath?.getValueType() === 1"
-                   [valueDetails]="selectedValue" [disabled]="!pending.hasPendingChange"
-                   (valueEdited)="addToEditedValues(selectedPath, selectedValue, $event)">
-</onos-string-value>
+<!--<onos-path-bar id="config-path-panel" [path]="selectedPath">-->
+<!--</onos-path-bar>-->
+<!--<onos-string-value *ngIf="selectedValue?.valueType === 1 || selectedRwPath?.getValueType() === 1"-->
+<!--                   [valueDetails]="selectedValue" [disabled]="!pending.hasPendingChange"-->
+<!--                   (valueEdited)="addToEditedValues(selectedPath, selectedValue, $event)">-->
+<!--</onos-string-value>-->
 
 <onos-confirm title="{{ create_pending }}"
               message="{{ create_pending_confirm }}"
@@ -54,8 +52,7 @@
 <!--            </svg:g>-->
             <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
                    [layerId]="c" [layerType]="0"
-                   (editRequestedLayer)="pathSelected($event)"
-                   (changeNameFound)="addToChangeNameCache($event)">
+                   (editRequestedLayer)="pathSelected($event)">
             </svg:g>
             <svg:g #readWriteLayer *ngIf="rwPathVisible"
                    onos-layer-svg [layerId]="type + version + ''"
@@ -67,10 +64,10 @@
                    onos-layer-svg [layerId]="device" [classes]="['state']"
                    [layerType]="1">
             </svg:g>
-            <svg:g *ngIf="pendingVisible" onos-layer-svg
-                   [layerId]="configName" [classes]="['pending']" [layerType]="2"
-                   (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">
-            </svg:g>
+<!--            <svg:g *ngIf="pendingVisible" onos-layer-svg-->
+<!--                   [layerId]="configName" [classes]="['pending']" [layerType]="2"-->
+<!--                   (editRequestedLayer)="pathSelected($event)" [updated]="pendingUdpateTime">-->
+<!--            </svg:g>-->
         </svg:g>
     </svg:svg>
 </div>

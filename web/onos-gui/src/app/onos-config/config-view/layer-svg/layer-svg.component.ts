@@ -23,25 +23,23 @@ import {
     SimpleChanges
 } from '@angular/core';
 import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
-import {
-    Change,
-    ChangeValue,
-    ChangeValueType,
-    ReadWritePath
-} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
-import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/diags/diags_pb';
 import {ModelService} from '../../model.service';
-import {ValueDetails} from '../../change-value.util';
-import {PendingNetChangeService} from '../../pending-net-change.service';
 import {ModelTempIndexService} from '../model-temp-index.service';
 import {ConfigLink, HierarchyLayoutService} from '../hierarchy-layout.service';
+import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {
+    DeviceChange, PathValue,
+    TypedValue
+} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {DeviceService} from '../../device.service';
 import {PathUtil} from '../../path.util';
+import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 
 const OFFSETY = 500;
 
 export interface ChangeValueObj {
     relPath: string;
-    value: ValueDetails;
+    value: TypedValue;
     removed: boolean;
     parentPath: string;
     rwPath: ReadWritePath;
@@ -59,15 +57,8 @@ const ControlPointX = -40;
 
 export interface PathDetails {
     abspath: string;
-    value: ValueDetails;
+    value: TypedValue;
     readWritePath: ReadWritePath;
-}
-
-export interface ChangeName {
-    hash: string;
-    name: string;
-    time: Date;
-    changes: number;
 }
 
 /**
@@ -90,11 +81,8 @@ export class LayerSvgComponent implements OnChanges {
     @Input() layerId: string = undefined;
     @Input() layerType: LayerType = LayerType.LAYERTYPE_CONFIG;
     @Input() classes: string[] = ['config'];
-    @Input() updated: Date;
     @Output() editRequestedLayer = new EventEmitter<PathDetails>();
-    @Output() changeNameFound = new EventEmitter<ChangeName>();
     description: string;
-    changeTime: number = 0;
     nodelist: Map<string, ChangeValueObj>;
     offset: number = Math.random() * 200;
     offsetY = OFFSETY;
@@ -102,12 +90,12 @@ export class LayerSvgComponent implements OnChanges {
     constructor(
         private diags: OnosConfigDiagsService,
         private models: ModelService,
-        private pending: PendingNetChangeService,
+        // private pending: PendingNetChangeService,
         private modelTempIdx: ModelTempIndexService,
         public hierarchy: HierarchyLayoutService,
+        private deviceService: DeviceService
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
-        this.updated = new Date(); // now
         console.log('Constructed LayerSvgComponent');
     }
 
@@ -115,7 +103,7 @@ export class LayerSvgComponent implements OnChanges {
         this.nodelist.clear();
         const cvRoot = <ChangeValueObj>{
             relPath: '/',
-            value: <ValueDetails>{}
+            value: <TypedValue>{}
         };
         this.nodelist.set('/', cvRoot);
     }
@@ -126,13 +114,14 @@ export class LayerSvgComponent implements OnChanges {
             const layerIdNew = changes['layerId'].currentValue;
             this.reinitialize();
 
-            if (this.layerType === LayerType.LAYERTYPE_PENDING && this.pending.pendingConfigValues !== undefined) {
-                const pendingChanges = this.pending.pendingConfigValues.get(layerIdNew);
-                console.log('Pending changes layer for', layerIdNew, pendingChanges);
-                if (pendingChanges && pendingChanges.length > 0) {
-                    this.updatePending(pendingChanges, layerIdNew);
-                }
-            } else if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
+            //     if (this.layerType === LayerType.LAYERTYPE_PENDING && this.pending.pendingConfigValues !== undefined) {
+            //         const pendingChanges = this.pending.pendingConfigValues.get(layerIdNew);
+            //         console.log('Pending changes layer for', layerIdNew, pendingChanges);
+            //         if (pendingChanges && pendingChanges.length > 0) {
+            //             this.updatePending(pendingChanges, layerIdNew);
+            //         }
+            //     } else
+            if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
                 for (const model of this.models.modelInfoList) {
                     if (model['id'] === layerIdNew) {
                         console.log('Getting RW paths for', layerIdNew);
@@ -145,24 +134,24 @@ export class LayerSvgComponent implements OnChanges {
                         });
                     }
                 }
+
             } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
                 console.log('Getting opstate changes from service:', layerIdNew);
                 this.diags.requestOpStateCache(layerIdNew, true, (opState: OpStateResponse) => {
                     this.description = 'OpState';
-                    this.changeTime = (new Date()).getMilliseconds();
                     const p = opState.getPathvalue().getPath();
                     this.hierarchy.ensureNode(p, layerIdNew);
                     const [parentPath, relPath] = PathUtil.strPathToParentChild(p);
+                    const value = new TypedValue(); // Convert from PathValue to TypedValue
+                    value.setBytes(opState.getPathvalue().getValue().getBytes_asU8());
+                    value.setType(opState.getPathvalue().getValue().getType());
+                    value.setTypeOptsList(opState.getPathvalue().getValue().getTypeOptsList());
                     const cv = <ChangeValueObj>{
                         relPath: relPath,
                         parentPath: parentPath,
-                        value: <ValueDetails>{
-                            value: opState.getPathvalue().getValue(),
-                            valueType: opState.getPathvalue().getValueType(),
-                            valueTypeOpts: opState.getPathvalue().getTypeOptsList(),
-                        },
+                        value: value,
                     };
                     this.nodelist.set(p, cv);
 
@@ -172,55 +161,36 @@ export class LayerSvgComponent implements OnChanges {
                 });
                 console.log('Finished with subscribe to OpStateCache on', layerIdNew);
             } else {
-                this.diags.requestChanges([layerIdNew], (change: Change) => {
-                    // We're only expecting the 1 change as we only asked for 1
-                    this.description = change.getDesc();
-                    this.changeTime = Number(change.getTime()) * 1000;
-                    for (const c of change.getChangeValuesList()) {
-                        this.hierarchy.ensureNode(c.getPath(), layerIdNew);
-                        const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
-                        const cv = <ChangeValueObj>{
-                            relPath: relPath,
-                            value: <ValueDetails>{
-                                value: c.getValue(),
-                                valueType: c.getValueType(),
-                                valueTypeOpts: c.getTypeOptsList(),
-                            },
-                            removed: c.getRemoved(),
-                            parentPath: parentPath
-                        };
-                        this.nodelist.set(c.getPath(), cv);
-                        this.checkParentExists(c.getPath(), parentPath);
-                        if (c.getPath().indexOf('[') > -1) {
-                            this.modelTempIdx.addIndex(c.getPath());
-                        }
+                const change = this.deviceService.deviceChangeMap.get(this.layerId);
+                for (const c of change.getChange().getValuesList()) {
+                    this.hierarchy.ensureNode(c.getPath(), layerIdNew);
+                    const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
+                    const cv = <ChangeValueObj>{
+                        relPath: relPath,
+                        value: c.getValue(),
+                        removed: c.getRemoved(),
+                        parentPath: parentPath
+                    };
+                    this.nodelist.set(c.getPath(), cv);
+                    this.checkParentExists(c.getPath(), parentPath);
+                    if (c.getPath().indexOf('[') > -1) {
+                        this.modelTempIdx.addIndex(c.getPath());
                     }
-                    const d1 = new Date();
-                    d1.setTime(change.getTime().getSeconds() * 1000);
-                    this.changeNameFound.emit(<ChangeName>{
-                        hash: change.getId(),
-                        name: change.getDesc(),
-                        time: d1,
-                        changes: change.getChangeValuesList().length
-                    });
-                    console.log('Change response for ', layerIdNew, 'received', this.nodelist);
-                    // The response from the server can be delayed by any amount
-                    // need to update after each one
-                    this.hierarchy.recalculate();
-                });
-            }
-        }
-
-        if (changes['updated']) {
-            if (this.layerType === LayerType.LAYERTYPE_PENDING && this.pending.pendingConfigValues !== undefined) {
-                const pendingChanges = this.pending.pendingConfigValues.get(this.layerId);
-                console.log('Pending changes layer for', this.layerId, pendingChanges);
-                if (pendingChanges && pendingChanges.length > 0) {
-                    this.updatePending(pendingChanges, this.layerId);
                 }
+                console.log('Change response for ', layerIdNew, 'received', this.nodelist);
             }
+
+            // if (changes['updated']) {
+            //     if (this.layerType === LayerType.LAYERTYPE_PENDING && this.pending.pendingConfigValues !== undefined) {
+            //         const pendingChanges = this.pending.pendingConfigValues.get(this.layerId);
+            //         console.log('Pending changes layer for', this.layerId, pendingChanges);
+            //         if (pendingChanges && pendingChanges.length > 0) {
+            //             this.updatePending(pendingChanges, this.layerId);
+            //         }
+            //     }
+            // }
+            this.hierarchy.recalculate();
         }
-        this.hierarchy.recalculate();
     }
 
     private addRwPath(path: ReadWritePath) {
@@ -229,38 +199,34 @@ export class LayerSvgComponent implements OnChanges {
         const cv = <ChangeValueObj>{
             relPath: relPath,
             parentPath: parentPath,
-            value: <ValueDetails>{
-                value: new Uint8Array(),
-                valueType: ChangeValueType.EMPTY,
-                valueTypeOpts: {},
-            },
+            value: new TypedValue(),
             rwPath: path
         };
         this.nodelist.set(path.getPath(), cv);
         this.checkParentExists(path.getPath(), parentPath);
     }
 
-    private updatePending(pendingChanges: Array<ChangeValue>, configName: string) {
-        console.log('Getting changes Pending from service:', configName);
-        for (const c of pendingChanges) {
-            console.log('Handling', c.getPath(), 'of', configName);
-            this.hierarchy.ensureNode(c.getPath(), this.layerId);
-            const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
-            const cv = <ChangeValueObj>{
-                relPath: relPath,
-                value: <ValueDetails>{
-                    value: c.getValue(),
-                    valueType: c.getValueType(),
-                    valueTypeOpts: c.getTypeOptsList(),
-                },
-                removed: c.getRemoved(),
-                parentPath: parentPath,
-            };
-            this.nodelist.set(c.getPath(), cv);
-
-            this.checkParentExists(c.getPath(), parentPath);
-        }
-    }
+    // private updatePending(pendingChanges: Array<ChangeValue>, configName: string) {
+    //     console.log('Getting changes Pending from service:', configName);
+    //     for (const c of pendingChanges) {
+    //         console.log('Handling', c.getPath(), 'of', configName);
+    //         this.hierarchy.ensureNode(c.getPath(), this.layerId);
+    //         const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
+    //         const cv = <ChangeValueObj>{
+    //             relPath: relPath,
+    //             value: <ValueDetails>{
+    //                 value: c.getValue(),
+    //                 valueType: c.getValueType(),
+    //                 valueTypeOpts: c.getTypeOptsList(),
+    //             },
+    //             removed: c.getRemoved(),
+    //             parentPath: parentPath,
+    //         };
+    //         this.nodelist.set(c.getPath(), cv);
+    //
+    //         this.checkParentExists(c.getPath(), parentPath);
+    //     }
+    // }
 
     // recursive function to add parent to the list with a link if necessary
     // If it was found no need to recurse.
@@ -273,40 +239,40 @@ export class LayerSvgComponent implements OnChanges {
         this.nodelist.set(parentPath, <ChangeValueObj>{
             relPath: relPath,
             parentPath: nextPp,
-            value: <ValueDetails>{},
+            value: new TypedValue(),
         });
         this.checkParentExists(parentPath, nextPp);
         return false;
     }
 
-    requestEditLayer(abspath: string, value: ValueDetails, rwPath?: ReadWritePath): void {
-        if (this.layerType === LayerType.LAYERTYPE_OPSTATE ||
-            this.layerType === LayerType.LAYERTYPE_ROPATHS
-        ) {
-            return;
-        }
-        let valueObj: ValueDetails;
-        if (value !== undefined && value.value !== undefined && value.value.length > 0) {
-            valueObj = value;
-        } else if (rwPath !== undefined) {
-            valueObj = <ValueDetails>{
-                value: new Uint8Array(),
-                valueType: rwPath.getValueType(),
-                valueTypeOpts: Array<number>(0), // TODO get number of decimal places from RW path
-            };
-        } else {
-            valueObj = <ValueDetails>{
-                value: new Uint8Array(),
-                valueType: ChangeValueType.EMPTY,
-            };
-        }
-        this.editRequestedLayer.emit(<PathDetails>{
-            abspath: abspath,
-            value: valueObj,
-            readWritePath: rwPath
-        });
-        console.log('Selected on layer', this.layerId, abspath, valueObj.valueType);
-    }
+    // requestEditLayer(abspath: string, value: ValueDetails, rwPath?: ReadWritePath): void {
+    //     if (this.layerType === LayerType.LAYERTYPE_OPSTATE ||
+    //         this.layerType === LayerType.LAYERTYPE_ROPATHS
+    //     ) {
+    //         return;
+    //     }
+    //     let valueObj: ValueDetails;
+    //     if (value !== undefined && value.value !== undefined && value.value.length > 0) {
+    //         valueObj = value;
+    //     } else if (rwPath !== undefined) {
+    //         valueObj = <ValueDetails>{
+    //             value: new Uint8Array(),
+    //             valueType: rwPath.getValueType(),
+    //             valueTypeOpts: Array<number>(0), // TODO get number of decimal places from RW path
+    //         };
+    //     } else {
+    //         valueObj = <ValueDetails>{
+    //             value: new Uint8Array(),
+    //             valueType: ChangeValueType.EMPTY,
+    //         };
+    //     }
+    //     this.editRequestedLayer.emit(<PathDetails>{
+    //         abspath: abspath,
+    //         value: valueObj,
+    //         readWritePath: rwPath
+    //     });
+    //     console.log('Selected on layer', this.layerId, abspath, valueObj.valueType);
+    // }
 
     // Calculates an SVG path for the branch
     // Start in the middle and draw path to source end with curve (control point is x+ControlPointX)
@@ -328,5 +294,6 @@ export class LayerSvgComponent implements OnChanges {
 
         return mm + ' ' + cp1 + ', ' + ep1 + ' ' + mm + ' ' + cp2 + ', ' + ep2;
     }
+
 }
 

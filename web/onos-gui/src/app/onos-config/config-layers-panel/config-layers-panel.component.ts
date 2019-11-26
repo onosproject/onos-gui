@@ -17,7 +17,8 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ACTIVE, CONFIGNAME, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
-import {ChangeName, LayerType} from '../config-view/layer-svg/layer-svg.component';
+import {DeviceChange} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {LayerType} from '../config-view/layer-svg/layer-svg.component';
 
 export interface SelectedLayer {
     layerName: string;
@@ -43,16 +44,14 @@ export interface SelectedLayer {
     ]
 })
 export class ConfigLayersPanelComponent implements OnChanges {
-    @Input() layerList: string[];
+    @Input() layerList: Map<string, DeviceChange>;
     @Input() on: boolean = true;
     @Input() configName: string; // Must be the same as the constant CONFIGNAME
     @Input() deviceName: string;
     @Input() type: string;
     @Input() version: string;
-    @Input() updated: Date;
     @Input() hasOpState: boolean;
-    @Input() hasPending: boolean;
-    @Input() changeNamesCache: Map<string, ChangeName>;
+    // @Input() hasPending: boolean;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
     layerVisibility = new Map<string, boolean>();
@@ -67,21 +66,20 @@ export class ConfigLayersPanelComponent implements OnChanges {
     public INACTIVE = INACTIVE;
 
     constructor() {
-        this.changeNamesCache = new Map<string, ChangeName>();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         console.log('Change happened in config-layers-panel');
         if (changes[CONFIGNAME]) {
             this.layerVisibility.clear();
-            for (const l of this.layerList) {
+            this.layerList.forEach((dc: DeviceChange, l: string) => {
                 this.layerVisibility.set(l, true);
-            }
+            });
         }
 
-        if (changes['hasPending']) {
-            this.layerVisibility.set('pending', changes['hasPending'].currentValue);
-        }
+        // if (changes['hasPending']) {
+        //     this.layerVisibility.set('pending', changes['hasPending'].currentValue);
+        // }
     }
 
     toggleDisplay(changeId: string, layerType: LayerType) {
@@ -95,26 +93,27 @@ export class ConfigLayersPanelComponent implements OnChanges {
 
     toggleAll(on: boolean) {
         this.toggledOn = on;
-        for (const l of this.layerList) {
+
+        this.layerList.forEach((dc: DeviceChange, l: string) => {
             this.layerVisibility.set(l, on);
             this.visibilityChange.emit(<SelectedLayer>{
                 layerName: l,
-                layerType: LayerType.LAYERTYPE_CONFIG,
+                // layerType: LayerType.LAYERTYPE_CONFIG,
                 madeVisible: on,
             });
-        }
+        });
     }
 
-    toggleRollup() {
-        this.rolledUp = !this.rolledUp;
-    }
+    // toggleRollup() {
+    //     this.rolledUp = !this.rolledUp;
+    // }
 
-    formatChangeNameTooltip(hash: string, changeName: ChangeName): string {
-        const tooltip = Array<String>(1).fill('ID:' + hash);
-        if (changeName !== undefined) {
-            tooltip.push('Date:' + changeName.time.toLocaleString());
-            tooltip.push('Num changes:' + changeName.changes.toString());
-        }
-        return tooltip.join('\n');
-    }
+    // formatChangeNameTooltip(hash: string, changeName: ChangeName): string {
+    //     const tooltip = Array<String>(1).fill('ID:' + hash);
+    //     if (changeName !== undefined) {
+    //         tooltip.push('Date:' + changeName.time.toLocaleString());
+    //         tooltip.push('Num changes:' + changeName.changes.toString());
+    //     }
+    //     return tooltip.join('\n');
+    // }
 }

@@ -16,10 +16,10 @@
 
 <div id="layers-panel" class="floatpanel" [@layersPanelState]="rolledUp">
     <div class="header">
-        <onos-icon id="rollupBtn" [iconId]="rolledUp?'triangleDown':'triangleUp'" [iconSize]="20"
-                   (click)="toggleRollup()"></onos-icon>
+<!--        <onos-icon id="rollupBtn" [iconId]="rolledUp?'triangleDown':'triangleUp'" [iconSize]="20"-->
+<!--                   (click)="toggleRollup()"></onos-icon>-->
         <h2>{{configName}}</h2>
-        <table id="layer-headings" *ngIf="!rolledUp">
+        <table id="layer-headings">
             <tbody>
             <tr>
                 <td class="field-name">Device:</td>
@@ -35,45 +35,45 @@
             </tr>
             <tr>
                 <td class="field-name">Updated:</td>
-                <td>{{updated | date: MEDIUM}}</td>
+<!--                <td>{{updated | date: MEDIUM}}</td>-->
             </tr>
             </tbody>
         </table>
     </div>
-    <hr *ngIf="!rolledUp">
-    <div id="changes-list" class="body" *ngIf="!rolledUp">
+    <hr>
+    <div id="changes-list" class="body">
     <span (click)="toggleAll(true)" class="layerItem">
       <onos-icon [iconId]="ACTIVE" [iconSize]="20"
                  [classes]="ACTIVE"></onos-icon>All</span>
         <span (click)="toggleAll(false)" class="layerItem">
     <onos-icon [iconId]="INACTIVE" [iconSize]="20"
                [classes]="INACTIVE"></onos-icon>None</span>
-        <table *ngIf="hasPending">
-            <tbody>
-            <tr class="layerItem"
-                (click)="toggleDisplay('pending', 2)">
-                <onos-icon
-                    [iconId]="layerVisibility.get('pending')?ACTIVE:INACTIVE"
-                    [iconSize]="20"
-                    [classes]="layerVisibility.get('pending')?ACTIVE:INACTIVE"></onos-icon>
-                <td>pending</td>
-            </tr>
-            </tbody>
-        </table>
+<!--        <table *ngIf="hasPending">-->
+<!--            <tbody>-->
+<!--            <tr class="layerItem"-->
+<!--                (click)="toggleDisplay('pending', 2)">-->
+<!--                <onos-icon-->
+<!--                    [iconId]="layerVisibility.get('pending')?ACTIVE:INACTIVE"-->
+<!--                    [iconSize]="20"-->
+<!--                    [classes]="layerVisibility.get('pending')?ACTIVE:INACTIVE"></onos-icon>-->
+<!--                <td>pending</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
         <table>
             <tbody>
-            <tr id="layerItem" class="layerItem" *ngFor="let p of layerList"
-                (click)="toggleDisplay(p, 0)">
-                <onos-icon [iconId]="layerVisibility.get(p)?ACTIVE:INACTIVE"
+            <tr id="layerItem" class="layerItem" *ngFor="let p of layerList | keyvalue"
+                (click)="toggleDisplay(p.key, 0)">
+                <onos-icon [iconId]="layerVisibility.get(p.key)?ACTIVE:INACTIVE"
                            [iconSize]="20"
-                           [classes]="layerVisibility.get(p)?ACTIVE:INACTIVE"></onos-icon>
-                <td [title]="formatChangeNameTooltip(p, changeNamesCache.get(p))">{{changeNamesCache.get(p) ? changeNamesCache.get(p).name : p}}</td>
+                           [classes]="layerVisibility.get(p.key)?ACTIVE:INACTIVE"></onos-icon>
+                <td [title]="p.value.getStatus() | changeStatus">{{p.key}}</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <hr *ngIf="!rolledUp">
-    <div class="footer" *ngIf="!rolledUp">
+    <hr>
+    <div class="footer">
         <table>
             <tbody>
             <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"

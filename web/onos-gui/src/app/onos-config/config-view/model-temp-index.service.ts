@@ -18,7 +18,7 @@ import {Injectable} from '@angular/core';
 import {
     ModelInfo,
     ReadWritePath
-} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 
 const EXTRACT_INDEX = /(=.+?[,\]])/;
 const EXTRACT_INDEX_VALUE = /([^=,\]])+?/; // Causes ng test to stop running

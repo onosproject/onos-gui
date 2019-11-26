@@ -15,7 +15,7 @@
 -->
 
 <svg:g xmlns:svg="http://www.w3.org/2000/svg">
-    <svg:desc>Layer: {{layerId}} {{description}} {{changeTime | date: 'medium'}}</svg:desc>
+    <svg:desc>Layer: {{layerId}} {{description}}</svg:desc>
     <svg:g *ngFor="let node of hierarchy.treeLayout.descendants() | nodeFilter: layerId">
         <svg:desc>Abs:{{node}} Val:{{node.data.absPath}}</svg:desc>
         <!-- Template explanation
@@ -31,8 +31,8 @@
                [relpath]="node.data.id"
                [value]="nodelist.get(node.data.absPath)?.value"
                [abspath]="node.data.absPath"
-               [classes]="classes"
-               (containerEditRequested)="requestEditLayer($event, nodelist.get(node.data.absPath).value, undefined)"
+               [classes]="classes">
+<!--               (containerEditRequested)="requestEditLayer($event, nodelist.get(node.data.absPath).value, undefined)"-->
                 >
         </svg:g>
     </svg:g>

@@ -21,8 +21,9 @@ import {
     OnChanges,
     Output, SimpleChanges
 } from '@angular/core';
-import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
-import {ChangeValueUtil, ValueDetails} from '../../change-value.util';
+import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ChangeValueUtil} from '../../change-value.util';
+import {TypedValue} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 @Component({
     selector: 'onos-string-value',
@@ -30,7 +31,7 @@ import {ChangeValueUtil, ValueDetails} from '../../change-value.util';
     styleUrls: ['./string-value.component.css']
 })
 export class StringValueComponent implements OnChanges {
-    @Input() valueDetails: ValueDetails = undefined;
+    @Input() valueDetails: TypedValue = undefined;
     @Input() readWritePath: ReadWritePath = undefined;
     @Input() disabled: boolean = true;
     @Output() valueEdited = new EventEmitter<Uint8Array>();
