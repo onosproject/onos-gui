@@ -17,6 +17,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {NetworkSnapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/network/types_pb';
 import {DeviceService} from '../../device.service';
+import {OnosConfigAdminService} from '../../proto/onos-config-admin.service';
+import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 @Component({
     selector: '[onos-network-snapshot]',
@@ -24,14 +26,19 @@ import {DeviceService} from '../../device.service';
     styleUrls: ['./network-snapshot.component.css']
 })
 export class NetworkSnapshotComponent implements OnInit {
-    @Input() networkSnapshot: NetworkSnapshot;
+    deviceSnapshots: Map<string, Snapshot>;
 
     constructor(
-        public deviceService: DeviceService
+        public deviceService: DeviceService,
+        public admin: OnosConfigAdminService
     ) {
+        this.deviceSnapshots = new Map<string, Snapshot>();
     }
 
     ngOnInit() {
+        this.admin.requestNetworkSnapshot((s: Snapshot) => {
+            const nameVersion = s.getId() + ':' + s.getDeviceVersion();
+            this.deviceSnapshots.set(nameVersion, s);
+        });
     }
-
 }

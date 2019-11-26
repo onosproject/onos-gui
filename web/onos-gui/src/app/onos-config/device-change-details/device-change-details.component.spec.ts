@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
+
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfigsListComponent } from './configs-list.component';
+import { DeviceChangeDetailsComponent } from './device-change-details.component';
 
-describe('ConfigsListComponent', () => {
-  let component: ConfigsListComponent;
-  let fixture: ComponentFixture<ConfigsListComponent>;
+describe('DeviceChangeDetailsComponent', () => {
+  let component: DeviceChangeDetailsComponent;
+  let fixture: ComponentFixture<DeviceChangeDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfigsListComponent ]
+      declarations: [ DeviceChangeDetailsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigsListComponent);
+    fixture = TestBed.createComponent(DeviceChangeDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

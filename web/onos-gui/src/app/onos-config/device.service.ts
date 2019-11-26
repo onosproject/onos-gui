@@ -16,8 +16,12 @@
 
 import {Injectable} from '@angular/core';
 import {
+    ChannelState,
+    ConnectivityState,
     Device,
-    ListResponse
+    ListResponse,
+    Protocol,
+    ProtocolState
 } from '../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
@@ -32,9 +36,9 @@ import {ListDeviceChangeResponse} from './proto/github.com/onosproject/onos-conf
     providedIn: 'root'
 })
 export class DeviceService {
-    deviceList: Map<string, Device>;
-    deviceChangeMap: Map<string, DeviceChange>;
-    deviceChangeSubs: Map<string, string>;
+    deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
+    deviceChangeMap: Map<string, DeviceChange>; // Expect <dev-id:dev-ver> as key
+    deviceChangeSubs: Map<string, string>; // Expect <nw-ch:dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
 
     constructor() {
@@ -49,13 +53,15 @@ export class DeviceService {
             console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
             deviceListItem['id'] = deviceListItem.getDevice().getId();
             deviceListItem['version'] = deviceListItem.getDevice().getVersion();
-            this.deviceList.set(deviceListItem.getDevice().getId(), deviceListItem.getDevice());
+            const nameVersion = deviceListItem.getDevice().getId() + ':' + deviceListItem.getDevice().getVersion();
+            this.deviceList.set(nameVersion, deviceListItem.getDevice());
             this.addDeviceChangeListener(deviceListItem.getDevice().getId(), deviceListItem.getDevice().getVersion());
         });
     }
 
     addDeviceChangeListener(deviceId: string, version: string) {
-        this.deviceChangeSubs.set(deviceId + ':' + version, deviceId + ':' + version);
+        const nameVersion = deviceId + ':' + version;
+        this.deviceChangeSubs.set(nameVersion, nameVersion);
         this.diags.requestDeviceChanges(deviceId, version, (devch: ListDeviceChangeResponse) => {
             const ch = devch.getChange();
             console.debug('List devices change for', ch.getId(), 'received');
@@ -64,16 +70,64 @@ export class DeviceService {
     }
 
     addDevice(deviceId: string, deviceType: string, version: string): void {
-        const newDevice = new Device();
-        newDevice.setId(deviceId);
-        newDevice.setType(deviceType);
-        newDevice.setVersion(version);
-        if (!this.deviceList.has(deviceId)) {
-            this.deviceList.set(deviceId, newDevice);
+        const nameVersion = deviceId + ':' + version;
+        if (!this.deviceList.has(nameVersion)) {
+            const newDevice = new Device();
+            newDevice.setId(deviceId);
+            newDevice.setType(deviceType);
+            newDevice.setVersion(version);
+            this.deviceList.set(nameVersion, newDevice);
         }
         if (!this.deviceChangeSubs.has(deviceId + ':' + version)) {
-            this.deviceChangeSubs.set(deviceId + ':' + version, deviceId + ':' + version);
+            this.deviceChangeSubs.set(nameVersion, deviceId + ':' + version);
             this.addDeviceChangeListener(deviceId, version);
         }
+    }
+
+    deviceStatusStyles(deviceKey: string): string[] {
+        const protocolList = this.deviceList.get(deviceKey).getProtocolsList();
+        const stateStyles = new Array<string>();
+
+        protocolList.forEach((value: ProtocolState) => {
+            let protocol = '';
+            switch (value.getProtocol()) {
+                case Protocol.GNMI:
+                    protocol = 'gnmi';
+                    break;
+                case Protocol.GNOI:
+                    protocol = 'gnoi';
+                    break;
+                case Protocol.P4RUNTIME:
+                    protocol = 'p4runtime';
+                    break;
+                default:
+                    protocol = 'unknown';
+            }
+            let channel = '';
+            switch (value.getChannelstate()) {
+                case ChannelState.CONNECTED:
+                    channel = 'connected';
+                    break;
+                case ChannelState.DISCONNECTED:
+                    channel = 'disconnected';
+                    break;
+                default:
+                    channel = 'unknown';
+            }
+            let connectivity = '';
+            switch (value.getConnectivitystate()) {
+                case ConnectivityState.REACHABLE:
+                    connectivity = 'reachable';
+                    break;
+                case ConnectivityState.UNREACHABLE:
+                    connectivity = 'unreachable';
+                    break;
+                default:
+                    connectivity = 'unknown';
+            }
+            stateStyles.push(protocol + '_' + channel + '_' + connectivity);
+        });
+
+        return stateStyles;
     }
 }

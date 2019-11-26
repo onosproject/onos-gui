@@ -21,7 +21,7 @@
     overflow-y: scroll;
 }
 
-.dashboard-header {
+.dashboard-footer {
     background-color: #a9aba0;
     color: white;
 }
@@ -46,6 +46,18 @@
 .device-hdr {
     text-align: center;
     border: 1px black solid;
-    background-color: white;
+    background-color: darkgray;
     padding: 6px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+device-link {
+    color: white;
+}
+
+/* Can apply to both the cell and the hyperlink overriding device-hdr and device-link */
+.gnmi_connected_reachable {
+    background-color: #00c853;
+    color: white;
 }

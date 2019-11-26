@@ -35,6 +35,8 @@ import { DeviceChangeComponent } from './config-dashboard/device-change/device-c
 import { DeviceSnapshotComponent } from './config-dashboard/device-snapshot/device-snapshot.component';
 import { NetworkSnapshotComponent } from './config-dashboard/network-snapshot/network-snapshot.component';
 import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
+import { DeviceChangeDetailsComponent } from './device-change-details/device-change-details.component';
+import { ChangeStatusPipe } from './change-status.pipe';
 
 @NgModule({
     declarations: [
@@ -46,6 +48,8 @@ import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service
         DeviceChangeComponent,
         DeviceSnapshotComponent,
         NetworkSnapshotComponent,
+        DeviceChangeDetailsComponent,
+        ChangeStatusPipe
     ],
     imports: [
         CommonModule,

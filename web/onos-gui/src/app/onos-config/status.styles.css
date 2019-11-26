@@ -14,15 +14,41 @@
  * limitations under the License.
  */
 
-.dev-change-cell {
-    padding: 6px;
-    text-align: center;
-    cursor: pointer;
+/* Phase options */
+.change {
+    color: white;
 }
 
-.nw-ch-title{
-    text-align: right;
-    padding-right: 4px;
-    font-weight: bold;
-    cursor: pointer;
+.rollback {
+    color: lightgrey;
+}
+
+/* State options */
+.pending {
+    background-color: maroon;
+}
+
+.running {
+    background-color: cornflowerblue;
+}
+
+.complete {
+    background-color: darkgreen;
+}
+
+.failure {
+    background-color: red;
+}
+
+/* Reason options */
+.error {
+    text-blink: 1;
+}
+
+.undefined {
+    visibility: hidden;
+}
+
+.dev-change-div {
+    vertical-align: middle;
 }

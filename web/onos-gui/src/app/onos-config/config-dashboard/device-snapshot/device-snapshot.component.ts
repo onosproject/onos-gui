@@ -16,6 +16,7 @@
 
 import {Component, Input} from '@angular/core';
 import {DeviceService} from '../../device.service';
+import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 @Component({
     selector: '[onos-device-snapshot]',
@@ -23,16 +24,10 @@ import {DeviceService} from '../../device.service';
     styleUrls: ['./device-snapshot.component.css']
 })
 export class DeviceSnapshotComponent {
-    @Input() deviceSnapshotId: string;
-    @Input() deviceVersion: string;
-    @Input() networkSnapshotId: string;
+    @Input() deviceSnapshot: Snapshot;
 
     constructor(
         public deviceService: DeviceService
     ) {
-    }
-
-    public deviceSnapshotName(): string {
-        return this.networkSnapshotId + ':' + this.deviceSnapshotId + ':' + this.deviceVersion;
     }
 }

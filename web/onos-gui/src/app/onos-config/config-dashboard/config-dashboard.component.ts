@@ -21,6 +21,11 @@ import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/typ
 import {ListNetworkChangeResponse} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 import {OnosTopoDeviceService} from '../../onos-topo/proto/onos-topo-device.service';
 import {DeviceService} from '../device.service';
+import {
+    Change,
+    DeviceChange
+} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {IconService} from 'gui2-fw-lib';
 
 @Component({
     selector: 'onos-config-dashboard',
@@ -28,15 +33,19 @@ import {DeviceService} from '../device.service';
     styleUrls: ['./config-dashboard.component.css']
 })
 export class ConfigDashboardComponent implements OnInit {
+    selectedChange: DeviceChange; // The complete row - not just the selId
+    selId: string;
     networkChanges: Map<string, NetworkChange>;
 
     constructor(
         private diags: OnosConfigDiagsService,
         private topoDeviceService: OnosTopoDeviceService,
         public deviceService: DeviceService,
+        private is: IconService
     ) {
         this.networkChanges = new Map<string, NetworkChange>();
         console.log('ConfigDashboardComponent constructed');
+        this.is.loadIconDef('xClose');
     }
 
     ngOnInit() {
@@ -49,6 +58,9 @@ export class ConfigDashboardComponent implements OnInit {
                 console.log(change.getId(), 'deleted');
             } else if (!change.getDeleted()) {
                 this.networkChanges.set(change.getId(), change);
+                change.getChangesList().forEach((ch: Change) => {
+                    this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion());
+                });
                 console.log(change.getId(), 'updated');
             }
         });
@@ -60,5 +72,16 @@ export class ConfigDashboardComponent implements OnInit {
      */
     nwChangeIncreasingAge = (a: KeyValue<string, NetworkChange>, b: KeyValue<string, NetworkChange>): number => {
         return a.value.getCreated() < b.value.getCreated() ? 1 : (a.value.getCreated() > b.value.getCreated() ? -1 : 0);
+    }
+
+    deviceChangeSelected(deviceChangeId: string, networkChange: NetworkChange) {
+        console.log('Device change selected', deviceChangeId);
+        if (deviceChangeId === this.selId) {
+            this.selId = '';
+            this.selectedChange = undefined;
+            return;
+        }
+        this.selId = deviceChangeId;
+        this.selectedChange = this.deviceService.deviceChangeMap.get(deviceChangeId);
     }
 }

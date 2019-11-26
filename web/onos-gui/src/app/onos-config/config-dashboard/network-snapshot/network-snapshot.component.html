@@ -17,6 +17,5 @@
 <td class="nw-ss-title">Snapshot</td>
 <td class="dev-ss-cell"
     *ngFor="let device of deviceService.deviceList | keyvalue"
-    onos-device-snapshot [deviceSnapshotId]="device.key"
-    [deviceVersion]="device.value.getVersion()" [networkSnapshotId]="networkSnapshot?.getId()">
+    onos-device-snapshot [deviceSnapshot]="deviceSnapshots.get(device.key)">
 </td>
