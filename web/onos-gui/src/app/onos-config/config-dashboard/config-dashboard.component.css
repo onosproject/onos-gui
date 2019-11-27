@@ -32,15 +32,17 @@
 }
 
 .nw-ch-row {
-    background-color: lightskyblue;
+    /*background-color: #e8e7e1;*/
+    background-image: linear-gradient(#e8e7e1, white);
 }
 
 .nw-ch-row__alternate {
-    background-color: #b3e9ff;
+    background-color: white;
 }
 
 .nw-ss-row {
-    background-color: #ffc2da;
+    background-image: linear-gradient(#db7773, #fac3c3);
+    max-height: 20px;
 }
 
 .device-hdr {
@@ -58,6 +60,11 @@ device-link {
 
 /* Can apply to both the cell and the hyperlink overriding device-hdr and device-link */
 .gnmi_connected_reachable {
-    background-color: #00c853;
+    background-color: #7fabdb;
+    color: white;
+}
+
+.gnmi_disconnected_reachable {
+    background-color: #C72930;
     color: white;
 }

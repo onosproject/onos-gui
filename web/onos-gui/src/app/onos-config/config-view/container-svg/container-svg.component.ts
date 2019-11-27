@@ -17,15 +17,18 @@
 import {
     Component,
     EventEmitter,
-    Input, OnChanges,
+    Input,
+    OnChanges,
     Output,
     SimpleChanges
 } from '@angular/core';
-import {
-    ChangeValueType
-} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
-import {ChangeValueUtil, ValueDetails} from '../../change-value.util';
+
+import {ChangeValueUtil} from '../../change-value.util';
 import {HierarchyNode} from '../hierarchy-layout.service';
+import {
+    TypedValue,
+    ValueType
+} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 @Component({
     selector: '[onos-container-svg]',
@@ -39,7 +42,7 @@ export class ContainerSvgComponent implements OnChanges {
     @Input() containerY: number = 0;
     @Input() hn: HierarchyNode; // For debugging
     @Input() containerScale: number = 1.0;
-    @Input() value: ValueDetails;
+    @Input() value: TypedValue;
     @Input() classes: string[] = ['config'];
     @Output() containerEditRequested = new EventEmitter<string>();
 
@@ -59,10 +62,9 @@ export class ContainerSvgComponent implements OnChanges {
             if (this.relpath && this.relpath.endsWith(']')) {
                 const wholeKey = this.relpath.substr(this.relpath.indexOf('['));
                 const keyNameList = wholeKey.substr(1, wholeKey.length - 2);
-                this.value = <ValueDetails>{
-                    value: this.textEncoder.encode(keyNameList),
-                    valueType: ChangeValueType.LEAFLIST_STRING
-                };
+                this.value = new TypedValue();
+                this.value.setBytes(this.textEncoder.encode(keyNameList));
+                this.value.setType(ValueType.LEAFLIST_STRING);
                 if (this.value) {
                     this.strvalue = ChangeValueUtil.transform(this.value, 15);
                 }

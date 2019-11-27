@@ -18,10 +18,10 @@ import {TestBed} from '@angular/core/testing';
 
 import {ModelTempIndexService} from './model-temp-index.service';
 import {
-    ChangeValueType,
     ModelInfo,
     ReadWritePath
-} from '../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
+} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ValueType} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 describe('ModelTempIndexService', () => {
     const pathArray: Array<ReadWritePath> = Array(2);
@@ -29,25 +29,25 @@ describe('ModelTempIndexService', () => {
     const rwPath1 = new ReadWritePath();
     rwPath1.setPath('/a/b[x=*,y=*]/c/d[z=*]/e');
     rwPath1.setDescription('Test leaf e');
-    rwPath1.setValueType(ChangeValueType.STRING);
+    rwPath1.setValueType(ValueType.STRING);
     pathArray[0] = rwPath1;
 
     const rwPath2 = new ReadWritePath();
     rwPath2.setPath('/a/b[x=*,y=*]/c/d[z=*]/f');
     rwPath2.setDescription('Test leaf e');
-    rwPath2.setValueType(ChangeValueType.STRING);
+    rwPath2.setValueType(ValueType.STRING);
     pathArray[1] = rwPath2;
 
     const rwPath3 = new ReadWritePath();
     rwPath3.setPath('/a/g/h/i');
     rwPath3.setDescription('Test leaf i');
-    rwPath3.setValueType(ChangeValueType.STRING);
+    rwPath3.setValueType(ValueType.STRING);
     pathArray[2] = rwPath3;
 
     const rwPath4 = new ReadWritePath();
     rwPath4.setPath('/a/p[n=*]/q/r[n=*]/s');
     rwPath4.setDescription('Test leaf s');
-    rwPath4.setValueType(ChangeValueType.STRING);
+    rwPath4.setValueType(ValueType.STRING);
     pathArray[3] = rwPath4;
 
     const testModelInfo = new ModelInfo();

@@ -36,5 +36,5 @@
 <!--             [attr.xlink:href]="'#plus'" width="16" height="16" x="-8" y="-8" (click)="requestEdit(abspath)">-->
 <!--    </svg:use>-->
     <svg:text id="title" x="5" y="17">{{displayPath}}</svg:text>
-    <svg:text id="value" x="160" y="32">{{value?.value | changeValue:value?.valueType:value?.valueTypeOpts:15}}</svg:text>
+    <svg:text id="value" x="160" y="32">{{value | changeValue:15}}</svg:text>
 </svg:g>

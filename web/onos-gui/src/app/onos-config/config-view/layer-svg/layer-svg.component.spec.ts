@@ -21,9 +21,8 @@ import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {ContainerSvgComponent} from '../container-svg/container-svg.component';
 import {ChangeValuePipe} from '../../change-value.pipe';
 import {ChangeDetectorRef} from '@angular/core';
-import {ChangeValueType} from '../../proto/github.com/onosproject/onos-config/pkg/northbound/admin/admin_pb';
 import {PathUtil} from '../../path.util';
-import {ValueDetails} from '../../change-value.util';
+import {TypedValue} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 
 class MockOnosConfigDiagsService {
 
@@ -68,10 +67,7 @@ describe('LayerSvgComponent', () => {
 
         const cv = <ChangeValueObj>{
             relPath: relpath,
-            value: <ValueDetails>{
-                value: new Uint8Array(),
-                valueType: ChangeValueType.EMPTY,
-            },
+            value: new TypedValue(),
             removed: false,
             parentPath: parentpath,
         };

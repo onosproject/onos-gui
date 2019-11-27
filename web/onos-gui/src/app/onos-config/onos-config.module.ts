@@ -37,6 +37,13 @@ import { NetworkSnapshotComponent } from './config-dashboard/network-snapshot/ne
 import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 import { DeviceChangeDetailsComponent } from './device-change-details/device-change-details.component';
 import { ChangeStatusPipe } from './change-status.pipe';
+import {ConfigViewComponent} from './config-view/config-view.component';
+import {ConfigLayersPanelComponent} from './config-layers-panel/config-layers-panel.component';
+import {LayerSvgComponent} from './config-view/layer-svg/layer-svg.component';
+import {NodeFilterPipe} from './config-view/node-filter.pipe';
+import {ContainerSvgComponent} from './config-view/container-svg/container-svg.component';
+import {LinkFilterPipe} from './config-view/link-filter.pipe';
+import {StringValueComponent} from './config-view/string-value/string-value.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +56,14 @@ import { ChangeStatusPipe } from './change-status.pipe';
         DeviceSnapshotComponent,
         NetworkSnapshotComponent,
         DeviceChangeDetailsComponent,
-        ChangeStatusPipe
+        ChangeStatusPipe,
+        ConfigViewComponent,
+        ConfigLayersPanelComponent,
+        LayerSvgComponent,
+        NodeFilterPipe,
+        ContainerSvgComponent,
+        LinkFilterPipe,
+        StringValueComponent
     ],
     imports: [
         CommonModule,

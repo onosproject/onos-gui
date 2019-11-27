@@ -18,12 +18,13 @@ import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {ModelsListComponent} from './models-list/models-list.component';
 import {ConfigDashboardComponent} from './config-dashboard/config-dashboard.component';
+import {ConfigViewComponent} from './config-view/config-view.component';
 
 const routes: Routes = [
-    // {
-    //     path: 'configview/:configName',
-    //     component: ConfigViewComponent
-    // },
+    {
+        path: 'configview/:configName',
+        component: ConfigViewComponent
+    },
     {
         path: 'dashboard',
         component: ConfigDashboardComponent

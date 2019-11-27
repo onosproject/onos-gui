@@ -16,11 +16,9 @@
         "**/*.d.ts"
     ],
     "exclude": [
-        "app/onos-config/config-view/**/*.spec.ts",
-        "app/onos-config/config-layers-panel/**/*.ts",
-        "app/onos-config/configs-list/**/*.ts",
-        "app/onos-config/network-change-detail/**/*.ts",
-        "app/onos-config/networkchanges/**/*.ts",
-        "app/onos-config/pending-net-change.service*.ts"
+        "app/onos-config/config-view/leaf-svg/*.spec.ts",
+        "app/onos-config/config-view/path-bar/*.spec.ts",
+        "app/onos-config/config-view/string-value/*.spec.ts",
+        "app/onos-config/pending-net-change.service*.spec.ts"
     ]
 }
