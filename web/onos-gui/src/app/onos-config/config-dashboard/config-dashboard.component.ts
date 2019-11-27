@@ -26,11 +26,20 @@ import {
     DeviceChange
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {IconService} from 'gui2-fw-lib';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
     selector: 'onos-config-dashboard',
     templateUrl: './config-dashboard.component.html',
-    styleUrls: ['./config-dashboard.component.css']
+    styleUrls: ['./config-dashboard.component.css'],
+    animations: [
+        trigger('deviceBorderFlash', [
+            state('true', style({
+                'border': 'solid white 1px',
+            })),
+            transition('* => 1', animate('500ms ease-out')),
+        ])
+    ]
 })
 export class ConfigDashboardComponent implements OnInit {
     selectedChange: DeviceChange; // The complete row - not just the selId
@@ -49,8 +58,6 @@ export class ConfigDashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.deviceService.init(this.topoDeviceService, this.diags);
-
         this.diags.requestNetworkChanges((nwch: ListNetworkChangeResponse) => {
             const change = nwch.getChange();
             if (this.networkChanges.has(change.getId()) && change.getDeleted()) {

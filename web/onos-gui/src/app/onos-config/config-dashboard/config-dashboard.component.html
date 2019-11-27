@@ -18,14 +18,17 @@
     <tbody>
     <tr class="nw-ch-row" [class.nw-ch-row__alternate]="i % 2"
         *ngFor="let nwchId of networkChanges | keyvalue:nwChangeIncreasingAge; let i = index"
-        onos-network-change [networkChange]="nwchId.value" (dcSelected)="deviceChangeSelected($event)">
+        onos-network-change [networkChange]="nwchId.value" (dcSelected)="deviceChangeSelected($event, nwchId.value)">
     </tr>
     <tr class="nw-ss-row" onos-network-snapshot></tr>
     </tbody>
     <tfoot>
     <tr class="dashboard-footer">
-        <td class="nw-ch-hdr">Network Changes</td>
-        <td class="device-hdr" [ngClass]="deviceService.deviceStatusStyles(device.key)" [title]="deviceService.deviceStatusStyles(device.key)"
+        <td class="nw-ch-hdr"></td>
+        <td class="device-hdr"
+            [@deviceBorderFlash]="true"
+            [ngClass]="deviceService.deviceStatusStyles(device.key)"
+            [title]="deviceService.deviceStatusStyles(device.key)"
             *ngFor="let device of deviceService.deviceList | keyvalue">
             <a class='device-link' [ngClass]="deviceService.deviceStatusStyles(device.key)" [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
         </td>

@@ -15,24 +15,17 @@
  */
 #dashboard-grid {
     margin: auto;
-    min-width: 60%;
-    min-height: 60%;
-    max-height: 90%;
-    overflow-y: scroll;
 }
 
 .dashboard-footer {
-    background-color: #a9aba0;
     color: white;
 }
 
 .nw-ch-hdr {
-    text-align: right;
-    padding-right: 4px;
+    opacity: 0%;
 }
 
 .nw-ch-row {
-    /*background-color: #e8e7e1;*/
     background-image: linear-gradient(#e8e7e1, white);
 }
 
@@ -47,14 +40,14 @@
 
 .device-hdr {
     text-align: center;
-    border: 1px black solid;
+    border: solid yellow 3px; /* changed by animation on load */
     background-color: darkgray;
     padding: 6px;
     font-weight: bold;
     font-size: 1.1em;
 }
 
-device-link {
+.device-link {
     color: white;
 }
 

@@ -114,3 +114,12 @@
 #device-change-detail-panel .bottom thead tr {
     background-color: #e5e5e6;
 }
+
+#path-list td.pathitem {
+    font-weight: bold;
+}
+
+#path-list td.removed {
+    text-decoration: line-through;
+    font-weight: normal;
+}

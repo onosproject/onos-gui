@@ -26,19 +26,13 @@ import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types
     styleUrls: ['./network-snapshot.component.css']
 })
 export class NetworkSnapshotComponent implements OnInit {
-    deviceSnapshots: Map<string, Snapshot>;
 
     constructor(
         public deviceService: DeviceService,
         public admin: OnosConfigAdminService
     ) {
-        this.deviceSnapshots = new Map<string, Snapshot>();
     }
 
     ngOnInit() {
-        this.admin.requestNetworkSnapshot((s: Snapshot) => {
-            const nameVersion = s.getId() + ':' + s.getDeviceVersion();
-            this.deviceSnapshots.set(nameVersion, s);
-        });
     }
 }

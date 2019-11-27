@@ -43,12 +43,6 @@ export class OnosConfigAdminService {
         console.log('Config Admin Service Connecting to ', onosConfigUrl);
     }
 
-    // requestNetworkChanges(callback: NetChangeCallback) {
-    //     const stream = this.adminServiceClient.getNetworkChanges(new NetworkChangesRequest(), {});
-    //     console.log('NetworkChangesRequest sent to', this.onosConfigUrl);
-    //     stream.on('data', callback);
-    // }
-
     requestRollback(nwChangeName: string, callback: RollbackCallback, rollbackComment?: string) {
         const rollbackReq = new RollbackRequest();
         rollbackReq.setName(nwChangeName);
@@ -68,7 +62,7 @@ export class OnosConfigAdminService {
         stream.on('data', callback);
     }
 
-    requestNetworkSnapshot(callback: SnapshotCallback) {
+    requestDeviceSnapshots(callback: SnapshotCallback) {
         const stream = this.adminServiceClient.listSnapshots(new ListSnapshotsRequest(), {});
         console.log('ListSnapshots sent to', this.onosConfigUrl);
         stream.on('data', callback);
