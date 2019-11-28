@@ -44,6 +44,7 @@ import {NodeFilterPipe} from './config-view/node-filter.pipe';
 import {ContainerSvgComponent} from './config-view/container-svg/container-svg.component';
 import {LinkFilterPipe} from './config-view/link-filter.pipe';
 import {StringValueComponent} from './config-view/string-value/string-value.component';
+import {DeviceService} from './device.service';
 
 @NgModule({
     declarations: [
@@ -94,6 +95,10 @@ import {StringValueComponent} from './config-view/string-value/string-value.comp
         {
             provide: ModelService,
             useClass: ModelService
+        },
+        {
+            provide: DeviceService,
+            useClass: DeviceService
         }
     ],
     exports: [

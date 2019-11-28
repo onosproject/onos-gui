@@ -75,14 +75,12 @@
                 <tr>
                     <th>Path</th>
                     <th>Value</th>
-                    <th>Removed</th>
                 </tr>
                 </thead>
                 <tbody id="path-list">
                 <tr *ngFor="let dcValue of detailsData?.getChange().getValuesList()">
-                    <td><b>{{dcValue.getPath()}}</b></td>
-                    <td>{{dcValue.getValue() | changeValue}}</td>
-                    <td>{{dcValue.getRemoved()}}</td>
+                    <td class="pathitem" [ngClass]="dcValue.getRemoved() ? 'removed':''">{{dcValue.getPath()}}</td>
+                    <td>{{dcValue.getValue() | changeValue:30}}</td>
                 </tr>
                 </tbody>
             </table>

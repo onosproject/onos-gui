@@ -27,6 +27,10 @@ import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
 import {DeviceChange} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {ListDeviceChangeResponse} from './proto/github.com/onosproject/onos-config/api/diags/diags_pb';
+import {asyncScheduler, from, Observable, Observer} from 'rxjs';
+import {takeWhile} from 'rxjs/operators';
+import {OnosConfigAdminService} from './proto/onos-config-admin.service';
+import {Snapshot} from './proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 /**
  * DeviceService allows consistent tracking of all known devices from
@@ -39,16 +43,22 @@ export class DeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     deviceChangeMap: Map<string, DeviceChange>; // Expect <dev-id:dev-ver> as key
     deviceChangeSubs: Map<string, string>; // Expect <nw-ch:dev-id:dev-ver> as key
+    deviceSnapshotMap: Map<string, Snapshot>; // Expect <dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
+    admin: OnosConfigAdminService;
+    deviceChangesObs: Observable<[string, DeviceChange]>;
 
-    constructor() {
+    constructor(topoDeviceService: OnosTopoDeviceService,
+                diags: OnosConfigDiagsService,
+                admin: OnosConfigAdminService) {
         this.deviceList = new Map<string, Device>();
         this.deviceChangeSubs = new Map<string, string>();
         this.deviceChangeMap = new Map<string, DeviceChange>();
-    }
+        this.deviceChangesObs = from(this.deviceChangeMap).pipe(takeWhile<[string, DeviceChange]>((dcId, dc) => true));
+        this.deviceSnapshotMap = new Map<string, Snapshot>();
 
-    init(topoDeviceService: OnosTopoDeviceService, diags: OnosConfigDiagsService) {
         this.diags = diags;
+        this.admin = admin;
         topoDeviceService.requestListDevices(true, (deviceListItem: ListResponse) => {
             console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
             deviceListItem['id'] = deviceListItem.getDevice().getId();
@@ -56,6 +66,14 @@ export class DeviceService {
             const nameVersion = deviceListItem.getDevice().getId() + ':' + deviceListItem.getDevice().getVersion();
             this.deviceList.set(nameVersion, deviceListItem.getDevice());
             this.addDeviceChangeListener(deviceListItem.getDevice().getId(), deviceListItem.getDevice().getVersion());
+        });
+
+        this.admin.requestDeviceSnapshots((s: Snapshot) => {
+            console.log('List Snapshots response for', s.getId(), s.getSnapshotId(), s.getValuesList().length);
+            if (!this.deviceList.has(s.getId())) {
+                this.addDevice(s.getDeviceId(), '?', s.getDeviceVersion());
+            }
+            this.deviceSnapshotMap.set(s.getId(), s);
         });
     }
 

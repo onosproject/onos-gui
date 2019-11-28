@@ -14,7 +14,16 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChange, SimpleChanges, ViewChild} from '@angular/core';
+import {
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChange,
+    SimpleChanges,
+    ViewChild
+} from '@angular/core';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
@@ -81,11 +90,11 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         private diags: OnosConfigDiagsService,
-    //     private pending: PendingNetChangeService,
+        //     private pending: PendingNetChangeService,
         protected ar: ActivatedRoute,
         protected is: IconService,
         private deviceService: DeviceService,
-    //     private modelTmpIndex: ModelTempIndexService,
+        private modelTmpIndex: ModelTempIndexService,
         private hierarchy: HierarchyLayoutService
     ) {
         this.is.loadIconDef('checkMark');
@@ -115,10 +124,20 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                     new SimpleChange({}, cn, true)
             });
         });
+        //
+        // this.deviceService.deviceChangesObs.subscribe(
+        //     value => {
+        //         console.log('Sub worked!', value);
+        //     },
+        //     err => {
+        //         console.warn('Sub Error', err);
+        //     },
+        //     () => console.log('Sub Completed')
+        // );
     }
 
     ngOnDestroy(): void {
-    //     this.modelTmpIndex.clearAll();
+        this.modelTmpIndex.clearAll();
         this.hierarchy.clearAll();
         console.log('ConfigViewComponent destroyed and Tree Service reset');
     }
@@ -140,16 +159,16 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             this.type = device.getType();
 
             // Check to see if this is a pending configuration first
-    //         if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
-    //             this.device = this.pending.pendingNewConfiguration.getDeviceId();
-    //             this.version = this.pending.pendingNewConfiguration.getVersion();
-    //             this.type = this.pending.pendingNewConfiguration.getDeviceType();
-    //             this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
-    //             for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
-    //                 this.changeIdsVisible.push(cid);
-    //             }
-    //             return;
-    //         }
+            //         if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
+            //             this.device = this.pending.pendingNewConfiguration.getDeviceId();
+            //             this.version = this.pending.pendingNewConfiguration.getVersion();
+            //             this.type = this.pending.pendingNewConfiguration.getDeviceType();
+            //             this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
+            //             for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
+            //                 this.changeIdsVisible.push(cid);
+            //             }
+            //             return;
+            //         }
 
             this.deviceService.deviceChangeMap.forEach((deviceChange: DeviceChange, dcName: string) => {
                 if (dcName.endsWith(cfgName)) {
@@ -158,19 +177,19 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 }
             });
 
-    //         this.hasPending = this.pending
-    //             .pendingNetChange
-    //             .getChangesList()
-    //             .findIndex((cfg) => cfg.getId() === this.configName) > -1;
-    //         if (this.hasPending) {
-    //             this.changeIdsVisible.push('pending');
-    //         }
+            //         this.hasPending = this.pending
+            //             .pendingNetChange
+            //             .getChangesList()
+            //             .findIndex((cfg) => cfg.getId() === this.configName) > -1;
+            //         if (this.hasPending) {
+            //             this.changeIdsVisible.push('pending');
+            //         }
         }
     }
 
     visibilityChanged(event: SelectedLayer) {
         if (event.layerType === LayerType.LAYERTYPE_PENDING) {
-    //         this.pendingVisible = event.madeVisible;
+            //         this.pendingVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_OPSTATE) {
             this.opstateVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
@@ -184,15 +203,15 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             this.changeIdsVisible.splice(idx, 1);
         }
 
-    //     if (!event.madeVisible) {
-    //         let layerName = event.layerName;
-    //         if (layerName === 'rwpaths') {
-    //             layerName = this.type + this.version;
-    //         } else if (layerName === 'opstate') {
-    //             layerName = this.device;
-    //         }
-    //         this.hierarchy.removeLayer(layerName);
-    //     }
+        //     if (!event.madeVisible) {
+        //         let layerName = event.layerName;
+        //         if (layerName === 'rwpaths') {
+        //             layerName = this.type + this.version;
+        //         } else if (layerName === 'opstate') {
+        //             layerName = this.device;
+        //         }
+        //         this.hierarchy.removeLayer(layerName);
+        //     }
     }
 
     pathSelected(pathDetails: PathDetails) {
@@ -213,8 +232,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     confirmedCreatePending(confirmed: boolean): void {
         if (confirmed) {
-    //         this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
-    //         this.changeIdsVisible.push(PENDING);
+            //         this.pending.addToPendingChange(this.configName + '-' + this.version, undefined);
+            //         this.changeIdsVisible.push(PENDING);
         } else {
             console.log('Create pending cancelled');
         }
