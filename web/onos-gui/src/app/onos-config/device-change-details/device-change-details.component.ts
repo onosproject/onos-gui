@@ -46,11 +46,11 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         trigger('deviceChangeDetailState', [
             state('true', style({
                 transform: 'translateX(-100%)',
-                opacity: '100'
+                opacity: '100%'
             })),
             state('false', style({
                 transform: 'translateX(0%)',
-                opacity: '0'
+                opacity: '0%'
             })),
             transition('0 => 1', animate('100ms ease-in')),
             transition('1 => 0', animate('100ms ease-out'))
@@ -79,7 +79,7 @@ export class DeviceChangeDetailsComponent extends DetailsPanelBaseImpl implement
         if (changes['id']) {
             this.closed = false;
             this.detailsData = this.deviceChange;
-            if (this.deviceChange !== undefined) {
+            if (this.deviceChange !== undefined && this.deviceChange.getUpdated() !== undefined) {
                 this.detailsData['created'] = (new Date()).setTime(this.deviceChange.getCreated().getSeconds() * 1000);
                 this.detailsData['updated'] = (new Date()).setTime(this.deviceChange.getUpdated().getSeconds() * 1000);
             }

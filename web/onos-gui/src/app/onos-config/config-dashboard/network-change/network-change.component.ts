@@ -19,7 +19,8 @@ import {NetworkChange} from '../../proto/github.com/onosproject/onos-config/api/
 import {DeviceService} from '../../device.service';
 import {Change} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {StatusUtil} from '../../status.util';
-import {formatDate} from '@angular/common';
+import {formatDate, KeyValue} from '@angular/common';
+import {Device} from '../../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
 
 @Component({
     selector: '[onos-network-change]',
@@ -28,6 +29,8 @@ import {formatDate} from '@angular/common';
 })
 export class NetworkChangeComponent implements OnInit {
     @Input() networkChange: NetworkChange;
+    @Input() deviceSortCriterion: (a: KeyValue<string, Device>, b: KeyValue<string, Device>) => number
+        = DeviceService.deviceSorterForwardAlpha;
     @Output() dcSelected = new EventEmitter<string>();
     created: number;
 

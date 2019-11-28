@@ -21,17 +21,25 @@ import {
     Device,
     ListResponse,
     Protocol,
-    ProtocolState
+    ProtocolState,
+    ServiceState
 } from '../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
 import {DeviceChange} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {ListDeviceChangeResponse} from './proto/github.com/onosproject/onos-config/api/diags/diags_pb';
-import {asyncScheduler, from, Observable, Observer} from 'rxjs';
+import {from, Observable} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {Snapshot} from './proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
+import {KeyValue} from '@angular/common';
 
+export enum DeviceSortCriterion {
+    ALPHABETICAL,
+    STATUS,
+    TYPE,
+    VERSION
+}
 /**
  * DeviceService allows consistent tracking of all known devices from
  * both Network Changes and from Topo
@@ -75,6 +83,94 @@ export class DeviceService {
             }
             this.deviceSnapshotMap.set(s.getId(), s);
         });
+    }
+
+    static deviceSorterForwardAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        return a.key < b.key ? -1 : (a.key > b.key) ? 1 : 0;
+    }
+
+    static deviceSorterReverseAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        return a.key < b.key ? 1 : (a.key > b.key) ? -1 : 0;
+    }
+
+    static deviceSorterForwardType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTypeVersion = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType());
+        const bTypeVersion = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType());
+        return  aTypeVersion < bTypeVersion ? -1 : (aTypeVersion > bTypeVersion) ? 1 : 0;
+    }
+
+    static deviceSorterReverseType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTypeVersion = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType());
+        const bTypeVersion = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType());
+        return  aTypeVersion < bTypeVersion ? 1 : (aTypeVersion > bTypeVersion) ? -1 : 0;
+    }
+
+    static deviceSorterForwardVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aVersionType = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType(), true);
+        const bVersionType = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType(), true);
+        return  aVersionType < bVersionType ? -1 : (aVersionType > bVersionType) ? 1 : 0;
+    }
+
+    static deviceSorterReverseVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aVersionType = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType(), true);
+        const bVersionType = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType(), true);
+        return  aVersionType < bVersionType ? 1 : (aVersionType > bVersionType) ? -1 : 0;
+    }
+
+    static deviceSorterForwardStatus(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aStatus = DeviceService.calculateState(a.value.getProtocolsList());
+        const bStatus = DeviceService.calculateState(b.value.getProtocolsList());
+        return  aStatus < bStatus ? -1 : (aStatus > bStatus) ? 1 : 0;
+    }
+
+    static deviceSorterReverseStatus(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aStatus = DeviceService.calculateState(a.value.getProtocolsList());
+        const bStatus = DeviceService.calculateState(b.value.getProtocolsList());
+        return  aStatus < bStatus ? 1 : (aStatus > bStatus) ? -1 : 0;
+    }
+
+    private static concatTypeOrVersion(devid: string, version: string, type: string, forVersion?: boolean): string {
+        if (forVersion) {
+            return version + ':' + type + ':' + devid;
+        }
+        return type + ':' + version + ':' + devid;
+    }
+
+    private static calculateState(protocolList: Array<ProtocolState>): number {
+        let stateAsNumber: number = 0;
+        protocolList.forEach((p: ProtocolState) => {
+            switch (p.getConnectivitystate()) {
+                case ConnectivityState.REACHABLE:
+                    stateAsNumber += 0x8;
+                    break;
+                case ConnectivityState.UNREACHABLE:
+                    stateAsNumber -= 0x8;
+                    break;
+                default:
+            }
+            switch (p.getServicestate()) {
+                case ServiceState.AVAILABLE:
+                    stateAsNumber += 0x4;
+                    break;
+                case ServiceState.UNAVAILABLE:
+                    stateAsNumber -= 0x4;
+                    break;
+                case ServiceState.CONNECTING:
+                    stateAsNumber -= 0x2;
+                    break;
+                default:
+            }
+            switch (p.getChannelstate()) {
+                case ChannelState.CONNECTED:
+                    stateAsNumber += 0x1;
+                    break;
+                case ChannelState.DISCONNECTED:
+                    stateAsNumber -= 0x1;
+                    break;
+                default:
+            }
+        });
+        return stateAsNumber;
     }
 
     addDeviceChangeListener(deviceId: string, version: string) {
@@ -143,7 +239,8 @@ export class DeviceService {
                 default:
                     connectivity = 'unknown';
             }
-            stateStyles.push(protocol + '_' + channel + '_' + connectivity);
+            stateStyles.push(protocol + '_' + channel);
+            stateStyles.push(protocol + '_' + connectivity);
         });
 
         return stateStyles;

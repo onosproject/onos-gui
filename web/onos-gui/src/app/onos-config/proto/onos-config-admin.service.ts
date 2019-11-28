@@ -19,6 +19,7 @@ import {
     ConfigAdminServiceClient
 } from './github.com/onosproject/onos-config/api/admin/adminServiceClientPb';
 import {
+    CompactChangesRequest, CompactChangesResponse,
     ListModelsRequest, ListSnapshotsRequest,
     ModelInfo,
     RegisterResponse, RollbackRequest,
@@ -26,11 +27,13 @@ import {
 } from './github.com/onosproject/onos-config/api/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 import {Snapshot} from './github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
+import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
 
 // type NetChangeCallback = (r: NetChange) => void;
 type ModelInfoCallback = (r: ModelInfo) => void;
 type RollbackCallback = (e: grpcWeb.Error, r: RollbackResponse) => void;
 type SnapshotCallback = (r: Snapshot) => void;
+type CompactChangeCallback = (e: grpcWeb.Error, r: CompactChangesResponse) => void;
 
 @Injectable()
 export class OnosConfigAdminService {
@@ -66,5 +69,14 @@ export class OnosConfigAdminService {
         const stream = this.adminServiceClient.listSnapshots(new ListSnapshotsRequest(), {});
         console.log('ListSnapshots sent to', this.onosConfigUrl);
         stream.on('data', callback);
+    }
+
+    requestCompactChanges(retensionSecs: number, callback: CompactChangeCallback) {
+        const retentionDuration = new google_protobuf_duration_pb.Duration();
+        retentionDuration.setSeconds(retensionSecs);
+        const compactRequest = new CompactChangesRequest();
+        compactRequest.setRetentionPeriod(retentionDuration);
+        console.log('Compacting changes', retensionSecs);
+        this.adminServiceClient.compactChanges(compactRequest, {}, callback);
     }
 }

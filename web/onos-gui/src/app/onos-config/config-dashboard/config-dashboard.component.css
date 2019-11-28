@@ -15,6 +15,7 @@
  */
 #dashboard-grid {
     margin: auto;
+
 }
 
 .dashboard-footer {
@@ -26,7 +27,7 @@
 }
 
 .nw-ch-row {
-    background-image: linear-gradient(#e8e7e1, white);
+    background-image: linear-gradient(white, #e8e7e1);
 }
 
 .nw-ch-row__alternate {
@@ -34,8 +35,9 @@
 }
 
 .nw-ss-row {
-    background-image: linear-gradient(#db7773, #fac3c3);
+    background-image: linear-gradient(white, #e8e7e1);
     max-height: 20px;
+    color: #444444;
 }
 
 .device-hdr {
@@ -52,12 +54,29 @@
 }
 
 /* Can apply to both the cell and the hyperlink overriding device-hdr and device-link */
-.gnmi_connected_reachable {
-    background-color: #7fabdb;
+td.gnmi_connected {
+    background-image: linear-gradient(#7fabdb, #007dc4);
+}
+
+td.gnmi_disconnected {
+    background-color: #C72930;
+}
+
+a.gnmi_reachable {
     color: white;
 }
 
-.gnmi_disconnected_reachable {
-    background-color: #C72930;
-    color: white;
+a.gnmi_unreachable {
+    color: #fac3c3;
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.control {
+    text-align: center;
 }

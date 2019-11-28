@@ -14,19 +14,30 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import {KeyValue} from '@angular/common';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
 import {ListNetworkChangeResponse} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 import {OnosTopoDeviceService} from '../../onos-topo/proto/onos-topo-device.service';
-import {DeviceService} from '../device.service';
+import {DeviceService, DeviceSortCriterion} from '../device.service';
 import {
     Change,
-    DeviceChange
+    ChangeValue,
+    DeviceChange,
+    PathValue
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {IconService} from 'gui2-fw-lib';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {
+    Phase,
+    State,
+    Status
+} from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {Device} from '../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
+import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
+import * as grpcWeb from 'grpc-web';
+import {CompactChangesResponse} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 
 @Component({
     selector: 'onos-config-dashboard',
@@ -45,12 +56,20 @@ export class ConfigDashboardComponent implements OnInit {
     selectedChange: DeviceChange; // The complete row - not just the selId
     selId: string;
     networkChanges: Map<string, NetworkChange>;
+    sortReverse: boolean = false;
+    sortCriterion: DeviceSortCriterion = DeviceSortCriterion.ALPHABETICAL;
+    deviceSortCriterion = DeviceService.deviceSorterForwardAlpha;
+    retenionSecs: number = 86400;
+    compactChangesMsg: string = undefined;
+    compactChangesConfirmMsg: string = undefined;
 
     constructor(
         private diags: OnosConfigDiagsService,
         private topoDeviceService: OnosTopoDeviceService,
+        private admin: OnosConfigAdminService,
         public deviceService: DeviceService,
-        private is: IconService
+        private is: IconService,
+        private cdr: ChangeDetectorRef
     ) {
         this.networkChanges = new Map<string, NetworkChange>();
         console.log('ConfigDashboardComponent constructed');
@@ -90,5 +109,91 @@ export class ConfigDashboardComponent implements OnInit {
         }
         this.selId = deviceChangeId;
         this.selectedChange = this.deviceService.deviceChangeMap.get(deviceChangeId);
+    }
+
+    deviceSnapshotSelected(deviceSnapshotId: string) {
+        console.log('Device snapshot selected', deviceSnapshotId);
+        if (deviceSnapshotId === this.selId) {
+            this.selId = '';
+            this.selectedChange = undefined;
+            return;
+        }
+        this.selId = deviceSnapshotId;
+        const snapshot = this.deviceService.deviceSnapshotMap.get(deviceSnapshotId);
+        // Fake the snapshot as a DeviceChange, so we can display the same way
+        const fakeDc = new DeviceChange();
+        fakeDc.setId(deviceSnapshotId);
+        const fakeChange = new Change();
+        fakeChange.setDeviceId(snapshot.getDeviceId());
+        fakeChange.setDeviceVersion(snapshot.getDeviceVersion());
+        const values = new Array<ChangeValue>();
+        snapshot.getValuesList().forEach((pathValue: PathValue) => {
+            const cv = new ChangeValue();
+            cv.setPath(pathValue.getPath());
+            cv.setValue(pathValue.getValue());
+            values.push(cv);
+        });
+        fakeChange.setValuesList(values);
+        fakeDc.setChange(fakeChange);
+        fakeDc.setIndex(snapshot.getChangeIndex());
+        const status = new Status();
+        status.setMessage('SNAPSHOT');
+        status.setState(State.COMPLETE);
+        status.setPhase(Phase.CHANGE);
+        fakeDc.setStatus(status);
+        this.selectedChange = fakeDc;
+    }
+
+    updateSort() {
+        console.log('Sort order updated', this.sortCriterion, this.sortReverse, this.sortCriterion | Number(this.sortReverse).valueOf());
+        switch (this.sortCriterion * 2 | Number(this.sortReverse).valueOf()) {
+            case DeviceSortCriterion.TYPE * 2 | 1:
+                this.deviceSortCriterion = DeviceService.deviceSorterReverseType;
+                break;
+            case DeviceSortCriterion.TYPE * 2 | 0:
+                this.deviceSortCriterion = DeviceService.deviceSorterForwardType;
+                break;
+            case DeviceSortCriterion.VERSION * 2 | 1:
+                this.deviceSortCriterion = DeviceService.deviceSorterReverseVersion;
+                break;
+            case DeviceSortCriterion.VERSION * 2 | 0:
+                this.deviceSortCriterion = DeviceService.deviceSorterForwardVersion;
+                break;
+            case DeviceSortCriterion.STATUS * 2 | 1:
+                this.deviceSortCriterion = DeviceService.deviceSorterReverseStatus;
+                break;
+            case DeviceSortCriterion.STATUS * 2 | 0:
+                this.deviceSortCriterion = DeviceService.deviceSorterForwardStatus;
+                break;
+            case DeviceSortCriterion.ALPHABETICAL * 2 | 1:
+                this.deviceSortCriterion = DeviceService.deviceSorterReverseAlpha;
+                break;
+            case DeviceSortCriterion.ALPHABETICAL * 2 | 0:
+            default:
+                this.deviceSortCriterion = DeviceService.deviceSorterForwardAlpha;
+        }
+        // Force a refresh by updating the data source
+        this.deviceService.deviceList.set('wakeup', new Device());
+        this.cdr.detectChanges();
+        this.deviceService.deviceList.delete('wakeup');
+    }
+
+    compactChangesDialog() {
+        this.compactChangesMsg = 'Compact Network Changes?';
+        const retensionStart = Date.now() - this.retenionSecs * 1000;
+        this.compactChangesConfirmMsg = 'All changes before ' + new Date(retensionStart) + ' will be compacted. Cannot be undone.';
+    }
+
+    confirmedCompactChanges(chosen: boolean) {
+        this.compactChangesMsg = undefined;
+        this.compactChangesConfirmMsg = undefined;
+        if (chosen) {
+            this.admin.requestCompactChanges(this.retenionSecs, (e: grpcWeb.Error, r: CompactChangesResponse): void => {
+                if (e !== undefined) {
+                    console.error('Compact changes failed', e.code, e.message);
+                }
+                console.log('Changes compacted!');
+            });
+        }
     }
 }
