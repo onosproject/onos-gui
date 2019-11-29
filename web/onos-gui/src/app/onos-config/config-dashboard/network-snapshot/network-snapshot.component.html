@@ -16,6 +16,8 @@
 
 <td class="nw-ss-title">Snapshot</td>
 <td class="dev-ss-cell"
-    *ngFor="let device of deviceService.deviceList | keyvalue"
-    onos-device-snapshot [deviceSnapshot]="deviceService.deviceSnapshotMap.get(device.key)">
+    *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion"
+    onos-device-snapshot
+    [deviceSnapshot]="deviceService.deviceSnapshotMap.get(device.key)"
+    (selected)="itemSelected(device.key)">
 </td>

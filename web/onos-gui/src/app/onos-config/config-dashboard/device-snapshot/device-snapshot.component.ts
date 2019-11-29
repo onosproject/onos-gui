@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DeviceService} from '../../device.service';
 import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
@@ -25,6 +25,7 @@ import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types
 })
 export class DeviceSnapshotComponent {
     @Input() deviceSnapshot: Snapshot;
+    @Output() selected  = new EventEmitter<boolean>();
 
     constructor(
         public deviceService: DeviceService

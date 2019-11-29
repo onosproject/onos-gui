@@ -14,4 +14,6 @@
 ~ limitations under the License.
 -->
 
-<div class="dev-ss-div">{{deviceSnapshot?.getValuesList().length}}</div>
+<div class="dev-ss-div"
+     (click)="selected.emit(true)">
+    {{deviceSnapshot?.getValuesList().length}}</div>

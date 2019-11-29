@@ -13,14 +13,33 @@
 ~ See the License for the specific language governing permissions and
 ~ limitations under the License.
 -->
-
-<table id="dashboard-grid">
+<table id="dashboard-grid" align="left">
     <tbody>
+    <tr class="control">
+        <td>
+            <input type="button" value="Compact.." (click)="compactChangesDialog()">
+            <label><small>Retention </small></label>
+            <select [(ngModel)]="retenionSecs">
+                <option value="0">none</option>
+                <option value="3600">1 hr</option>
+                <option value="21600">6 hrs</option>
+                <option value="43200">12 hrs</option>
+                <option value="86400">24 hrs</option>
+                <option value="172800">2 days</option>
+                <option value="259200">3 days</option>
+                <option value="604800">1 week</option>
+            </select>
+        </td>
+    </tr>
     <tr class="nw-ch-row" [class.nw-ch-row__alternate]="i % 2"
         *ngFor="let nwchId of networkChanges | keyvalue:nwChangeIncreasingAge; let i = index"
-        onos-network-change [networkChange]="nwchId.value" (dcSelected)="deviceChangeSelected($event, nwchId.value)">
+        onos-network-change [networkChange]="nwchId.value"
+        [deviceSortCriterion]="deviceSortCriterion"
+        (dcSelected)="deviceChangeSelected($event, nwchId.value)">
     </tr>
-    <tr class="nw-ss-row" onos-network-snapshot></tr>
+    <tr class="nw-ss-row" onos-network-snapshot
+        [deviceSortCriterion]="deviceSortCriterion"
+        (dsSelected)="deviceSnapshotSelected($event)"></tr>
     </tbody>
     <tfoot>
     <tr class="dashboard-footer">
@@ -29,8 +48,30 @@
             [@deviceBorderFlash]="true"
             [ngClass]="deviceService.deviceStatusStyles(device.key)"
             [title]="deviceService.deviceStatusStyles(device.key)"
-            *ngFor="let device of deviceService.deviceList | keyvalue">
-            <a class='device-link' [ngClass]="deviceService.deviceStatusStyles(device.key)" [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
+            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
+            <a class='device-link'
+               [ngClass]="deviceService.deviceStatusStyles(device.key)"
+               [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+<!--        <td colspan="2" class="control">-->
+<!--            <label>Filter</label>-->
+<!--            <input [title]="'Filter the list of devices'" type="search">-->
+<!--        </td>-->
+        <td colspan="2" class="control">
+            <label><small>Sort </small></label>
+            <select [(ngModel)]="sortCriterion" (click)="updateSort()">
+                <!-- options must correspond with DeviceService.DeviceSortCriterion -->
+                <option [value]="0">A-Z</option>
+                <option [value]="1">Status</option>
+                <option [value]="2">Type</option>
+                <option [value]="3">Version</option>
+            </select>
+            <label><small>Reverse</small></label>
+            <input type="checkbox" [(ngModel)]="sortReverse"
+                   (change)="updateSort()">
         </td>
     </tr>
     </tfoot>
@@ -38,3 +79,7 @@
 
 <onos-device-change-details class="floatpanel" id="{{selId}}"
                             [deviceChange]="selectedChange"></onos-device-change-details>
+
+<onos-confirm title="{{ compactChangesMsg }}"
+              message="{{ compactChangesConfirmMsg }}"
+              (chosen)="confirmedCompactChanges($event)"></onos-confirm>
