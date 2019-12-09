@@ -23,12 +23,10 @@ import {OnosConfigGnmiService} from './proto/onos-config-gnmi.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OnosConfigRoutingModule} from './onos-config-routing.module';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
-import {Gui2TopoLibModule} from 'gui2-topo-lib';
 import { ModelsListComponent } from './models-list/models-list.component';
 import {ModelService} from './model.service';
 import { ModelDetailComponent } from './model-detail/model-detail.component';
 import { ChangeValuePipe } from './change-value.pipe';
-import {OnosUtilsModule} from '../utils/onos-utils.module';
 import { ConfigDashboardComponent } from './config-dashboard/config-dashboard.component';
 import { NetworkChangeComponent } from './config-dashboard/network-change/network-change.component';
 import { DeviceChangeComponent } from './config-dashboard/device-change/device-change.component';
@@ -72,8 +70,6 @@ import {DeviceService} from './device.service';
         ReactiveFormsModule,
         OnosConfigRoutingModule,
         Gui2FwLibModule,
-        Gui2TopoLibModule,
-        OnosUtilsModule
     ],
     providers: [
         {

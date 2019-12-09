@@ -27,9 +27,8 @@ import {
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
-import {ZoomableDirective} from 'gui2-topo-lib';
 import {ActivatedRoute} from '@angular/router';
-import {IconService, TopoZoomPrefs} from 'gui2-fw-lib';
+import {IconService, TopoZoomPrefs, ZoomableDirective} from 'gui2-fw-lib';
 import {DeviceService} from '../device.service';
 import {
     DeviceChange,
@@ -64,7 +63,7 @@ export const CONFIGNAME = 'configName';
 export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     @Input() configName: string;
 
-    @ViewChild(ZoomableDirective) zoomDirective: ZoomableDirective;
+    @ViewChild(ZoomableDirective, {static: false}) zoomDirective: ZoomableDirective;
 
     device: string;
     version: string;
