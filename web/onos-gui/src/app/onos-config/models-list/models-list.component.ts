@@ -18,13 +18,12 @@ import {Component, OnInit} from '@angular/core';
 import {ModelService} from '../model.service';
 import {
     FnService, IconService,
-    LogService, SortDir, TableAnnots,
+    LogService, NameInputResult, SortDir, TableAnnots,
     TableBaseImpl, TableFilter,
     WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
-import {NameInputResult} from '../../utils/name-input/name-input.component';
 
 @Component({
     selector: 'onos-models-list',
