@@ -22,8 +22,8 @@ export const environment = {
   production: false
 };
 
-export const grpc_web_config_proxy = 'http://localhost:8091';
-export const grpc_web_topo_proxy = 'http://localhost:8092';
+export const grpc_web_topo_proxy = 'http://localhost:8091';
+export const grpc_web_config_proxy = 'http://localhost:8092';
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

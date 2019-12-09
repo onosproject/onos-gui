@@ -43,11 +43,11 @@ spec:
             {{- end }}
           livenessProbe:
             tcpSocket:
-              port: admin
+              port: web
             initialDelaySeconds: 30
           readinessProbe:
             tcpSocket:
-              port: admin
+              port: web
             initialDelaySeconds: 30
         - name: onos-envoy
           image: "{{ .Values.Envoy.image.repository }}:{{ .Values.Envoy.image.tag }}"
@@ -66,6 +66,11 @@ spec:
             - name: {{ $key }}
               {{ toYaml $port | nindent 14 }}
             {{- end }}
+            {{- end }}
+            {{- range $key, $value := .Values.onosservices }}
+            - name: {{ $key }}-port
+              containerPort: {{ $value.proxy }}
+              protocol: TCP
             {{- end }}
 
           livenessProbe:
@@ -87,10 +92,6 @@ spec:
               readOnly: true
             {{- if .Values.Envoy.volumeMounts }}
             {{ toYaml .Values.Envoy.volumeMounts | nindent 12 }}
-            {{- end }}
-            {{- range $key, $value := .Values.Envoy.secretMounts }}
-            - name: {{ $key }}
-              mountPath: {{ $value.mountPath }}
             {{- end }}
           lifecycle:
             {{ toYaml .Values.Envoy.lifecyle | nindent 12 }}

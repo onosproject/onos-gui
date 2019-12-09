@@ -51,7 +51,19 @@ tolerations: []
 
 affinity: {}
 
+onosservices:
+  topo:
+    grpc: 5150
+    proxy: 8080
+  config:
+    grpc: 5150
+    proxy: 8081
+#  control:
+#    grpc: 5150
+#    proxy: 8082
+
 Envoy:
+  # Inspired by https://github.com/helm/charts/blob/master/stable/envoy/values.yaml
   image:
     repository: envoyproxy/envoy
     tag: v1.11.1
@@ -65,43 +77,9 @@ Envoy:
     - -c
     - /config/envoy.yaml
 
-  ## Args template allows you to use Chart template expressions to dynamically generate args
-  # argsTemplate: |-
-  #   - -c
-  #   - /docker-entrypoint.sh envoy --service-node ${POD_NAME} --service-cluster {{ template "envoy.fullname" . }} -l debug -c /config/envoy.yaml
-
-  ## Client service.
-  service:
-    enabled: true
-    ## Service name is user-configurable for maximum service discovery flexibility.
-    name: onos-envoy
-    type: ClusterIP
-    ## Ignored if the type is not LoadBalancer or if the IP is empty string
-    loadBalancerIP: ""
-    annotations: {}
-      ## AWS example for use with LoadBalancer service type.
-      # external-dns.alpha.kubernetes.io/hostname: envoy.cluster.local
-    # service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-    # service.beta.kubernetes.io/aws-load-balancer-internal: "true"
-    ports:
-      n0:
-        port: 8080
-        targetPort: n0
-        protocol: TCP
-      n1:
-        port: 8081
-        targetPort: n1
-        protocol: TCP
-
   ports:
     admin:
       containerPort: 9901
-      protocol: TCP
-    n0:
-      containerPort: 8080
-      protocol: TCP
-    n1:
-      containerPort: 8081
       protocol: TCP
 
   resources: {}
@@ -192,7 +170,7 @@ Envoy:
   #      - -c
   #      - "sleep 60"
 
-  files:
+  templates:
     envoy.yaml: |-
       ## refs:
       ## - https://www.envoyproxy.io/docs/envoy/latest/start/start#quick-start-to-run-simple-example
@@ -204,9 +182,10 @@ Envoy:
 
       static_resources:
         listeners:
-          - name: listener_topo
+        {{- range $key, $value := .Values.onosservices }}
+          - name: listener_{{$key}}
             address:
-              socket_address: { address: 0.0.0.0, port_value: 8080 }
+              socket_address: { address: 0.0.0.0, port_value: {{ $value.proxy }} }
             filter_chains:
               - filters:
                   - name: envoy.http_connection_manager
@@ -221,7 +200,7 @@ Envoy:
                             routes:
                               - match: { prefix: "/" }
                                 route:
-                                  cluster: onos_topo_service
+                                  cluster: onos_{{ $key }}_service
                                   max_grpc_timeout: 0s
                             cors:
                               allow_origin:
@@ -234,44 +213,16 @@ Envoy:
                         - name: envoy.grpc_web
                         - name: envoy.cors
                         - name: envoy.router
-          - name: listener_config
-            address:
-              socket_address: { address: 0.0.0.0, port_value: 8081 }
-            filter_chains:
-              - filters:
-                  - name: envoy.http_connection_manager
-                    config:
-                      codec_type: auto
-                      stat_prefix: ingress_http
-                      route_config:
-                        name: local_route
-                        virtual_hosts:
-                          - name: local_service
-                            domains: ["*"]
-                            routes:
-                              - match: { prefix: "/" }
-                                route:
-                                  cluster: onos_config_service
-                                  max_grpc_timeout: 0s
-                            cors:
-                              allow_origin:
-                                - "*"
-                              allow_methods: GET, PUT, DELETE, POST, OPTIONS
-                              allow_headers: keep-alive,user-agent,cache-control,content-type,content-transfer-encoding,custom-header-1,x-accept-content-transfer-encoding,x-accept-response-streaming,x-user-agent,x-grpc-web,grpc-timeout
-                              max_age: "1728000"
-                              expose_headers: custom-header-1,grpc-status,grpc-message
-                      http_filters:
-                        - name: envoy.grpc_web
-                        - name: envoy.cors
-                        - name: envoy.router
+        {{- end }}
         clusters:
-          - name: onos_topo_service
+        {{- range $key, $value := .Values.onosservices }}
+          - name: onos_{{ $key }}_service
             connect_timeout: 0.25s
             type: logical_dns
             http2_protocol_options: {}
             lb_policy: round_robin
             # win/mac hosts: Use address: host.docker.internal instead of address: localhost in the line below
-            hosts: [{ socket_address: { address: onos-topo, port_value: 5150 }}]
+            hosts: [{ socket_address: { address: onos-{{$key}}, port_value: {{ $value.grpc }} }}]
             tls_context:
               common_tls_context:
                 tls_certificates:
@@ -279,17 +230,4 @@ Envoy:
                   private_key: { "filename": "/etc/envoy-proxy/certs/tls.key" }
                 validation_context:
                   trusted_ca: { filename: "/etc/envoy-proxy/certs/tls.cacrt" }
-          - name: onos_config_service
-            connect_timeout: 0.25s
-            type: logical_dns
-            http2_protocol_options: {}
-            lb_policy: round_robin
-            # win/mac hosts: Use address: host.docker.internal instead of address: localhost in the line below
-            hosts: [{ socket_address: { address: onos-config, port_value: 5150 }}]
-            tls_context:
-              common_tls_context:
-                tls_certificates:
-                  certificate_chain: { "filename": "/etc/envoy-proxy/certs/tls.crt" }
-                  private_key: { "filename": "/etc/envoy-proxy/certs/tls.key" }
-                validation_context:
-                  trusted_ca: { filename: "/etc/envoy-proxy/certs/tls.cacrt" }
+        {{- end }}

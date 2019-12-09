@@ -15,9 +15,9 @@ spec:
   tls:
     - secretName: {{ template "onos-gui.fullname" . }}-secret
       hosts:
-        - gui.onosproject.org
+        - onos-gui.onosproject.org
   rules:
-    - host: gui.onosproject.org
+    - host: onos-gui.onosproject.org
       http:
         paths:
           - backend:
