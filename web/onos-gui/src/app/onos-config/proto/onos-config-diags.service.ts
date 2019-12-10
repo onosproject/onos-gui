@@ -25,10 +25,9 @@ import {
     OpStateRequest,
     OpStateResponse
 } from './github.com/onosproject/onos-config/api/diags/diags_pb';
-
-type NetworkChangesCallback = (r: ListNetworkChangeResponse) => void;
-type DeviceChangesCallback = (r: ListDeviceChangeResponse) => void;
-type OpStateCallback = (r: OpStateResponse) => void;
+import {Observable, Subscriber} from 'rxjs';
+import {Metadata} from 'grpc-web';
+import * as grpcWeb from 'grpc-web';
 
 @Injectable()
 export class OnosConfigDiagsService {
@@ -42,55 +41,71 @@ export class OnosConfigDiagsService {
         console.log('Connecting to ', onosConfigUrl);
     }
 
-    // requestChanges(changeIds: string[], callback: ChangesCallback) {
-    //     console.log('ListChangesRequest sent to', this.onosConfigUrl);
-    //     const changesRequest = new ChangesRequest();
-    //     let idx = 0;
-    //     for (const ch of changeIds) {
-    //         changesRequest.addChangeIds(ch, idx);
-    //         idx++;
-    //     }
-    //     const stream = this.diagsService.getChanges(changesRequest, {});
-    //     stream.on('data', callback);
-    // }
-
-    // requestConfigurations(configNames: string[], callback: ConfigsCallback) {
-    //     const configRequest = new ConfigRequest();
-    //     let idx = 0;
-    //     for (const cfg of configNames) {
-    //         configRequest.addDeviceIds(cfg, idx);
-    //         idx++;
-    //     }
-    //     const stream = this.diagsService.getConfigurations(configRequest, {});
-    //     console.log('ListConfigsRequest sent to', this.onosConfigUrl, 'for', configNames.join(','));
-    //     stream.on('data', callback);
-    // }
-
-    requestNetworkChanges(callback: NetworkChangesCallback) {
+    requestNetworkChanges(): Observable<ListNetworkChangeResponse> {
         const listNetworkChangeRequest = new ListNetworkChangeRequest();
         listNetworkChangeRequest.setSubscribe(true);
         const stream = this.diagsService.listNetworkChanges(listNetworkChangeRequest, {});
         console.log('ListNetworkChangeRequest sent to', this.onosConfigUrl);
-        stream.on('data', callback);
+
+        const networkChangesObs = new Observable<ListNetworkChangeResponse>((observer: Subscriber<ListNetworkChangeResponse>) => {
+            stream.on('data', (resp: ListNetworkChangeResponse) => {
+                observer.next(resp);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+            stream.on('status', (status: grpcWeb.Status) => {
+                console.log('ListNetworkChanges status', status.code, status.details, status.metadata);
+            });
+        });
+        return networkChangesObs;
     }
 
-    requestDeviceChanges(deviceId: string, version: string, callback: DeviceChangesCallback) {
+    requestDeviceChanges(deviceId: string, version: string): Observable<ListDeviceChangeResponse> {
         const listDeviceChangesRequest = new ListDeviceChangeRequest();
         listDeviceChangesRequest.setSubscribe(true);
         listDeviceChangesRequest.setDeviceId(deviceId);
         listDeviceChangesRequest.setDeviceVersion(version);
-        const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, {});
+        const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, <Metadata>{});
         console.log('ListDeviceChangeRequest for', deviceId, version, 'sent to', this.onosConfigUrl);
-        stream.on('data', callback);
+        const devicechangeObs = new Observable<ListDeviceChangeResponse>((observer: Subscriber<ListDeviceChangeResponse>) => {
+            stream.on('data', (resp: ListDeviceChangeResponse) => {
+                observer.next(resp);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+            stream.on('status', (status: grpcWeb.Status) => {
+                console.log('ListDeviceChange status', status.code, status.details, status.metadata);
+            });
+        });
+        return devicechangeObs;
     }
 
-    requestOpStateCache(deviceId: string, subscribe: boolean, callback: OpStateCallback ) {
+    requestOpStateCache(deviceId: string, subscribe: boolean): Observable<OpStateResponse> {
         const opStateRequest = new OpStateRequest();
         opStateRequest.setDeviceid(deviceId);
         opStateRequest.setSubscribe(subscribe);
-
         const stream = this.opStateService.getOpState(opStateRequest, {});
         console.log('GetOpStateRequest sent to', this.onosConfigUrl, 'for', deviceId);
-        stream.on('data', callback);
+
+        const opstateObs = new Observable<OpStateResponse>((observer: Subscriber<OpStateResponse>) => {
+            stream.on('data', (resp: OpStateResponse) => {
+                observer.next(resp);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+        });
+        return opstateObs;
     }
 }

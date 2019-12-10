@@ -22,18 +22,13 @@ import {
     CompactChangesRequest, CompactChangesResponse,
     ListModelsRequest, ListSnapshotsRequest,
     ModelInfo,
-    RegisterResponse, RollbackRequest,
+    RollbackRequest,
     RollbackResponse
 } from './github.com/onosproject/onos-config/api/admin/admin_pb';
 import * as grpcWeb from 'grpc-web';
 import {Snapshot} from './github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
-
-// type NetChangeCallback = (r: NetChange) => void;
-type ModelInfoCallback = (r: ModelInfo) => void;
-type RollbackCallback = (e: grpcWeb.Error, r: RollbackResponse) => void;
-type SnapshotCallback = (r: Snapshot) => void;
-type CompactChangeCallback = (e: grpcWeb.Error, r: CompactChangesResponse) => void;
+import {Observable, Subscriber} from 'rxjs';
 
 @Injectable()
 export class OnosConfigAdminService {
@@ -46,37 +41,98 @@ export class OnosConfigAdminService {
         console.log('Config Admin Service Connecting to ', onosConfigUrl);
     }
 
-    requestRollback(nwChangeName: string, callback: RollbackCallback, rollbackComment?: string) {
+    requestRollback(nwChangeName: string, rollbackComment?: string): Observable<RollbackResponse> {
         const rollbackReq = new RollbackRequest();
         rollbackReq.setName(nwChangeName);
         if (rollbackComment) {
+            rollbackReq.setComment(rollbackComment);
+        } else {
             rollbackReq.setComment('Rolled back from GUI');
         }
-
-        this.adminServiceClient.rollbackNetworkChange(rollbackReq, {}, callback);
+        const rollbackObs = new Observable<RollbackResponse>((observer: Subscriber<RollbackResponse>) => {
+            const call = this.adminServiceClient.rollbackNetworkChange(rollbackReq, {}, (err, resp) => {
+                if (err) {
+                    observer.error(err);
+                } else {
+                    observer.next(resp);
+                }
+                call.on('error', (error: grpcWeb.Error) => {
+                    observer.error(error);
+                });
+                call.on('end', () => {
+                    observer.complete();
+                });
+                call.on('status', (status: grpcWeb.Status) => {
+                    console.log('Rollback status', status.code, status.details, status.metadata);
+                });
+            });
+        });
         console.log('network change', nwChangeName, 'rolled back');
+        return rollbackObs;
     }
 
-    requestListRegisteredModels(callback: ModelInfoCallback) {
+    requestListRegisteredModels(): Observable<ModelInfo> {
         const modelRequest = new ListModelsRequest();
         modelRequest.setVerbose(true);
         const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
-        stream.on('data', callback);
+
+        const modelsObs = new Observable<ModelInfo>((observer: Subscriber<ModelInfo>) => {
+            stream.on('data', (modelInfo: ModelInfo) => {
+                observer.next(modelInfo);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+        });
+        return modelsObs;
     }
 
-    requestDeviceSnapshots(callback: SnapshotCallback) {
+    requestDeviceSnapshots(): Observable<Snapshot> {
         const stream = this.adminServiceClient.listSnapshots(new ListSnapshotsRequest(), {});
         console.log('ListSnapshots sent to', this.onosConfigUrl);
-        stream.on('data', callback);
+
+        const snapshotObs = new Observable<Snapshot>((observer: Subscriber<Snapshot>) => {
+            stream.on('data', (snapshot: Snapshot) => {
+                observer.next(snapshot);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+        });
+        return snapshotObs;
     }
 
-    requestCompactChanges(retensionSecs: number, callback: CompactChangeCallback) {
+    requestCompactChanges(retensionSecs: number): Observable<CompactChangesResponse> {
         const retentionDuration = new google_protobuf_duration_pb.Duration();
         retentionDuration.setSeconds(retensionSecs);
         const compactRequest = new CompactChangesRequest();
         compactRequest.setRetentionPeriod(retentionDuration);
-        console.log('Compacting changes', retensionSecs);
-        this.adminServiceClient.compactChanges(compactRequest, {}, callback);
+        console.log('Compacting changes older than', retensionSecs, 'second(s)');
+        const compactchangesObs = new Observable<CompactChangesResponse>((observer: Subscriber<CompactChangesResponse>) => {
+            const call = this.adminServiceClient.compactChanges(compactRequest, {}, (err, resp) => {
+                if (err) {
+                    observer.error(err);
+                } else {
+                    observer.next(resp);
+                }
+            });
+            call.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            call.on('end', () => {
+                observer.complete();
+            });
+            call.on('status', (status: grpcWeb.Status) => {
+                console.log('Compact changes status', status.code, status.details, status.metadata);
+            });
+        });
+        return compactchangesObs;
     }
 }

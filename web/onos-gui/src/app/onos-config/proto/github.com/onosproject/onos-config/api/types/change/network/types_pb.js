@@ -107,6 +107,7 @@ proto.onos.config.change.network.NetworkChange.toObject = function(includeInstan
     index: jspb.Message.getFieldWithDefault(msg, 2, 0),
     revision: jspb.Message.getFieldWithDefault(msg, 3, 0),
     status: (f = msg.getStatus()) && github_com_onosproject_onos$config_api_types_change_types_pb.Status.toObject(includeInstance, f),
+    attempt: jspb.Message.getFieldWithDefault(msg, 10, 0),
     created: (f = msg.getCreated()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     updated: (f = msg.getUpdated()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     changesList: jspb.Message.toObjectList(msg.getChangesList(),
@@ -166,6 +167,10 @@ proto.onos.config.change.network.NetworkChange.deserializeBinaryFromReader = fun
       var value = new github_com_onosproject_onos$config_api_types_change_types_pb.Status;
       reader.readMessage(value,github_com_onosproject_onos$config_api_types_change_types_pb.Status.deserializeBinaryFromReader);
       msg.setStatus(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setAttempt(value);
       break;
     case 5:
       var value = new google_protobuf_timestamp_pb.Timestamp;
@@ -247,6 +252,13 @@ proto.onos.config.change.network.NetworkChange.serializeBinaryToWriter = functio
       4,
       f,
       github_com_onosproject_onos$config_api_types_change_types_pb.Status.serializeBinaryToWriter
+    );
+  }
+  f = message.getAttempt();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
+      f
     );
   }
   f = message.getCreated();
@@ -366,6 +378,21 @@ proto.onos.config.change.network.NetworkChange.prototype.clearStatus = function(
  */
 proto.onos.config.change.network.NetworkChange.prototype.hasStatus = function() {
   return jspb.Message.getField(this, 4) != null;
+};
+
+
+/**
+ * optional uint32 attempt = 10;
+ * @return {number}
+ */
+proto.onos.config.change.network.NetworkChange.prototype.getAttempt = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/** @param {number} value */
+proto.onos.config.change.network.NetworkChange.prototype.setAttempt = function(value) {
+  jspb.Message.setProto3IntField(this, 10, value);
 };
 
 

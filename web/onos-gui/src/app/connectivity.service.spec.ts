@@ -14,26 +14,15 @@
  * limitations under the License.
  */
 
-import {Component} from '@angular/core';
-import {FnService, IconService, KeysService, LogService} from 'gui2-fw-lib';
+import {TestBed} from '@angular/core/testing';
+
 import {ConnectivityService} from './connectivity.service';
 
-@Component({
-    selector: 'onos-root',
-    templateUrl: './onos.component.html',
-    styleUrls: ['./onos.component.css', './onos-theme.css']
-})
-export class OnosComponent {
-    title = 'onos-gui';
+describe('ConnectivityService', () => {
+    beforeEach(() => TestBed.configureTestingModule({}));
 
-    constructor(
-        protected fs: FnService,
-        protected ks: KeysService,
-        protected log: LogService,
-        protected is: IconService,
-        public connectivity: ConnectivityService
-    ) {
-        this.is.loadIconDef('bird');
-        console.log('Constructed OnosComponent');
-    }
-}
+    it('should be created', () => {
+        const service: ConnectivityService = TestBed.get(ConnectivityService);
+        expect(service).toBeTruthy();
+    });
+});

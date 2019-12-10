@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ModelService} from '../model.service';
 import {
     FnService, IconService,
@@ -24,6 +24,8 @@ import {
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ConnectivityService} from '../../connectivity.service';
+import * as grpcWeb from 'grpc-web';
 
 @Component({
     selector: 'onos-models-list',
@@ -35,7 +37,7 @@ import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/a
         '../../fw/widget/table.theme.css'
     ]
 })
-export class ModelsListComponent extends TableBaseImpl implements OnInit {
+export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDestroy {
     selectedChange: ModelInfo; // The complete row - not just the selId
     alertMsg: string;
     newConfigTitle: string = '';
@@ -48,6 +50,7 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
         protected wss: WebSocketService,
         protected is: IconService,
         public modelService: ModelService,
+        private connectivityService: ConnectivityService
         // public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'models', 'id');
@@ -76,6 +79,15 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
     ngOnInit() {
         this.selId = undefined;
         this.tableData = this.modelService.modelInfoList;
+        this.modelService.loadModelList((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Model list gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable']);
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.modelService.close();
     }
 
     newConfig(modelInfo: ModelInfo) {
@@ -94,4 +106,16 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit {
         this.newConfigTitle = '';
     }
 
+    toggleRefreshNew() {
+        this.autoRefresh = !this.autoRefresh;
+        if (this.autoRefresh) {
+            this.modelService.loadModelList((err: grpcWeb.Error) => {
+                this.connectivityService.showVeil([
+                    'Model list gRPC error', String(err.code), err.message,
+                    'Please ensure onos-config is reachable']);
+            });
+        } else {
+            this.modelService.close();
+        }
+    }
 }

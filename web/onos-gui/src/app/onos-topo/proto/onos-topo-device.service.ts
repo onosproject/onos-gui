@@ -19,9 +19,7 @@ import {DeviceServiceClient} from './github.com/onosproject/onos-topo/api/device
 import {
     ListRequest, ListResponse
 } from './github.com/onosproject/onos-topo/api/device/device_pb';
-import * as grpcWeb from 'grpc-web';
-
-type ListDeviceCallback = (r: ListResponse) => void;
+import {Observable, Subscriber} from 'rxjs';
 
 @Injectable()
 export class OnosTopoDeviceService {
@@ -34,11 +32,16 @@ export class OnosTopoDeviceService {
         console.log('Device Service Connecting to ', onosTopoUrl);
     }
 
-    requestListDevices(subscribe: boolean, callback: ListDeviceCallback) {
+    requestListDevices(subscribe: boolean): Observable<ListResponse> {
         const listRequest = new ListRequest();
         listRequest.setSubscribe(subscribe);
         const stream = this.deviceServiceClient.list(listRequest, {});
         console.log('ListDevices sent to', this.onosTopoUrl);
-        stream.on('data', callback);
+        const topoObs = new Observable<ListResponse>((observer: Subscriber<ListResponse>) => {
+            stream.on('data', (listResponse: ListResponse) => {
+                observer.next(listResponse);
+            });
+        });
+        return topoObs;
     }
 }

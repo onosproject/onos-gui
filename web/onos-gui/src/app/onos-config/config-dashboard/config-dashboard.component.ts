@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component, Host, OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {KeyValue} from '@angular/common';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
 import {ListNetworkChangeResponse} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 import {OnosTopoDeviceService} from '../../onos-topo/proto/onos-topo-device.service';
-import {DeviceService, DeviceSortCriterion} from '../device.service';
+import {
+    DeviceService,
+    DeviceSortCriterion,
+    ErrorCallback
+} from '../device.service';
 import {
     Change,
     ChangeValue,
     DeviceChange,
     PathValue
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-import {IconService} from 'gui2-fw-lib';
+import {IconService, VeilComponent} from 'gui2-fw-lib';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     Phase,
@@ -37,7 +46,8 @@ import {
 import {Device} from '../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import * as grpcWeb from 'grpc-web';
-import {CompactChangesResponse} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ConnectivityService} from '../../connectivity.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'onos-config-dashboard',
@@ -52,7 +62,7 @@ import {CompactChangesResponse} from '../proto/github.com/onosproject/onos-confi
         ])
     ]
 })
-export class ConfigDashboardComponent implements OnInit {
+export class ConfigDashboardComponent implements OnInit, OnDestroy {
     selectedChange: DeviceChange; // The complete row - not just the selId
     selId: string;
     networkChanges: Map<string, NetworkChange>;
@@ -62,6 +72,7 @@ export class ConfigDashboardComponent implements OnInit {
     retenionSecs: number = 86400;
     compactChangesMsg: string = undefined;
     compactChangesConfirmMsg: string = undefined;
+    nwchangesSub: Subscription;
 
     constructor(
         private diags: OnosConfigDiagsService,
@@ -69,7 +80,8 @@ export class ConfigDashboardComponent implements OnInit {
         private admin: OnosConfigAdminService,
         public deviceService: DeviceService,
         private is: IconService,
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private connectivityService: ConnectivityService
     ) {
         this.networkChanges = new Map<string, NetworkChange>();
         console.log('ConfigDashboardComponent constructed');
@@ -77,20 +89,43 @@ export class ConfigDashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.diags.requestNetworkChanges((nwch: ListNetworkChangeResponse) => {
-            const change = nwch.getChange();
-            if (this.networkChanges.has(change.getId()) && change.getDeleted()) {
-                this.networkChanges.delete(change.getId());
-                console.log(change.getId(), 'deleted');
-            } else if (!change.getDeleted()) {
-                this.networkChanges.set(change.getId(), change);
-                change.getChangesList().forEach((ch: Change) => {
-                    this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion());
-                });
-                console.log(change.getId(), 'updated');
-            }
+        this.watchNetworkChanges((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Network Changes gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable']);
+        });
+
+        this.deviceService.watchSnapshots((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Device Snapshot gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable']);
         });
         console.log('ConfigDashboardComponent initialized');
+    }
+
+    ngOnDestroy(): void {
+        this.deviceService.stopWatchingSnapshots();
+        this.deviceService.closeAllDeviceChangeSubs();
+    }
+
+    watchNetworkChanges(errCb: ErrorCallback) {
+        this.nwchangesSub = this.diags.requestNetworkChanges().subscribe(
+            (nwch: ListNetworkChangeResponse) => {
+                const change = nwch.getChange();
+                if (this.networkChanges.has(change.getId()) && change.getDeleted()) {
+                    this.networkChanges.delete(change.getId());
+                    console.log(change.getId(), 'deleted');
+                } else if (!change.getDeleted()) {
+                    this.networkChanges.set(change.getId(), change);
+                    change.getChangesList().forEach((ch: Change) => {
+                        this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion(), errCb);
+                    });
+                    console.log('Network Change', change.getId(), 'updated');
+                }
+            },
+            (err: grpcWeb.Error) => {
+                errCb(err);
+            });
     }
 
     /*
@@ -188,11 +223,11 @@ export class ConfigDashboardComponent implements OnInit {
         this.compactChangesMsg = undefined;
         this.compactChangesConfirmMsg = undefined;
         if (chosen) {
-            this.admin.requestCompactChanges(this.retenionSecs, (e: grpcWeb.Error, r: CompactChangesResponse): void => {
-                if (e !== undefined) {
-                    console.error('Compact changes failed', e.code, e.message);
-                }
+            const myObs = this.admin.requestCompactChanges(this.retenionSecs);
+            myObs.subscribe((resp) => {
                 console.log('Changes compacted!');
+            }, error => {
+                console.log('Changes compacting error', error);
             });
         }
     }

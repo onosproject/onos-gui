@@ -19,27 +19,42 @@ import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {
     ModelInfo,
 } from './proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {Observable, Subscription} from 'rxjs';
+import {ErrorCallback} from './device.service';
 
 @Injectable()
 export class ModelService {
     modelInfoList: ModelInfo[] = [];
+    modelInfoSub: Subscription;
 
     constructor(private configAdminService: OnosConfigAdminService) {
-        this.loadModelList();
     }
 
-    loadModelList(): void {
+    loadModelList(errCb: ErrorCallback): void {
+        this.close();
         this.modelInfoList.length = 0;
-        this.configAdminService.requestListRegisteredModels((modelInfo: ModelInfo) => {
-            modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
-            modelInfo['name'] = modelInfo.getName(); // To make it selectable
-            modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
-            modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
-            modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display
-            modelInfo['numyangs'] = modelInfo.getModelDataList().length; // For display
-            this.modelInfoList.push(modelInfo);
-            console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion(), modelInfo.getModule(),
-                modelInfo['numropaths'], modelInfo['numrwpaths'], modelInfo['numyangs']);
-        });
+        this.modelInfoSub = this.configAdminService.requestListRegisteredModels().subscribe(
+            (modelInfo: ModelInfo) => {
+                    modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
+                    modelInfo['name'] = modelInfo.getName(); // To make it selectable
+                    modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
+                    modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
+                    modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display
+                    modelInfo['numyangs'] = modelInfo.getModelDataList().length; // For display
+                    this.modelInfoList.push(modelInfo);
+                    console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion(), modelInfo.getModule(),
+                        modelInfo['numropaths'], modelInfo['numrwpaths'], modelInfo['numyangs']);
+                },
+            (error) => {
+                console.log('Error on subscribe to registered models', error);
+                errCb(error);
+            });
+    }
+
+    close() {
+        if (this.modelInfoSub) {
+            this.modelInfoSub.unsubscribe();
+        }
+        console.log('Closed model service');
     }
 }

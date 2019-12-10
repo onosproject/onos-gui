@@ -186,6 +186,7 @@ proto.onos.config.change.device.DeviceChange.toObject = function(includeInstance
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     index: jspb.Message.getFieldWithDefault(msg, 2, 0),
     revision: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    attempt: jspb.Message.getFieldWithDefault(msg, 9, 0),
     networkChange: (f = msg.getNetworkChange()) && proto.onos.config.change.device.NetworkChangeRef.toObject(includeInstance, f),
     change: (f = msg.getChange()) && proto.onos.config.change.device.Change.toObject(includeInstance, f),
     status: (f = msg.getStatus()) && github_com_onosproject_onos$config_api_types_change_types_pb.Status.toObject(includeInstance, f),
@@ -238,6 +239,10 @@ proto.onos.config.change.device.DeviceChange.deserializeBinaryFromReader = funct
     case 3:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setRevision(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setAttempt(value);
       break;
     case 4:
       var value = new proto.onos.config.change.device.NetworkChangeRef;
@@ -311,6 +316,13 @@ proto.onos.config.change.device.DeviceChange.serializeBinaryToWriter = function(
   if (f !== 0) {
     writer.writeUint64(
       3,
+      f
+    );
+  }
+  f = message.getAttempt();
+  if (f !== 0) {
+    writer.writeUint32(
+      9,
       f
     );
   }
@@ -399,6 +411,21 @@ proto.onos.config.change.device.DeviceChange.prototype.getRevision = function() 
 /** @param {number} value */
 proto.onos.config.change.device.DeviceChange.prototype.setRevision = function(value) {
   jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional uint32 attempt = 9;
+ * @return {number}
+ */
+proto.onos.config.change.device.DeviceChange.prototype.getAttempt = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/** @param {number} value */
+proto.onos.config.change.device.DeviceChange.prototype.setAttempt = function(value) {
+  jspb.Message.setProto3IntField(this, 9, value);
 };
 
 
