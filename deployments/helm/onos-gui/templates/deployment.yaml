@@ -2,16 +2,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "onos-gui.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "onos-gui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
+      name: {{ template "onos-gui.fullname" . }}
+      app: onos
+      type: gui
+      resource: {{ template "onos-gui.fullname" . }}
       {{- include "onos-gui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
+        name: {{ template "onos-gui.fullname" . }}
+        app: onos
+        type: gui
+        resource: {{ template "onos-gui.fullname" . }}
         {{- include "onos-gui.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.imagePullSecrets }}
@@ -27,11 +36,6 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           stdin : true
-          volumeMounts:
-            - name: config
-              mountPath: /home/onos/.atomix/config.yaml
-              subPath:   atomix.yaml
-              readOnly: false
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           ports:

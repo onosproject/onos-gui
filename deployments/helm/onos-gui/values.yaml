@@ -14,10 +14,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-store:
-  raftgroup: onos-gui
-  controller: atomix-controller.kube-system.svc.cluster.local:5679
-
 ## Client service.
 service:
   enabled: true

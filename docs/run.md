@@ -1,8 +1,6 @@
 # Running onos-gui
 
-onos-gui can only be run in a Kubernetes cluster. The easiest set up is to
-deploy it using the ONOS Integration Test tool. See
-[onos-gui-access-inside-kubernetes](../../onos-test/docs/run.md#onos-gui-access-inside-kubernetes).
+onos-gui can only be run in a Kubernetes cluster. Use the [Helm chart](./deployment.md) to load it.
 
 ## Browser access
 When deployed, the onos-gui is available to a browser at 
@@ -10,8 +8,18 @@ When deployed, the onos-gui is available to a browser at
 is involved).
 
 > Using the hostname **onos-gui** is mandatory - an IP address will not suffice.
-> This means that you may have to add an entry to your /etc/hosts file if the
-> name is not configured on a DNS server
+> This means that you may have to add an entry to your `/etc/hosts` file if the
+> name is not configured on a DNS server. e.g. onos-gui can be added to 127.0.0.1
+
+A simple way to connect to a local pod (e.g. running on KinD) is to use port-forwarding
+in a separate terminal:
+```bash
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8181:80
+```
+which should make the GUI available at [http://onos-gui:8181](http://onos-gui:8181)
+
+> The port-forward command can be given with `--address=<interfaceip>` matching
+> the entry in `/etc/hosts` if the GUI needs to be accessible outside the machine.
 
 The browser connects to onos-gui over HTTP 1.1 to retrieve the Angular compiled
 static files.
@@ -33,11 +41,17 @@ To run the GUI locally on a development machine
 
 - install the prerequisites as described in [prerequisites.md](prerequisites.md)
 - run ONIT in Kubernetes as above
-- perform additional configuration steps on Kubernetes (such as port forwarding
-or firewall rules as described in [onos-test/run](../../onos-test/docs/run.md))
-- run the Angular CLI in 'serve' mode from the web/onos-gui folder
-- browse to [http://localhost:4200](http://localhost:4200)
+- do not do the port forwarding above - instead forward the ports of the envoy proxy
+in 2 separate terminals
+```bash
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8080:8080
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8181:8181
+```
+
+- run the Angular CLI in `ng serve --configuration=kind` mode from the web/onos-gui folder
+- browse to [http://localhost:4200](http://localhost:4200) - this does not require `onos-gui` hostname.
 - ensure that the models page shows the 4 loaded model plugins (this
 ensures that the gRPC requests are proxied correctly through the envoy proxy)
 
+![onos-gui-models-view](images/onos-gui-models-view.png)
 
