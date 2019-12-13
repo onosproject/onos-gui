@@ -13,11 +13,12 @@ the [Kubernetes] setup steps outlined in [deploy with Helm](https://docs.onospro
 The following steps assume you have the setup outlined in that page, including the `micro-onos` namespace configured.
 
 ## Installing the Chart
-To install the chart in the `micro-onos` namespace, simply run `helm install -n micro-onos onos-gui deployments/helm/onos-gui` from
-the root directory of this project:
-
+To install the chart in the `micro-onos` namespace run from the root directory of the `onos-helm-charts` repo the command:
 ```bash
-helm install -n micro-onos onos-gui deployments/helm/onos-gui
+helm install -n micro-onos onos-gui onos-gui
+```
+The output should be:
+```bash
 NAME: onos-gui
 LAST DEPLOYED: Sun Dec  8 19:40:39 2019
 NAMESPACE: default
@@ -44,7 +45,7 @@ onos-gui	1       	Sun Dec 8 18:56:39 2019	DEPLOYED	onos-gui-0.1.0	        0.1.0 
 
 Issue the `helm install` command substituting `micro-onos` with your namespace.
 ```bash
-helm install -n <your_name_space> onos-gui deployments/helm/onos-gui
+helm install -n <your_name_space> onos-gui onos-gui
 ```
 
 ### Troubleshoot
@@ -56,12 +57,12 @@ you modified values Helm offers two flags to help you debug your chart:
 * `--debug` prints out more information about your chart
 
 ```bash
-helm install -n micro-onos onos-gui --debug --dry-run ./deployments/helm/onos-gui/
+helm install -n micro-onos onos-gui --debug --dry-run onos-gui
 ```
 
 Also to verify how template values are expanded, run:
 ```bash
-helm install template ./deployments/helm/onos-gui/
+helm install template onos-gui
 ```
 
 ## Uninstalling the chart.
