@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OnosTopoDeviceService} from '../proto/onos-topo-device.service';
 import {
     Device,
@@ -27,6 +27,7 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'onos-devices-list',
@@ -37,8 +38,9 @@ import {ActivatedRoute, Router} from '@angular/router';
         '../../fw/widget/table.theme.css'
     ]
 })
-export class DevicesListComponent extends TableBaseImpl implements OnInit {
+export class DevicesListComponent extends TableBaseImpl implements OnInit, OnDestroy {
     selectedChange: Device;
+    topologySub: Subscription;
 
     constructor(
         protected fs: FnService,
@@ -75,11 +77,15 @@ export class DevicesListComponent extends TableBaseImpl implements OnInit {
 
     ngOnInit() {
         this.tableData.length = 0;
-        this.onosTopoDeviceService.requestListDevices(true, (deviceListItem: ListResponse) => {
+        this.topologySub = this.onosTopoDeviceService.requestListDevices(true).subscribe((deviceListItem: ListResponse) => {
             console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
             deviceListItem['id'] = deviceListItem.getDevice().getId();
             deviceListItem['version'] = deviceListItem.getDevice().getVersion();
             this.tableData.push(deviceListItem);
         });
+    }
+
+    ngOnDestroy(): void {
+        this.topologySub.unsubscribe();
     }
 }

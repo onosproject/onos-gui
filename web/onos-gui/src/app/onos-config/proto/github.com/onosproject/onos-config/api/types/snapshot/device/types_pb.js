@@ -121,9 +121,10 @@ proto.onos.config.snapshot.device.DeviceSnapshot.toObject = function(includeInst
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     deviceId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     deviceVersion: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    revision: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    deviceType: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    revision: jspb.Message.getFieldWithDefault(msg, 5, 0),
     networkSnapshot: (f = msg.getNetworkSnapshot()) && proto.onos.config.snapshot.device.NetworkSnapshotRef.toObject(includeInstance, f),
-    maxNetworkChangeIndex: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    maxNetworkChangeIndex: jspb.Message.getFieldWithDefault(msg, 7, 0),
     status: (f = msg.getStatus()) && github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status.toObject(includeInstance, f),
     created: (f = msg.getCreated()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     updated: (f = msg.getUpdated()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
@@ -176,29 +177,33 @@ proto.onos.config.snapshot.device.DeviceSnapshot.deserializeBinaryFromReader = f
       msg.setDeviceVersion(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDeviceType(value);
+      break;
+    case 5:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setRevision(value);
       break;
-    case 5:
+    case 6:
       var value = new proto.onos.config.snapshot.device.NetworkSnapshotRef;
       reader.readMessage(value,proto.onos.config.snapshot.device.NetworkSnapshotRef.deserializeBinaryFromReader);
       msg.setNetworkSnapshot(value);
       break;
-    case 6:
+    case 7:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setMaxNetworkChangeIndex(value);
       break;
-    case 7:
+    case 8:
       var value = new github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status;
       reader.readMessage(value,github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status.deserializeBinaryFromReader);
       msg.setStatus(value);
       break;
-    case 8:
+    case 9:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setCreated(value);
       break;
-    case 9:
+    case 10:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setUpdated(value);
@@ -253,17 +258,24 @@ proto.onos.config.snapshot.device.DeviceSnapshot.serializeBinaryToWriter = funct
       f
     );
   }
+  f = message.getDeviceType();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
   f = message.getRevision();
   if (f !== 0) {
     writer.writeUint64(
-      4,
+      5,
       f
     );
   }
   f = message.getNetworkSnapshot();
   if (f != null) {
     writer.writeMessage(
-      5,
+      6,
       f,
       proto.onos.config.snapshot.device.NetworkSnapshotRef.serializeBinaryToWriter
     );
@@ -271,14 +283,14 @@ proto.onos.config.snapshot.device.DeviceSnapshot.serializeBinaryToWriter = funct
   f = message.getMaxNetworkChangeIndex();
   if (f !== 0) {
     writer.writeUint64(
-      6,
+      7,
       f
     );
   }
   f = message.getStatus();
   if (f != null) {
     writer.writeMessage(
-      7,
+      8,
       f,
       github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status.serializeBinaryToWriter
     );
@@ -286,7 +298,7 @@ proto.onos.config.snapshot.device.DeviceSnapshot.serializeBinaryToWriter = funct
   f = message.getCreated();
   if (f != null) {
     writer.writeMessage(
-      8,
+      9,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -294,7 +306,7 @@ proto.onos.config.snapshot.device.DeviceSnapshot.serializeBinaryToWriter = funct
   f = message.getUpdated();
   if (f != null) {
     writer.writeMessage(
-      9,
+      10,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -348,33 +360,48 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setDeviceVersion = fu
 
 
 /**
- * optional uint64 revision = 4;
+ * optional string device_type = 4;
+ * @return {string}
+ */
+proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getDeviceType = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/** @param {string} value */
+proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setDeviceType = function(value) {
+  jspb.Message.setProto3StringField(this, 4, value);
+};
+
+
+/**
+ * optional uint64 revision = 5;
  * @return {number}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getRevision = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /** @param {number} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setRevision = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
 /**
- * optional NetworkSnapshotRef network_snapshot = 5;
+ * optional NetworkSnapshotRef network_snapshot = 6;
  * @return {?proto.onos.config.snapshot.device.NetworkSnapshotRef}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getNetworkSnapshot = function() {
   return /** @type{?proto.onos.config.snapshot.device.NetworkSnapshotRef} */ (
-    jspb.Message.getWrapperField(this, proto.onos.config.snapshot.device.NetworkSnapshotRef, 5));
+    jspb.Message.getWrapperField(this, proto.onos.config.snapshot.device.NetworkSnapshotRef, 6));
 };
 
 
 /** @param {?proto.onos.config.snapshot.device.NetworkSnapshotRef|undefined} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setNetworkSnapshot = function(value) {
-  jspb.Message.setWrapperField(this, 5, value);
+  jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -391,38 +418,38 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearNetworkSnapshot 
  * @return {boolean}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.hasNetworkSnapshot = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.getField(this, 6) != null;
 };
 
 
 /**
- * optional uint64 max_network_change_index = 6;
+ * optional uint64 max_network_change_index = 7;
  * @return {number}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getMaxNetworkChangeIndex = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /** @param {number} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setMaxNetworkChangeIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  jspb.Message.setProto3IntField(this, 7, value);
 };
 
 
 /**
- * optional onos.config.snapshot.Status status = 7;
+ * optional onos.config.snapshot.Status status = 8;
  * @return {?proto.onos.config.snapshot.Status}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getStatus = function() {
   return /** @type{?proto.onos.config.snapshot.Status} */ (
-    jspb.Message.getWrapperField(this, github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status, 7));
+    jspb.Message.getWrapperField(this, github_com_onosproject_onos$config_api_types_snapshot_types_pb.Status, 8));
 };
 
 
 /** @param {?proto.onos.config.snapshot.Status|undefined} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setStatus = function(value) {
-  jspb.Message.setWrapperField(this, 7, value);
+  jspb.Message.setWrapperField(this, 8, value);
 };
 
 
@@ -439,23 +466,23 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearStatus = functio
  * @return {boolean}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.hasStatus = function() {
-  return jspb.Message.getField(this, 7) != null;
+  return jspb.Message.getField(this, 8) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp created = 8;
+ * optional google.protobuf.Timestamp created = 9;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getCreated = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 8));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 9));
 };
 
 
 /** @param {?proto.google.protobuf.Timestamp|undefined} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setCreated = function(value) {
-  jspb.Message.setWrapperField(this, 8, value);
+  jspb.Message.setWrapperField(this, 9, value);
 };
 
 
@@ -472,23 +499,23 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearCreated = functi
  * @return {boolean}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.hasCreated = function() {
-  return jspb.Message.getField(this, 8) != null;
+  return jspb.Message.getField(this, 9) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp updated = 9;
+ * optional google.protobuf.Timestamp updated = 10;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getUpdated = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 9));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 10));
 };
 
 
 /** @param {?proto.google.protobuf.Timestamp|undefined} value */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setUpdated = function(value) {
-  jspb.Message.setWrapperField(this, 9, value);
+  jspb.Message.setWrapperField(this, 10, value);
 };
 
 
@@ -505,7 +532,7 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearUpdated = functi
  * @return {boolean}
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.hasUpdated = function() {
-  return jspb.Message.getField(this, 9) != null;
+  return jspb.Message.getField(this, 10) != null;
 };
 
 
@@ -669,7 +696,7 @@ proto.onos.config.snapshot.device.NetworkSnapshotRef.prototype.setIndex = functi
  * @private {!Array<number>}
  * @const
  */
-proto.onos.config.snapshot.device.Snapshot.repeatedFields_ = [6];
+proto.onos.config.snapshot.device.Snapshot.repeatedFields_ = [7];
 
 
 
@@ -705,8 +732,9 @@ proto.onos.config.snapshot.device.Snapshot.toObject = function(includeInstance, 
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     deviceId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     deviceVersion: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    snapshotId: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    changeIndex: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    deviceType: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    snapshotId: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    changeIndex: jspb.Message.getFieldWithDefault(msg, 6, 0),
     valuesList: jspb.Message.toObjectList(msg.getValuesList(),
     github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue.toObject, includeInstance)
   };
@@ -759,13 +787,17 @@ proto.onos.config.snapshot.device.Snapshot.deserializeBinaryFromReader = functio
       break;
     case 4:
       var value = /** @type {string} */ (reader.readString());
-      msg.setSnapshotId(value);
+      msg.setDeviceType(value);
       break;
     case 5:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setSnapshotId(value);
+      break;
+    case 6:
       var value = /** @type {number} */ (reader.readUint64());
       msg.setChangeIndex(value);
       break;
-    case 6:
+    case 7:
       var value = new github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue;
       reader.readMessage(value,github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue.deserializeBinaryFromReader);
       msg.addValues(value);
@@ -820,24 +852,31 @@ proto.onos.config.snapshot.device.Snapshot.serializeBinaryToWriter = function(me
       f
     );
   }
-  f = message.getSnapshotId();
+  f = message.getDeviceType();
   if (f.length > 0) {
     writer.writeString(
       4,
       f
     );
   }
+  f = message.getSnapshotId();
+  if (f.length > 0) {
+    writer.writeString(
+      5,
+      f
+    );
+  }
   f = message.getChangeIndex();
   if (f !== 0) {
     writer.writeUint64(
-      5,
+      6,
       f
     );
   }
   f = message.getValuesList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      6,
+      7,
       f,
       github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue.serializeBinaryToWriter
     );
@@ -891,48 +930,63 @@ proto.onos.config.snapshot.device.Snapshot.prototype.setDeviceVersion = function
 
 
 /**
- * optional string snapshot_id = 4;
+ * optional string device_type = 4;
  * @return {string}
  */
-proto.onos.config.snapshot.device.Snapshot.prototype.getSnapshotId = function() {
+proto.onos.config.snapshot.device.Snapshot.prototype.getDeviceType = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
 };
 
 
 /** @param {string} value */
-proto.onos.config.snapshot.device.Snapshot.prototype.setSnapshotId = function(value) {
+proto.onos.config.snapshot.device.Snapshot.prototype.setDeviceType = function(value) {
   jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
 /**
- * optional uint64 change_index = 5;
+ * optional string snapshot_id = 5;
+ * @return {string}
+ */
+proto.onos.config.snapshot.device.Snapshot.prototype.getSnapshotId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
+};
+
+
+/** @param {string} value */
+proto.onos.config.snapshot.device.Snapshot.prototype.setSnapshotId = function(value) {
+  jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional uint64 change_index = 6;
  * @return {number}
  */
 proto.onos.config.snapshot.device.Snapshot.prototype.getChangeIndex = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
 /** @param {number} value */
 proto.onos.config.snapshot.device.Snapshot.prototype.setChangeIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  jspb.Message.setProto3IntField(this, 6, value);
 };
 
 
 /**
- * repeated onos.config.change.device.PathValue values = 6;
+ * repeated onos.config.change.device.PathValue values = 7;
  * @return {!Array<!proto.onos.config.change.device.PathValue>}
  */
 proto.onos.config.snapshot.device.Snapshot.prototype.getValuesList = function() {
   return /** @type{!Array<!proto.onos.config.change.device.PathValue>} */ (
-    jspb.Message.getRepeatedWrapperField(this, github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue, 6));
+    jspb.Message.getRepeatedWrapperField(this, github_com_onosproject_onos$config_api_types_change_device_types_pb.PathValue, 7));
 };
 
 
 /** @param {!Array<!proto.onos.config.change.device.PathValue>} value */
 proto.onos.config.snapshot.device.Snapshot.prototype.setValuesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 6, value);
+  jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -942,7 +996,7 @@ proto.onos.config.snapshot.device.Snapshot.prototype.setValuesList = function(va
  * @return {!proto.onos.config.change.device.PathValue}
  */
 proto.onos.config.snapshot.device.Snapshot.prototype.addValues = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 6, opt_value, proto.onos.config.change.device.PathValue, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 7, opt_value, proto.onos.config.change.device.PathValue, opt_index);
 };
 
 

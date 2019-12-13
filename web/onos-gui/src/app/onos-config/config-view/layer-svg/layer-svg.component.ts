@@ -28,12 +28,12 @@ import {ModelTempIndexService} from '../model-temp-index.service';
 import {ConfigLink, HierarchyLayoutService} from '../hierarchy-layout.service';
 import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 import {
-    DeviceChange, PathValue,
     TypedValue
 } from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {DeviceService} from '../../device.service';
 import {PathUtil} from '../../path.util';
 import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
+import {Subscription} from 'rxjs';
 
 const OFFSETY = 500;
 
@@ -86,6 +86,7 @@ export class LayerSvgComponent implements OnChanges {
     nodelist: Map<string, ChangeValueObj>;
     offset: number = Math.random() * 200;
     offsetY = OFFSETY;
+    opStateSub: Subscription;
 
     constructor(
         private diags: OnosConfigDiagsService,
@@ -139,26 +140,31 @@ export class LayerSvgComponent implements OnChanges {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
                 console.log('Getting opstate changes from service:', layerIdNew);
-                this.diags.requestOpStateCache(layerIdNew, true, (opState: OpStateResponse) => {
-                    this.description = 'OpState';
-                    const p = opState.getPathvalue().getPath();
-                    this.hierarchy.ensureNode(p, layerIdNew);
-                    const [parentPath, relPath] = PathUtil.strPathToParentChild(p);
-                    const value = new TypedValue(); // Convert from PathValue to TypedValue
-                    value.setBytes(opState.getPathvalue().getValue().getBytes_asU8());
-                    value.setType(opState.getPathvalue().getValue().getType());
-                    value.setTypeOptsList(opState.getPathvalue().getValue().getTypeOptsList());
-                    const cv = <ChangeValueObj>{
-                        relPath: relPath,
-                        parentPath: parentPath,
-                        value: value,
-                    };
-                    this.nodelist.set(p, cv);
+                this.opStateSub = this.diags.requestOpStateCache(layerIdNew, true).subscribe(
+                    (opState: OpStateResponse) => {
+                            this.description = 'OpState';
+                            const p = opState.getPathvalue().getPath();
+                            this.hierarchy.ensureNode(p, layerIdNew);
+                            const [parentPath, relPath] = PathUtil.strPathToParentChild(p);
+                            const value = new TypedValue(); // Convert from PathValue to TypedValue
+                            value.setBytes(opState.getPathvalue().getValue().getBytes_asU8());
+                            value.setType(opState.getPathvalue().getValue().getType());
+                            value.setTypeOptsList(opState.getPathvalue().getValue().getTypeOptsList());
+                            const cv = <ChangeValueObj>{
+                                relPath: relPath,
+                                parentPath: parentPath,
+                                value: value,
+                            };
+                            this.nodelist.set(p, cv);
 
-                    this.checkParentExists(p, parentPath);
-                    console.log('Change response for ', layerIdNew, 'received', p);
-                    this.hierarchy.recalculate(); // Has to happen after each response
-                });
+                            this.checkParentExists(p, parentPath);
+                            console.log('Change response for ', layerIdNew, 'received', p);
+                            this.hierarchy.recalculate(); // Has to happen after each response
+                        },
+                    (err) => {
+                            console.log('Error retrieving OpState through gRPC', err);
+                        }
+                    );
                 console.log('Finished with subscribe to OpStateCache on', layerIdNew);
             } else {
                 const change = this.deviceService.deviceChangeMap.get(this.layerId);

@@ -19,20 +19,19 @@ import {
     ChannelState,
     ConnectivityState,
     Device,
-    ListResponse,
     Protocol,
     ProtocolState,
     ServiceState
 } from '../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
-import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
 import {DeviceChange} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {ListDeviceChangeResponse} from './proto/github.com/onosproject/onos-config/api/diags/diags_pb';
-import {from, Observable} from 'rxjs';
+import {from, Observable, Subscriber, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {OnosConfigAdminService} from './proto/onos-config-admin.service';
 import {Snapshot} from './proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 import {KeyValue} from '@angular/common';
+import * as grpcWeb from 'grpc-web';
 
 export enum DeviceSortCriterion {
     ALPHABETICAL,
@@ -40,6 +39,9 @@ export enum DeviceSortCriterion {
     TYPE,
     VERSION
 }
+
+export type ErrorCallback = (e: grpcWeb.Error) => void;
+
 /**
  * DeviceService allows consistent tracking of all known devices from
  * both Network Changes and from Topo
@@ -50,39 +52,23 @@ export enum DeviceSortCriterion {
 export class DeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     deviceChangeMap: Map<string, DeviceChange>; // Expect <dev-id:dev-ver> as key
-    deviceChangeSubs: Map<string, string>; // Expect <nw-ch:dev-id:dev-ver> as key
+    deviceChangeSubs: Map<string, Subscription>; // Expect <nw-ch:dev-id:dev-ver> as key
     deviceSnapshotMap: Map<string, Snapshot>; // Expect <dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
     admin: OnosConfigAdminService;
     deviceChangesObs: Observable<[string, DeviceChange]>;
+    snapshotSub: Subscription;
 
-    constructor(topoDeviceService: OnosTopoDeviceService,
-                diags: OnosConfigDiagsService,
+    constructor(diags: OnosConfigDiagsService,
                 admin: OnosConfigAdminService) {
         this.deviceList = new Map<string, Device>();
-        this.deviceChangeSubs = new Map<string, string>();
+        this.deviceChangeSubs = new Map<string, Subscription>();
         this.deviceChangeMap = new Map<string, DeviceChange>();
         this.deviceChangesObs = from(this.deviceChangeMap).pipe(takeWhile<[string, DeviceChange]>((dcId, dc) => true));
         this.deviceSnapshotMap = new Map<string, Snapshot>();
 
         this.diags = diags;
         this.admin = admin;
-        topoDeviceService.requestListDevices(true, (deviceListItem: ListResponse) => {
-            console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
-            deviceListItem['id'] = deviceListItem.getDevice().getId();
-            deviceListItem['version'] = deviceListItem.getDevice().getVersion();
-            const nameVersion = deviceListItem.getDevice().getId() + ':' + deviceListItem.getDevice().getVersion();
-            this.deviceList.set(nameVersion, deviceListItem.getDevice());
-            this.addDeviceChangeListener(deviceListItem.getDevice().getId(), deviceListItem.getDevice().getVersion());
-        });
-
-        this.admin.requestDeviceSnapshots((s: Snapshot) => {
-            console.log('List Snapshots response for', s.getId(), s.getSnapshotId(), s.getValuesList().length);
-            if (!this.deviceList.has(s.getId())) {
-                this.addDevice(s.getDeviceId(), '?', s.getDeviceVersion());
-            }
-            this.deviceSnapshotMap.set(s.getId(), s);
-        });
     }
 
     static deviceSorterForwardAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
@@ -173,17 +159,46 @@ export class DeviceService {
         return stateAsNumber;
     }
 
-    addDeviceChangeListener(deviceId: string, version: string) {
-        const nameVersion = deviceId + ':' + version;
-        this.deviceChangeSubs.set(nameVersion, nameVersion);
-        this.diags.requestDeviceChanges(deviceId, version, (devch: ListDeviceChangeResponse) => {
-            const ch = devch.getChange();
-            console.debug('List devices change for', ch.getId(), 'received');
-            this.deviceChangeMap.set(ch.getId(), ch);
-        });
+    watchSnapshots(errorCb: ErrorCallback) {
+        this.snapshotSub = this.admin.requestDeviceSnapshots().subscribe(
+    (s: Snapshot) => {
+            console.log('List Snapshots response for', s.getId(), s.getSnapshotId(), s.getValuesList().length);
+            if (!this.deviceList.has(s.getId())) {
+                this.addDevice(s.getDeviceId(), s.getDeviceType(), s.getDeviceVersion(), errorCb);
+            }
+            this.deviceSnapshotMap.set(s.getId(), s);
+            },
+    (error) => {
+            console.log('Error on snapshot subscription', error);
+            errorCb(error);
+            }
+    );
     }
 
-    addDevice(deviceId: string, deviceType: string, version: string): void {
+    stopWatchingSnapshots() {
+        if (this.snapshotSub) {
+            this.snapshotSub.unsubscribe();
+        }
+        console.log('Stopped watching snapshots');
+    }
+
+    addDeviceChangeListener(deviceId: string, version: string, errCb: ErrorCallback) {
+        const nameVersion = deviceId + ':' + version;
+        const deviceSub = this.diags.requestDeviceChanges(deviceId, version).subscribe(
+            (devch: ListDeviceChangeResponse) => {
+                    const ch = devch.getChange();
+                    console.log('Device change', ch.getId());
+                    this.deviceChangeMap.set(ch.getId(), ch);
+                },
+            (err) => {
+                errCb(err);
+                },
+        () => console.log('Completed device change request', deviceId, version)
+        );
+        this.deviceChangeSubs.set(nameVersion, deviceSub);
+    }
+
+    addDevice(deviceId: string, deviceType: string, version: string, errCb: ErrorCallback): void {
         const nameVersion = deviceId + ':' + version;
         if (!this.deviceList.has(nameVersion)) {
             const newDevice = new Device();
@@ -193,9 +208,17 @@ export class DeviceService {
             this.deviceList.set(nameVersion, newDevice);
         }
         if (!this.deviceChangeSubs.has(deviceId + ':' + version)) {
-            this.deviceChangeSubs.set(nameVersion, deviceId + ':' + version);
-            this.addDeviceChangeListener(deviceId, version);
+            this.addDeviceChangeListener(deviceId, version, errCb);
         }
+    }
+
+    closeAllDeviceChangeSubs() {
+        this.deviceChangeSubs.forEach((sub: Subscription) => {
+            sub.unsubscribe();
+        });
+        console.log('Stopped watching', this.deviceChangeSubs.size, 'Device Change subs');
+        this.deviceChangeSubs.clear();
+        this.deviceList.clear();
     }
 
     deviceStatusStyles(deviceKey: string): string[] {
