@@ -14,6 +14,41 @@
 ~ limitations under the License.
 -->
 <table id="dashboard-grid" align="left">
+    <col class="nw-ch-col">
+    <tfoot><!-- should always be before tbody - will be displayed after it -->
+    <tr class="dashboard-footer">
+        <th class="nw-ch-hdr"></th>
+        <th class="device-hdr"
+            [@deviceBorderFlash]="true"
+            [ngClass]="deviceService.deviceStatusStyles(device.key)"
+            [title]="deviceService.deviceStatusStyles(device.key)"
+            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
+            <a class='device-link'
+               [ngClass]="deviceService.deviceStatusStyles(device.key)"
+               [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
+        </th>
+    </tr>
+    <tr>
+        <th></th>
+        <!--        <td colspan="2" class="control">-->
+        <!--            <label>Filter</label>-->
+        <!--            <input [title]="'Filter the list of devices'" type="search">-->
+        <!--        </td>-->
+        <th colspan="2" class="control">
+            <label><small>Sort </small></label>
+            <select [(ngModel)]="sortCriterion" (click)="updateSort()">
+                <!-- options must correspond with DeviceService.DeviceSortCriterion -->
+                <option [value]="0">A-Z</option>
+                <option [value]="1">Status</option>
+                <option [value]="2">Type</option>
+                <option [value]="3">Version</option>
+            </select>
+            <label><small>Reverse</small></label>
+            <input type="checkbox" [(ngModel)]="sortReverse"
+                   (change)="updateSort()">
+        </th>
+    </tr>
+    </tfoot>
     <tbody>
     <tr class="control">
         <td>
@@ -41,40 +76,6 @@
         [deviceSortCriterion]="deviceSortCriterion"
         (dsSelected)="deviceSnapshotSelected($event)"></tr>
     </tbody>
-    <tfoot>
-    <tr class="dashboard-footer">
-        <td class="nw-ch-hdr"></td>
-        <td class="device-hdr"
-            [@deviceBorderFlash]="true"
-            [ngClass]="deviceService.deviceStatusStyles(device.key)"
-            [title]="deviceService.deviceStatusStyles(device.key)"
-            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
-            <a class='device-link'
-               [ngClass]="deviceService.deviceStatusStyles(device.key)"
-               [routerLink]="['/config','configview', device.key ]">{{device.key}}</a>
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-<!--        <td colspan="2" class="control">-->
-<!--            <label>Filter</label>-->
-<!--            <input [title]="'Filter the list of devices'" type="search">-->
-<!--        </td>-->
-        <td colspan="2" class="control">
-            <label><small>Sort </small></label>
-            <select [(ngModel)]="sortCriterion" (click)="updateSort()">
-                <!-- options must correspond with DeviceService.DeviceSortCriterion -->
-                <option [value]="0">A-Z</option>
-                <option [value]="1">Status</option>
-                <option [value]="2">Type</option>
-                <option [value]="3">Version</option>
-            </select>
-            <label><small>Reverse</small></label>
-            <input type="checkbox" [(ngModel)]="sortReverse"
-                   (change)="updateSort()">
-        </td>
-    </tr>
-    </tfoot>
 </table>
 
 <onos-device-change-details class="floatpanel" id="{{selId}}"

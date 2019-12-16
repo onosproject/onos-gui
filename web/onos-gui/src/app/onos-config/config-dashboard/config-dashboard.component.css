@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 #dashboard-grid {
-    margin: auto;
+    width:100%;
+    height: 90%;
+    display: block;
+    overflow: auto;
+}
 
+#dashboard-grid col {
+    background: white;
+}
+
+#dashboard-grid {
+    margin: auto;
 }
 
 .dashboard-footer {
@@ -28,6 +38,10 @@
 
 .nw-ch-row {
     background-image: linear-gradient(white, #e8e7e1);
+}
+
+.nw-ch-row:hover {
+    background: #e8e7e1;
 }
 
 .nw-ch-row__alternate {
@@ -54,11 +68,11 @@
 }
 
 /* Can apply to both the cell and the hyperlink overriding device-hdr and device-link */
-td.gnmi_connected {
+th.gnmi_connected {
     background-image: linear-gradient(#7fabdb, #007dc4);
 }
 
-td.gnmi_disconnected {
+th.gnmi_disconnected {
     background-color: #C72930;
 }
 

@@ -29,7 +29,7 @@ export class OnosTopoDeviceService {
     constructor(@Inject('onosTopoUrl') private onosTopoUrl: string) {
         this.deviceServiceClient = new DeviceServiceClient(onosTopoUrl);
 
-        console.log('Device Service Connecting to ', onosTopoUrl);
+        console.log('Topo Device Url', onosTopoUrl);
     }
 
     requestListDevices(subscribe: boolean): Observable<ListResponse> {

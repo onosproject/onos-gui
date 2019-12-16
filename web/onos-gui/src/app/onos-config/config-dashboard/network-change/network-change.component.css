@@ -21,9 +21,16 @@
     font-weight: bold;
 }
 
-.nw-ch-title{
+.nw-ch-title {
     text-align: right;
     padding-right: 4px;
     font-weight: bold;
     cursor: pointer;
 }
+
+/*.nw-ch-title {*/
+/*    position: absolute;*/
+/*    left: 0px;*/
+/*    z-index: 2;*/
+/*    width: 140px;*/
+/*}*/

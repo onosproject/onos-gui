@@ -42,7 +42,7 @@ export class OnosConfigGnmiService {
 
     constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.gnmiService = new gNMIClient(onosConfigUrl);
-        console.log('gNMI Client Connecting to ', onosConfigUrl);
+        console.log('gNMI Url', onosConfigUrl);
     }
 
     requestCapabilities(cb: CapabilityCallback): void {
