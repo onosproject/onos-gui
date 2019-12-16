@@ -38,7 +38,7 @@ export class OnosConfigDiagsService {
         this.diagsService = new ChangeServiceClient(onosConfigUrl);
         this.opStateService = new OpStateDiagsClient(onosConfigUrl);
 
-        console.log('Connecting to ', onosConfigUrl);
+        console.log('Config Diags Url ', onosConfigUrl);
     }
 
     requestNetworkChanges(): Observable<ListNetworkChangeResponse> {

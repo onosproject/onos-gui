@@ -17,8 +17,7 @@
 import {
     ChangeDetectorRef,
     Component, Host, OnDestroy,
-    OnInit,
-    ViewChild
+    OnInit
 } from '@angular/core';
 import {KeyValue} from '@angular/common';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
@@ -89,6 +88,12 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.deviceService.watchTopoDevices((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Topo Devices gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable']);
+        });
+
         this.watchNetworkChanges((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
                 'Network Changes gRPC error', String(err.code), err.message,
@@ -104,8 +109,11 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        this.deviceService.stopWatchingTopoDevices();
         this.deviceService.stopWatchingSnapshots();
         this.deviceService.closeAllDeviceChangeSubs();
+        this.nwchangesSub.unsubscribe();
+        console.log('Stopped watching NetworkChanges');
     }
 
     watchNetworkChanges(errCb: ErrorCallback) {
@@ -118,7 +126,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
                 } else if (!change.getDeleted()) {
                     this.networkChanges.set(change.getId(), change);
                     change.getChangesList().forEach((ch: Change) => {
-                        this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion(), errCb);
+                        this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion(), true, errCb);
                     });
                     console.log('Network Change', change.getId(), 'updated');
                 }

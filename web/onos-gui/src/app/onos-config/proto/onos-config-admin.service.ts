@@ -38,7 +38,7 @@ export class OnosConfigAdminService {
     constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
         this.adminServiceClient = new ConfigAdminServiceClient(onosConfigUrl);
 
-        console.log('Config Admin Service Connecting to ', onosConfigUrl);
+        console.log('Config Admin Url ', onosConfigUrl);
     }
 
     requestRollback(nwChangeName: string, rollbackComment?: string): Observable<RollbackResponse> {
