@@ -43,6 +43,7 @@ import {ContainerSvgComponent} from './config-view/container-svg/container-svg.c
 import {LinkFilterPipe} from './config-view/link-filter.pipe';
 import {StringValueComponent} from './config-view/string-value/string-value.component';
 import {DeviceService} from './device.service';
+import {TopoDeviceService} from '../onos-topo/topodevice.service';
 
 @NgModule({
     declarations: [
@@ -95,6 +96,10 @@ import {DeviceService} from './device.service';
         {
             provide: DeviceService,
             useClass: DeviceService
+        },
+        {
+            provide: TopoDeviceService,
+            useClass: TopoDeviceService
         }
     ],
     exports: [

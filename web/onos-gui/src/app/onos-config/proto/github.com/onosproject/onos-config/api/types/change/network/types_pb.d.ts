@@ -22,9 +22,6 @@ export class NetworkChange extends jspb.Message {
   hasStatus(): boolean;
   clearStatus(): void;
 
-  getAttempt(): number;
-  setAttempt(value: number): void;
-
   getCreated(): google_protobuf_timestamp_pb.Timestamp | undefined;
   setCreated(value?: google_protobuf_timestamp_pb.Timestamp): void;
   hasCreated(): boolean;
@@ -62,7 +59,6 @@ export namespace NetworkChange {
     index: number,
     revision: number,
     status?: github_com_onosproject_onos$config_api_types_change_types_pb.Status.AsObject,
-    attempt: number,
     created?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     updated?: google_protobuf_timestamp_pb.Timestamp.AsObject,
     changesList: Array<github_com_onosproject_onos$config_api_types_change_device_types_pb.Change.AsObject>,

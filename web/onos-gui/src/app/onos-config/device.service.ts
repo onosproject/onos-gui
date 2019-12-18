@@ -57,14 +57,11 @@ export class DeviceService {
     deviceSnapshotMap: Map<string, Snapshot>; // Expect <dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
     admin: OnosConfigAdminService;
-    topoDeviceService: OnosTopoDeviceService;
     deviceChangesObs: Observable<[string, DeviceChange]>;
     snapshotSub: Subscription;
-    topoDevicesSub: Subscription;
 
     constructor(diags: OnosConfigDiagsService,
-                admin: OnosConfigAdminService,
-                topoDeviceService: OnosTopoDeviceService) {
+                admin: OnosConfigAdminService) {
         this.deviceList = new Map<string, Device>();
         this.deviceChangeSubs = new Map<string, Subscription>();
         this.deviceChangeMap = new Map<string, DeviceChange>();
@@ -73,7 +70,6 @@ export class DeviceService {
 
         this.diags = diags;
         this.admin = admin;
-        this.topoDeviceService = topoDeviceService;
     }
 
     static deviceSorterForwardAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
@@ -185,51 +181,6 @@ export class DeviceService {
             this.snapshotSub.unsubscribe();
         }
         console.log('Stopped watching snapshots');
-    }
-
-    watchTopoDevices(errorCb: ErrorCallback) {
-        this.topoDevicesSub = this.topoDeviceService.requestListDevices(true).subscribe(
-            (resp: ListResponse) => {
-                const nameVersion = resp.getDevice().getId() + ':' + resp.getDevice().getVersion();
-                console.log('List Topo Device response', resp.getType(), nameVersion);
-                if (!this.deviceList.has(nameVersion) &&
-                    (resp.getType() === ListResponse.Type.ADDED || resp.getType() === ListResponse.Type.NONE)) {
-                    this.addTopoDevice(resp.getDevice());
-                } else if (this.deviceList.has(nameVersion) && resp.getType() === ListResponse.Type.REMOVED) {
-                    this.removeDevice(nameVersion, resp.getDevice().getVersion());
-                } else if (resp.getType() === ListResponse.Type.UPDATED) {
-                    const updated = resp.getDevice();
-                    const protosHandled: Protocol[] = [];
-                    this.deviceList.get(nameVersion).getProtocolsList().forEach((protocol) => {
-                        protosHandled.push(protocol.getProtocol());
-                        const newProtoState =
-                            updated.getProtocolsList().find((p) => p.getProtocol() === protocol.getProtocol());
-                        if (protocol.getChannelstate() !== newProtoState.getChannelstate() ||
-                            protocol.getConnectivitystate() !== newProtoState.getConnectivitystate() ||
-                            protocol.getServicestate() !== newProtoState.getServicestate()) {
-                                this.deviceList.set(nameVersion, resp.getDevice());
-                        }
-                    });
-                    // In case there are some in the new set that are not in the old - just push them
-                    updated.getProtocolsList().filter((p) => !protosHandled.includes(p.getProtocol())).forEach((p) => {
-                        this.deviceList.set(nameVersion, resp.getDevice());
-                    });
-                } else {
-                    console.log('Unhandled Topo update', resp.getType(), resp.getDevice().getId(), resp.getDevice().getVersion());
-                }
-            },
-            (error) => {
-                console.log('Error on topo subscription', error);
-                errorCb(error);
-            }
-        );
-    }
-
-    stopWatchingTopoDevices() {
-        if (this.topoDevicesSub) {
-            this.topoDevicesSub.unsubscribe();
-        }
-        console.log('Stopped watching topo devices');
     }
 
     addDeviceChangeListener(deviceId: string, version: string, errCb: ErrorCallback) {

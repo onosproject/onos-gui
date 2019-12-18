@@ -28,7 +28,7 @@
                 <onos-icon classes="{{ 'details-icon'}}" iconId="'device'"
                            [iconSize]="40"></onos-icon>
             </div>
-            <h2 class="editable clickable">{{detailsData?.id}}</h2>
+            <h2 class="editable clickable">{{detailsData?.getId()}}</h2>
             <div class="top-content">
                 <div class="top-tables">
                     <div class="left">
@@ -37,28 +37,28 @@
                             <tr>
                                 <td class="label" width="110">Version :</td>
                                 <td class="value"
-                                    width="80">{{detailsData?.getDevice().getVersion()}}</td>
+                                    width="80">{{detailsData?.getVersion()}}</td>
                             </tr>
                             <tr>
                                 <td class="label" width="110">Address</td>
                                 <td class="value"
-                                    width="80">{{detailsData?.getDevice().getAddress()}}</td>
+                                    width="80">{{detailsData?.getAddress()}}</td>
                             </tr>
                             <tr>
                                 <td class="label" width="110">Revision</td>
                                 <td class="value"
-                                    width="80">{{detailsData?.getDevice().getRevision()}}</td>
+                                    width="80">{{detailsData?.getRevision()}}</td>
                             </tr>
                             <tr>
                                 <td class="label" width="110">Timeout</td>
                                 <td class="value"
-                                    width="80">{{detailsData?.getDevice().getTimeout()}}</td>
+                                    width="80">{{detailsData?.getTimeout()}}</td>
                             </tr>
                             <tr>
                                 <td class="label" width="110">Configuration</td>
                                 <td class="value"
                                     width="80"><a
-                                    [routerLink]="['/config','configview', detailsData?.id + '-' + detailsData?.getDevice().getVersion() ]">{{ detailsData?.id + '-' + detailsData?.getDevice().getVersion() }}</a></td>
+                                    [routerLink]="['/config','configview', detailsData?.id + '-' + detailsData?.getVersion() ]">{{ detailsData?.id + '-' + detailsData?.getVersion() }}</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -74,12 +74,12 @@
                 <tr>
                     <td class="label" width="110">User :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getCredentials().getUser()}}</td>
+                        width="80">{{detailsData?.getCredentials().getUser()}}</td>
                 </tr>
                 <tr>
                     <td class="label" width="110">Password :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getCredentials().getPassword()}}</td>
+                        width="80">{{detailsData?.getCredentials().getPassword()}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -89,27 +89,27 @@
                 <tr>
                     <td class="label" width="110">Cert Authority :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getTls().getCacert()}}</td>
+                        width="80">{{detailsData?.getTls().getCacert()}}</td>
                 </tr>
                 <tr>
                     <td class="label" width="110">Client Cert :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getTls().getCert()}}</td>
+                        width="80">{{detailsData?.getTls().getCert()}}</td>
                 </tr>
                 <tr>
                     <td class="label" width="110">Client Key:</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getTls().getKey()}}</td>
+                        width="80">{{detailsData?.getTls().getKey()}}</td>
                 </tr>
                 <tr>
                     <td class="label" width="110">Plain connection :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getTls().getPlain()}}</td>
+                        width="80">{{detailsData?.getTls().getPlain()}}</td>
                 </tr>
                 <tr>
                     <td class="label" width="110">Insecure connection :</td>
                     <td class="value"
-                        width="80">{{detailsData?.getDevice().getTls().getInsecure()}}</td>
+                        width="80">{{detailsData?.getTls().getInsecure()}}</td>
                 </tr>
 
                 </tbody>

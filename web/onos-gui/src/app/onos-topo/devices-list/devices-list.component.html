@@ -15,21 +15,20 @@
 -->
 
 <div id="ov-devices">
-    <onos-loading [theme]="'light'" [running]="loadingIconShown"></onos-loading>
     <div class="tabular-header">
-        <h2>Devices ({{ tableData.length }} total)</h2>
+        <h2>Devices ({{ topoDeviceService.deviceList.size }} total)</h2>
         <div class="ctrl-btns">
             <div class="separator"></div>
         </div>
         <div class="search">
-            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"
-                   type="search" #search placeholder="Search"/>
-            <select [(ngModel)]="tableDataFilter.queryBy">
-                <option value="" disabled>Search By</option>
-                <!--                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in  -->
-                <option value="id">Id</option>
-                <option value="version">Version</option>
-            </select>
+<!--            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"-->
+<!--                   type="search" #search placeholder="Search"/>-->
+<!--            <select [(ngModel)]="tableDataFilter.queryBy">-->
+<!--                <option value="" disabled>Search By</option>-->
+<!--                &lt;!&ndash;                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in  &ndash;&gt;-->
+<!--                <option value="id">Id</option>-->
+<!--                <option value="version">Version</option>-->
+<!--            </select>-->
         </div>
     </div>
 
@@ -66,19 +65,18 @@
         </div>
         <div class="table-body">
             <table>
-                <tr class="table-body" *ngIf="tableData.length === 0"
+                <tr class="table-body" *ngIf="topoDeviceService.deviceList.size === 0"
                     class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
-                <tr *ngFor="let device of tableData | filter : tableDataFilter"
-                    (click)="selectCallback($event, device); selectedChange = device"
-                    [ngClass]="{selected: device.id === selId, 'data-change': isChanged(device.id)}">
-                    <td>{{ device['id'] }}</td>
-                    <td>{{ device['version'] }}</td>
-                    <td>{{ device.getDevice().getAddress() }}</td>
-                    <td>{{ device.getDevice().getRevision() }}</td>
-                    <td>{{ device.getDevice().getTarget() }}</td>
-                    <td>{{ device.getDevice().getTimeout() }}</td>
+                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue"
+                    (click)="selectCallback($event, device.key, device.value)">
+                    <td>{{ device.value.getId() }}</td>
+                    <td>{{ device.value.getVersion() }}</td>
+                    <td>{{ device.value.getAddress() }}</td>
+                    <td>{{ device.value.getRevision() }}</td>
+                    <td>{{ device.value.getTarget() }}</td>
+                    <td>{{ device.value.getTimeout() }}</td>
                 </tr>
             </table>
         </div>

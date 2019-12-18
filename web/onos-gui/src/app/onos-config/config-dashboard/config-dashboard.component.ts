@@ -23,7 +23,6 @@ import {KeyValue} from '@angular/common';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
 import {ListNetworkChangeResponse} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
-import {OnosTopoDeviceService} from '../../onos-topo/proto/onos-topo-device.service';
 import {
     DeviceService,
     DeviceSortCriterion,
@@ -42,11 +41,15 @@ import {
     State,
     Status
 } from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
-import {Device} from '../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
+import {
+    Device,
+    ListResponse
+} from '../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
-import {Subscription} from 'rxjs';
+import {of, Subscription} from 'rxjs';
+import {TopoDeviceService} from '../../onos-topo/topodevice.service';
 
 @Component({
     selector: 'onos-config-dashboard',
@@ -75,12 +78,12 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private diags: OnosConfigDiagsService,
-        private topoDeviceService: OnosTopoDeviceService,
+        private topoDeviceService: TopoDeviceService,
         private admin: OnosConfigAdminService,
         public deviceService: DeviceService,
         private is: IconService,
         private cdr: ChangeDetectorRef,
-        private connectivityService: ConnectivityService
+        private connectivityService: ConnectivityService,
     ) {
         this.networkChanges = new Map<string, NetworkChange>();
         console.log('ConfigDashboardComponent constructed');
@@ -88,11 +91,16 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.deviceService.watchTopoDevices((err: grpcWeb.Error) => {
+        this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
                 'Topo Devices gRPC error', String(err.code), err.message,
                 'Please ensure onos-config is reachable']);
-        });
+            },
+            (type, device) => {
+                if (type === ListResponse.Type.ADDED || type === ListResponse.Type.NONE) {
+                    this.deviceService.addTopoDevice(device);
+                }
+            });
 
         this.watchNetworkChanges((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
@@ -109,7 +117,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.deviceService.stopWatchingTopoDevices();
+        this.topoDeviceService.stopWatchingTopoDevices();
         this.deviceService.stopWatchingSnapshots();
         this.deviceService.closeAllDeviceChangeSubs();
         this.nwchangesSub.unsubscribe();
