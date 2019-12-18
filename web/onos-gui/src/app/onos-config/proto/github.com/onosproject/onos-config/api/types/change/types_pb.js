@@ -72,7 +72,8 @@ proto.onos.config.change.Status.toObject = function(includeInstance, msg) {
     phase: jspb.Message.getFieldWithDefault(msg, 1, 0),
     state: jspb.Message.getFieldWithDefault(msg, 2, 0),
     reason: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    message: jspb.Message.getFieldWithDefault(msg, 4, "")
+    message: jspb.Message.getFieldWithDefault(msg, 4, ""),
+    incarnation: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -124,6 +125,10 @@ proto.onos.config.change.Status.deserializeBinaryFromReader = function(msg, read
     case 4:
       var value = /** @type {string} */ (reader.readString());
       msg.setMessage(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setIncarnation(value);
       break;
     default:
       reader.skipField();
@@ -179,6 +184,13 @@ proto.onos.config.change.Status.serializeBinaryToWriter = function(message, writ
   if (f.length > 0) {
     writer.writeString(
       4,
+      f
+    );
+  }
+  f = message.getIncarnation();
+  if (f !== 0) {
+    writer.writeUint64(
+      5,
       f
     );
   }
@@ -246,6 +258,21 @@ proto.onos.config.change.Status.prototype.setMessage = function(value) {
 
 
 /**
+ * optional uint64 incarnation = 5;
+ * @return {number}
+ */
+proto.onos.config.change.Status.prototype.getIncarnation = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/** @param {number} value */
+proto.onos.config.change.Status.prototype.setIncarnation = function(value) {
+  jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
  * @enum {number}
  */
 proto.onos.config.change.Phase = {
@@ -258,7 +285,6 @@ proto.onos.config.change.Phase = {
  */
 proto.onos.config.change.State = {
   PENDING: 0,
-  RUNNING: 1,
   COMPLETE: 2,
   FAILED: 3
 };

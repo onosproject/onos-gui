@@ -23,6 +23,7 @@ import {grpc_web_topo_proxy} from '../../environments/environment';
 import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
 import { DevicesListComponent } from './devices-list/devices-list.component';
 import { DeviceDetailComponent } from './device-detail/device-detail.component';
+import {TopoDeviceService} from './topodevice.service';
 
 @NgModule({
     declarations: [DevicesListComponent, DeviceDetailComponent],
@@ -38,6 +39,10 @@ import { DeviceDetailComponent } from './device-detail/device-detail.component';
             provide: OnosTopoDeviceService,
             useValue: new OnosTopoDeviceService(grpc_web_topo_proxy)
         },
+        {
+            provide: TopoDeviceService,
+            useClass: TopoDeviceService
+        }
     ],
 })
 export class OnosTopoModule {

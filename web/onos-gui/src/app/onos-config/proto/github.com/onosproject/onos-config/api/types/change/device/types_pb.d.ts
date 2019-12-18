@@ -16,9 +16,6 @@ export class DeviceChange extends jspb.Message {
   getRevision(): number;
   setRevision(value: number): void;
 
-  getAttempt(): number;
-  setAttempt(value: number): void;
-
   getNetworkChange(): NetworkChangeRef | undefined;
   setNetworkChange(value?: NetworkChangeRef): void;
   hasNetworkChange(): boolean;
@@ -57,7 +54,6 @@ export namespace DeviceChange {
     id: string,
     index: number,
     revision: number,
-    attempt: number,
     networkChange?: NetworkChangeRef.AsObject,
     change?: Change.AsObject,
     status?: github_com_onosproject_onos$config_api_types_change_types_pb.Status.AsObject,

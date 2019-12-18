@@ -15,6 +15,9 @@ export class Status extends jspb.Message {
   getMessage(): string;
   setMessage(value: string): void;
 
+  getIncarnation(): number;
+  setIncarnation(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Status.AsObject;
   static toObject(includeInstance: boolean, msg: Status): Status.AsObject;
@@ -29,6 +32,7 @@ export namespace Status {
     state: State,
     reason: Reason,
     message: string,
+    incarnation: number,
   }
 }
 
@@ -38,7 +42,6 @@ export enum Phase {
 }
 export enum State { 
   PENDING = 0,
-  RUNNING = 1,
   COMPLETE = 2,
   FAILED = 3,
 }

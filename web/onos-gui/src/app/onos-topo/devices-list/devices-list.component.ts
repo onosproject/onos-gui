@@ -15,19 +15,17 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {OnosTopoDeviceService} from '../proto/onos-topo-device.service';
 import {
     Device,
-    ListResponse
 } from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,
-    TableBaseImpl, TableFilter,
-    WebSocketService
 } from 'gui2-fw-lib';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
+import * as grpcWeb from 'grpc-web';
+import {TopoDeviceService} from '../topodevice.service';
+import {ConnectivityService} from '../../connectivity.service';
 
 @Component({
     selector: 'onos-devices-list',
@@ -38,35 +36,22 @@ import {Subscription} from 'rxjs';
         '../../fw/widget/table.theme.css'
     ]
 })
-export class DevicesListComponent extends TableBaseImpl implements OnInit, OnDestroy {
+export class DevicesListComponent implements OnInit, OnDestroy {
     selectedChange: Device;
-    topologySub: Subscription;
+    selId: string = undefined;
+    public annots: TableAnnots;
 
     constructor(
         protected fs: FnService,
         protected log: LogService,
         protected as: ActivatedRoute,
         protected router: Router,
-        protected wss: WebSocketService,
         protected is: IconService,
-        private onosTopoDeviceService: OnosTopoDeviceService
+        public topoDeviceService: TopoDeviceService,
+        private connectivityService: ConnectivityService
     ) {
-        super(fs, log, wss, 'devices', 'id');
-
         this.is.loadIconDef('switch');
         this.is.loadIconDef('xClose');
-
-        this.sortParams = {
-            firstCol: 'id',
-            firstDir: SortDir.asc,
-            secondCol: 'version',
-            secondDir: SortDir.desc,
-        };
-
-        this.tableDataFilter = <TableFilter>{ // This is here until table pipe bug is fixed
-            queryStr: '',
-            queryBy: 'id', // Default should be $ all fields
-        };
 
         this.annots = <TableAnnots>{
             noRowsMsg: 'No data found'
@@ -76,16 +61,32 @@ export class DevicesListComponent extends TableBaseImpl implements OnInit, OnDes
     }
 
     ngOnInit() {
-        this.tableData.length = 0;
-        this.topologySub = this.onosTopoDeviceService.requestListDevices(true).subscribe((deviceListItem: ListResponse) => {
-            console.debug('List devices response for', deviceListItem.getDevice().getId(), 'received');
-            deviceListItem['id'] = deviceListItem.getDevice().getId();
-            deviceListItem['version'] = deviceListItem.getDevice().getVersion();
-            this.tableData.push(deviceListItem);
+        this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Topo Devices gRPC error', String(err.code), err.message,
+                'Please ensure onos-topo is reachable']);
         });
     }
 
     ngOnDestroy(): void {
-        this.topologySub.unsubscribe();
+        this.topoDeviceService.stopWatchingTopoDevices();
+    }
+
+    selectCallback(event, devId: string, device: Device): void {
+        this.selId = (this.selId === devId ? undefined : devId);
+        this.selectedChange = device;
+    }
+
+    deselectRow(event): void {
+        this.selectedChange = undefined;
+        this.selId = undefined;
+    }
+
+    onSort(colname: string) {
+        // not yet implemented
+    }
+
+    sortIcon(colname: string) {
+        // not yet implemented
     }
 }

@@ -30,9 +30,6 @@ export class StatusUtil {
 
 
         switch (changeStatus.getState()) {
-            case State.RUNNING:
-                status = 'running';
-                break;
             case State.PENDING:
                 status = 'pending';
                 break;

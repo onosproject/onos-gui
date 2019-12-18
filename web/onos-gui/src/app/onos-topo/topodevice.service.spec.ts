@@ -14,39 +14,15 @@
  * limitations under the License.
  */
 
-/* Phase options */
-.change {
-    color: white;
-}
+import {TestBed} from '@angular/core/testing';
 
-.rollback {
-    color: lightgrey;
-    opacity: 50%;
-}
+import {TopoDeviceService} from './topodevice.service';
 
-/* State options */
-.pending {
-    background-color: maroon;
-}
+describe('TopoDeviceService', () => {
+    beforeEach(() => TestBed.configureTestingModule({}));
 
-.complete {
-    background-image: linear-gradient(#7fabdb, #5b99d2);
-    /*background-color: #7fabdb;*/
-}
-
-.failure {
-    background-color: red;
-}
-
-/* Reason options */
-.error {
-    text-blink: 1;
-}
-
-.undefined {
-    visibility: hidden;
-}
-
-.dev-change-div {
-    vertical-align: middle;
-}
+    it('should be created', () => {
+        const service: TopoDeviceService = TestBed.get(TopoDeviceService);
+        expect(service).toBeTruthy();
+    });
+});
