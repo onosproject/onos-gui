@@ -60,6 +60,7 @@ export class OnosConfigDiagsService {
             stream.on('status', (status: grpcWeb.Status) => {
                 console.log('ListNetworkChanges status', status.code, status.details, status.metadata);
             });
+            return () => stream.cancel();
         });
         return networkChangesObs;
     }
@@ -84,6 +85,7 @@ export class OnosConfigDiagsService {
             stream.on('status', (status: grpcWeb.Status) => {
                 console.log('ListDeviceChange status', status.code, status.details, status.metadata);
             });
+            return () => stream.cancel();
         });
         return devicechangeObs;
     }
@@ -105,6 +107,7 @@ export class OnosConfigDiagsService {
             stream.on('end', () => {
                 observer.complete();
             });
+            return () => stream.cancel();
         });
         return opstateObs;
     }

@@ -20,6 +20,7 @@ import {
     ListRequest, ListResponse
 } from './github.com/onosproject/onos-topo/api/device/device_pb';
 import {Observable, Subscriber} from 'rxjs';
+import * as grpcWeb from 'grpc-web';
 
 @Injectable()
 export class OnosTopoDeviceService {
@@ -41,6 +42,13 @@ export class OnosTopoDeviceService {
             stream.on('data', (listResponse: ListResponse) => {
                 observer.next(listResponse);
             });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+            return () => stream.cancel();
         });
         return topoObs;
     }
