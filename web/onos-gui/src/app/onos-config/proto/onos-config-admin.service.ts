@@ -87,6 +87,7 @@ export class OnosConfigAdminService {
             stream.on('end', () => {
                 observer.complete();
             });
+            return () => stream.cancel();
         });
         return modelsObs;
     }
@@ -105,6 +106,7 @@ export class OnosConfigAdminService {
             stream.on('end', () => {
                 observer.complete();
             });
+            return () => stream.cancel();
         });
         return snapshotObs;
     }
