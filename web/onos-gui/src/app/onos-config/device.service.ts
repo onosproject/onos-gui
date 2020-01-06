@@ -53,7 +53,6 @@ export type ErrorCallback = (e: grpcWeb.Error) => void;
 export class DeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     deviceChangeMap: Map<string, DeviceChange>; // Expect <dev-id:dev-ver> as key
-    deviceChangeSubs: Map<string, Subscription>; // Expect <nw-ch:dev-id:dev-ver> as key
     deviceSnapshotMap: Map<string, Snapshot>; // Expect <dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
     admin: OnosConfigAdminService;
@@ -63,7 +62,6 @@ export class DeviceService {
     constructor(diags: OnosConfigDiagsService,
                 admin: OnosConfigAdminService) {
         this.deviceList = new Map<string, Device>();
-        this.deviceChangeSubs = new Map<string, Subscription>();
         this.deviceChangeMap = new Map<string, DeviceChange>();
         this.deviceChangesObs = from(this.deviceChangeMap).pipe(takeWhile<[string, DeviceChange]>((dcId, dc) => true));
         this.deviceSnapshotMap = new Map<string, Snapshot>();
@@ -183,22 +181,6 @@ export class DeviceService {
         console.log('Stopped watching snapshots');
     }
 
-    addDeviceChangeListener(deviceId: string, version: string, errCb: ErrorCallback) {
-        const nameVersion = deviceId + ':' + version;
-        const deviceSub = this.diags.requestDeviceChanges(deviceId, version).subscribe(
-            (devch: ListDeviceChangeResponse) => {
-                    const ch = devch.getChange();
-                    console.log('Device change', ch.getId());
-                    this.deviceChangeMap.set(ch.getId(), ch);
-                },
-            (err) => {
-                errCb(err);
-                },
-        () => console.log('Completed device change request', deviceId, version)
-        );
-        this.deviceChangeSubs.set(nameVersion, deviceSub);
-    }
-
     addTopoDevice(device: Device) {
         const nameVersion = device.getId() + ':' + device.getVersion();
         if (!this.deviceList.has(nameVersion)) {
@@ -215,30 +197,14 @@ export class DeviceService {
             newDevice.setVersion(version);
             this.deviceList.set(nameVersion, newDevice);
         }
-        if (addDcSub && !this.deviceChangeSubs.has(deviceId + ':' + version)) {
-            this.addDeviceChangeListener(deviceId, version, errCb);
-        }
     }
 
     removeDevice(deviceId: string, version: string) {
         const nameVersion = deviceId + ':' + version;
         // TODO Should not remove if it has device changes
-        if (this.deviceChangeSubs.has(nameVersion)) {
-            this.deviceChangeSubs.get(nameVersion).unsubscribe();
-            this.deviceChangeSubs.delete(nameVersion);
-        }
         if (this.deviceList.has(nameVersion)) {
             this.deviceList.delete(nameVersion);
         }
-    }
-
-    closeAllDeviceChangeSubs() {
-        this.deviceChangeSubs.forEach((sub: Subscription) => {
-            sub.unsubscribe();
-        });
-        console.log('Stopped watching', this.deviceChangeSubs.size, 'Device Change subs');
-        this.deviceChangeSubs.clear();
-        this.deviceList.clear();
     }
 
     deviceStatusStyles(deviceKey: string): string[] {

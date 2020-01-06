@@ -17,5 +17,5 @@
      [ngClass]="getStatusClass()"
      [title]="getTooltip()"
      (click)="selected.emit(true)">
-    {{deviceService.deviceChangeMap.get(deviceChangeName())?.getChange().getValuesList().length}}
+    {{change?.getValuesList().length}}
 </div>

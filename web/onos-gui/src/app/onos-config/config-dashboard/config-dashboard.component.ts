@@ -65,7 +65,7 @@ import {TopoDeviceService} from '../../onos-topo/topodevice.service';
     ]
 })
 export class ConfigDashboardComponent implements OnInit, OnDestroy {
-    selectedChange: DeviceChange; // The complete row - not just the selId
+    selectedChange: Change; // The complete row - not just the selId
     selId: string;
     networkChanges: Map<string, NetworkChange>;
     sortReverse: boolean = false;
@@ -119,7 +119,6 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.topoDeviceService.stopWatchingTopoDevices();
         this.deviceService.stopWatchingSnapshots();
-        this.deviceService.closeAllDeviceChangeSubs();
         this.nwchangesSub.unsubscribe();
         console.log('Stopped watching NetworkChanges');
     }
@@ -151,15 +150,16 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
         return a.value.getCreated() < b.value.getCreated() ? 1 : (a.value.getCreated() > b.value.getCreated() ? -1 : 0);
     }
 
-    deviceChangeSelected(deviceChangeId: string, networkChange: NetworkChange) {
-        console.log('Device change selected', deviceChangeId);
+    deviceChangeSelected(deviceChange: Change, nwChangeId: string) {
+        const deviceChangeId = nwChangeId + ':' + deviceChange.getDeviceId() + ':' + deviceChange.getDeviceVersion();
+        console.log('Device change selected', deviceChange.getDeviceId(), deviceChange.getDeviceVersion());
         if (deviceChangeId === this.selId) {
             this.selId = '';
             this.selectedChange = undefined;
             return;
         }
         this.selId = deviceChangeId;
-        this.selectedChange = this.deviceService.deviceChangeMap.get(deviceChangeId);
+        this.selectedChange = deviceChange;
     }
 
     deviceSnapshotSelected(deviceSnapshotId: string) {
@@ -172,8 +172,6 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
         this.selId = deviceSnapshotId;
         const snapshot = this.deviceService.deviceSnapshotMap.get(deviceSnapshotId);
         // Fake the snapshot as a DeviceChange, so we can display the same way
-        const fakeDc = new DeviceChange();
-        fakeDc.setId(deviceSnapshotId);
         const fakeChange = new Change();
         fakeChange.setDeviceId(snapshot.getDeviceId());
         fakeChange.setDeviceVersion(snapshot.getDeviceVersion());
@@ -185,14 +183,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
             values.push(cv);
         });
         fakeChange.setValuesList(values);
-        fakeDc.setChange(fakeChange);
-        fakeDc.setIndex(snapshot.getChangeIndex());
-        const status = new Status();
-        status.setMessage('SNAPSHOT');
-        status.setState(State.COMPLETE);
-        status.setPhase(Phase.CHANGE);
-        fakeDc.setStatus(status);
-        this.selectedChange = fakeDc;
+        this.selectedChange = fakeChange;
     }
 
     updateSort() {

@@ -29,8 +29,7 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import {
-    ChangeValue,
-    DeviceChange
+    Change,
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
@@ -60,7 +59,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class DeviceChangeDetailsComponent extends DetailsPanelBaseImpl implements OnInit, OnChanges {
     @Input() id: string; // Has to be repeated from base class
     // Output closeEvent is inherited
-    @Input() deviceChange: DeviceChange;
+    @Input() deviceChange: Change;
 
     constructor(
         protected fs: FnService,
@@ -79,10 +78,6 @@ export class DeviceChangeDetailsComponent extends DetailsPanelBaseImpl implement
         if (changes['id']) {
             this.closed = false;
             this.detailsData = this.deviceChange;
-            if (this.deviceChange !== undefined && this.deviceChange.getUpdated() !== undefined) {
-                this.detailsData['created'] = (new Date()).setTime(this.deviceChange.getCreated().getSeconds() * 1000);
-                this.detailsData['updated'] = (new Date()).setTime(this.deviceChange.getUpdated().getSeconds() * 1000);
-            }
         }
     }
 }

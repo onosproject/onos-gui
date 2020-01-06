@@ -5,12 +5,16 @@ with an atomix controller deployed in a namespace.
 `onos-gui` Helm chart is based on Helm 3.0 version, with no need for the Tiller pod to be present.
 
 > The onos-gui deployment consists of 2 containers:
+>
 > * onos-gui - containing an nginx web server and the compiled GUI
 > * onos-envoy - containing a grpc-web proxy for connecting to onos-topo, onos-config etc.
 
 If you don't have a cluster running and want to try on your local machine please follow first 
 the [Kubernetes] setup steps outlined in [deploy with Helm](https://docs.onosproject.org/developers/deploy_with_helm/).
 The following steps assume you have the setup outlined in that page, including the `micro-onos` namespace configured.
+
+> Note: if deploying the GUI on top of `onit` that its default namespace is `onos`,
+> so any mention of `micro-onos` below should be replaced with `onos` 
 
 ## Installing the Chart
 To install the chart in the `micro-onos` namespace run from the root directory of the `onos-helm-charts` repo the command:

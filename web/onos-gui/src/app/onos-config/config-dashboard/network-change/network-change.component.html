@@ -24,5 +24,7 @@
     onos-device-change [deviceChangeId]="device.value.getId()"
     [deviceVersion]="device.value.getVersion()"
     [networkChangeId]="networkChange.getId()"
+    [change]="getChangeByName(device.value.getId(), device.value.getVersion())"
+    [state]="networkChange.getStatus()"
     (selected)="itemSelected(networkChange.getId(), device.value.getId(), device.value.getVersion())">
 </td>
