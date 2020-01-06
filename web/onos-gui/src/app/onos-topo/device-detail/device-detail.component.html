@@ -40,6 +40,11 @@
                                     width="80">{{detailsData?.getVersion()}}</td>
                             </tr>
                             <tr>
+                                <td class="label" width="110">Type :</td>
+                                <td class="value"
+                                    width="80">{{detailsData?.getType()}}</td>
+                            </tr>
+                            <tr>
                                 <td class="label" width="110">Address</td>
                                 <td class="value"
                                     width="80">{{detailsData?.getAddress()}}</td>
@@ -58,7 +63,7 @@
                                 <td class="label" width="110">Configuration</td>
                                 <td class="value"
                                     width="80"><a
-                                    [routerLink]="['/config','configview', detailsData?.id + '-' + detailsData?.getVersion() ]">{{ detailsData?.id + '-' + detailsData?.getVersion() }}</a></td>
+                                    [routerLink]="['/config','configview', detailsData?.getId() + '-' + detailsData?.getVersion() ]">{{ detailsData?.getId() + '-' + detailsData?.getVersion() }}</a></td>
                             </tr>
                             </tbody>
                         </table>

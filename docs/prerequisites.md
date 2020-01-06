@@ -2,8 +2,26 @@
 This document provides an overview of the tools and packages needed to work on and to build onos-gui.
 Developers are expected to have these tools installed on the machine where the project is built.
 
+## Reusing tools from an existing ONOS installation
+If you already have the legacy ONOS project code checked out and built using Bazel
+on your system you already have all the tools you need.
+Add the following 2 entries to your $PATH environment variable to give access
+to the `npm` and the `ng` command respectively
+
+* [bazel output_base]/external/nodejs_linux_amd64/bin/nodejs/bin
+* ~/onos/web/gui2/node_modules/@angular/cli/bin
+
+where [bazel output_base] above can be found from running the command: `bazel info output_base`
+
+After setting the PATH it should be possible to see the version of **node** and **npm**:
+```bash
+node -v
+npm -v
+which ng
+```
+
 ## NodeJS
-Install the latest Long Term Support version of NodeJS on your system.
+If legacy ONOS is not available install the latest Long Term Support version of NodeJS on your system.
 
 * Downloads are available from <https://nodejs.org/en/download/>
 * Instructions for installing on Linux are at <https://github.com/nodejs/help/wiki/Installation>
@@ -16,7 +34,7 @@ npm -v
 ```
 
 ## Angular CLI
-Angular CLI provides the **ng** tools. Installation instructions are at
+If legacy ONOS is not available install Angular CLI to provide the **ng** tools. Installation instructions are at
 <https://angular.io/guide/setup-local>
 
 The following command can be run from any folder:
@@ -48,7 +66,7 @@ git remote -v
 ```
 
 ## Set up Angular for local development
-After this install (and after changing to the web/onos-gui folder) it should be
+After this install (and after changing to the `web/onos-gui` folder) it should be
 possible to see the Angular CLI version:
 ```bash
 cd web/onos-gui
@@ -57,11 +75,6 @@ ng version
 This should give a result like:
 
 ```bash
-Your global Angular CLI version (8.1.2) is greater than your local
-version (7.0.7). The local Angular CLI version is used.
-
-To disable this warning use "ng config -g cli.warnings.versionMismatch false".
-
      _                      _                 ____ _     ___
     / \   _ __   __ _ _   _| | __ _ _ __     / ___| |   |_ _|
    / △ \ | '_ \ / _` | | | | |/ _` | '__|   | |   | |    | |
@@ -69,14 +82,13 @@ To disable this warning use "ng config -g cli.warnings.versionMismatch false".
  /_/   \_\_| |_|\__, |\__,_|_|\__,_|_|       \____|_____|___|
                 |___/
     
-
-Angular CLI: 7.0.7
-Node: 12.6.0
+Angular CLI: 8.3.20
+Node: 10.16.0
 OS: linux x64
-Angular: 7.0.4
+Angular: 8.2.14
 ... animations, common, compiler, compiler-cli, core, forms
-... http, language-service, platform-browser
-... platform-browser-dynamic, router
+... language-service, platform-browser, platform-browser-dynamic
+... router
 ...
 ``` 
 
@@ -102,7 +114,7 @@ Some form of an integrated development environment that supports Web Development
 with TypeScript is also recommended. The core team uses the Intellij
 [WebStorm IDE] from JetBrains, but there are many other options.
 The [Atom] editor is a lightweight solution supporting TypeScript and Git integration.
-[Visual Studio Code] is another option that supports TypeScript..
+[Visual Studio Code] is another option that supports TypeScript.
 
 ## License
 The project requires that all Typescript source files are properly annotated using the Apache 2.0 License.

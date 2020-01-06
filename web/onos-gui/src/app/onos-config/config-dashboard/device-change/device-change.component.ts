@@ -16,12 +16,9 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DeviceService} from '../../device.service';
-import {
-    Phase,
-    Reason,
-    State
-} from '../../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
 import {StatusUtil} from '../../status.util';
+import {Change} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {Status} from '../../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
 
 @Component({
     selector: '[onos-device-change]',
@@ -32,6 +29,8 @@ export class DeviceChangeComponent {
     @Input() deviceChangeId: string;
     @Input() deviceVersion: string;
     @Input() networkChangeId: string;
+    @Input() change: Change;
+    @Input() state: Status;
     @Output() selected  = new EventEmitter<boolean>();
 
     constructor(
@@ -44,17 +43,10 @@ export class DeviceChangeComponent {
     }
 
     getStatusClass(): string[] {
-        const deviceChange = this.deviceService.deviceChangeMap.get(this.deviceChangeName());
-        if (deviceChange === undefined) {
-            return ['undefined'];
-        }
-        return StatusUtil.statusToStrings(deviceChange.getStatus());
+        return StatusUtil.statusToStrings(this.state);
     }
 
     getTooltip(): string[] {
-        const deviceChange = this.deviceService.deviceChangeMap.get(this.deviceChangeName());
-        if (deviceChange !== undefined) {
-            return StatusUtil.statusToStrings(deviceChange.getStatus());
-        }
+        return [this.deviceChangeName()];
     }
 }

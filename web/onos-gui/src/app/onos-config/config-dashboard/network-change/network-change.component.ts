@@ -31,7 +31,7 @@ export class NetworkChangeComponent implements OnInit {
     @Input() networkChange: NetworkChange;
     @Input() deviceSortCriterion: (a: KeyValue<string, Device>, b: KeyValue<string, Device>) => number
         = DeviceService.deviceSorterForwardAlpha;
-    @Output() dcSelected = new EventEmitter<string>();
+    @Output() dcSelected = new EventEmitter<Change>();
     created: number;
 
     constructor(
@@ -43,14 +43,8 @@ export class NetworkChangeComponent implements OnInit {
         this.created = (new Date()).setTime(this.networkChange.getCreated().getSeconds() * 1000);
     }
 
-    hasChangeByName(name: string): boolean {
-        this.networkChange.getChangesList().forEach((ch: Change) => {
-            if (ch.getDeviceId() === name) {
-                console.log('Returning true for', name, 'on', this.networkChange.getId());
-                return true;
-            }
-        });
-        return false;
+    getChangeByName(name: string, version: string): Change {
+        return this.networkChange.getChangesList().find((c) => c.getDeviceId() === name && c.getDeviceVersion() === version);
     }
 
     getStatusClass(): string[] {
@@ -72,6 +66,6 @@ export class NetworkChangeComponent implements OnInit {
     }
 
     itemSelected(nwChangeId: string, deviceId: string, version: string) {
-        this.dcSelected.emit(nwChangeId  + ':' + deviceId + ':' + version);
+        this.dcSelected.emit(this.getChangeByName(deviceId, version));
     }
 }

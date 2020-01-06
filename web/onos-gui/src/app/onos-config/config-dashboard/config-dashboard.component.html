@@ -55,7 +55,7 @@
             <input type="button" value="Compact.." (click)="compactChangesDialog()">
             <label><small>Retention </small></label>
             <select [(ngModel)]="retenionSecs">
-                <option value="0">none</option>
+                <option value="0">0 sec</option>
                 <option value="3600">1 hr</option>
                 <option value="21600">6 hrs</option>
                 <option value="43200">12 hrs</option>
@@ -70,7 +70,7 @@
         *ngFor="let nwchId of networkChanges | keyvalue:nwChangeIncreasingAge; let i = index"
         onos-network-change [networkChange]="nwchId.value"
         [deviceSortCriterion]="deviceSortCriterion"
-        (dcSelected)="deviceChangeSelected($event, nwchId.value)">
+        (dcSelected)="deviceChangeSelected($event, nwchId.key)">
     </tr>
     <tr class="nw-ss-row" onos-network-snapshot
         [deviceSortCriterion]="deviceSortCriterion"

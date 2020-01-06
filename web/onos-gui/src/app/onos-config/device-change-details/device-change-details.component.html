@@ -23,49 +23,7 @@
                            iconId="close" iconSize="20"
                            (click)="close()"></onos-icon>
             </div>
-            <h2 class="editable clickable">{{detailsData?.getId()}}</h2>
-            <div class="top-content">
-                <div class="top-tables">
-                    <div class="left">
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td class="label" width="110">Created :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.created | date:'medium'}}</td>
-                                <td class="label" width="110">Phase :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getStatus() | changeStatus:[1]}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Updated :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.updated | date:'medium'}}</td>
-                                <td class="label" width="110">State :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getStatus() | changeStatus:[0]}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Revision :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getRevision()}}</td>
-                                <td class="label" width="110">Reason :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getStatus() | changeStatus:[2]}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Index :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getIndex()}}</td>
-                                <td class="label" width="110">Message :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getStatus().getMessage()}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <h2 class="editable clickable">{{id}}</h2>
             <hr>
         </div>
         <div class="middle">
@@ -78,7 +36,7 @@
                 </tr>
                 </thead>
                 <tbody id="path-list">
-                <tr *ngFor="let dcValue of detailsData?.getChange().getValuesList()">
+                <tr *ngFor="let dcValue of detailsData?.getValuesList()">
                     <td class="pathitem" [ngClass]="dcValue.getRemoved() ? 'removed':''">{{dcValue.getPath()}}</td>
                     <td>{{dcValue.getValue() | changeValue:30}}</td>
                 </tr>
