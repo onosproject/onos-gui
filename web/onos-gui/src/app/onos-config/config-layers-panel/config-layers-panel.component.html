@@ -33,10 +33,6 @@
                 <td class="field-name">Type:</td>
                 <td>{{type}}</td>
             </tr>
-            <tr>
-                <td class="field-name">Updated:</td>
-<!--                <td>{{updated | date: MEDIUM}}</td>-->
-            </tr>
             </tbody>
         </table>
     </div>
@@ -62,7 +58,7 @@
 <!--        </table>-->
         <table>
             <tbody>
-            <tr id="layerItem" class="layerItem" *ngFor="let p of layerList | keyvalue"
+            <tr id="layerItem" class="layerItem" *ngFor="let p of layerMap | keyvalue"
                 (click)="toggleDisplay(p.key, 0)">
                 <onos-icon [iconId]="layerVisibility.get(p.key)?ACTIVE:INACTIVE"
                            [iconSize]="20"

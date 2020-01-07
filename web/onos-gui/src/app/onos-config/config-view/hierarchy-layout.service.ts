@@ -72,6 +72,7 @@ export class HierarchyLayoutService {
     constructor() {
         this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
             absPath: '/', layerRefs: Array<String>(0)};
+        this.treeLayout = null;
     }
 
     /**
@@ -89,11 +90,11 @@ export class HierarchyLayoutService {
      *
      * TODO refine this so the whole thing does not have to be rebuilt
      */
-    recalculate() {
+    recalculate(): TreeLayoutNode {
         const hierarchyRoot = d3.hierarchy(this.root);
         this.treeLayout = d3.tree().nodeSize([nodeWidth, nodeHeight])(hierarchyRoot);
-        console.log('Hierarchy has', this.treeLayout.descendants().length, ' nodes and',
-            this.treeLayout.links().length, ' links');
+        // console.log('Hierarchy has', this.treeLayout.descendants().length, ' nodes and',
+        //     this.treeLayout.links().length, ' links');
         if (this.resizeCb) {
             this.resizeCb(this.treeLayout.height);
         }
@@ -180,8 +181,6 @@ export class HierarchyLayoutService {
             this.root = <HierarchyNode>{id: '/', children: Array<HierarchyNode>(0),
                 absPath: '/', layerRefs: Array<String>(0)};
         }
-        // Then do the calculation again
-        this.recalculate();
     }
 
     /**

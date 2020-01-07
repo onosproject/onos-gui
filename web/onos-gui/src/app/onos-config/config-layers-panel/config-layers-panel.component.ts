@@ -44,7 +44,7 @@ export interface SelectedLayer {
     ]
 })
 export class ConfigLayersPanelComponent implements OnChanges {
-    @Input() layerList: Map<string, DeviceChange>;
+    @Input() layerMap: Map<string, DeviceChange>;
     @Input() on: boolean = true;
     @Input() configName: string; // Must be the same as the constant CONFIGNAME
     @Input() deviceName: string;
@@ -58,7 +58,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     toggledOn: boolean = true;
     rolledUp: boolean = false;
 
-    // Constants - have to declare a viable to hold a constant so it can be used in HTML(?!?!)
+    // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
     public RWPATHS = RWPATHS;
     public MEDIUM = MEDIUM;
@@ -70,9 +70,9 @@ export class ConfigLayersPanelComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         console.log('Change happened in config-layers-panel');
-        if (changes[CONFIGNAME]) {
+        if (changes['type']) { // It's only when the 'type' is updated that we see the update
             this.layerVisibility.clear();
-            this.layerList.forEach((dc: DeviceChange, l: string) => {
+            this.layerMap.forEach((dc: DeviceChange, l: string) => {
                 this.layerVisibility.set(l, true);
             });
         }
@@ -94,7 +94,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     toggleAll(on: boolean) {
         this.toggledOn = on;
 
-        this.layerList.forEach((dc: DeviceChange, l: string) => {
+        this.layerMap.forEach((dc: DeviceChange, l: string) => {
             this.layerVisibility.set(l, on);
             this.visibilityChange.emit(<SelectedLayer>{
                 layerName: l,

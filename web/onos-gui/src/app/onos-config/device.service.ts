@@ -199,13 +199,6 @@ export class DeviceService {
         }
     }
 
-    removeDevice(deviceId: string, version: string) {
-        const nameVersion = deviceId + ':' + version;
-        // TODO Should not remove if it has device changes
-        if (this.deviceList.has(nameVersion)) {
-            this.deviceList.delete(nameVersion);
-        }
-    }
 
     deviceStatusStyles(deviceKey: string): string[] {
         const protocolList = this.deviceList.get(deviceKey).getProtocolsList();

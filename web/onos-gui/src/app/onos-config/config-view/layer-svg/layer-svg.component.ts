@@ -25,9 +25,15 @@ import {
 import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
 import {ModelService} from '../../model.service';
 import {ModelTempIndexService} from '../model-temp-index.service';
-import {ConfigLink, HierarchyLayoutService} from '../hierarchy-layout.service';
+import {
+    ConfigLink,
+    HierarchyLayoutService,
+    TreeLayoutNode
+} from '../hierarchy-layout.service';
 import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 import {
+    ChangeValue,
+    DeviceChange,
     TypedValue
 } from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {DeviceService} from '../../device.service';
@@ -81,6 +87,12 @@ export class LayerSvgComponent implements OnChanges {
     @Input() layerId: string = undefined;
     @Input() layerType: LayerType = LayerType.LAYERTYPE_CONFIG;
     @Input() classes: string[] = ['config'];
+    @Input() changeValues: ChangeValue[] = [];
+    // The following have to be passed in because they are used to drive an *ngFor
+    // Calculating them internally causes the dreaded ExpressionChangedAfterItHasBeenCheckedError
+    // Items are added and removed in the ConfigView updateHierarchy()
+    @Input() hierarchyDescendants: TreeLayoutNode[] = [];
+    @Input() hierarchyLinks: ConfigLink[] = [];
     @Output() editRequestedLayer = new EventEmitter<PathDetails>();
     description: string;
     nodelist: Map<string, ChangeValueObj>;
@@ -93,8 +105,6 @@ export class LayerSvgComponent implements OnChanges {
         private models: ModelService,
         // private pending: PendingNetChangeService,
         private modelTempIdx: ModelTempIndexService,
-        public hierarchy: HierarchyLayoutService,
-        private deviceService: DeviceService
     ) {
         this.nodelist = new Map<string, ChangeValueObj>();
         console.log('Constructed LayerSvgComponent');
@@ -123,53 +133,33 @@ export class LayerSvgComponent implements OnChanges {
             //         }
             //     } else
             if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
-                for (const model of this.models.modelInfoList) {
-                    if (model['id'] === layerIdNew) {
-                        console.log('Getting RW paths for', layerIdNew);
-                        for (const path of model.getReadWritePathList()) {
-                            this.addRwPath(path);
-                        }
-                        this.modelTempIdx.addModelInfo(model);
-                        this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
-                            this.addRwPath(ep);
-                        });
+                const layerIdSplit: string[] = this.layerId.split(':');
+                if (layerIdSplit.length !== 2) {
+                    console.warn('Error in handling layer name', this.layerId);
+                    return;
+                }
+                const model = this.models.modelInfoList
+                    .find((m) => m.getName() === layerIdSplit[0] && m.getVersion() === layerIdSplit[1]);
+                if (model) {
+                    console.log('Getting RW paths for', layerIdNew);
+                    for (const path of model.getReadWritePathList()) {
+                        this.addRwPath(path);
                     }
+                    this.modelTempIdx.addModelInfo(model);
+                    this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
+                        this.addRwPath(ep);
+                    });
+                } else {
+                    console.warn('Could not find model', layerIdSplit[0], layerIdSplit[1]);
                 }
 
             } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
-                console.log('Getting opstate changes from service:', layerIdNew);
-                this.opStateSub = this.diags.requestOpStateCache(layerIdNew, true).subscribe(
-                    (opState: OpStateResponse) => {
-                            this.description = 'OpState';
-                            const p = opState.getPathvalue().getPath();
-                            this.hierarchy.ensureNode(p, layerIdNew);
-                            const [parentPath, relPath] = PathUtil.strPathToParentChild(p);
-                            const value = new TypedValue(); // Convert from PathValue to TypedValue
-                            value.setBytes(opState.getPathvalue().getValue().getBytes_asU8());
-                            value.setType(opState.getPathvalue().getValue().getType());
-                            value.setTypeOptsList(opState.getPathvalue().getValue().getTypeOptsList());
-                            const cv = <ChangeValueObj>{
-                                relPath: relPath,
-                                parentPath: parentPath,
-                                value: value,
-                            };
-                            this.nodelist.set(p, cv);
-
-                            this.checkParentExists(p, parentPath);
-                            console.log('Change response for ', layerIdNew, 'received', p);
-                            this.hierarchy.recalculate(); // Has to happen after each response
-                        },
-                    (err) => {
-                            console.log('Error retrieving OpState through gRPC', err);
-                        }
-                    );
-                console.log('Finished with subscribe to OpStateCache on', layerIdNew);
+                // Do nothing - there will be no changes yet
             } else {
-                const change = this.deviceService.deviceChangeMap.get(this.layerId);
-                for (const c of change.getChange().getValuesList()) {
-                    this.hierarchy.ensureNode(c.getPath(), layerIdNew);
+                // The hierarchy updates are made in ConfigView - updateHierarchy()
+                for (const c of this.changeValues) {
                     const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
                     const cv = <ChangeValueObj>{
                         relPath: relPath,
@@ -183,7 +173,7 @@ export class LayerSvgComponent implements OnChanges {
                         this.modelTempIdx.addIndex(c.getPath());
                     }
                 }
-                console.log('Change response for ', layerIdNew, 'received', this.nodelist);
+                console.log('Device change for ', layerIdNew, 'handled', this.nodelist);
             }
 
             // if (changes['updated']) {
@@ -195,12 +185,31 @@ export class LayerSvgComponent implements OnChanges {
             //         }
             //     }
             // }
-            this.hierarchy.recalculate();
+            // this.hierarchy.recalculate();
+        }
+        if (changes['changeValues']) {
+            const changeValues = <ChangeValue[]>changes['changeValues'].currentValue;
+            if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
+                for (const c of this.changeValues) {
+                    const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
+                    const cv = <ChangeValueObj>{
+                        relPath: relPath,
+                        value: c.getValue(),
+                        removed: c.getRemoved(),
+                        parentPath: parentPath
+                    };
+                    this.nodelist.set(c.getPath(), cv);
+                    this.checkParentExists(c.getPath(), parentPath);
+                    if (c.getPath().indexOf('[') > -1) {
+                        this.modelTempIdx.addIndex(c.getPath());
+                    }
+                }
+            }
         }
     }
 
     private addRwPath(path: ReadWritePath) {
-        this.hierarchy.ensureNode(path.getPath(), this.layerId);
+        // this.hierarchy.ensureNode(path.getPath(), this.layerId);
         const [parentPath, relPath] = PathUtil.strPathToParentChild(path.getPath());
         const cv = <ChangeValueObj>{
             relPath: relPath,

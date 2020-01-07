@@ -19,7 +19,7 @@
                           [deviceName]="device"
                           [version]="version"
                           [type]="type"
-                          [layerList]="deviceChanges"
+                          [layerMap]="deviceChanges"
                           [on]="true"
                           [hasOpState]="hasOpStateData"
                             (visibilityChange)="visibilityChanged($event)">
@@ -52,16 +52,24 @@
 <!--            </svg:g>-->
             <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
                    [layerId]="c" [layerType]="0"
+                   [changeValues]="deviceChanges.get(c).getChange().getValuesList()"
+                   [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
+                   [hierarchyLinks]="hierarchy.treeLayout?.links()"
                    (editRequestedLayer)="pathSelected($event)">
             </svg:g>
             <svg:g #readWriteLayer *ngIf="rwPathVisible"
-                   onos-layer-svg [layerId]="type + version + ''"
+                   onos-layer-svg [layerId]="type + ':' + version"
                    [classes]="['rwpaths']"
                    [layerType]="3"
+                   [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
+                   [hierarchyLinks]="hierarchy.treeLayout?.links()"
                    (editRequestedLayer)="pathSelected($event)">
             </svg:g>
             <svg:g *ngIf="opstateVisible" #opStateLayer
                    onos-layer-svg [layerId]="device" [classes]="['state']"
+                   [changeValues]="opStateCache"
+                   [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
+                   [hierarchyLinks]="hierarchy.treeLayout?.links()"
                    [layerType]="1">
             </svg:g>
 <!--            <svg:g *ngIf="pendingVisible" onos-layer-svg-->
