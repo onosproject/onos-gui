@@ -173,7 +173,6 @@ export class LayerSvgComponent implements OnChanges {
                         this.modelTempIdx.addIndex(c.getPath());
                     }
                 }
-                console.log('Device change for ', layerIdNew, 'handled', this.nodelist);
             }
 
             // if (changes['updated']) {

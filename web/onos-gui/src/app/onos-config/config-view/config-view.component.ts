@@ -166,7 +166,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         if (changes[CONFIGNAME]) {
             const cfgName: string = changes[CONFIGNAME].currentValue;
-            const sepIdx = cfgName.lastIndexOf('-');
+            const sepIdx = cfgName.lastIndexOf(':');
             this.device = cfgName.slice(0, sepIdx);
             this.version = cfgName.slice(sepIdx + 1);
             console.log('Configuration view changed to', cfgName, this.device, this.version);
