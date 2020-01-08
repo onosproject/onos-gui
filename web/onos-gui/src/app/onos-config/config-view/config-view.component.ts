@@ -29,14 +29,27 @@ import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
 import {ActivatedRoute} from '@angular/router';
 import {IconService, TopoZoomPrefs, ZoomableDirective} from 'gui2-fw-lib';
-import {DeviceService} from '../device.service';
+import {ErrorCallback} from '../device.service';
 import {
+    Change, ChangeValue,
     DeviceChange,
     TypedValue
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
-import {LayerType, PathDetails} from './layer-svg/layer-svg.component';
+import {
+    LayerSvgComponent,
+    LayerType,
+    PathDetails
+} from './layer-svg/layer-svg.component';
 import {ReadWritePath} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {Subscription} from 'rxjs';
+import {
+    ListDeviceChangeResponse,
+    OpStateResponse
+} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
+import * as grpcWeb from 'grpc-web';
+import {ConnectivityService} from '../../connectivity.service';
+import {ModelService} from '../model.service';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -64,6 +77,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     @Input() configName: string;
 
     @ViewChild(ZoomableDirective, {static: false}) zoomDirective: ZoomableDirective;
+    @ViewChild('opStateLayer', {static: false}) opStateLayer: LayerSvgComponent;
 
     device: string;
     version: string;
@@ -82,6 +96,9 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     selectedValue: TypedValue = undefined;
     selectedRwPath: ReadWritePath;
     deviceChanges: Map<string, DeviceChange>;
+    deviceChangeSub: Subscription;
+    opStateSub: Subscription;
+    opStateCache: ChangeValue[] = [];
 
     // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -92,9 +109,10 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         //     private pending: PendingNetChangeService,
         protected ar: ActivatedRoute,
         protected is: IconService,
-        private deviceService: DeviceService,
         private modelTmpIndex: ModelTempIndexService,
-        private hierarchy: HierarchyLayoutService
+        private hierarchy: HierarchyLayoutService,
+        private connectivityService: ConnectivityService,
+        private models: ModelService,
     ) {
         this.is.loadIconDef('checkMark');
         this.is.loadIconDef('xMark');
@@ -123,81 +141,118 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                     new SimpleChange({}, cn, true)
             });
         });
-        //
-        // this.deviceService.deviceChangesObs.subscribe(
-        //     value => {
-        //         console.log('Sub worked!', value);
-        //     },
-        //     err => {
-        //         console.warn('Sub Error', err);
-        //     },
-        //     () => console.log('Sub Completed')
-        // );
+        this.models.loadModelList((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+                'Device Changes gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable']);
+        });
     }
 
     ngOnDestroy(): void {
         this.modelTmpIndex.clearAll();
         this.hierarchy.clearAll();
+        this.deviceChangeSub.unsubscribe();
+        this.deviceChanges.clear();
+        if (this.opStateSub) {
+            this.opStateSub.unsubscribe();
+        }
+        this.opStateCache.length = 0;
+        this.models.close();
+        this.changeIdsVisible.length = 0;
         console.log('ConfigViewComponent destroyed and Tree Service reset');
     }
 
     // the config name can be changed any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes[CONFIGNAME]) {
-            const cfgName = changes[CONFIGNAME].currentValue;
-            // this.changeIds.length = 0;
+            const cfgName: string = changes[CONFIGNAME].currentValue;
+            const sepIdx = cfgName.lastIndexOf('-');
+            this.device = cfgName.slice(0, sepIdx);
+            this.version = cfgName.slice(sepIdx + 1);
+            console.log('Configuration view changed to', cfgName, this.device, this.version);
             this.changeIdsVisible.length = 0;
-            console.log('Configuration view changed to', cfgName);
-            const device = this.deviceService.deviceList.get(cfgName);
-            if (device === undefined) {
-                console.warn('No config', cfgName, 'found');
-                return;
+            this.deviceChanges.clear();
+            if (this.deviceChangeSub) {
+                this.deviceChangeSub.unsubscribe();
             }
-            this.device = device.getId();
-            this.version = device.getVersion();
-            this.type = device.getType();
 
-            // Check to see if this is a pending configuration first
-            //         if (this.pending.pendingNewConfiguration && this.pending.pendingNewConfiguration.getName() === cfgName) {
-            //             this.device = this.pending.pendingNewConfiguration.getDeviceId();
-            //             this.version = this.pending.pendingNewConfiguration.getVersion();
-            //             this.type = this.pending.pendingNewConfiguration.getDeviceType();
-            //             this.updated = Number(this.pending.pendingNewConfiguration.getUpdated()) * 1000;
-            //             for (const cid of this.pending.pendingNewConfiguration.getChangeIdsList()) {
-            //                 this.changeIdsVisible.push(cid);
-            //             }
-            //             return;
-            //         }
-
-            this.deviceService.deviceChangeMap.forEach((deviceChange: DeviceChange, dcName: string) => {
-                if (dcName.endsWith(cfgName)) {
-                    this.deviceChanges.set(dcName, deviceChange);
-                    this.changeIdsVisible.push(dcName);
-                }
+            this.watchDeviceChanges(this.device, this.version, (err: grpcWeb.Error) => {
+                this.connectivityService.showVeil([
+                    'Device Changes gRPC error', String(err.code), err.message,
+                    'Please ensure onos-config is reachable']);
             });
 
-            //         this.hasPending = this.pending
-            //             .pendingNetChange
-            //             .getChangesList()
-            //             .findIndex((cfg) => cfg.getId() === this.configName) > -1;
-            //         if (this.hasPending) {
-            //             this.changeIdsVisible.push('pending');
-            //         }
         }
+    }
+
+    watchDeviceChanges(deviceId: string, version: string, errCb: ErrorCallback) {
+        this.deviceChangeSub = this.diags.requestDeviceChanges(deviceId, version).subscribe(
+            (devCh: ListDeviceChangeResponse) => {
+                const change = devCh.getChange();
+                this.deviceChanges.set(change.getId(), change);
+                this.updateHierarchy(change.getId(), change.getChange());
+                this.changeIdsVisible.push(change.getId());
+                this.type = change.getChange().getDeviceType(); // All changes should have same type - take whatever comes
+                console.log('Device Change', change.getId(), 'updated');
+            },
+            (err: grpcWeb.Error) => {
+                errCb(err);
+            }
+        );
+    }
+
+    /**
+     * The hierarchy has to be updated from here because they are used to drive an *ngFor in the layer component
+     * Updating hierarchy from inside the Layer component causes the dreaded ExpressionChangedAfterItHasBeenCheckedError
+     * @param deviceChangeId the layer ID (aka the device change id)
+     * @param change (the change, with paths and values)
+     */
+    updateHierarchy(deviceChangeId: string, change: Change): void {
+        change.getValuesList().forEach((cv) => {
+            this.hierarchy.ensureNode(cv.getPath(), deviceChangeId);
+            this.hierarchy.recalculate();
+        });
     }
 
     visibilityChanged(event: SelectedLayer) {
         if (event.layerType === LayerType.LAYERTYPE_PENDING) {
             //         this.pendingVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_OPSTATE) {
+            if (event.madeVisible) {
+                this.watchOpState(this.device, (err: grpcWeb.Error) => {
+                    this.connectivityService.showVeil([
+                        'OpState gRPC error', String(err.code), err.message,
+                        'Please ensure onos-config is reachable']);
+                });
+            } else {
+                this.hierarchy.removeLayer(this.device);
+                this.hierarchy.recalculate();
+                this.stopOpStateSub();
+            }
             this.opstateVisible = event.madeVisible;
         } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
+            const model = this.models.modelInfoList
+                .find((m) => m.getName() === this.type && m.getVersion() === this.version);
+            if (model && event.madeVisible) {
+                model.getReadWritePathList().forEach((rw) => {
+                    this.hierarchy.ensureNode(rw.getPath(), this.type + ':' + this.version);
+                });
+                this.hierarchy.recalculate();
+            } else if (!event.madeVisible) {
+                this.hierarchy.removeLayer(this.type + ':' + this.version);
+                this.hierarchy.recalculate();
+            } else {
+                console.warn('No model', this.type, this.version, 'found');
+            }
             this.rwPathVisible = event.madeVisible;
-
         } else if (event.madeVisible && !this.changeIdsVisible.includes(event.layerName)) {
+            // For regular "Network Change" layers
+            // Update the hierarchy with newly visible nodes
+            this.updateHierarchy(event.layerName, this.deviceChanges.get(event.layerName).getChange());
             this.changeIdsVisible.push(event.layerName);
-
         } else if (!event.madeVisible && this.changeIdsVisible.includes(event.layerName)) {
+            this.hierarchy.removeLayer(event.layerName);
+            this.hierarchy.recalculate();
             const idx = this.changeIdsVisible.indexOf(event.layerName);
             this.changeIdsVisible.splice(idx, 1);
         }
@@ -261,4 +316,44 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     //         this.hasPending = true;
     //     }
     // }
+
+    watchOpState(deviceName: string, errCb: ErrorCallback) {
+        console.log('Listening to OpState for', deviceName);
+        this.opStateSub = this.diags.requestOpStateCache(deviceName, true).subscribe(
+            (opState: OpStateResponse) => {
+                const p = opState.getPathvalue().getPath();
+                const value = new TypedValue(); // Convert from PathValue to TypedValue
+                value.setBytes(opState.getPathvalue().getValue().getBytes_asU8());
+                value.setType(opState.getPathvalue().getValue().getType());
+                value.setTypeOptsList(opState.getPathvalue().getValue().getTypeOptsList());
+                const cv = new ChangeValue();
+                cv.setPath(p);
+                cv.setValue(value);
+                cv.setRemoved(false);
+                const oldChanges: ChangeValue[] = [];
+                this.opStateCache.forEach((o) => {
+                    oldChanges.push(o);
+                });
+                this.opStateCache.push(cv);
+                // Should not have to call this child layer directly, but these changes
+                // come too late in the cycle and are not detected by the usual bindings
+                this.opStateLayer.ngOnChanges({
+                    'changeValues':
+                        new SimpleChange(oldChanges, this.opStateCache, oldChanges.length === 0)
+                });
+                this.hierarchy.ensureNode(p, deviceName);
+                this.hierarchy.recalculate(); // Has to happen after each response
+                console.log('Change response for ', deviceName, 'received', p, this.opStateCache.length);
+            },
+            (err: grpcWeb.Error) => {
+                errCb(err);
+            }
+        );
+    }
+
+    stopOpStateSub() {
+        this.opStateSub.unsubscribe();
+        this.opStateCache.length = 0;
+        console.log('Stopped listening to OpState for', this.device);
+    }
 }

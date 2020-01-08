@@ -27,7 +27,7 @@ import {TreeLayoutNode} from './hierarchy-layout.service';
 export class NodeFilterPipe implements PipeTransform {
 
     transform(nodes: TreeLayoutNode[], layerId: string): TreeLayoutNode[] {
-        if (nodes === undefined || nodes.length === 0) {
+        if (nodes === undefined || nodes === null || nodes.length === 0) {
             return undefined;
         }
         const returnedNodes = Array<TreeLayoutNode>(0);
