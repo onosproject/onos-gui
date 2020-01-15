@@ -49,9 +49,9 @@
 <!--            <tr class="layerItem"-->
 <!--                (click)="toggleDisplay('pending', 2)">-->
 <!--                <onos-icon-->
-<!--                    [iconId]="layerVisibility.get('pending')?ACTIVE:INACTIVE"-->
+<!--                    [iconId]="hiddenLayers.get('pending')?ACTIVE:INACTIVE"-->
 <!--                    [iconSize]="20"-->
-<!--                    [classes]="layerVisibility.get('pending')?ACTIVE:INACTIVE"></onos-icon>-->
+<!--                    [classes]="hiddenLayers.get('pending')?ACTIVE:INACTIVE"></onos-icon>-->
 <!--                <td>pending</td>-->
 <!--            </tr>-->
 <!--            </tbody>-->
@@ -60,9 +60,9 @@
             <tbody>
             <tr id="layerItem" class="layerItem" *ngFor="let p of layerMap | keyvalue"
                 (click)="toggleDisplay(p.key, 0)">
-                <onos-icon [iconId]="layerVisibility.get(p.key)?ACTIVE:INACTIVE"
+                <onos-icon [iconId]="hiddenLayers.includes(p.key)?INACTIVE:ACTIVE"
                            [iconSize]="20"
-                           [classes]="layerVisibility.get(p.key)?ACTIVE:INACTIVE"></onos-icon>
+                           [classes]="hiddenLayers.includes(p.key)?INACTIVE:ACTIVE"></onos-icon>
                 <td [title]="p.value.getStatus() | changeStatus">{{p.key}}</td>
             </tr>
             </tbody>
@@ -72,20 +72,28 @@
     <div class="footer">
         <table>
             <tbody>
+            <tr id="snapshot-layer" class="layerItem"
+                (click)="toggleDisplay(SNAPSHOT, 5)">
+                <onos-icon
+                    [iconId]="hiddenLayers.includes(SNAPSHOT) ? INACTIVE : ACTIVE"
+                    [iconSize]="20"
+                    [classes]="hiddenLayers.includes(SNAPSHOT) ? INACTIVE:ACTIVE"></onos-icon>
+                <td>Snapshot</td>
+            </tr>
             <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"
                 (click)="toggleDisplay(OPSTATE, 1)">
                 <onos-icon
-                    [iconId]="layerVisibility.get(OPSTATE) ? ACTIVE : INACTIVE"
+                    [iconId]="hiddenLayers.includes(OPSTATE) ? INACTIVE : ACTIVE"
                     [iconSize]="20"
-                    [classes]="layerVisibility.get(OPSTATE) ? ACTIVE:INACTIVE"></onos-icon>
+                    [classes]="hiddenLayers.includes(OPSTATE) ? INACTIVE:ACTIVE"></onos-icon>
                 <td>State</td>
             </tr>
             <tr id="rwpaths-layer" class="layerItem"
                 (click)="toggleDisplay(RWPATHS, 3)">
                 <onos-icon
-                    [iconId]="layerVisibility.get(RWPATHS) ? ACTIVE : INACTIVE"
+                    [iconId]="hiddenLayers.includes(RWPATHS) ? INACTIVE : ACTIVE"
                     [iconSize]="20"
-                    [classes]="layerVisibility.get(RWPATHS) ? ACTIVE:INACTIVE"></onos-icon>
+                    [classes]="hiddenLayers.includes(RWPATHS) ? INACTIVE:ACTIVE"></onos-icon>
                 <td>ReadWrite paths</td>
             </tr>
             </tbody>

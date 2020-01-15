@@ -102,3 +102,19 @@ use#editicon {
     fill: #00bfed;
     fill-opacity: 0.6;
 }
+
+.snapshot rect#box  {
+    stroke: #222222;
+    stroke-width: 1px;
+    fill: #ffffff;
+    fill-opacity: 0.8;
+}
+
+.snapshot text#title {
+    stroke: #a9aba0;
+}
+
+.snapshot text#value {
+    stroke: #111111;
+    fill: #111111;
+}

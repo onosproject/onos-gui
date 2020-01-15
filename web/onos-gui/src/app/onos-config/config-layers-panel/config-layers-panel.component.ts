@@ -16,7 +16,7 @@
 
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {ACTIVE, CONFIGNAME, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
+import {ACTIVE, SNAPSHOT, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
 import {DeviceChange} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {LayerType} from '../config-view/layer-svg/layer-svg.component';
 
@@ -54,40 +54,47 @@ export class ConfigLayersPanelComponent implements OnChanges {
     // @Input() hasPending: boolean;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
-    layerVisibility = new Map<string, boolean>();
+    hiddenLayers: string[] = [];
     toggledOn: boolean = true;
     rolledUp: boolean = false;
 
     // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
     public RWPATHS = RWPATHS;
+    public SNAPSHOT = SNAPSHOT;
     public MEDIUM = MEDIUM;
     public ACTIVE = ACTIVE;
     public INACTIVE = INACTIVE;
 
     constructor() {
+        this.hiddenLayers.push(RWPATHS);
+        this.hiddenLayers.push(OPSTATE);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         console.log('Change happened in config-layers-panel');
         if (changes['type']) { // It's only when the 'type' is updated that we see the update
-            this.layerVisibility.clear();
-            this.layerMap.forEach((dc: DeviceChange, l: string) => {
-                this.layerVisibility.set(l, true);
-            });
+
         }
 
         // if (changes['hasPending']) {
-        //     this.layerVisibility.set('pending', changes['hasPending'].currentValue);
+        //     this.hiddenLayers.set('pending', changes['hasPending'].currentValue);
         // }
     }
 
     toggleDisplay(changeId: string, layerType: LayerType) {
-        this.layerVisibility.set(changeId, !this.layerVisibility.get(changeId));
+        let madeVisible = false;
+        if (this.hiddenLayers.includes(changeId)) {
+            const layerIdx = this.hiddenLayers.indexOf(changeId);
+            this.hiddenLayers.splice(layerIdx, 1);
+            madeVisible = true;
+        } else {
+            this.hiddenLayers.push(changeId);
+        }
         this.visibilityChange.emit(<SelectedLayer>{
             layerName: changeId,
             layerType: layerType,
-            madeVisible: this.layerVisibility.get(changeId),
+            madeVisible: madeVisible,
         });
     }
 
@@ -95,7 +102,12 @@ export class ConfigLayersPanelComponent implements OnChanges {
         this.toggledOn = on;
 
         this.layerMap.forEach((dc: DeviceChange, l: string) => {
-            this.layerVisibility.set(l, on);
+            if (this.hiddenLayers.includes(l) && on) {
+                const layerIdx = this.hiddenLayers.indexOf(l);
+                this.hiddenLayers.splice(layerIdx, 1);
+            } else if (!this.hiddenLayers.includes(l) && !on) {
+                this.hiddenLayers.push(l);
+            }
             this.visibilityChange.emit(<SelectedLayer>{
                 layerName: l,
                 // layerType: LayerType.LAYERTYPE_CONFIG,

@@ -50,9 +50,16 @@
             </svg:desc>
 <!--            <svg:g #gridFull onos-gridsvg> To optionally display a grid - development-->
 <!--            </svg:g>-->
+            <svg:g *ngIf="snapshotVisible" onos-layer-svg #snapshotLayer
+                   [layerId]="'snapshot'" [layerType]="5"
+                   [classes]="['snapshot']"
+                   [changeValues]="snapshotChangeValues"
+                   [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
+                   [hierarchyLinks]="hierarchy.treeLayout?.links()">
+            </svg:g>
             <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
                    [layerId]="c" [layerType]="0"
-                   [changeValues]="deviceChanges.get(c).getChange().getValuesList()"
+                   [changeValues]="deviceChanges.get(c)?.getChange().getValuesList()"
                    [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
                    [hierarchyLinks]="hierarchy.treeLayout?.links()"
                    (editRequestedLayer)="pathSelected($event)">

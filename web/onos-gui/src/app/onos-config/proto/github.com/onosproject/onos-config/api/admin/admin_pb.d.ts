@@ -264,29 +264,13 @@ export namespace RollbackResponse {
   }
 }
 
-export class GetSnapshotRequest extends jspb.Message {
-  getDeviceId(): string;
-  setDeviceId(value: string): void;
-
-  getDeviceVersion(): string;
-  setDeviceVersion(value: string): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GetSnapshotRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: GetSnapshotRequest): GetSnapshotRequest.AsObject;
-  static serializeBinaryToWriter(message: GetSnapshotRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GetSnapshotRequest;
-  static deserializeBinaryFromReader(message: GetSnapshotRequest, reader: jspb.BinaryReader): GetSnapshotRequest;
-}
-
-export namespace GetSnapshotRequest {
-  export type AsObject = {
-    deviceId: string,
-    deviceVersion: string,
-  }
-}
-
 export class ListSnapshotsRequest extends jspb.Message {
+  getSubscribe(): boolean;
+  setSubscribe(value: boolean): void;
+
+  getId(): string;
+  setId(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListSnapshotsRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListSnapshotsRequest): ListSnapshotsRequest.AsObject;
@@ -297,6 +281,8 @@ export class ListSnapshotsRequest extends jspb.Message {
 
 export namespace ListSnapshotsRequest {
   export type AsObject = {
+    subscribe: boolean,
+    id: string,
   }
 }
 

@@ -19,6 +19,7 @@
     padding-right: 4px;
     font-weight: bold;
     border: solid black 1px;
+    cursor: default;
 }
 
 .dev-ss-cell {
@@ -26,4 +27,5 @@
     border: solid 1px black;
     text-align: center;
     font-weight: bold;
+    cursor: pointer;
 }
