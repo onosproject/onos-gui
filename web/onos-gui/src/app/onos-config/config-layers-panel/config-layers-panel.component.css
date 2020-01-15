@@ -56,12 +56,15 @@
 }
 
 #changes-list {
-    height: 300px;
+    max-height: 50vh;
     overflow-y: auto;
 }
 
-#rollupBtn {
+div.tbar-arrow {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0%;
+    left: 96%;
+    margin-right: -4%;
+    /*transform: translate(-50%, -50%);*/
+    cursor: pointer;
 }

@@ -33,10 +33,10 @@ export interface SelectedLayer {
     animations: [
         trigger('layersPanelState', [
             state('true', style({
-                height: '30px'
+                transform: 'translateX(0%)',
             })),
             state('false', style({
-                height: '510px'
+                transform: 'translateX(-100%)',
             })),
             transition('0 => 1', animate('100ms ease-in')),
             transition('1 => 0', animate('100ms ease-out'))
@@ -56,7 +56,6 @@ export class ConfigLayersPanelComponent implements OnChanges {
 
     hiddenLayers: string[] = [];
     toggledOn: boolean = true;
-    rolledUp: boolean = false;
 
     // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -115,10 +114,6 @@ export class ConfigLayersPanelComponent implements OnChanges {
             });
         });
     }
-
-    // toggleRollup() {
-    //     this.rolledUp = !this.rolledUp;
-    // }
 
     // formatChangeNameTooltip(hash: string, changeName: ChangeName): string {
     //     const tooltip = Array<String>(1).fill('ID:' + hash);
