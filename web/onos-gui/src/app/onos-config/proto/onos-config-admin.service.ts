@@ -92,8 +92,13 @@ export class OnosConfigAdminService {
         return modelsObs;
     }
 
-    requestDeviceSnapshots(): Observable<Snapshot> {
-        const stream = this.adminServiceClient.listSnapshots(new ListSnapshotsRequest(), {});
+    requestSnapshots(wildcard: string): Observable<Snapshot> {
+        const snapshotsRequest = new ListSnapshotsRequest();
+        snapshotsRequest.setSubscribe(true);
+        snapshotsRequest.setId(wildcard);
+        const stream = this.adminServiceClient.listSnapshots(
+            snapshotsRequest, {}
+        );
         console.log('ListSnapshots sent to', this.onosConfigUrl);
 
         const snapshotObs = new Observable<Snapshot>((observer: Subscriber<Snapshot>) => {

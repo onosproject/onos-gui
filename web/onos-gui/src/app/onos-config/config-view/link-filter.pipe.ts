@@ -28,7 +28,7 @@ import {ConfigLink} from './hierarchy-layout.service';
 export class LinkFilterPipe implements PipeTransform {
 
     transform(links: ConfigLink[], layerId: string): ConfigLink[] {
-        if (links === undefined || links.length === 0) {
+        if (links === undefined || links === null || links.length === 0) {
             return null;
         }
         const returnedLinks = Array<ConfigLink>(0);

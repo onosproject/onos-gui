@@ -31,7 +31,8 @@ import {ActivatedRoute} from '@angular/router';
 import {IconService, TopoZoomPrefs, ZoomableDirective} from 'gui2-fw-lib';
 import {ErrorCallback} from '../device.service';
 import {
-    Change, ChangeValue,
+    Change,
+    ChangeValue,
     DeviceChange,
     TypedValue
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
@@ -50,9 +51,12 @@ import {
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
 import {ModelService} from '../model.service';
+import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
+import {Snapshot} from '../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
+export const SNAPSHOT = 'snapshot';
 export const MEDIUM = 'medium';
 export const ACTIVE = 'active';
 export const INACTIVE = 'inactive';
@@ -78,6 +82,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     @ViewChild(ZoomableDirective, {static: false}) zoomDirective: ZoomableDirective;
     @ViewChild('opStateLayer', {static: false}) opStateLayer: LayerSvgComponent;
+    @ViewChild('snapshotLayer', {static: false}) snapshotLayer: LayerSvgComponent;
 
     device: string;
     version: string;
@@ -87,6 +92,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     rwPathVisible: boolean;
     // pendingVisible: boolean = false;
     opstateVisible = false;
+    snapshotVisible = true;
     hasOpStateData: boolean = true;
     // hasPending: boolean = false;
     // pendingUdpateTime: Date;
@@ -99,6 +105,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     deviceChangeSub: Subscription;
     opStateSub: Subscription;
     opStateCache: ChangeValue[] = [];
+    snapshotSub: Subscription;
+    snapshotChangeValues: ChangeValue[] = [];
 
     // Constants - have to declare a variable to hold a constant so it can be used in HTML(?!?!)
     public OPSTATE = OPSTATE;
@@ -106,6 +114,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(
         private diags: OnosConfigDiagsService,
+        private admin: OnosConfigAdminService,
         //     private pending: PendingNetChangeService,
         protected ar: ActivatedRoute,
         protected is: IconService,
@@ -156,6 +165,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         if (this.opStateSub) {
             this.opStateSub.unsubscribe();
         }
+        this.snapshotSub.unsubscribe();
+        this.snapshotChangeValues.length = 0;
         this.opStateCache.length = 0;
         this.models.close();
         this.changeIdsVisible.length = 0;
@@ -181,7 +192,11 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                     'Device Changes gRPC error', String(err.code), err.message,
                     'Please ensure onos-config is reachable']);
             });
-
+            this.watchSnapshot(this.device, this.version, (err: grpcWeb.Error) => {
+                this.connectivityService.showVeil([
+                    'Snapshot gRPC error', String(err.code), err.message,
+                    'Please ensure onos-config is reachable']);
+            });
         }
     }
 
@@ -189,11 +204,51 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.deviceChangeSub = this.diags.requestDeviceChanges(deviceId, version).subscribe(
             (devCh: ListDeviceChangeResponse) => {
                 const change = devCh.getChange();
-                this.deviceChanges.set(change.getId(), change);
-                this.updateHierarchy(change.getId(), change.getChange());
-                this.changeIdsVisible.push(change.getId());
-                this.type = change.getChange().getDeviceType(); // All changes should have same type - take whatever comes
-                console.log('Device Change', change.getId(), 'updated');
+                // Waiting on https://github.com/onosproject/onos-config/pull/1034 to be merged
+                // if (this.deviceChanges.has(change.getId()) && devCh.getType() === ListResponseType.LISTREMOVED) {
+                //     const idx = this.changeIdsVisible.indexOf(change.getId());
+                //     this.changeIdsVisible.splice(idx, 1);
+                //     this.hierarchy.removeLayer(change.getId());
+                //     this.deviceChanges.delete(change.getId());
+                //     this.hierarchy.recalculate();
+                //     console.log(change.getId(), 'deleted');
+                // } else if (devCh.getType() !== ListResponseType.LISTREMOVED) {
+                    this.deviceChanges.set(change.getId(), change);
+                    this.updateHierarchy(change.getId(), change.getChange());
+                    this.changeIdsVisible.push(change.getId());
+                    this.type = change.getChange().getDeviceType(); // All changes should have same type - take whatever comes
+                    console.log('Device Change', change.getId(), 'updated');
+                // }
+            },
+            (err: grpcWeb.Error) => {
+                errCb(err);
+            }
+        );
+    }
+
+    watchSnapshot(deviceId: string, version: string, errCb: ErrorCallback) {
+        this.snapshotSub = this.admin.requestSnapshots(deviceId + ':' + version).subscribe(
+            (snapshot: Snapshot) => {
+                const oldChanges: ChangeValue[] = [];
+                this.snapshotChangeValues.forEach((o) => {
+                    oldChanges.push(o);
+                });
+                this.snapshotChangeValues.length = 0;
+                snapshot.getValuesList().forEach((v) => {
+                    const changeValue = new ChangeValue();
+                    changeValue.setPath(v.getPath());
+                    changeValue.setValue(v.getValue());
+                    this.hierarchy.ensureNode(v.getPath(), 'snapshot');
+                    this.snapshotChangeValues.push(changeValue);
+                });
+                // Should not have to call this child layer directly, but these changes
+                // come too late in the cycle and are not detected by the usual bindings
+                this.snapshotLayer.ngOnChanges({
+                    'changeValues':
+                        new SimpleChange(oldChanges, this.snapshotChangeValues, oldChanges.length === 0)
+                });
+                console.log('Snapshot for', deviceId, version, 'updated. #Values:', this.snapshotChangeValues.length);
+                this.hierarchy.recalculate();
             },
             (err: grpcWeb.Error) => {
                 errCb(err);
@@ -230,6 +285,18 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.stopOpStateSub();
             }
             this.opstateVisible = event.madeVisible;
+        } else if (event.layerType === LayerType.LAYERTYPE_SNAPSHOTS) {
+            if (event.madeVisible) {
+                this.watchSnapshot(this.device, this.version, (err: grpcWeb.Error) => {
+                    this.connectivityService.showVeil([
+                        'OpState gRPC error', String(err.code), err.message,
+                        'Please ensure onos-config is reachable']);
+                });
+            } else {
+                this.hierarchy.removeLayer(SNAPSHOT);
+                this.hierarchy.recalculate();
+                this.snapshotSub.unsubscribe();
+            }
         } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
             const model = this.models.modelInfoList
                 .find((m) => m.getName() === this.type && m.getVersion() === this.version);

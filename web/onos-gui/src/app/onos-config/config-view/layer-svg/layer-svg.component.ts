@@ -57,6 +57,7 @@ export enum LayerType {
     LAYERTYPE_PENDING,
     LAYERTYPE_RWPATHS,
     LAYERTYPE_ROPATHS,
+    LAYERTYPE_SNAPSHOTS
 }
 
 const ControlPointX = -40;
@@ -98,7 +99,6 @@ export class LayerSvgComponent implements OnChanges {
     nodelist: Map<string, ChangeValueObj>;
     offset: number = Math.random() * 200;
     offsetY = OFFSETY;
-    opStateSub: Subscription;
 
     constructor(
         private diags: OnosConfigDiagsService,
@@ -157,6 +157,8 @@ export class LayerSvgComponent implements OnChanges {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
                 // Do nothing - there will be no changes yet
+            } else if (this.layerType === LayerType.LAYERTYPE_SNAPSHOTS) {
+                // Do nothing - there will be no changes yet
             } else {
                 // The hierarchy updates are made in ConfigView - updateHierarchy()
                 for (const c of this.changeValues) {
@@ -188,7 +190,7 @@ export class LayerSvgComponent implements OnChanges {
         }
         if (changes['changeValues']) {
             const changeValues = <ChangeValue[]>changes['changeValues'].currentValue;
-            if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
+            if (this.layerType === LayerType.LAYERTYPE_OPSTATE || this.layerType === LayerType.LAYERTYPE_SNAPSHOTS) {
                 for (const c of this.changeValues) {
                     const [parentPath, relPath] = PathUtil.strPathToParentChild(c.getPath());
                     const cv = <ChangeValueObj>{

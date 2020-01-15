@@ -159,7 +159,7 @@ export class DeviceService {
     }
 
     watchSnapshots(errorCb: ErrorCallback) {
-        this.snapshotSub = this.admin.requestDeviceSnapshots().subscribe(
+        this.snapshotSub = this.admin.requestSnapshots('').subscribe(
     (s: Snapshot) => {
             console.log('List Snapshots response for', s.getId(), s.getSnapshotId(), s.getValuesList().length);
             if (!this.deviceList.has(s.getId())) {

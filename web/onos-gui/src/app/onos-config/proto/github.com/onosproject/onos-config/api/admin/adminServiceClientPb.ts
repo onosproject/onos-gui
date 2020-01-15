@@ -19,7 +19,6 @@ import {
   Chunk,
   CompactChangesRequest,
   CompactChangesResponse,
-  GetSnapshotRequest,
   ListModelsRequest,
   ListSnapshotsRequest,
   ModelInfo,
@@ -84,28 +83,6 @@ export class ConfigAdminServiceClient {
       request,
       metadata || {},
       this.methodInfoRollbackNetworkChange,
-      callback);
-  }
-
-  methodInfoGetSnapshot = new grpcWeb.AbstractClientBase.MethodInfo(
-    github_com_onosproject_onos$config_api_types_snapshot_device_types_pb.Snapshot,
-    (request: GetSnapshotRequest) => {
-      return request.serializeBinary();
-    },
-    github_com_onosproject_onos$config_api_types_snapshot_device_types_pb.Snapshot.deserializeBinary
-  );
-
-  getSnapshot(
-    request: GetSnapshotRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.Error,
-               response: github_com_onosproject_onos$config_api_types_snapshot_device_types_pb.Snapshot) => void) {
-    return this.client_.rpcCall(
-      this.hostname_ +
-        '/onos.config.admin.ConfigAdminService/GetSnapshot',
-      request,
-      metadata || {},
-      this.methodInfoGetSnapshot,
       callback);
   }
 
