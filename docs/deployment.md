@@ -1,6 +1,6 @@
 # Deploying onos-gui with Helm
 
-This guide deploys `onos-gui` through it's [Helm] chart assumes you have a [Kubernetes] cluster running 
+This guide deploys `onos-gui` through it's [Helm] chart and assumes you have a [Kubernetes] cluster running 
 with an atomix controller deployed in a namespace.  
 `onos-gui` Helm chart is based on Helm 3.0 version, with no need for the Tiller pod to be present.
 
@@ -25,7 +25,7 @@ The output should be:
 ```bash
 NAME: onos-gui
 LAST DEPLOYED: Sun Dec  8 19:40:39 2019
-NAMESPACE: default
+NAMESPACE: micro-onos
 STATUS: deployed
 REVISION: 1
 TEST SUITE: None
@@ -81,6 +81,11 @@ To view the pods that are deployed, run `kubectl -n micro-onos get pods`.
 
 ## Running the GUI
 To run the GUI follow the instructions at [Running onos-gui](run.md)
+
+Use the terminal to find the GUI IP address, and open in your browser.
+```bash
+kubectl -n onos get services -l app.kubernetes.io/instance=onos-gui
+```
 
 [Helm]: https://helm.sh/
 [Kubernetes]: https://kubernetes.io/

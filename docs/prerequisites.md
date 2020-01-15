@@ -4,14 +4,17 @@ Developers are expected to have these tools installed on the machine where the p
 
 ## Reusing tools from an existing ONOS installation
 If you already have the legacy ONOS project code checked out and built using Bazel
-on your system you already have all the tools you need.
+on your system, then you already have all the tools you need.
 Add the following 2 entries to your $PATH environment variable to give access
 to the `npm` and the `ng` command respectively
 
-* [bazel output_base]/external/nodejs_linux_amd64/bin/nodejs/bin
-* ~/onos/web/gui2/node_modules/@angular/cli/bin
+* `[bazel output_base]/external/nodejs_linux_amd64/bin/nodejs/bin`
+* `~/onos/web/gui2/node_modules/@angular/cli/bin`
 
-where [bazel output_base] above can be found from running the command: `bazel info output_base`
+where **[bazel output_base]** above can be found from running the command:
+```bash
+bazel info output_base
+```
 
 After setting the PATH it should be possible to see the version of **node** and **npm**:
 ```bash
@@ -24,6 +27,7 @@ which ng
 If legacy ONOS is not available install the latest Long Term Support version of NodeJS on your system.
 
 * Downloads are available from <https://nodejs.org/en/download/>
+    * Please use **v10.16.0** or greater
 * Instructions for installing on Linux are at <https://github.com/nodejs/help/wiki/Installation>
 
 After installing it should be possible to see the version of **node** and **npm**
