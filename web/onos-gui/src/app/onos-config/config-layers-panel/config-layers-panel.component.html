@@ -14,10 +14,11 @@
 ~ limitations under the License.
 -->
 
-<div id="layers-panel" class="floatpanel" [@layersPanelState]="rolledUp">
+<div id="layers-panel" class="floatpanel" [@layersPanelState]="on">
+    <div class="tbar-arrow" (click)="on =! on">
+        <onos-icon [iconSize]="10" [iconId]="on?'triangleLeft':'triangleRight'"></onos-icon>
+    </div>
     <div class="header">
-<!--        <onos-icon id="rollupBtn" [iconId]="rolledUp?'triangleDown':'triangleUp'" [iconSize]="20"-->
-<!--                   (click)="toggleRollup()"></onos-icon>-->
         <h2>{{configName}}</h2>
         <table id="layer-headings">
             <tbody>

@@ -129,7 +129,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.deviceChanges = new Map<string, DeviceChange>();
         this.hierarchy.setResizeCallback((h) => {
             const currentZoom = this.zoomDirective.zoomCached.sc;
-            const zoomLevel = <TopoZoomPrefs>{sc: 3 / h, tx: 0, ty: 0};
+            const zoomLevel = <TopoZoomPrefs>{sc: 3 / h, tx: 20, ty: 0};
             // Only change the pan location if zoom has changed
             if (currentZoom !== zoomLevel.sc) {
                 this.zoomDirective.changeZoomLevel(zoomLevel);
