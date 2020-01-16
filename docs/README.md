@@ -8,12 +8,13 @@ It will provide GUI interfaces for all of the core projects such as
 * [onos-config](config-gui.md)
 * onos-topo
 * onos-control
+* onos-ran
 
-In the first iteration (Sep '19) the Configuration GUI is the main target, but generally
+In the first iteration (Jan '20) the Configuration GUI is the main target, but generally
 the architecture will support UI extensions for any project, as libraries.
 
 ## Architecture
-See [architecture.md](architecture.md) for an architectural discussion.
+See [architecture.md](architecture.md) for an architectural description.
 
 ## Running the GUI
 
