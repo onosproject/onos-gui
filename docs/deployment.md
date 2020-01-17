@@ -1,7 +1,8 @@
-# Deploying onos-gui with Helm
+# Deploying and running onos-gui with Helm
 
 This guide deploys `onos-gui` through it's [Helm] chart and assumes you have a [Kubernetes] cluster running 
-with an atomix controller deployed in a namespace.  
+with an atomix controller deployed in a namespace.
+
 `onos-gui` Helm chart is based on Helm 3.0 version, with no need for the Tiller pod to be present.
 
 > The onos-gui deployment consists of 2 containers:
@@ -9,19 +10,21 @@ with an atomix controller deployed in a namespace.
 > * onos-gui - containing an nginx web server and the compiled GUI
 > * onos-envoy - containing a grpc-web proxy for connecting to onos-topo, onos-config etc.
 
-If you don't have a cluster running and want to try on your local machine please follow first 
+If you don't have a cluster running and want to try on your local machine please follow first
 the [Kubernetes] setup steps outlined in [deploy with Helm](https://docs.onosproject.org/developers/deploy_with_helm/).
 The following steps assume you have the setup outlined in that page, including the `micro-onos` namespace configured.
 
 > Note: if deploying the GUI on top of `onit` that its default namespace is `onos`,
-> so any mention of `micro-onos` below should be replaced with `onos` 
+> so any mention of `micro-onos` below should be replaced with `onos`
+
+> The GUI can also be installed on a test pod by referring to its cluster name 
 
 ## Installing the Chart
 To install the chart in the `micro-onos` namespace run from the root directory of the `onos-helm-charts` repo the command:
 ```bash
 helm install -n micro-onos onos-gui onos-gui
 ```
-The output should be:
+The output should be like:
 ```bash
 NAME: onos-gui
 LAST DEPLOYED: Sun Dec  8 19:40:39 2019
@@ -76,17 +79,52 @@ To remove the `onos-gui` pod issue
  helm delete -n micro-onos onos-gui
 ```
 ## Pod Information
-
 To view the pods that are deployed, run `kubectl -n micro-onos get pods`.
 
 ## Running the GUI
-To run the GUI follow the instructions at [Running onos-gui](run.md)
-
-Use the terminal to find the GUI IP address, and open in your browser.
+Use the terminal to find the "GUI Service IP Address"
 ```bash
 kubectl -n onos get services -l app.kubernetes.io/instance=onos-gui
 ```
 
+and open in your browser to access the GUI directly at: **http://{GUI Service IP Address}**.
+
+## Accessing the GUI from outside the Kubernetes cluster machine
+If access is required from another computer, first find the IP address of the
+external interface of the Kubernetes machine, by running the following in the
+Kubernetes machine:
+```bash
+ip route get <other computer's ip address>
+```
+this might give a response like (in the case where the *other machine ip address* is **192.168.0.100**):
+```bash
+192.168.0.100 dev ens1 src 192.168.0.2 uid 1000
+```
+
+Here the 5th field **192.168.0.2** is the address of K8s cluster that's facing the "other computer".
+To make the GUI available to the "other computer", run the following on the Kubernetes machine:
+```bash
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) --address 192.168.0.2 8181:80
+```
+
+and open in your browser to access the GUI at: **http://192.168.0.2:8181**.
+
+## Developer mode
+To run the GUI locally on a development machine
+
+- install the prerequisites as described in [Prerequisites]
+- run ONIT in Kubernetes as above
+- Forward the ports of the envoy proxy in 2 separate terminals
+```bash
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8080:8080
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8081:8081
+```
+
+- run the Angular CLI in `ng serve --configuration=kind` mode from the `web/onos-gui` folder
+- browse to [http://localhost:4200](http://localhost:4200)
+- ensure that the models page shows the 4 loaded model plugins (this
+ensures that the gRPC requests are proxied correctly through the envoy proxy)
+
 [Helm]: https://helm.sh/
 [Kubernetes]: https://kubernetes.io/
-
+[Prerequisites]: ./prerequisites.md
