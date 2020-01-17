@@ -85,6 +85,9 @@ export class ListNetworkChangeResponse extends jspb.Message {
   hasChange(): boolean;
   clearChange(): void;
 
+  getType(): Type;
+  setType(value: Type): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListNetworkChangeResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ListNetworkChangeResponse): ListNetworkChangeResponse.AsObject;
@@ -96,6 +99,7 @@ export class ListNetworkChangeResponse extends jspb.Message {
 export namespace ListNetworkChangeResponse {
   export type AsObject = {
     change?: github_com_onosproject_onos$config_api_types_change_network_types_pb.NetworkChange.AsObject,
+    type: Type,
   }
 }
 
@@ -135,6 +139,9 @@ export class ListDeviceChangeResponse extends jspb.Message {
   hasChange(): boolean;
   clearChange(): void;
 
+  getType(): Type;
+  setType(value: Type): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListDeviceChangeResponse.AsObject;
   static toObject(includeInstance: boolean, msg: ListDeviceChangeResponse): ListDeviceChangeResponse.AsObject;
@@ -146,6 +153,13 @@ export class ListDeviceChangeResponse extends jspb.Message {
 export namespace ListDeviceChangeResponse {
   export type AsObject = {
     change?: github_com_onosproject_onos$config_api_types_change_device_types_pb.DeviceChange.AsObject,
+    type: Type,
   }
 }
 
+export enum Type { 
+  NONE = 0,
+  ADDED = 1,
+  UPDATED = 2,
+  REMOVED = 3,
+}

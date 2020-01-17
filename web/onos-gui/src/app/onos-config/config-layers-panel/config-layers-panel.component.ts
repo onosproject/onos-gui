@@ -19,6 +19,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ACTIVE, SNAPSHOT, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
 import {DeviceChange} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {LayerType} from '../config-view/layer-svg/layer-svg.component';
+import {formatDate, KeyValue} from '@angular/common';
+import {StatusUtil} from '../status.util';
 
 export interface SelectedLayer {
     layerName: string;
@@ -45,7 +47,6 @@ export interface SelectedLayer {
 })
 export class ConfigLayersPanelComponent implements OnChanges {
     @Input() layerMap: Map<string, DeviceChange>;
-    @Input() on: boolean = true;
     @Input() configName: string; // Must be the same as the constant CONFIGNAME
     @Input() deviceName: string;
     @Input() type: string;
@@ -54,6 +55,7 @@ export class ConfigLayersPanelComponent implements OnChanges {
     // @Input() hasPending: boolean;
     @Output() visibilityChange = new EventEmitter<SelectedLayer>();
 
+    on: boolean = true;
     hiddenLayers: string[] = [];
     toggledOn: boolean = true;
 
@@ -113,6 +115,28 @@ export class ConfigLayersPanelComponent implements OnChanges {
                 madeVisible: on,
             });
         });
+    }
+
+    devChangeDecreasingIndex = (a: KeyValue<string, DeviceChange>, b: KeyValue<string, DeviceChange>): number => {
+        return a.value.getIndex() < b.value.getIndex() ? 1 : (a.value.getIndex() > b.value.getIndex() ? -1 : 0);
+    }
+
+    getTooltip(change: DeviceChange): string {
+
+        const created = (new Date()).setTime(change.getCreated().getSeconds() * 1000);
+        const updated = (new Date()).setTime(change.getUpdated().getSeconds() * 1000);
+
+        const tooltip = [
+            'Index: ' + change.getIndex(),
+            'Created: ' + formatDate(created, 'medium', 'en_US'),
+            'Updated: ' + formatDate(updated, 'medium', 'en_US'),
+            'Revision: ' + change.getRevision(),
+            'Status: ' + StatusUtil.statusToStrings(change.getStatus()).join(','),
+            'NWChange: ' + change.getNetworkChange().getId(),
+            '# changes: ' + change.getChange().getValuesList().length
+        ];
+
+        return tooltip.join('\n');
     }
 
     // formatChangeNameTooltip(hash: string, changeName: ChangeName): string {

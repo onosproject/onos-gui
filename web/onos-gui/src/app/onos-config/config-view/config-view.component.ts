@@ -46,7 +46,8 @@ import {ReadWritePath} from '../proto/github.com/onosproject/onos-config/api/adm
 import {Subscription} from 'rxjs';
 import {
     ListDeviceChangeResponse,
-    OpStateResponse
+    OpStateResponse,
+    Type
 } from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
@@ -204,21 +205,20 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.deviceChangeSub = this.diags.requestDeviceChanges(deviceId, version).subscribe(
             (devCh: ListDeviceChangeResponse) => {
                 const change = devCh.getChange();
-                // Waiting on https://github.com/onosproject/onos-config/pull/1034 to be merged
-                // if (this.deviceChanges.has(change.getId()) && devCh.getType() === ListResponseType.LISTREMOVED) {
-                //     const idx = this.changeIdsVisible.indexOf(change.getId());
-                //     this.changeIdsVisible.splice(idx, 1);
-                //     this.hierarchy.removeLayer(change.getId());
-                //     this.deviceChanges.delete(change.getId());
-                //     this.hierarchy.recalculate();
-                //     console.log(change.getId(), 'deleted');
-                // } else if (devCh.getType() !== ListResponseType.LISTREMOVED) {
+                if (this.deviceChanges.has(change.getId()) && devCh.getType() === Type.REMOVED) {
+                    const idx = this.changeIdsVisible.indexOf(change.getId());
+                    this.changeIdsVisible.splice(idx, 1);
+                    this.hierarchy.removeLayer(change.getId());
+                    this.deviceChanges.delete(change.getId());
+                    this.hierarchy.recalculate();
+                    console.log(change.getId(), 'deleted');
+                } else if (devCh.getType() !== Type.REMOVED) {
                     this.deviceChanges.set(change.getId(), change);
                     this.updateHierarchy(change.getId(), change.getChange());
                     this.changeIdsVisible.push(change.getId());
                     this.type = change.getChange().getDeviceType(); // All changes should have same type - take whatever comes
                     console.log('Device Change', change.getId(), 'updated');
-                // }
+                }
             },
             (err: grpcWeb.Error) => {
                 errCb(err);

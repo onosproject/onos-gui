@@ -150,6 +150,10 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
         return a.value.getCreated() < b.value.getCreated() ? 1 : (a.value.getCreated() > b.value.getCreated() ? -1 : 0);
     }
 
+    nwChangeDecreasingIndex = (a: KeyValue<string, NetworkChange>, b: KeyValue<string, NetworkChange>): number => {
+        return a.value.getIndex() < b.value.getIndex() ? 1 : (a.value.getIndex() > b.value.getIndex() ? -1 : 0);
+    }
+
     deviceChangeSelected(deviceChange: Change, nwChangeId: string) {
         const deviceChangeId = nwChangeId + ':' + deviceChange.getDeviceId() + ':' + deviceChange.getDeviceVersion();
         console.log('Device change selected', deviceChange.getDeviceId(), deviceChange.getDeviceVersion());

@@ -59,12 +59,12 @@
 <!--        </table>-->
         <table>
             <tbody>
-            <tr id="layerItem" class="layerItem" *ngFor="let p of layerMap | keyvalue"
+            <tr id="layerItem" class="layerItem" *ngFor="let p of layerMap | keyvalue:devChangeDecreasingIndex"
                 (click)="toggleDisplay(p.key, 0)">
                 <onos-icon [iconId]="hiddenLayers.includes(p.key)?INACTIVE:ACTIVE"
                            [iconSize]="20"
                            [classes]="hiddenLayers.includes(p.key)?INACTIVE:ACTIVE"></onos-icon>
-                <td [title]="p.value.getStatus() | changeStatus">{{p.key}}</td>
+                <td [title]="getTooltip(p.value)" [ngClass]="p.value.getStatus() | changeStatus">{{p.key}}</td>
             </tr>
             </tbody>
         </table>
@@ -79,7 +79,7 @@
                     [iconId]="hiddenLayers.includes(SNAPSHOT) ? INACTIVE : ACTIVE"
                     [iconSize]="20"
                     [classes]="hiddenLayers.includes(SNAPSHOT) ? INACTIVE:ACTIVE"></onos-icon>
-                <td>Snapshot</td>
+                <td class="snapshot">Snapshot</td>
             </tr>
             <tr id="opstate-layer" class="layerItem" *ngIf="hasOpState"
                 (click)="toggleDisplay(OPSTATE, 1)">

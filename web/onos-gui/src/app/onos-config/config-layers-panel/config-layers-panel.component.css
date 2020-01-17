@@ -68,3 +68,29 @@ div.tbar-arrow {
     /*transform: translate(-50%, -50%);*/
     cursor: pointer;
 }
+
+td.snapshot {
+    font-weight: bold;
+}
+
+td.complete {
+    color: #5b99d2;
+    font-weight: bold;
+}
+
+td.pending {
+    color: maroon;
+    font-weight: bold;
+}
+
+td.failed {
+    color: red;
+    font-weight: bold;
+}
+
+/* Rollback is the opposite of "Change" */
+td.rollback {
+    text-decoration: line-through;
+    font-weight: normal;
+    font-style: italic;
+}
