@@ -67,7 +67,7 @@
         </td>
     </tr>
     <tr class="nw-ch-row" [class.nw-ch-row__alternate]="i % 2"
-        *ngFor="let nwchId of networkChanges | keyvalue:nwChangeIncreasingAge; let i = index"
+        *ngFor="let nwchId of networkChanges | keyvalue:nwChangeDecreasingIndex; let i = index"
         onos-network-change [networkChange]="nwchId.value"
         [deviceSortCriterion]="deviceSortCriterion"
         (dcSelected)="deviceChangeSelected($event, nwchId.key)">

@@ -58,11 +58,15 @@ export class NetworkChangeComponent implements OnInit {
         const created = (new Date()).setTime(this.networkChange.getCreated().getSeconds() * 1000);
         const updated = (new Date()).setTime(this.networkChange.getUpdated().getSeconds() * 1000);
 
-        return 'Created:' + formatDate(created, 'medium', 'en_US') +
-            '\nUpdated:' + formatDate(updated, 'medium', 'en_US') +
-            '\nStatus: ' + this.getStatusClass().join(',') +
-            '\nIndex: ' + this.networkChange.getIndex() +
-            '\nRevision: ' + this.networkChange.getRevision();
+        const tooltip = [
+            'Created:' + formatDate(created, 'medium', 'en_US'),
+            'Updated:' + formatDate(updated, 'medium', 'en_US'),
+            'Status: ' + this.getStatusClass().join(','),
+            'Index: ' + this.networkChange.getIndex(),
+            'Revision: ' + this.networkChange.getRevision()
+        ];
+
+        return tooltip.join('\n');
     }
 
     itemSelected(nwChangeId: string, deviceId: string, version: string) {
