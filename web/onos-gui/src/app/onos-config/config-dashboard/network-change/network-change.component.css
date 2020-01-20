@@ -28,6 +28,10 @@
     cursor: pointer;
 }
 
+.nw-ch-title.rollback {
+    text-decoration: line-through;
+}
+
 /*.nw-ch-title {*/
 /*    position: absolute;*/
 /*    left: 0px;*/

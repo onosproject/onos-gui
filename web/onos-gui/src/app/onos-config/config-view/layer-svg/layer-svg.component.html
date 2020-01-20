@@ -17,7 +17,7 @@
 <svg:g xmlns:svg="http://www.w3.org/2000/svg">
     <svg:desc>Layer: {{layerId}} {{description}}</svg:desc>
     <svg:g *ngFor="let node of hierarchyDescendants | nodeFilter: layerId">
-        <svg:desc>Abs:{{node}} Val:{{node.data.absPath}}</svg:desc>
+        <svg:desc>Abs:{{node}} Val:{{node.data.absPath}} Classes:{{classes}}</svg:desc>
         <!-- Template explanation
            For each container object - some of the data is held in the layer and the
            rest of it is held in the Hierarchy service's hierarchy tree
@@ -31,6 +31,7 @@
                [relpath]="node.data.id"
                [value]="nodelist.get(node.data.absPath)?.value"
                [abspath]="node.data.absPath"
+               [removed]="nodelist.get(node.data.absPath)?.removed"
                [classes]="classes">
 <!--               (containerEditRequested)="requestEditLayer($event, nodelist.get(node.data.absPath).value, undefined)"-->
         </svg:g>

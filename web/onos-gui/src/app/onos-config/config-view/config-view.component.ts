@@ -54,6 +54,7 @@ import {ConnectivityService} from '../../connectivity.service';
 import {ModelService} from '../model.service';
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import {Snapshot} from '../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
+import {Phase} from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';
@@ -422,5 +423,11 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.opStateSub.unsubscribe();
         this.opStateCache.length = 0;
         console.log('Stopped listening to OpState for', this.device);
+    }
+
+    isRolledBack(deviceChange: DeviceChange): boolean {
+        if (deviceChange.getStatus().getPhase() === Phase.ROLLBACK) {
+            return true;
+        }
     }
 }

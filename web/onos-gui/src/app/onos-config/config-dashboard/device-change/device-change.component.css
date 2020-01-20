@@ -14,3 +14,6 @@
  * limitations under the License.
  */
 
+.dev-change-div.rollback {
+    text-decoration: line-through;
+}

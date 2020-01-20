@@ -50,6 +50,14 @@
     </tr>
     </tfoot>
     <tbody>
+    <tr>
+        <th class="nw-cnt-hdr">Pending/Complete/Failed/Total<br>Change/Rollback</th>
+        <td class="nw-cnt-row"
+            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
+            <!-- the pre is required so that the newline in the string is not flattened -->
+            <pre id="nw-ch-counts">{{countChangesStates(device.value.getId(), device.value.getVersion())}}</pre>
+        </td>
+    </tr>
     <tr class="control">
         <td>
             <input type="button" value="Compact.." (click)="compactChangesDialog()">
@@ -67,10 +75,12 @@
         </td>
     </tr>
     <tr class="nw-ch-row" [class.nw-ch-row__alternate]="i % 2"
-        *ngFor="let nwchId of networkChanges | keyvalue:nwChangeDecreasingIndex; let i = index"
+        *ngFor="let nwchId of networkChanges | keyvalue:nwChangeDecreasingIndex; let i = index; first as isFirst"
         onos-network-change [networkChange]="nwchId.value"
         [deviceSortCriterion]="deviceSortCriterion"
-        (dcSelected)="deviceChangeSelected($event, nwchId.key)">
+        [canRollback]="isFirst && nwchId.value.getStatus().getPhase() !== 1"
+        (dcSelected)="deviceChangeSelected($event, nwchId.key)"
+        (rollbackSelected)="rollbackDialog($event, nwchId.key)">
     </tr>
     <tr class="nw-ss-row" onos-network-snapshot
         [deviceSortCriterion]="deviceSortCriterion"
@@ -84,3 +94,7 @@
 <onos-confirm title="{{ compactChangesMsg }}"
               message="{{ compactChangesConfirmMsg }}"
               (chosen)="confirmedCompactChanges($event)"></onos-confirm>
+
+<onos-confirm title="{{ rollbackMsg }}"
+              message="{{ rollbackConfigMsg }}"
+              (chosen)="confirmedRollback($event)"></onos-confirm>

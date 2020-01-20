@@ -32,6 +32,8 @@ export class NetworkChangeComponent implements OnInit {
     @Input() deviceSortCriterion: (a: KeyValue<string, Device>, b: KeyValue<string, Device>) => number
         = DeviceService.deviceSorterForwardAlpha;
     @Output() dcSelected = new EventEmitter<Change>();
+    @Input() canRollback: boolean = false;
+    @Output() rollbackSelected = new EventEmitter<boolean>();
     created: number;
 
     constructor(
@@ -71,5 +73,9 @@ export class NetworkChangeComponent implements OnInit {
 
     itemSelected(nwChangeId: string, deviceId: string, version: string) {
         this.dcSelected.emit(this.getChangeByName(deviceId, version));
+    }
+
+    rollbackChange() {
+        this.rollbackSelected.emit(true);
     }
 }
