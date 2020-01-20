@@ -22,6 +22,10 @@
             <svg:feMergeNode in="SourceGraphic" />
         </svg:feMerge>
     </svg:filter>
+    <linearGradient id="rect-grad" x1="0" x2="1" y1="0" y2="1">
+        <stop offset="0%" stop-color="#007dc4"/>
+        <stop offset="100%" stop-color="#00bfed"/>
+    </linearGradient>
 </svg:defs>
 
 <svg:g id="container" [ngClass]="classes.join(' ')" xmlns:svg="http://www.w3.org/2000/svg" width="160" height="80"
@@ -37,4 +41,8 @@
 <!--    </svg:use>-->
     <svg:text id="title" x="5" y="17">{{displayPath}}</svg:text>
     <svg:text id="value" x="160" y="32">{{value | changeValue:15}}</svg:text>
+    <svg:g id="cross" *ngIf="removed">
+        <svg:line x1="0" y1="0" x2="160" y2="35"></svg:line>
+        <svg:line x1="0" y1="35" x2="160" y2="0"></svg:line>
+    </svg:g>
 </svg:g>

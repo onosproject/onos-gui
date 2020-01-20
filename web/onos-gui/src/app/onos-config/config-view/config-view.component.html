@@ -59,6 +59,7 @@
             <svg:g *ngFor="let c of changeIdsVisible" onos-layer-svg
                    [layerId]="c" [layerType]="0"
                    [changeValues]="deviceChanges.get(c)?.getChange().getValuesList()"
+                   [classes]="isRolledBack(deviceChanges.get(c)) ? ['config','rollback'] : ['config']"
                    [hierarchyDescendants]="hierarchy.treeLayout?.descendants()"
                    [hierarchyLinks]="hierarchy.treeLayout?.links()"
                    (editRequestedLayer)="pathSelected($event)">

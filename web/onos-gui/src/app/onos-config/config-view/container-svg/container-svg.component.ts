@@ -43,6 +43,7 @@ export class ContainerSvgComponent implements OnChanges {
     @Input() hn: HierarchyNode; // For debugging
     @Input() containerScale: number = 1.0;
     @Input() value: TypedValue;
+    @Input() removed: boolean = false;
     @Input() classes: string[] = ['config'];
     @Output() containerEditRequested = new EventEmitter<string>();
 

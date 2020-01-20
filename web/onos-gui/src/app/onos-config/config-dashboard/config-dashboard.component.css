@@ -54,6 +54,18 @@
     color: #444444;
 }
 
+.nw-cnt-hdr {
+    text-align: right;
+    padding-right: 4px;
+    font-weight: bold;
+    cursor: default;
+}
+
+.nw-cnt-row {
+    text-align: center;
+    cursor: default;
+}
+
 .device-hdr {
     text-align: center;
     border: solid yellow 3px; /* changed by animation on load */
@@ -93,4 +105,9 @@ a.gnmi_unreachable {
 
 .control {
     text-align: center;
+}
+
+#nw-ch-counts {
+    font-family: 'Open Sans', normal;
+    margin: 0px;
 }

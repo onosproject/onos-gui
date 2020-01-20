@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 
-import {
-    ChangeDetectorRef,
-    Component, Host, OnDestroy,
-    OnInit
-} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {KeyValue} from '@angular/common';
 import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
 import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
@@ -31,15 +27,13 @@ import {
 import {
     Change,
     ChangeValue,
-    DeviceChange,
     PathValue
 } from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-import {IconService, VeilComponent} from 'gui2-fw-lib';
+import {IconService} from 'gui2-fw-lib';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     Phase,
-    State,
-    Status
+    State
 } from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
 import {
     Device,
@@ -48,7 +42,7 @@ import {
 import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
-import {of, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {TopoDeviceService} from '../../onos-topo/topodevice.service';
 
 @Component({
@@ -74,6 +68,9 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     retenionSecs: number = 86400;
     compactChangesMsg: string = undefined;
     compactChangesConfirmMsg: string = undefined;
+    rollbackMsg: string = undefined;
+    rollbackConfigMsg: string = undefined;
+    rollbackNwChName: string = undefined;
     nwchangesSub: Subscription;
 
     constructor(
@@ -239,6 +236,66 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
                 console.log('Changes compacted!');
             }, error => {
                 console.log('Changes compacting error', error);
+            });
+        }
+    }
+
+    /**
+     * Get counts of every device change in the system
+     * @param deviceId The column (device) that's being handled
+     */
+    countChangesStates(deviceId: string, ver: string): string {
+        let pending = 0;
+        let complete = 0;
+        let failed = 0;
+        let total = 0;
+        let change = 0;
+        let rollback = 0;
+
+        this.networkChanges.forEach((nwCh) => {
+            if (nwCh.getChangesList().findIndex(
+                (ch) => ch.getDeviceId() === deviceId && ch.getDeviceVersion() === ver) !== -1) {
+                total = total + 1;
+                switch (nwCh.getStatus().getState()) {
+                    case State.PENDING:
+                        pending = pending + 1;
+                        break;
+                    case State.COMPLETE:
+                        complete = complete + 1;
+                        break;
+                    case State.FAILED:
+                        failed = failed + 1;
+                }
+                switch (nwCh.getStatus().getPhase()) {
+                    case Phase.CHANGE:
+                        change = change + 1;
+                        break;
+                    case Phase.ROLLBACK:
+                        rollback = rollback + 1;
+                }
+            }
+        });
+
+        return pending + '/' + complete + '/' + failed + '/' + total + '\n' + change + '/' + rollback;
+    }
+
+    rollbackDialog(rolledback: boolean, nwChId: string): void {
+        this.rollbackMsg = 'Rollback Network Change?';
+        this.rollbackConfigMsg = 'Change ' + nwChId + ' will be rolled back. It\'s changes will be ignored. Cannot be undone.';
+        this.rollbackNwChName = nwChId;
+    }
+
+    confirmedRollback(chosen: boolean) {
+        this.rollbackMsg = undefined;
+        this.rollbackConfigMsg = undefined;
+        const nwChange = this.rollbackNwChName;
+        this.rollbackNwChName = undefined;
+        if (chosen) {
+            const myObs = this.admin.requestRollback(nwChange);
+            myObs.subscribe((resp) => {
+                console.log('Change ', nwChange, 'rolled back!');
+            }, error => {
+                console.log('Rollback', nwChange, 'error', error);
             });
         }
     }

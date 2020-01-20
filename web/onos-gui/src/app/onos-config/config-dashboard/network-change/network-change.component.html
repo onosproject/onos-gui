@@ -17,7 +17,8 @@
 <th class="nw-ch-title" scope="row" [ngClass]="getStatusClass()" [title]="getTooltip()">
     {{networkChange.getId()}}
     <br>
-    <small style="font-weight: lighter">{{created | date:'medium'}}</small>
+    <small style="font-weight: lighter">{{created | date:'medium'}}</small><br>
+    <input type="button" *ngIf="canRollback" value="Rollback" (click)="rollbackChange()">
 </th>
 <td class="dev-change-cell"
     *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion"
