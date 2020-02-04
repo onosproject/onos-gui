@@ -1,7 +1,8 @@
 sudo: false
 
-services:
-  - docker
+language: node_js
+node_js:
+  - "12"
 
 notifications:
   email: false
@@ -10,13 +11,21 @@ branches:
   only:
     - master
 
-jobs:
-  include:
-    - stage: tests
-      script:
-        - docker container run --rm -it -v $(pwd):/opt -w /opt teracy/angular-cli ./build/bin/make-coverage
-        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./build/bin/push-images; fi'
-    - stage: docs build
-      if: type != pull_request
-      script:
-          - sh build/bin/trigger-docs-travis $TRAVIS_ACCESS_TOKEN
+addons:
+  apt:
+    packages:
+      - chromium-browser
+
+cache:
+  directories:
+    - ./node_modules
+
+before_install:
+  - cd web/onos-gui
+
+install:
+  - npm install
+
+script:
+  - npm run lint
+  - npm run test -- --no-watch --no-progress --browsers=ChromiumHeadless
