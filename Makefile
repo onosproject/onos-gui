@@ -16,7 +16,7 @@ coverage: deps build license_check test
 deps: # @HELP ensure that the required dependencies are in place
 	cd web/onos-gui && NG_CLI_ANALYTICS=false npm install
 
-lint: # @HELP run the linters for Go source code
+lint: # @HELP run the linters for Typescript source code
 	cd web/onos-gui && ng lint
 
 license_check: # @HELP examine and ensure license headers exist
