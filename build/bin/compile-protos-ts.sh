@@ -42,10 +42,10 @@ rm -rf github.com
 cp -r gogoproto/* web/onos-gui/src/app/onos-topo/proto/gogoproto/
 cp -r gogoproto/* web/onos-gui/src/app/onos-config/proto/gogoproto/
 rm -rf gogoproto
-cp -r Github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/proto/github.com/onosproject/onos-config/
-cp -r Github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
-cp -r Github.com/onosproject/onos-topo/* web/onos-gui/src/app/onos-topo/proto/github.com/onosproject/onos-topo/
-rm -rf Github.com
+#cp -r github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/proto/github.com/onosproject/onos-config/
+#cp -r github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
+#cp -r github.com/onosproject/onos-topo/* web/onos-gui/src/app/onos-topo/proto/github.com/onosproject/onos-topo/
+#rm -rf Github.com
 
 # Add the license text to generated files
 for f in $(find web/onos-gui/src/app/onos-*/proto/github.com/ -type f -name "*.d.ts"); do

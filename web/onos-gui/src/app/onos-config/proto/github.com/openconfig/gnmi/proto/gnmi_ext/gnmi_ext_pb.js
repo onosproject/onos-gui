@@ -288,17 +288,21 @@ proto.gnmi_ext.Extension.prototype.getRegisteredExt = function() {
 };
 
 
-/** @param {?proto.gnmi_ext.RegisteredExtension|undefined} value */
+/**
+ * @param {?proto.gnmi_ext.RegisteredExtension|undefined} value
+ * @return {!proto.gnmi_ext.Extension} returns this
+*/
 proto.gnmi_ext.Extension.prototype.setRegisteredExt = function(value) {
-  jspb.Message.setOneofWrapperField(this, 1, proto.gnmi_ext.Extension.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 1, proto.gnmi_ext.Extension.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi_ext.Extension} returns this
  */
 proto.gnmi_ext.Extension.prototype.clearRegisteredExt = function() {
-  this.setRegisteredExt(undefined);
+  return this.setRegisteredExt(undefined);
 };
 
 
@@ -321,17 +325,21 @@ proto.gnmi_ext.Extension.prototype.getMasterArbitration = function() {
 };
 
 
-/** @param {?proto.gnmi_ext.MasterArbitration|undefined} value */
+/**
+ * @param {?proto.gnmi_ext.MasterArbitration|undefined} value
+ * @return {!proto.gnmi_ext.Extension} returns this
+*/
 proto.gnmi_ext.Extension.prototype.setMasterArbitration = function(value) {
-  jspb.Message.setOneofWrapperField(this, 2, proto.gnmi_ext.Extension.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 2, proto.gnmi_ext.Extension.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi_ext.Extension} returns this
  */
 proto.gnmi_ext.Extension.prototype.clearMasterArbitration = function() {
-  this.setMasterArbitration(undefined);
+  return this.setMasterArbitration(undefined);
 };
 
 
@@ -477,9 +485,12 @@ proto.gnmi_ext.RegisteredExtension.prototype.getId = function() {
 };
 
 
-/** @param {!proto.gnmi_ext.ExtensionID} value */
+/**
+ * @param {!proto.gnmi_ext.ExtensionID} value
+ * @return {!proto.gnmi_ext.RegisteredExtension} returns this
+ */
 proto.gnmi_ext.RegisteredExtension.prototype.setId = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -516,9 +527,12 @@ proto.gnmi_ext.RegisteredExtension.prototype.getMsg_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi_ext.RegisteredExtension} returns this
+ */
 proto.gnmi_ext.RegisteredExtension.prototype.setMsg = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -660,17 +674,21 @@ proto.gnmi_ext.MasterArbitration.prototype.getRole = function() {
 };
 
 
-/** @param {?proto.gnmi_ext.Role|undefined} value */
+/**
+ * @param {?proto.gnmi_ext.Role|undefined} value
+ * @return {!proto.gnmi_ext.MasterArbitration} returns this
+*/
 proto.gnmi_ext.MasterArbitration.prototype.setRole = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi_ext.MasterArbitration} returns this
  */
 proto.gnmi_ext.MasterArbitration.prototype.clearRole = function() {
-  this.setRole(undefined);
+  return this.setRole(undefined);
 };
 
 
@@ -693,17 +711,21 @@ proto.gnmi_ext.MasterArbitration.prototype.getElectionId = function() {
 };
 
 
-/** @param {?proto.gnmi_ext.Uint128|undefined} value */
+/**
+ * @param {?proto.gnmi_ext.Uint128|undefined} value
+ * @return {!proto.gnmi_ext.MasterArbitration} returns this
+*/
 proto.gnmi_ext.MasterArbitration.prototype.setElectionId = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi_ext.MasterArbitration} returns this
  */
 proto.gnmi_ext.MasterArbitration.prototype.clearElectionId = function() {
-  this.setElectionId(undefined);
+  return this.setElectionId(undefined);
 };
 
 
@@ -849,9 +871,12 @@ proto.gnmi_ext.Uint128.prototype.getHigh = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi_ext.Uint128} returns this
+ */
 proto.gnmi_ext.Uint128.prototype.setHigh = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -864,9 +889,12 @@ proto.gnmi_ext.Uint128.prototype.getLow = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi_ext.Uint128} returns this
+ */
 proto.gnmi_ext.Uint128.prototype.setLow = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -991,9 +1019,12 @@ proto.gnmi_ext.Role.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi_ext.Role} returns this
+ */
 proto.gnmi_ext.Role.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

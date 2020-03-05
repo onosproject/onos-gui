@@ -18,7 +18,7 @@ import {Inject, Injectable} from '@angular/core';
 import {
     ChangeServiceClient,
     OpStateDiagsClient
-} from './github.com/onosproject/onos-config/api/diags/diagsServiceClientPb';
+} from './github.com/onosproject/onos-config/api/diags/DiagsServiceClientPb';
 import {
     ListDeviceChangeRequest, ListDeviceChangeResponse,
     ListNetworkChangeRequest, ListNetworkChangeResponse,

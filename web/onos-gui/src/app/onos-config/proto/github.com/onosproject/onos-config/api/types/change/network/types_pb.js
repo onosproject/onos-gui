@@ -300,9 +300,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+ */
 proto.onos.config.change.network.NetworkChange.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -315,9 +318,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getIndex = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+ */
 proto.onos.config.change.network.NetworkChange.prototype.setIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -330,9 +336,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getRevision = function(
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+ */
 proto.onos.config.change.network.NetworkChange.prototype.setRevision = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -346,17 +355,21 @@ proto.onos.config.change.network.NetworkChange.prototype.getStatus = function() 
 };
 
 
-/** @param {?proto.onos.config.change.Status|undefined} value */
+/**
+ * @param {?proto.onos.config.change.Status|undefined} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+*/
 proto.onos.config.change.network.NetworkChange.prototype.setStatus = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
  */
 proto.onos.config.change.network.NetworkChange.prototype.clearStatus = function() {
-  this.setStatus(undefined);
+  return this.setStatus(undefined);
 };
 
 
@@ -379,17 +392,21 @@ proto.onos.config.change.network.NetworkChange.prototype.getCreated = function()
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+*/
 proto.onos.config.change.network.NetworkChange.prototype.setCreated = function(value) {
-  jspb.Message.setWrapperField(this, 5, value);
+  return jspb.Message.setWrapperField(this, 5, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
  */
 proto.onos.config.change.network.NetworkChange.prototype.clearCreated = function() {
-  this.setCreated(undefined);
+  return this.setCreated(undefined);
 };
 
 
@@ -412,17 +429,21 @@ proto.onos.config.change.network.NetworkChange.prototype.getUpdated = function()
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+*/
 proto.onos.config.change.network.NetworkChange.prototype.setUpdated = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
  */
 proto.onos.config.change.network.NetworkChange.prototype.clearUpdated = function() {
-  this.setUpdated(undefined);
+  return this.setUpdated(undefined);
 };
 
 
@@ -445,9 +466,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getChangesList = functi
 };
 
 
-/** @param {!Array<!proto.onos.config.change.device.Change>} value */
+/**
+ * @param {!Array<!proto.onos.config.change.device.Change>} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+*/
 proto.onos.config.change.network.NetworkChange.prototype.setChangesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -463,9 +487,10 @@ proto.onos.config.change.network.NetworkChange.prototype.addChanges = function(o
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
  */
 proto.onos.config.change.network.NetworkChange.prototype.clearChangesList = function() {
-  this.setChangesList([]);
+  return this.setChangesList([]);
 };
 
 
@@ -479,9 +504,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getRefsList = function(
 };
 
 
-/** @param {!Array<!proto.onos.config.change.network.DeviceChangeRef>} value */
+/**
+ * @param {!Array<!proto.onos.config.change.network.DeviceChangeRef>} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+*/
 proto.onos.config.change.network.NetworkChange.prototype.setRefsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 8, value);
+  return jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
 
@@ -497,9 +525,10 @@ proto.onos.config.change.network.NetworkChange.prototype.addRefs = function(opt_
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
  */
 proto.onos.config.change.network.NetworkChange.prototype.clearRefsList = function() {
-  this.setRefsList([]);
+  return this.setRefsList([]);
 };
 
 
@@ -512,9 +541,12 @@ proto.onos.config.change.network.NetworkChange.prototype.getDeleted = function()
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.change.network.NetworkChange} returns this
+ */
 proto.onos.config.change.network.NetworkChange.prototype.setDeleted = function(value) {
-  jspb.Message.setProto3BooleanField(this, 9, value);
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 
@@ -639,9 +671,12 @@ proto.onos.config.change.network.DeviceChangeRef.prototype.getDeviceChangeId = f
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.change.network.DeviceChangeRef} returns this
+ */
 proto.onos.config.change.network.DeviceChangeRef.prototype.setDeviceChangeId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
