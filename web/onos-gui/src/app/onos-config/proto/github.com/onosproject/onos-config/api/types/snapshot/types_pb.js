@@ -195,9 +195,12 @@ proto.onos.config.snapshot.Status.prototype.getPhase = function() {
 };
 
 
-/** @param {!proto.onos.config.snapshot.Phase} value */
+/**
+ * @param {!proto.onos.config.snapshot.Phase} value
+ * @return {!proto.onos.config.snapshot.Status} returns this
+ */
 proto.onos.config.snapshot.Status.prototype.setPhase = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -210,9 +213,12 @@ proto.onos.config.snapshot.Status.prototype.getState = function() {
 };
 
 
-/** @param {!proto.onos.config.snapshot.State} value */
+/**
+ * @param {!proto.onos.config.snapshot.State} value
+ * @return {!proto.onos.config.snapshot.Status} returns this
+ */
 proto.onos.config.snapshot.Status.prototype.setState = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -340,17 +346,21 @@ proto.onos.config.snapshot.RetentionOptions.prototype.getRetainWindow = function
 };
 
 
-/** @param {?proto.google.protobuf.Duration|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.onos.config.snapshot.RetentionOptions} returns this
+*/
 proto.onos.config.snapshot.RetentionOptions.prototype.setRetainWindow = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.RetentionOptions} returns this
  */
 proto.onos.config.snapshot.RetentionOptions.prototype.clearRetainWindow = function() {
-  this.setRetainWindow(undefined);
+  return this.setRetainWindow(undefined);
 };
 
 

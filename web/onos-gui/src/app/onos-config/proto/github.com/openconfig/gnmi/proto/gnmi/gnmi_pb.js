@@ -773,9 +773,12 @@ proto.gnmi.Notification.prototype.getTimestamp = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Notification} returns this
+ */
 proto.gnmi.Notification.prototype.setTimestamp = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -789,17 +792,21 @@ proto.gnmi.Notification.prototype.getPrefix = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.Notification} returns this
+*/
 proto.gnmi.Notification.prototype.setPrefix = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Notification} returns this
  */
 proto.gnmi.Notification.prototype.clearPrefix = function() {
-  this.setPrefix(undefined);
+  return this.setPrefix(undefined);
 };
 
 
@@ -821,9 +828,12 @@ proto.gnmi.Notification.prototype.getAlias = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.Notification} returns this
+ */
 proto.gnmi.Notification.prototype.setAlias = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -837,9 +847,12 @@ proto.gnmi.Notification.prototype.getUpdateList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Update>} value */
+/**
+ * @param {!Array<!proto.gnmi.Update>} value
+ * @return {!proto.gnmi.Notification} returns this
+*/
 proto.gnmi.Notification.prototype.setUpdateList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 4, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -855,9 +868,10 @@ proto.gnmi.Notification.prototype.addUpdate = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.Notification} returns this
  */
 proto.gnmi.Notification.prototype.clearUpdateList = function() {
-  this.setUpdateList([]);
+  return this.setUpdateList([]);
 };
 
 
@@ -871,9 +885,12 @@ proto.gnmi.Notification.prototype.getDeleteList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Path>} value */
+/**
+ * @param {!Array<!proto.gnmi.Path>} value
+ * @return {!proto.gnmi.Notification} returns this
+*/
 proto.gnmi.Notification.prototype.setDeleteList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -889,9 +906,10 @@ proto.gnmi.Notification.prototype.addDelete = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.Notification} returns this
  */
 proto.gnmi.Notification.prototype.clearDeleteList = function() {
-  this.setDeleteList([]);
+  return this.setDeleteList([]);
 };
 
 
@@ -904,9 +922,12 @@ proto.gnmi.Notification.prototype.getAtomic = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.Notification} returns this
+ */
 proto.gnmi.Notification.prototype.setAtomic = function(value) {
-  jspb.Message.setProto3BooleanField(this, 6, value);
+  return jspb.Message.setProto3BooleanField(this, 6, value);
 };
 
 
@@ -1074,17 +1095,21 @@ proto.gnmi.Update.prototype.getPath = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.Update} returns this
+*/
 proto.gnmi.Update.prototype.setPath = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Update} returns this
  */
 proto.gnmi.Update.prototype.clearPath = function() {
-  this.setPath(undefined);
+  return this.setPath(undefined);
 };
 
 
@@ -1107,17 +1132,21 @@ proto.gnmi.Update.prototype.getValue = function() {
 };
 
 
-/** @param {?proto.gnmi.Value|undefined} value */
+/**
+ * @param {?proto.gnmi.Value|undefined} value
+ * @return {!proto.gnmi.Update} returns this
+*/
 proto.gnmi.Update.prototype.setValue = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Update} returns this
  */
 proto.gnmi.Update.prototype.clearValue = function() {
-  this.setValue(undefined);
+  return this.setValue(undefined);
 };
 
 
@@ -1140,17 +1169,21 @@ proto.gnmi.Update.prototype.getVal = function() {
 };
 
 
-/** @param {?proto.gnmi.TypedValue|undefined} value */
+/**
+ * @param {?proto.gnmi.TypedValue|undefined} value
+ * @return {!proto.gnmi.Update} returns this
+*/
 proto.gnmi.Update.prototype.setVal = function(value) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Update} returns this
  */
 proto.gnmi.Update.prototype.clearVal = function() {
-  this.setVal(undefined);
+  return this.setVal(undefined);
 };
 
 
@@ -1172,9 +1205,12 @@ proto.gnmi.Update.prototype.getDuplicates = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Update} returns this
+ */
 proto.gnmi.Update.prototype.setDuplicates = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -1486,17 +1522,21 @@ proto.gnmi.TypedValue.prototype.getStringVal = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setStringVal = function(value) {
-  jspb.Message.setOneofField(this, 1, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 1, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearStringVal = function() {
-  jspb.Message.setOneofField(this, 1, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 1, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1518,17 +1558,21 @@ proto.gnmi.TypedValue.prototype.getIntVal = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setIntVal = function(value) {
-  jspb.Message.setOneofField(this, 2, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 2, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearIntVal = function() {
-  jspb.Message.setOneofField(this, 2, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 2, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1550,17 +1594,21 @@ proto.gnmi.TypedValue.prototype.getUintVal = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setUintVal = function(value) {
-  jspb.Message.setOneofField(this, 3, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 3, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearUintVal = function() {
-  jspb.Message.setOneofField(this, 3, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 3, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1582,17 +1630,21 @@ proto.gnmi.TypedValue.prototype.getBoolVal = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setBoolVal = function(value) {
-  jspb.Message.setOneofField(this, 4, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 4, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearBoolVal = function() {
-  jspb.Message.setOneofField(this, 4, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 4, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1638,17 +1690,21 @@ proto.gnmi.TypedValue.prototype.getBytesVal_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setBytesVal = function(value) {
-  jspb.Message.setOneofField(this, 5, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 5, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearBytesVal = function() {
-  jspb.Message.setOneofField(this, 5, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 5, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1670,17 +1726,21 @@ proto.gnmi.TypedValue.prototype.getFloatVal = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setFloatVal = function(value) {
-  jspb.Message.setOneofField(this, 6, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 6, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearFloatVal = function() {
-  jspb.Message.setOneofField(this, 6, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 6, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1703,17 +1763,21 @@ proto.gnmi.TypedValue.prototype.getDecimalVal = function() {
 };
 
 
-/** @param {?proto.gnmi.Decimal64|undefined} value */
+/**
+ * @param {?proto.gnmi.Decimal64|undefined} value
+ * @return {!proto.gnmi.TypedValue} returns this
+*/
 proto.gnmi.TypedValue.prototype.setDecimalVal = function(value) {
-  jspb.Message.setOneofWrapperField(this, 7, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 7, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearDecimalVal = function() {
-  this.setDecimalVal(undefined);
+  return this.setDecimalVal(undefined);
 };
 
 
@@ -1736,17 +1800,21 @@ proto.gnmi.TypedValue.prototype.getLeaflistVal = function() {
 };
 
 
-/** @param {?proto.gnmi.ScalarArray|undefined} value */
+/**
+ * @param {?proto.gnmi.ScalarArray|undefined} value
+ * @return {!proto.gnmi.TypedValue} returns this
+*/
 proto.gnmi.TypedValue.prototype.setLeaflistVal = function(value) {
-  jspb.Message.setOneofWrapperField(this, 8, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 8, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearLeaflistVal = function() {
-  this.setLeaflistVal(undefined);
+  return this.setLeaflistVal(undefined);
 };
 
 
@@ -1769,17 +1837,21 @@ proto.gnmi.TypedValue.prototype.getAnyVal = function() {
 };
 
 
-/** @param {?proto.google.protobuf.Any|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Any|undefined} value
+ * @return {!proto.gnmi.TypedValue} returns this
+*/
 proto.gnmi.TypedValue.prototype.setAnyVal = function(value) {
-  jspb.Message.setOneofWrapperField(this, 9, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 9, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearAnyVal = function() {
-  this.setAnyVal(undefined);
+  return this.setAnyVal(undefined);
 };
 
 
@@ -1825,17 +1897,21 @@ proto.gnmi.TypedValue.prototype.getJsonVal_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setJsonVal = function(value) {
-  jspb.Message.setOneofField(this, 10, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 10, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearJsonVal = function() {
-  jspb.Message.setOneofField(this, 10, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 10, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1881,17 +1957,21 @@ proto.gnmi.TypedValue.prototype.getJsonIetfVal_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setJsonIetfVal = function(value) {
-  jspb.Message.setOneofField(this, 11, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 11, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearJsonIetfVal = function() {
-  jspb.Message.setOneofField(this, 11, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 11, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1913,17 +1993,21 @@ proto.gnmi.TypedValue.prototype.getAsciiVal = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setAsciiVal = function(value) {
-  jspb.Message.setOneofField(this, 12, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 12, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearAsciiVal = function() {
-  jspb.Message.setOneofField(this, 12, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 12, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -1969,17 +2053,21 @@ proto.gnmi.TypedValue.prototype.getProtoBytes_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi.TypedValue} returns this
+ */
 proto.gnmi.TypedValue.prototype.setProtoBytes = function(value) {
-  jspb.Message.setOneofField(this, 13, proto.gnmi.TypedValue.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 13, proto.gnmi.TypedValue.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.TypedValue} returns this
  */
 proto.gnmi.TypedValue.prototype.clearProtoBytes = function() {
-  jspb.Message.setOneofField(this, 13, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 13, proto.gnmi.TypedValue.oneofGroups_[0], undefined);
 };
 
 
@@ -2159,26 +2247,31 @@ proto.gnmi.Path.prototype.getElementList = function() {
 };
 
 
-/** @param {!Array<string>} value */
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.gnmi.Path} returns this
+ */
 proto.gnmi.Path.prototype.setElementList = function(value) {
-  jspb.Message.setField(this, 1, value || []);
+  return jspb.Message.setField(this, 1, value || []);
 };
 
 
 /**
  * @param {string} value
  * @param {number=} opt_index
+ * @return {!proto.gnmi.Path} returns this
  */
 proto.gnmi.Path.prototype.addElement = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 1, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 1, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.Path} returns this
  */
 proto.gnmi.Path.prototype.clearElementList = function() {
-  this.setElementList([]);
+  return this.setElementList([]);
 };
 
 
@@ -2191,9 +2284,12 @@ proto.gnmi.Path.prototype.getOrigin = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.Path} returns this
+ */
 proto.gnmi.Path.prototype.setOrigin = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -2207,9 +2303,12 @@ proto.gnmi.Path.prototype.getElemList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.PathElem>} value */
+/**
+ * @param {!Array<!proto.gnmi.PathElem>} value
+ * @return {!proto.gnmi.Path} returns this
+*/
 proto.gnmi.Path.prototype.setElemList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
@@ -2225,9 +2324,10 @@ proto.gnmi.Path.prototype.addElem = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.Path} returns this
  */
 proto.gnmi.Path.prototype.clearElemList = function() {
-  this.setElemList([]);
+  return this.setElemList([]);
 };
 
 
@@ -2240,9 +2340,12 @@ proto.gnmi.Path.prototype.getTarget = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.Path} returns this
+ */
 proto.gnmi.Path.prototype.setTarget = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -2323,7 +2426,7 @@ proto.gnmi.PathElem.deserializeBinaryFromReader = function(msg, reader) {
     case 2:
       var value = msg.getKeyMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "");
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
       break;
     default:
@@ -2378,9 +2481,12 @@ proto.gnmi.PathElem.prototype.getName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.PathElem} returns this
+ */
 proto.gnmi.PathElem.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2399,10 +2505,11 @@ proto.gnmi.PathElem.prototype.getKeyMap = function(opt_noLazyCreate) {
 
 /**
  * Clears values from the map. The map will be non-null.
+ * @return {!proto.gnmi.PathElem} returns this
  */
 proto.gnmi.PathElem.prototype.clearKeyMap = function() {
   this.getKeyMap().clear();
-};
+  return this;};
 
 
 
@@ -2562,9 +2669,12 @@ proto.gnmi.Value.prototype.getValue_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.gnmi.Value} returns this
+ */
 proto.gnmi.Value.prototype.setValue = function(value) {
-  jspb.Message.setProto3BytesField(this, 1, value);
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 
@@ -2577,9 +2687,12 @@ proto.gnmi.Value.prototype.getType = function() {
 };
 
 
-/** @param {!proto.gnmi.Encoding} value */
+/**
+ * @param {!proto.gnmi.Encoding} value
+ * @return {!proto.gnmi.Value} returns this
+ */
 proto.gnmi.Value.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -2730,9 +2843,12 @@ proto.gnmi.Error.prototype.getCode = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Error} returns this
+ */
 proto.gnmi.Error.prototype.setCode = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -2745,9 +2861,12 @@ proto.gnmi.Error.prototype.getMessage = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.Error} returns this
+ */
 proto.gnmi.Error.prototype.setMessage = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -2761,17 +2880,21 @@ proto.gnmi.Error.prototype.getData = function() {
 };
 
 
-/** @param {?proto.google.protobuf.Any|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Any|undefined} value
+ * @return {!proto.gnmi.Error} returns this
+*/
 proto.gnmi.Error.prototype.setData = function(value) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Error} returns this
  */
 proto.gnmi.Error.prototype.clearData = function() {
-  this.setData(undefined);
+  return this.setData(undefined);
 };
 
 
@@ -2917,9 +3040,12 @@ proto.gnmi.Decimal64.prototype.getDigits = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Decimal64} returns this
+ */
 proto.gnmi.Decimal64.prototype.setDigits = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -2932,9 +3058,12 @@ proto.gnmi.Decimal64.prototype.getPrecision = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Decimal64} returns this
+ */
 proto.gnmi.Decimal64.prototype.setPrecision = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -3070,9 +3199,12 @@ proto.gnmi.ScalarArray.prototype.getElementList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.TypedValue>} value */
+/**
+ * @param {!Array<!proto.gnmi.TypedValue>} value
+ * @return {!proto.gnmi.ScalarArray} returns this
+*/
 proto.gnmi.ScalarArray.prototype.setElementList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
@@ -3088,9 +3220,10 @@ proto.gnmi.ScalarArray.prototype.addElement = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.ScalarArray} returns this
  */
 proto.gnmi.ScalarArray.prototype.clearElementList = function() {
-  this.setElementList([]);
+  return this.setElementList([]);
 };
 
 
@@ -3295,17 +3428,21 @@ proto.gnmi.SubscribeRequest.prototype.getSubscribe = function() {
 };
 
 
-/** @param {?proto.gnmi.SubscriptionList|undefined} value */
+/**
+ * @param {?proto.gnmi.SubscriptionList|undefined} value
+ * @return {!proto.gnmi.SubscribeRequest} returns this
+*/
 proto.gnmi.SubscribeRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setOneofWrapperField(this, 1, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 1, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscribeRequest} returns this
  */
 proto.gnmi.SubscribeRequest.prototype.clearSubscribe = function() {
-  this.setSubscribe(undefined);
+  return this.setSubscribe(undefined);
 };
 
 
@@ -3328,17 +3465,21 @@ proto.gnmi.SubscribeRequest.prototype.getPoll = function() {
 };
 
 
-/** @param {?proto.gnmi.Poll|undefined} value */
+/**
+ * @param {?proto.gnmi.Poll|undefined} value
+ * @return {!proto.gnmi.SubscribeRequest} returns this
+*/
 proto.gnmi.SubscribeRequest.prototype.setPoll = function(value) {
-  jspb.Message.setOneofWrapperField(this, 3, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 3, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscribeRequest} returns this
  */
 proto.gnmi.SubscribeRequest.prototype.clearPoll = function() {
-  this.setPoll(undefined);
+  return this.setPoll(undefined);
 };
 
 
@@ -3361,17 +3502,21 @@ proto.gnmi.SubscribeRequest.prototype.getAliases = function() {
 };
 
 
-/** @param {?proto.gnmi.AliasList|undefined} value */
+/**
+ * @param {?proto.gnmi.AliasList|undefined} value
+ * @return {!proto.gnmi.SubscribeRequest} returns this
+*/
 proto.gnmi.SubscribeRequest.prototype.setAliases = function(value) {
-  jspb.Message.setOneofWrapperField(this, 4, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 4, proto.gnmi.SubscribeRequest.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscribeRequest} returns this
  */
 proto.gnmi.SubscribeRequest.prototype.clearAliases = function() {
-  this.setAliases(undefined);
+  return this.setAliases(undefined);
 };
 
 
@@ -3394,9 +3539,12 @@ proto.gnmi.SubscribeRequest.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.SubscribeRequest} returns this
+*/
 proto.gnmi.SubscribeRequest.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -3412,9 +3560,10 @@ proto.gnmi.SubscribeRequest.prototype.addExtension$ = function(opt_value, opt_in
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SubscribeRequest} returns this
  */
 proto.gnmi.SubscribeRequest.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -3718,17 +3867,21 @@ proto.gnmi.SubscribeResponse.prototype.getUpdate = function() {
 };
 
 
-/** @param {?proto.gnmi.Notification|undefined} value */
+/**
+ * @param {?proto.gnmi.Notification|undefined} value
+ * @return {!proto.gnmi.SubscribeResponse} returns this
+*/
 proto.gnmi.SubscribeResponse.prototype.setUpdate = function(value) {
-  jspb.Message.setOneofWrapperField(this, 1, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 1, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscribeResponse} returns this
  */
 proto.gnmi.SubscribeResponse.prototype.clearUpdate = function() {
-  this.setUpdate(undefined);
+  return this.setUpdate(undefined);
 };
 
 
@@ -3750,17 +3903,21 @@ proto.gnmi.SubscribeResponse.prototype.getSyncResponse = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.SubscribeResponse} returns this
+ */
 proto.gnmi.SubscribeResponse.prototype.setSyncResponse = function(value) {
-  jspb.Message.setOneofField(this, 3, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
+  return jspb.Message.setOneofField(this, 3, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the field making it undefined.
+ * @return {!proto.gnmi.SubscribeResponse} returns this
  */
 proto.gnmi.SubscribeResponse.prototype.clearSyncResponse = function() {
-  jspb.Message.setOneofField(this, 3, proto.gnmi.SubscribeResponse.oneofGroups_[0], undefined);
+  return jspb.Message.setOneofField(this, 3, proto.gnmi.SubscribeResponse.oneofGroups_[0], undefined);
 };
 
 
@@ -3783,17 +3940,21 @@ proto.gnmi.SubscribeResponse.prototype.getError = function() {
 };
 
 
-/** @param {?proto.gnmi.Error|undefined} value */
+/**
+ * @param {?proto.gnmi.Error|undefined} value
+ * @return {!proto.gnmi.SubscribeResponse} returns this
+*/
 proto.gnmi.SubscribeResponse.prototype.setError = function(value) {
-  jspb.Message.setOneofWrapperField(this, 4, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 4, proto.gnmi.SubscribeResponse.oneofGroups_[0], value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscribeResponse} returns this
  */
 proto.gnmi.SubscribeResponse.prototype.clearError = function() {
-  this.setError(undefined);
+  return this.setError(undefined);
 };
 
 
@@ -3816,9 +3977,12 @@ proto.gnmi.SubscribeResponse.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.SubscribeResponse} returns this
+*/
 proto.gnmi.SubscribeResponse.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -3834,9 +3998,10 @@ proto.gnmi.SubscribeResponse.prototype.addExtension$ = function(opt_value, opt_i
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SubscribeResponse} returns this
  */
 proto.gnmi.SubscribeResponse.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -4084,17 +4249,21 @@ proto.gnmi.SubscriptionList.prototype.getPrefix = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+*/
 proto.gnmi.SubscriptionList.prototype.setPrefix = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscriptionList} returns this
  */
 proto.gnmi.SubscriptionList.prototype.clearPrefix = function() {
-  this.setPrefix(undefined);
+  return this.setPrefix(undefined);
 };
 
 
@@ -4117,9 +4286,12 @@ proto.gnmi.SubscriptionList.prototype.getSubscriptionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Subscription>} value */
+/**
+ * @param {!Array<!proto.gnmi.Subscription>} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+*/
 proto.gnmi.SubscriptionList.prototype.setSubscriptionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -4135,9 +4307,10 @@ proto.gnmi.SubscriptionList.prototype.addSubscription = function(opt_value, opt_
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SubscriptionList} returns this
  */
 proto.gnmi.SubscriptionList.prototype.clearSubscriptionList = function() {
-  this.setSubscriptionList([]);
+  return this.setSubscriptionList([]);
 };
 
 
@@ -4150,9 +4323,12 @@ proto.gnmi.SubscriptionList.prototype.getUseAliases = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+ */
 proto.gnmi.SubscriptionList.prototype.setUseAliases = function(value) {
-  jspb.Message.setProto3BooleanField(this, 3, value);
+  return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 
@@ -4166,17 +4342,21 @@ proto.gnmi.SubscriptionList.prototype.getQos = function() {
 };
 
 
-/** @param {?proto.gnmi.QOSMarking|undefined} value */
+/**
+ * @param {?proto.gnmi.QOSMarking|undefined} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+*/
 proto.gnmi.SubscriptionList.prototype.setQos = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SubscriptionList} returns this
  */
 proto.gnmi.SubscriptionList.prototype.clearQos = function() {
-  this.setQos(undefined);
+  return this.setQos(undefined);
 };
 
 
@@ -4198,9 +4378,12 @@ proto.gnmi.SubscriptionList.prototype.getMode = function() {
 };
 
 
-/** @param {!proto.gnmi.SubscriptionList.Mode} value */
+/**
+ * @param {!proto.gnmi.SubscriptionList.Mode} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+ */
 proto.gnmi.SubscriptionList.prototype.setMode = function(value) {
-  jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 
@@ -4213,9 +4396,12 @@ proto.gnmi.SubscriptionList.prototype.getAllowAggregation = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+ */
 proto.gnmi.SubscriptionList.prototype.setAllowAggregation = function(value) {
-  jspb.Message.setProto3BooleanField(this, 6, value);
+  return jspb.Message.setProto3BooleanField(this, 6, value);
 };
 
 
@@ -4229,9 +4415,12 @@ proto.gnmi.SubscriptionList.prototype.getUseModelsList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.ModelData>} value */
+/**
+ * @param {!Array<!proto.gnmi.ModelData>} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+*/
 proto.gnmi.SubscriptionList.prototype.setUseModelsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -4247,9 +4436,10 @@ proto.gnmi.SubscriptionList.prototype.addUseModels = function(opt_value, opt_ind
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SubscriptionList} returns this
  */
 proto.gnmi.SubscriptionList.prototype.clearUseModelsList = function() {
-  this.setUseModelsList([]);
+  return this.setUseModelsList([]);
 };
 
 
@@ -4262,9 +4452,12 @@ proto.gnmi.SubscriptionList.prototype.getEncoding = function() {
 };
 
 
-/** @param {!proto.gnmi.Encoding} value */
+/**
+ * @param {!proto.gnmi.Encoding} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+ */
 proto.gnmi.SubscriptionList.prototype.setEncoding = function(value) {
-  jspb.Message.setProto3EnumField(this, 8, value);
+  return jspb.Message.setProto3EnumField(this, 8, value);
 };
 
 
@@ -4277,9 +4470,12 @@ proto.gnmi.SubscriptionList.prototype.getUpdatesOnly = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.SubscriptionList} returns this
+ */
 proto.gnmi.SubscriptionList.prototype.setUpdatesOnly = function(value) {
-  jspb.Message.setProto3BooleanField(this, 9, value);
+  return jspb.Message.setProto3BooleanField(this, 9, value);
 };
 
 
@@ -4455,17 +4651,21 @@ proto.gnmi.Subscription.prototype.getPath = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.Subscription} returns this
+*/
 proto.gnmi.Subscription.prototype.setPath = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Subscription} returns this
  */
 proto.gnmi.Subscription.prototype.clearPath = function() {
-  this.setPath(undefined);
+  return this.setPath(undefined);
 };
 
 
@@ -4487,9 +4687,12 @@ proto.gnmi.Subscription.prototype.getMode = function() {
 };
 
 
-/** @param {!proto.gnmi.SubscriptionMode} value */
+/**
+ * @param {!proto.gnmi.SubscriptionMode} value
+ * @return {!proto.gnmi.Subscription} returns this
+ */
 proto.gnmi.Subscription.prototype.setMode = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -4502,9 +4705,12 @@ proto.gnmi.Subscription.prototype.getSampleInterval = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Subscription} returns this
+ */
 proto.gnmi.Subscription.prototype.setSampleInterval = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -4517,9 +4723,12 @@ proto.gnmi.Subscription.prototype.getSuppressRedundant = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.gnmi.Subscription} returns this
+ */
 proto.gnmi.Subscription.prototype.setSuppressRedundant = function(value) {
-  jspb.Message.setProto3BooleanField(this, 4, value);
+  return jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 
@@ -4532,9 +4741,12 @@ proto.gnmi.Subscription.prototype.getHeartbeatInterval = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.Subscription} returns this
+ */
 proto.gnmi.Subscription.prototype.setHeartbeatInterval = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -4659,9 +4871,12 @@ proto.gnmi.QOSMarking.prototype.getMarking = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.QOSMarking} returns this
+ */
 proto.gnmi.QOSMarking.prototype.setMarking = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -4801,17 +5016,21 @@ proto.gnmi.Alias.prototype.getPath = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.Alias} returns this
+*/
 proto.gnmi.Alias.prototype.setPath = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.Alias} returns this
  */
 proto.gnmi.Alias.prototype.clearPath = function() {
-  this.setPath(undefined);
+  return this.setPath(undefined);
 };
 
 
@@ -4833,9 +5052,12 @@ proto.gnmi.Alias.prototype.getAlias = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.Alias} returns this
+ */
 proto.gnmi.Alias.prototype.setAlias = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -4971,9 +5193,12 @@ proto.gnmi.AliasList.prototype.getAliasList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Alias>} value */
+/**
+ * @param {!Array<!proto.gnmi.Alias>} value
+ * @return {!proto.gnmi.AliasList} returns this
+*/
 proto.gnmi.AliasList.prototype.setAliasList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
@@ -4989,9 +5214,10 @@ proto.gnmi.AliasList.prototype.addAlias = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.AliasList} returns this
  */
 proto.gnmi.AliasList.prototype.clearAliasList = function() {
-  this.setAliasList([]);
+  return this.setAliasList([]);
 };
 
 
@@ -5186,17 +5412,21 @@ proto.gnmi.SetRequest.prototype.getPrefix = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.SetRequest} returns this
+*/
 proto.gnmi.SetRequest.prototype.setPrefix = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SetRequest} returns this
  */
 proto.gnmi.SetRequest.prototype.clearPrefix = function() {
-  this.setPrefix(undefined);
+  return this.setPrefix(undefined);
 };
 
 
@@ -5219,9 +5449,12 @@ proto.gnmi.SetRequest.prototype.getDeleteList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Path>} value */
+/**
+ * @param {!Array<!proto.gnmi.Path>} value
+ * @return {!proto.gnmi.SetRequest} returns this
+*/
 proto.gnmi.SetRequest.prototype.setDeleteList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -5237,9 +5470,10 @@ proto.gnmi.SetRequest.prototype.addDelete = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetRequest} returns this
  */
 proto.gnmi.SetRequest.prototype.clearDeleteList = function() {
-  this.setDeleteList([]);
+  return this.setDeleteList([]);
 };
 
 
@@ -5253,9 +5487,12 @@ proto.gnmi.SetRequest.prototype.getReplaceList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Update>} value */
+/**
+ * @param {!Array<!proto.gnmi.Update>} value
+ * @return {!proto.gnmi.SetRequest} returns this
+*/
 proto.gnmi.SetRequest.prototype.setReplaceList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
@@ -5271,9 +5508,10 @@ proto.gnmi.SetRequest.prototype.addReplace = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetRequest} returns this
  */
 proto.gnmi.SetRequest.prototype.clearReplaceList = function() {
-  this.setReplaceList([]);
+  return this.setReplaceList([]);
 };
 
 
@@ -5287,9 +5525,12 @@ proto.gnmi.SetRequest.prototype.getUpdateList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Update>} value */
+/**
+ * @param {!Array<!proto.gnmi.Update>} value
+ * @return {!proto.gnmi.SetRequest} returns this
+*/
 proto.gnmi.SetRequest.prototype.setUpdateList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 4, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -5305,9 +5546,10 @@ proto.gnmi.SetRequest.prototype.addUpdate = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetRequest} returns this
  */
 proto.gnmi.SetRequest.prototype.clearUpdateList = function() {
-  this.setUpdateList([]);
+  return this.setUpdateList([]);
 };
 
 
@@ -5321,9 +5563,12 @@ proto.gnmi.SetRequest.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.SetRequest} returns this
+*/
 proto.gnmi.SetRequest.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -5339,9 +5584,10 @@ proto.gnmi.SetRequest.prototype.addExtension$ = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetRequest} returns this
  */
 proto.gnmi.SetRequest.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -5532,17 +5778,21 @@ proto.gnmi.SetResponse.prototype.getPrefix = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.SetResponse} returns this
+*/
 proto.gnmi.SetResponse.prototype.setPrefix = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SetResponse} returns this
  */
 proto.gnmi.SetResponse.prototype.clearPrefix = function() {
-  this.setPrefix(undefined);
+  return this.setPrefix(undefined);
 };
 
 
@@ -5565,9 +5815,12 @@ proto.gnmi.SetResponse.prototype.getResponseList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.UpdateResult>} value */
+/**
+ * @param {!Array<!proto.gnmi.UpdateResult>} value
+ * @return {!proto.gnmi.SetResponse} returns this
+*/
 proto.gnmi.SetResponse.prototype.setResponseList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -5583,9 +5836,10 @@ proto.gnmi.SetResponse.prototype.addResponse = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetResponse} returns this
  */
 proto.gnmi.SetResponse.prototype.clearResponseList = function() {
-  this.setResponseList([]);
+  return this.setResponseList([]);
 };
 
 
@@ -5599,17 +5853,21 @@ proto.gnmi.SetResponse.prototype.getMessage = function() {
 };
 
 
-/** @param {?proto.gnmi.Error|undefined} value */
+/**
+ * @param {?proto.gnmi.Error|undefined} value
+ * @return {!proto.gnmi.SetResponse} returns this
+*/
 proto.gnmi.SetResponse.prototype.setMessage = function(value) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.SetResponse} returns this
  */
 proto.gnmi.SetResponse.prototype.clearMessage = function() {
-  this.setMessage(undefined);
+  return this.setMessage(undefined);
 };
 
 
@@ -5631,9 +5889,12 @@ proto.gnmi.SetResponse.prototype.getTimestamp = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.SetResponse} returns this
+ */
 proto.gnmi.SetResponse.prototype.setTimestamp = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -5647,9 +5908,12 @@ proto.gnmi.SetResponse.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.SetResponse} returns this
+*/
 proto.gnmi.SetResponse.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 5, value);
+  return jspb.Message.setRepeatedWrapperField(this, 5, value);
 };
 
 
@@ -5665,9 +5929,10 @@ proto.gnmi.SetResponse.prototype.addExtension$ = function(opt_value, opt_index) 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.SetResponse} returns this
  */
 proto.gnmi.SetResponse.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -5842,9 +6107,12 @@ proto.gnmi.UpdateResult.prototype.getTimestamp = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.gnmi.UpdateResult} returns this
+ */
 proto.gnmi.UpdateResult.prototype.setTimestamp = function(value) {
-  jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3IntField(this, 1, value);
 };
 
 
@@ -5858,17 +6126,21 @@ proto.gnmi.UpdateResult.prototype.getPath = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.UpdateResult} returns this
+*/
 proto.gnmi.UpdateResult.prototype.setPath = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.UpdateResult} returns this
  */
 proto.gnmi.UpdateResult.prototype.clearPath = function() {
-  this.setPath(undefined);
+  return this.setPath(undefined);
 };
 
 
@@ -5891,17 +6163,21 @@ proto.gnmi.UpdateResult.prototype.getMessage = function() {
 };
 
 
-/** @param {?proto.gnmi.Error|undefined} value */
+/**
+ * @param {?proto.gnmi.Error|undefined} value
+ * @return {!proto.gnmi.UpdateResult} returns this
+*/
 proto.gnmi.UpdateResult.prototype.setMessage = function(value) {
-  jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.UpdateResult} returns this
  */
 proto.gnmi.UpdateResult.prototype.clearMessage = function() {
-  this.setMessage(undefined);
+  return this.setMessage(undefined);
 };
 
 
@@ -5923,9 +6199,12 @@ proto.gnmi.UpdateResult.prototype.getOp = function() {
 };
 
 
-/** @param {!proto.gnmi.UpdateResult.Operation} value */
+/**
+ * @param {!proto.gnmi.UpdateResult.Operation} value
+ * @return {!proto.gnmi.UpdateResult} returns this
+ */
 proto.gnmi.UpdateResult.prototype.setOp = function(value) {
-  jspb.Message.setProto3EnumField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
@@ -6139,17 +6418,21 @@ proto.gnmi.GetRequest.prototype.getPrefix = function() {
 };
 
 
-/** @param {?proto.gnmi.Path|undefined} value */
+/**
+ * @param {?proto.gnmi.Path|undefined} value
+ * @return {!proto.gnmi.GetRequest} returns this
+*/
 proto.gnmi.GetRequest.prototype.setPrefix = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.GetRequest} returns this
  */
 proto.gnmi.GetRequest.prototype.clearPrefix = function() {
-  this.setPrefix(undefined);
+  return this.setPrefix(undefined);
 };
 
 
@@ -6172,9 +6455,12 @@ proto.gnmi.GetRequest.prototype.getPathList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Path>} value */
+/**
+ * @param {!Array<!proto.gnmi.Path>} value
+ * @return {!proto.gnmi.GetRequest} returns this
+*/
 proto.gnmi.GetRequest.prototype.setPathList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -6190,9 +6476,10 @@ proto.gnmi.GetRequest.prototype.addPath = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.GetRequest} returns this
  */
 proto.gnmi.GetRequest.prototype.clearPathList = function() {
-  this.setPathList([]);
+  return this.setPathList([]);
 };
 
 
@@ -6205,9 +6492,12 @@ proto.gnmi.GetRequest.prototype.getType = function() {
 };
 
 
-/** @param {!proto.gnmi.GetRequest.DataType} value */
+/**
+ * @param {!proto.gnmi.GetRequest.DataType} value
+ * @return {!proto.gnmi.GetRequest} returns this
+ */
 proto.gnmi.GetRequest.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -6220,9 +6510,12 @@ proto.gnmi.GetRequest.prototype.getEncoding = function() {
 };
 
 
-/** @param {!proto.gnmi.Encoding} value */
+/**
+ * @param {!proto.gnmi.Encoding} value
+ * @return {!proto.gnmi.GetRequest} returns this
+ */
 proto.gnmi.GetRequest.prototype.setEncoding = function(value) {
-  jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 5, value);
 };
 
 
@@ -6236,9 +6529,12 @@ proto.gnmi.GetRequest.prototype.getUseModelsList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.ModelData>} value */
+/**
+ * @param {!Array<!proto.gnmi.ModelData>} value
+ * @return {!proto.gnmi.GetRequest} returns this
+*/
 proto.gnmi.GetRequest.prototype.setUseModelsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 6, value);
+  return jspb.Message.setRepeatedWrapperField(this, 6, value);
 };
 
 
@@ -6254,9 +6550,10 @@ proto.gnmi.GetRequest.prototype.addUseModels = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.GetRequest} returns this
  */
 proto.gnmi.GetRequest.prototype.clearUseModelsList = function() {
-  this.setUseModelsList([]);
+  return this.setUseModelsList([]);
 };
 
 
@@ -6270,9 +6567,12 @@ proto.gnmi.GetRequest.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.GetRequest} returns this
+*/
 proto.gnmi.GetRequest.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -6288,9 +6588,10 @@ proto.gnmi.GetRequest.prototype.addExtension$ = function(opt_value, opt_index) {
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.GetRequest} returns this
  */
 proto.gnmi.GetRequest.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -6455,9 +6756,12 @@ proto.gnmi.GetResponse.prototype.getNotificationList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Notification>} value */
+/**
+ * @param {!Array<!proto.gnmi.Notification>} value
+ * @return {!proto.gnmi.GetResponse} returns this
+*/
 proto.gnmi.GetResponse.prototype.setNotificationList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
@@ -6473,9 +6777,10 @@ proto.gnmi.GetResponse.prototype.addNotification = function(opt_value, opt_index
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.GetResponse} returns this
  */
 proto.gnmi.GetResponse.prototype.clearNotificationList = function() {
-  this.setNotificationList([]);
+  return this.setNotificationList([]);
 };
 
 
@@ -6489,17 +6794,21 @@ proto.gnmi.GetResponse.prototype.getError = function() {
 };
 
 
-/** @param {?proto.gnmi.Error|undefined} value */
+/**
+ * @param {?proto.gnmi.Error|undefined} value
+ * @return {!proto.gnmi.GetResponse} returns this
+*/
 proto.gnmi.GetResponse.prototype.setError = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.gnmi.GetResponse} returns this
  */
 proto.gnmi.GetResponse.prototype.clearError = function() {
-  this.setError(undefined);
+  return this.setError(undefined);
 };
 
 
@@ -6522,9 +6831,12 @@ proto.gnmi.GetResponse.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.GetResponse} returns this
+*/
 proto.gnmi.GetResponse.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
@@ -6540,9 +6852,10 @@ proto.gnmi.GetResponse.prototype.addExtension$ = function(opt_value, opt_index) 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.GetResponse} returns this
  */
 proto.gnmi.GetResponse.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -6678,9 +6991,12 @@ proto.gnmi.CapabilityRequest.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.CapabilityRequest} returns this
+*/
 proto.gnmi.CapabilityRequest.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
@@ -6696,9 +7012,10 @@ proto.gnmi.CapabilityRequest.prototype.addExtension$ = function(opt_value, opt_i
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.CapabilityRequest} returns this
  */
 proto.gnmi.CapabilityRequest.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -6873,9 +7190,12 @@ proto.gnmi.CapabilityResponse.prototype.getSupportedModelsList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.ModelData>} value */
+/**
+ * @param {!Array<!proto.gnmi.ModelData>} value
+ * @return {!proto.gnmi.CapabilityResponse} returns this
+*/
 proto.gnmi.CapabilityResponse.prototype.setSupportedModelsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 1, value);
+  return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
 
@@ -6891,9 +7211,10 @@ proto.gnmi.CapabilityResponse.prototype.addSupportedModels = function(opt_value,
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.CapabilityResponse} returns this
  */
 proto.gnmi.CapabilityResponse.prototype.clearSupportedModelsList = function() {
-  this.setSupportedModelsList([]);
+  return this.setSupportedModelsList([]);
 };
 
 
@@ -6906,26 +7227,31 @@ proto.gnmi.CapabilityResponse.prototype.getSupportedEncodingsList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.Encoding>} value */
+/**
+ * @param {!Array<!proto.gnmi.Encoding>} value
+ * @return {!proto.gnmi.CapabilityResponse} returns this
+ */
 proto.gnmi.CapabilityResponse.prototype.setSupportedEncodingsList = function(value) {
-  jspb.Message.setField(this, 2, value || []);
+  return jspb.Message.setField(this, 2, value || []);
 };
 
 
 /**
  * @param {!proto.gnmi.Encoding} value
  * @param {number=} opt_index
+ * @return {!proto.gnmi.CapabilityResponse} returns this
  */
 proto.gnmi.CapabilityResponse.prototype.addSupportedEncodings = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 2, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 2, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.CapabilityResponse} returns this
  */
 proto.gnmi.CapabilityResponse.prototype.clearSupportedEncodingsList = function() {
-  this.setSupportedEncodingsList([]);
+  return this.setSupportedEncodingsList([]);
 };
 
 
@@ -6938,9 +7264,12 @@ proto.gnmi.CapabilityResponse.prototype.getGnmiVersion = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.CapabilityResponse} returns this
+ */
 proto.gnmi.CapabilityResponse.prototype.setGnmiVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -6954,9 +7283,12 @@ proto.gnmi.CapabilityResponse.prototype.getExtensionList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi_ext.Extension>} value */
+/**
+ * @param {!Array<!proto.gnmi_ext.Extension>} value
+ * @return {!proto.gnmi.CapabilityResponse} returns this
+*/
 proto.gnmi.CapabilityResponse.prototype.setExtensionList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 4, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -6972,9 +7304,10 @@ proto.gnmi.CapabilityResponse.prototype.addExtension$ = function(opt_value, opt_
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.gnmi.CapabilityResponse} returns this
  */
 proto.gnmi.CapabilityResponse.prototype.clearExtensionList = function() {
-  this.setExtensionList([]);
+  return this.setExtensionList([]);
 };
 
 
@@ -7123,9 +7456,12 @@ proto.gnmi.ModelData.prototype.getName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.ModelData} returns this
+ */
 proto.gnmi.ModelData.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -7138,9 +7474,12 @@ proto.gnmi.ModelData.prototype.getOrganization = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.ModelData} returns this
+ */
 proto.gnmi.ModelData.prototype.setOrganization = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -7153,9 +7492,12 @@ proto.gnmi.ModelData.prototype.getVersion = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.gnmi.ModelData} returns this
+ */
 proto.gnmi.ModelData.prototype.setVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 

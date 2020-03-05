@@ -286,9 +286,12 @@ proto.onos.config.diags.OpStateRequest.prototype.getDeviceid = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.diags.OpStateRequest} returns this
+ */
 proto.onos.config.diags.OpStateRequest.prototype.setDeviceid = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -301,9 +304,12 @@ proto.onos.config.diags.OpStateRequest.prototype.getSubscribe = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.diags.OpStateRequest} returns this
+ */
 proto.onos.config.diags.OpStateRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setProto3BooleanField(this, 2, value);
+  return jspb.Message.setProto3BooleanField(this, 2, value);
 };
 
 
@@ -442,9 +448,12 @@ proto.onos.config.diags.OpStateResponse.prototype.getType = function() {
 };
 
 
-/** @param {!proto.onos.config.admin.Type} value */
+/**
+ * @param {!proto.onos.config.admin.Type} value
+ * @return {!proto.onos.config.diags.OpStateResponse} returns this
+ */
 proto.onos.config.diags.OpStateResponse.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -458,17 +467,21 @@ proto.onos.config.diags.OpStateResponse.prototype.getPathvalue = function() {
 };
 
 
-/** @param {?proto.onos.config.change.device.PathValue|undefined} value */
+/**
+ * @param {?proto.onos.config.change.device.PathValue|undefined} value
+ * @return {!proto.onos.config.diags.OpStateResponse} returns this
+*/
 proto.onos.config.diags.OpStateResponse.prototype.setPathvalue = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.diags.OpStateResponse} returns this
  */
 proto.onos.config.diags.OpStateResponse.prototype.clearPathvalue = function() {
-  this.setPathvalue(undefined);
+  return this.setPathvalue(undefined);
 };
 
 
@@ -626,9 +639,12 @@ proto.onos.config.diags.ListNetworkChangeRequest.prototype.getSubscribe = functi
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.diags.ListNetworkChangeRequest} returns this
+ */
 proto.onos.config.diags.ListNetworkChangeRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
@@ -641,9 +657,12 @@ proto.onos.config.diags.ListNetworkChangeRequest.prototype.getChangeid = functio
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.diags.ListNetworkChangeRequest} returns this
+ */
 proto.onos.config.diags.ListNetworkChangeRequest.prototype.setChangeid = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -656,9 +675,12 @@ proto.onos.config.diags.ListNetworkChangeRequest.prototype.getWithoutreplay = fu
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.diags.ListNetworkChangeRequest} returns this
+ */
 proto.onos.config.diags.ListNetworkChangeRequest.prototype.setWithoutreplay = function(value) {
-  jspb.Message.setProto3BooleanField(this, 3, value);
+  return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 
@@ -798,17 +820,21 @@ proto.onos.config.diags.ListNetworkChangeResponse.prototype.getChange = function
 };
 
 
-/** @param {?proto.onos.config.change.network.NetworkChange|undefined} value */
+/**
+ * @param {?proto.onos.config.change.network.NetworkChange|undefined} value
+ * @return {!proto.onos.config.diags.ListNetworkChangeResponse} returns this
+*/
 proto.onos.config.diags.ListNetworkChangeResponse.prototype.setChange = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.diags.ListNetworkChangeResponse} returns this
  */
 proto.onos.config.diags.ListNetworkChangeResponse.prototype.clearChange = function() {
-  this.setChange(undefined);
+  return this.setChange(undefined);
 };
 
 
@@ -830,9 +856,12 @@ proto.onos.config.diags.ListNetworkChangeResponse.prototype.getType = function()
 };
 
 
-/** @param {!proto.onos.config.diags.Type} value */
+/**
+ * @param {!proto.onos.config.diags.Type} value
+ * @return {!proto.onos.config.diags.ListNetworkChangeResponse} returns this
+ */
 proto.onos.config.diags.ListNetworkChangeResponse.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -993,9 +1022,12 @@ proto.onos.config.diags.ListDeviceChangeRequest.prototype.getSubscribe = functio
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeRequest} returns this
+ */
 proto.onos.config.diags.ListDeviceChangeRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
@@ -1008,9 +1040,12 @@ proto.onos.config.diags.ListDeviceChangeRequest.prototype.getDeviceId = function
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeRequest} returns this
+ */
 proto.onos.config.diags.ListDeviceChangeRequest.prototype.setDeviceId = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1023,9 +1058,12 @@ proto.onos.config.diags.ListDeviceChangeRequest.prototype.getDeviceVersion = fun
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeRequest} returns this
+ */
 proto.onos.config.diags.ListDeviceChangeRequest.prototype.setDeviceVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -1038,9 +1076,12 @@ proto.onos.config.diags.ListDeviceChangeRequest.prototype.getWithoutreplay = fun
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeRequest} returns this
+ */
 proto.onos.config.diags.ListDeviceChangeRequest.prototype.setWithoutreplay = function(value) {
-  jspb.Message.setProto3BooleanField(this, 4, value);
+  return jspb.Message.setProto3BooleanField(this, 4, value);
 };
 
 
@@ -1180,17 +1221,21 @@ proto.onos.config.diags.ListDeviceChangeResponse.prototype.getChange = function(
 };
 
 
-/** @param {?proto.onos.config.change.device.DeviceChange|undefined} value */
+/**
+ * @param {?proto.onos.config.change.device.DeviceChange|undefined} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeResponse} returns this
+*/
 proto.onos.config.diags.ListDeviceChangeResponse.prototype.setChange = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.diags.ListDeviceChangeResponse} returns this
  */
 proto.onos.config.diags.ListDeviceChangeResponse.prototype.clearChange = function() {
-  this.setChange(undefined);
+  return this.setChange(undefined);
 };
 
 
@@ -1212,9 +1257,12 @@ proto.onos.config.diags.ListDeviceChangeResponse.prototype.getType = function() 
 };
 
 
-/** @param {!proto.onos.config.diags.Type} value */
+/**
+ * @param {!proto.onos.config.diags.Type} value
+ * @return {!proto.onos.config.diags.ListDeviceChangeResponse} returns this
+ */
 proto.onos.config.diags.ListDeviceChangeResponse.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 

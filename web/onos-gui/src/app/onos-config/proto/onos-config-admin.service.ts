@@ -17,7 +17,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {
     ConfigAdminServiceClient
-} from './github.com/onosproject/onos-config/api/admin/adminServiceClientPb';
+} from './github.com/onosproject/onos-config/api/admin/AdminServiceClientPb';
 import {
     CompactChangesRequest, CompactChangesResponse,
     ListModelsRequest, ListSnapshotsRequest,

@@ -367,6 +367,7 @@ export enum Protocol {
   GNMI = 1,
   P4RUNTIME = 2,
   GNOI = 3,
+  E2AP = 4,
 }
 export enum ConnectivityState { 
   UNKNOWN_CONNECTIVITY_STATE = 0,

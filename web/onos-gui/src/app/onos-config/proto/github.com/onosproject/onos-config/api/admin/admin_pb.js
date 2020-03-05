@@ -420,9 +420,12 @@ proto.onos.config.admin.ReadOnlySubPath.prototype.getSubPath = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadOnlySubPath} returns this
+ */
 proto.onos.config.admin.ReadOnlySubPath.prototype.setSubPath = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -435,9 +438,12 @@ proto.onos.config.admin.ReadOnlySubPath.prototype.getValueType = function() {
 };
 
 
-/** @param {!proto.onos.config.change.device.ValueType} value */
+/**
+ * @param {!proto.onos.config.change.device.ValueType} value
+ * @return {!proto.onos.config.admin.ReadOnlySubPath} returns this
+ */
 proto.onos.config.admin.ReadOnlySubPath.prototype.setValueType = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -584,9 +590,12 @@ proto.onos.config.admin.ReadOnlyPath.prototype.getPath = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadOnlyPath} returns this
+ */
 proto.onos.config.admin.ReadOnlyPath.prototype.setPath = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -600,9 +609,12 @@ proto.onos.config.admin.ReadOnlyPath.prototype.getSubPathList = function() {
 };
 
 
-/** @param {!Array<!proto.onos.config.admin.ReadOnlySubPath>} value */
+/**
+ * @param {!Array<!proto.onos.config.admin.ReadOnlySubPath>} value
+ * @return {!proto.onos.config.admin.ReadOnlyPath} returns this
+*/
 proto.onos.config.admin.ReadOnlyPath.prototype.setSubPathList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 2, value);
+  return jspb.Message.setRepeatedWrapperField(this, 2, value);
 };
 
 
@@ -618,9 +630,10 @@ proto.onos.config.admin.ReadOnlyPath.prototype.addSubPath = function(opt_value, 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ReadOnlyPath} returns this
  */
 proto.onos.config.admin.ReadOnlyPath.prototype.clearSubPathList = function() {
-  this.setSubPathList([]);
+  return this.setSubPathList([]);
 };
 
 
@@ -836,9 +849,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getPath = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setPath = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -851,9 +867,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getValueType = function() {
 };
 
 
-/** @param {!proto.onos.config.change.device.ValueType} value */
+/**
+ * @param {!proto.onos.config.change.device.ValueType} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setValueType = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -866,9 +885,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getUnits = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setUnits = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -881,9 +903,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getDescription = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setDescription = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -896,9 +921,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getMandatory = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setMandatory = function(value) {
-  jspb.Message.setProto3BooleanField(this, 5, value);
+  return jspb.Message.setProto3BooleanField(this, 5, value);
 };
 
 
@@ -911,9 +939,12 @@ proto.onos.config.admin.ReadWritePath.prototype.getDefault = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setDefault = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 
@@ -926,26 +957,31 @@ proto.onos.config.admin.ReadWritePath.prototype.getRangeList = function() {
 };
 
 
-/** @param {!Array<string>} value */
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setRangeList = function(value) {
-  jspb.Message.setField(this, 7, value || []);
+  return jspb.Message.setField(this, 7, value || []);
 };
 
 
 /**
  * @param {string} value
  * @param {number=} opt_index
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
  */
 proto.onos.config.admin.ReadWritePath.prototype.addRange = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 7, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 7, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
  */
 proto.onos.config.admin.ReadWritePath.prototype.clearRangeList = function() {
-  this.setRangeList([]);
+  return this.setRangeList([]);
 };
 
 
@@ -958,26 +994,31 @@ proto.onos.config.admin.ReadWritePath.prototype.getLengthList = function() {
 };
 
 
-/** @param {!Array<string>} value */
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
+ */
 proto.onos.config.admin.ReadWritePath.prototype.setLengthList = function(value) {
-  jspb.Message.setField(this, 8, value || []);
+  return jspb.Message.setField(this, 8, value || []);
 };
 
 
 /**
  * @param {string} value
  * @param {number=} opt_index
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
  */
 proto.onos.config.admin.ReadWritePath.prototype.addLength = function(value, opt_index) {
-  jspb.Message.addToRepeatedField(this, 8, value, opt_index);
+  return jspb.Message.addToRepeatedField(this, 8, value, opt_index);
 };
 
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ReadWritePath} returns this
  */
 proto.onos.config.admin.ReadWritePath.prototype.clearLengthList = function() {
-  this.setLengthList([]);
+  return this.setLengthList([]);
 };
 
 
@@ -1190,9 +1231,12 @@ proto.onos.config.admin.ModelInfo.prototype.getName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+ */
 proto.onos.config.admin.ModelInfo.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -1205,9 +1249,12 @@ proto.onos.config.admin.ModelInfo.prototype.getVersion = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+ */
 proto.onos.config.admin.ModelInfo.prototype.setVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1221,9 +1268,12 @@ proto.onos.config.admin.ModelInfo.prototype.getModelDataList = function() {
 };
 
 
-/** @param {!Array<!proto.gnmi.ModelData>} value */
+/**
+ * @param {!Array<!proto.gnmi.ModelData>} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+*/
 proto.onos.config.admin.ModelInfo.prototype.setModelDataList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 3, value);
 };
 
 
@@ -1239,9 +1289,10 @@ proto.onos.config.admin.ModelInfo.prototype.addModelData = function(opt_value, o
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
  */
 proto.onos.config.admin.ModelInfo.prototype.clearModelDataList = function() {
-  this.setModelDataList([]);
+  return this.setModelDataList([]);
 };
 
 
@@ -1254,9 +1305,12 @@ proto.onos.config.admin.ModelInfo.prototype.getModule = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+ */
 proto.onos.config.admin.ModelInfo.prototype.setModule = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -1269,9 +1323,12 @@ proto.onos.config.admin.ModelInfo.prototype.getGetstatemode = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+ */
 proto.onos.config.admin.ModelInfo.prototype.setGetstatemode = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -1285,9 +1342,12 @@ proto.onos.config.admin.ModelInfo.prototype.getReadOnlyPathList = function() {
 };
 
 
-/** @param {!Array<!proto.onos.config.admin.ReadOnlyPath>} value */
+/**
+ * @param {!Array<!proto.onos.config.admin.ReadOnlyPath>} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+*/
 proto.onos.config.admin.ModelInfo.prototype.setReadOnlyPathList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -1303,9 +1363,10 @@ proto.onos.config.admin.ModelInfo.prototype.addReadOnlyPath = function(opt_value
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
  */
 proto.onos.config.admin.ModelInfo.prototype.clearReadOnlyPathList = function() {
-  this.setReadOnlyPathList([]);
+  return this.setReadOnlyPathList([]);
 };
 
 
@@ -1319,9 +1380,12 @@ proto.onos.config.admin.ModelInfo.prototype.getReadWritePathList = function() {
 };
 
 
-/** @param {!Array<!proto.onos.config.admin.ReadWritePath>} value */
+/**
+ * @param {!Array<!proto.onos.config.admin.ReadWritePath>} value
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
+*/
 proto.onos.config.admin.ModelInfo.prototype.setReadWritePathList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 8, value);
+  return jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
 
@@ -1337,9 +1401,10 @@ proto.onos.config.admin.ModelInfo.prototype.addReadWritePath = function(opt_valu
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.admin.ModelInfo} returns this
  */
 proto.onos.config.admin.ModelInfo.prototype.clearReadWritePathList = function() {
-  this.setReadWritePathList([]);
+  return this.setReadWritePathList([]);
 };
 
 
@@ -1476,9 +1541,12 @@ proto.onos.config.admin.Chunk.prototype.getSoFile = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.Chunk} returns this
+ */
 proto.onos.config.admin.Chunk.prototype.setSoFile = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -1515,9 +1583,12 @@ proto.onos.config.admin.Chunk.prototype.getContent_asU8 = function() {
 };
 
 
-/** @param {!(string|Uint8Array)} value */
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.onos.config.admin.Chunk} returns this
+ */
 proto.onos.config.admin.Chunk.prototype.setContent = function(value) {
-  jspb.Message.setProto3BytesField(this, 2, value);
+  return jspb.Message.setProto3BytesField(this, 2, value);
 };
 
 
@@ -1654,9 +1725,12 @@ proto.onos.config.admin.RegisterResponse.prototype.getName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.RegisterResponse} returns this
+ */
 proto.onos.config.admin.RegisterResponse.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -1669,9 +1743,12 @@ proto.onos.config.admin.RegisterResponse.prototype.getVersion = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.RegisterResponse} returns this
+ */
 proto.onos.config.admin.RegisterResponse.prototype.setVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1820,9 +1897,12 @@ proto.onos.config.admin.ListModelsRequest.prototype.getVerbose = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.admin.ListModelsRequest} returns this
+ */
 proto.onos.config.admin.ListModelsRequest.prototype.setVerbose = function(value) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
@@ -1835,9 +1915,12 @@ proto.onos.config.admin.ListModelsRequest.prototype.getModelName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ListModelsRequest} returns this
+ */
 proto.onos.config.admin.ListModelsRequest.prototype.setModelName = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -1850,9 +1933,12 @@ proto.onos.config.admin.ListModelsRequest.prototype.getModelVersion = function()
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ListModelsRequest} returns this
+ */
 proto.onos.config.admin.ListModelsRequest.prototype.setModelVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -1989,9 +2075,12 @@ proto.onos.config.admin.RollbackRequest.prototype.getName = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.RollbackRequest} returns this
+ */
 proto.onos.config.admin.RollbackRequest.prototype.setName = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2004,9 +2093,12 @@ proto.onos.config.admin.RollbackRequest.prototype.getComment = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.RollbackRequest} returns this
+ */
 proto.onos.config.admin.RollbackRequest.prototype.setComment = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -2131,9 +2223,12 @@ proto.onos.config.admin.RollbackResponse.prototype.getMessage = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.RollbackResponse} returns this
+ */
 proto.onos.config.admin.RollbackResponse.prototype.setMessage = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2270,9 +2365,12 @@ proto.onos.config.admin.ListSnapshotsRequest.prototype.getSubscribe = function()
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.onos.config.admin.ListSnapshotsRequest} returns this
+ */
 proto.onos.config.admin.ListSnapshotsRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
@@ -2285,9 +2383,12 @@ proto.onos.config.admin.ListSnapshotsRequest.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.admin.ListSnapshotsRequest} returns this
+ */
 proto.onos.config.admin.ListSnapshotsRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -2415,17 +2516,21 @@ proto.onos.config.admin.CompactChangesRequest.prototype.getRetentionPeriod = fun
 };
 
 
-/** @param {?proto.google.protobuf.Duration|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.onos.config.admin.CompactChangesRequest} returns this
+*/
 proto.onos.config.admin.CompactChangesRequest.prototype.setRetentionPeriod = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.admin.CompactChangesRequest} returns this
  */
 proto.onos.config.admin.CompactChangesRequest.prototype.clearRetentionPeriod = function() {
-  this.setRetentionPeriod(undefined);
+  return this.setRetentionPeriod(undefined);
 };
 
 

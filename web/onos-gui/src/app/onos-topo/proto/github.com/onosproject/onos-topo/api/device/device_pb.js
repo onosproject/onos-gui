@@ -453,17 +453,21 @@ proto.topo.device.AddRequest.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.AddRequest} returns this
+*/
 proto.topo.device.AddRequest.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.AddRequest} returns this
  */
 proto.topo.device.AddRequest.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -600,17 +604,21 @@ proto.topo.device.AddResponse.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.AddResponse} returns this
+*/
 proto.topo.device.AddResponse.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.AddResponse} returns this
  */
 proto.topo.device.AddResponse.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -747,17 +755,21 @@ proto.topo.device.UpdateRequest.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.UpdateRequest} returns this
+*/
 proto.topo.device.UpdateRequest.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.UpdateRequest} returns this
  */
 proto.topo.device.UpdateRequest.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -894,17 +906,21 @@ proto.topo.device.UpdateResponse.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.UpdateResponse} returns this
+*/
 proto.topo.device.UpdateResponse.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.UpdateResponse} returns this
  */
 proto.topo.device.UpdateResponse.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -1038,9 +1054,12 @@ proto.topo.device.GetRequest.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.GetRequest} returns this
+ */
 proto.topo.device.GetRequest.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -1168,17 +1187,21 @@ proto.topo.device.GetResponse.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.GetResponse} returns this
+*/
 proto.topo.device.GetResponse.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.GetResponse} returns this
  */
 proto.topo.device.GetResponse.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -1312,9 +1335,12 @@ proto.topo.device.ListRequest.prototype.getSubscribe = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.topo.device.ListRequest} returns this
+ */
 proto.topo.device.ListRequest.prototype.setSubscribe = function(value) {
-  jspb.Message.setProto3BooleanField(this, 1, value);
+  return jspb.Message.setProto3BooleanField(this, 1, value);
 };
 
 
@@ -1463,9 +1489,12 @@ proto.topo.device.ListResponse.prototype.getType = function() {
 };
 
 
-/** @param {!proto.topo.device.ListResponse.Type} value */
+/**
+ * @param {!proto.topo.device.ListResponse.Type} value
+ * @return {!proto.topo.device.ListResponse} returns this
+ */
 proto.topo.device.ListResponse.prototype.setType = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -1479,17 +1508,21 @@ proto.topo.device.ListResponse.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.ListResponse} returns this
+*/
 proto.topo.device.ListResponse.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 2, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.ListResponse} returns this
  */
 proto.topo.device.ListResponse.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -1626,17 +1659,21 @@ proto.topo.device.RemoveRequest.prototype.getDevice = function() {
 };
 
 
-/** @param {?proto.topo.device.Device|undefined} value */
+/**
+ * @param {?proto.topo.device.Device|undefined} value
+ * @return {!proto.topo.device.RemoveRequest} returns this
+*/
 proto.topo.device.RemoveRequest.prototype.setDevice = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.RemoveRequest} returns this
  */
 proto.topo.device.RemoveRequest.prototype.clearDevice = function() {
-  this.setDevice(undefined);
+  return this.setDevice(undefined);
 };
 
 
@@ -1884,7 +1921,7 @@ proto.topo.device.Device.deserializeBinaryFromReader = function(msg, reader) {
     case 11:
       var value = msg.getAttributesMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "");
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
       break;
     case 12:
@@ -2018,9 +2055,12 @@ proto.topo.device.Device.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2033,9 +2073,12 @@ proto.topo.device.Device.prototype.getRevision = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setRevision = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -2048,9 +2091,12 @@ proto.topo.device.Device.prototype.getAddress = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setAddress = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -2063,9 +2109,12 @@ proto.topo.device.Device.prototype.getTarget = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setTarget = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -2078,9 +2127,12 @@ proto.topo.device.Device.prototype.getVersion = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
@@ -2094,17 +2146,21 @@ proto.topo.device.Device.prototype.getTimeout = function() {
 };
 
 
-/** @param {?proto.google.protobuf.Duration|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Duration|undefined} value
+ * @return {!proto.topo.device.Device} returns this
+*/
 proto.topo.device.Device.prototype.setTimeout = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.Device} returns this
  */
 proto.topo.device.Device.prototype.clearTimeout = function() {
-  this.setTimeout(undefined);
+  return this.setTimeout(undefined);
 };
 
 
@@ -2127,17 +2183,21 @@ proto.topo.device.Device.prototype.getCredentials = function() {
 };
 
 
-/** @param {?proto.topo.device.Credentials|undefined} value */
+/**
+ * @param {?proto.topo.device.Credentials|undefined} value
+ * @return {!proto.topo.device.Device} returns this
+*/
 proto.topo.device.Device.prototype.setCredentials = function(value) {
-  jspb.Message.setWrapperField(this, 7, value);
+  return jspb.Message.setWrapperField(this, 7, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.Device} returns this
  */
 proto.topo.device.Device.prototype.clearCredentials = function() {
-  this.setCredentials(undefined);
+  return this.setCredentials(undefined);
 };
 
 
@@ -2160,17 +2220,21 @@ proto.topo.device.Device.prototype.getTls = function() {
 };
 
 
-/** @param {?proto.topo.device.TlsConfig|undefined} value */
+/**
+ * @param {?proto.topo.device.TlsConfig|undefined} value
+ * @return {!proto.topo.device.Device} returns this
+*/
 proto.topo.device.Device.prototype.setTls = function(value) {
-  jspb.Message.setWrapperField(this, 8, value);
+  return jspb.Message.setWrapperField(this, 8, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.topo.device.Device} returns this
  */
 proto.topo.device.Device.prototype.clearTls = function() {
-  this.setTls(undefined);
+  return this.setTls(undefined);
 };
 
 
@@ -2192,9 +2256,12 @@ proto.topo.device.Device.prototype.getType = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setType = function(value) {
-  jspb.Message.setProto3StringField(this, 9, value);
+  return jspb.Message.setProto3StringField(this, 9, value);
 };
 
 
@@ -2207,9 +2274,12 @@ proto.topo.device.Device.prototype.getRole = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
 proto.topo.device.Device.prototype.setRole = function(value) {
-  jspb.Message.setProto3StringField(this, 10, value);
+  return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
@@ -2228,10 +2298,11 @@ proto.topo.device.Device.prototype.getAttributesMap = function(opt_noLazyCreate)
 
 /**
  * Clears values from the map. The map will be non-null.
+ * @return {!proto.topo.device.Device} returns this
  */
 proto.topo.device.Device.prototype.clearAttributesMap = function() {
   this.getAttributesMap().clear();
-};
+  return this;};
 
 
 /**
@@ -2244,9 +2315,12 @@ proto.topo.device.Device.prototype.getProtocolsList = function() {
 };
 
 
-/** @param {!Array<!proto.topo.device.ProtocolState>} value */
+/**
+ * @param {!Array<!proto.topo.device.ProtocolState>} value
+ * @return {!proto.topo.device.Device} returns this
+*/
 proto.topo.device.Device.prototype.setProtocolsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 12, value);
+  return jspb.Message.setRepeatedWrapperField(this, 12, value);
 };
 
 
@@ -2262,9 +2336,10 @@ proto.topo.device.Device.prototype.addProtocols = function(opt_value, opt_index)
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.topo.device.Device} returns this
  */
 proto.topo.device.Device.prototype.clearProtocolsList = function() {
-  this.setProtocolsList([]);
+  return this.setProtocolsList([]);
 };
 
 
@@ -2401,9 +2476,12 @@ proto.topo.device.Credentials.prototype.getUser = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Credentials} returns this
+ */
 proto.topo.device.Credentials.prototype.setUser = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -2416,9 +2494,12 @@ proto.topo.device.Credentials.prototype.getPassword = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Credentials} returns this
+ */
 proto.topo.device.Credentials.prototype.setPassword = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -2591,9 +2672,12 @@ proto.topo.device.TlsConfig.prototype.getCacert = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.TlsConfig} returns this
+ */
 proto.topo.device.TlsConfig.prototype.setCacert = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -2606,9 +2690,12 @@ proto.topo.device.TlsConfig.prototype.getCert = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.TlsConfig} returns this
+ */
 proto.topo.device.TlsConfig.prototype.setCert = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -2621,9 +2708,12 @@ proto.topo.device.TlsConfig.prototype.getKey = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.TlsConfig} returns this
+ */
 proto.topo.device.TlsConfig.prototype.setKey = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
@@ -2636,9 +2726,12 @@ proto.topo.device.TlsConfig.prototype.getPlain = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.topo.device.TlsConfig} returns this
+ */
 proto.topo.device.TlsConfig.prototype.setPlain = function(value) {
-  jspb.Message.setProto3BooleanField(this, 6, value);
+  return jspb.Message.setProto3BooleanField(this, 6, value);
 };
 
 
@@ -2651,9 +2744,12 @@ proto.topo.device.TlsConfig.prototype.getInsecure = function() {
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.topo.device.TlsConfig} returns this
+ */
 proto.topo.device.TlsConfig.prototype.setInsecure = function(value) {
-  jspb.Message.setProto3BooleanField(this, 7, value);
+  return jspb.Message.setProto3BooleanField(this, 7, value);
 };
 
 
@@ -2814,9 +2910,12 @@ proto.topo.device.ProtocolState.prototype.getProtocol = function() {
 };
 
 
-/** @param {!proto.topo.device.Protocol} value */
+/**
+ * @param {!proto.topo.device.Protocol} value
+ * @return {!proto.topo.device.ProtocolState} returns this
+ */
 proto.topo.device.ProtocolState.prototype.setProtocol = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -2829,9 +2928,12 @@ proto.topo.device.ProtocolState.prototype.getConnectivitystate = function() {
 };
 
 
-/** @param {!proto.topo.device.ConnectivityState} value */
+/**
+ * @param {!proto.topo.device.ConnectivityState} value
+ * @return {!proto.topo.device.ProtocolState} returns this
+ */
 proto.topo.device.ProtocolState.prototype.setConnectivitystate = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -2844,9 +2946,12 @@ proto.topo.device.ProtocolState.prototype.getChannelstate = function() {
 };
 
 
-/** @param {!proto.topo.device.ChannelState} value */
+/**
+ * @param {!proto.topo.device.ChannelState} value
+ * @return {!proto.topo.device.ProtocolState} returns this
+ */
 proto.topo.device.ProtocolState.prototype.setChannelstate = function(value) {
-  jspb.Message.setProto3EnumField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -2859,9 +2964,12 @@ proto.topo.device.ProtocolState.prototype.getServicestate = function() {
 };
 
 
-/** @param {!proto.topo.device.ServiceState} value */
+/**
+ * @param {!proto.topo.device.ServiceState} value
+ * @return {!proto.topo.device.ProtocolState} returns this
+ */
 proto.topo.device.ProtocolState.prototype.setServicestate = function(value) {
-  jspb.Message.setProto3EnumField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
@@ -2872,7 +2980,8 @@ proto.topo.device.Protocol = {
   UNKNOWN_PROTOCOL: 0,
   GNMI: 1,
   P4RUNTIME: 2,
-  GNOI: 3
+  GNOI: 3,
+  E2AP: 4
 };
 
 /**

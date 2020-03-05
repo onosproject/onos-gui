@@ -285,9 +285,12 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getId = function() 
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+ */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -300,9 +303,12 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getIndex = function
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+ */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -315,9 +321,12 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getRevision = funct
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+ */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setRevision = function(value) {
-  jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 3, value);
 };
 
 
@@ -331,17 +340,21 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getStatus = functio
 };
 
 
-/** @param {?proto.onos.config.snapshot.Status|undefined} value */
+/**
+ * @param {?proto.onos.config.snapshot.Status|undefined} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+*/
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setStatus = function(value) {
-  jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
  */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.clearStatus = function() {
-  this.setStatus(undefined);
+  return this.setStatus(undefined);
 };
 
 
@@ -364,17 +377,21 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getRetention = func
 };
 
 
-/** @param {?proto.onos.config.snapshot.RetentionOptions|undefined} value */
+/**
+ * @param {?proto.onos.config.snapshot.RetentionOptions|undefined} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+*/
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setRetention = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
  */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.clearRetention = function() {
-  this.setRetention(undefined);
+  return this.setRetention(undefined);
 };
 
 
@@ -397,17 +414,21 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getCreated = functi
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+*/
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setCreated = function(value) {
-  jspb.Message.setWrapperField(this, 8, value);
+  return jspb.Message.setWrapperField(this, 8, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
  */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.clearCreated = function() {
-  this.setCreated(undefined);
+  return this.setCreated(undefined);
 };
 
 
@@ -430,17 +451,21 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getUpdated = functi
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+*/
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setUpdated = function(value) {
-  jspb.Message.setWrapperField(this, 9, value);
+  return jspb.Message.setWrapperField(this, 9, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
  */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.clearUpdated = function() {
-  this.setUpdated(undefined);
+  return this.setUpdated(undefined);
 };
 
 
@@ -463,9 +488,12 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.getRefsList = funct
 };
 
 
-/** @param {!Array<!proto.onos.config.snapshot.network.DeviceSnapshotRef>} value */
+/**
+ * @param {!Array<!proto.onos.config.snapshot.network.DeviceSnapshotRef>} value
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
+*/
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.setRefsList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 10, value);
+  return jspb.Message.setRepeatedWrapperField(this, 10, value);
 };
 
 
@@ -481,9 +509,10 @@ proto.onos.config.snapshot.network.NetworkSnapshot.prototype.addRefs = function(
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.snapshot.network.NetworkSnapshot} returns this
  */
 proto.onos.config.snapshot.network.NetworkSnapshot.prototype.clearRefsList = function() {
-  this.setRefsList([]);
+  return this.setRefsList([]);
 };
 
 
@@ -608,9 +637,12 @@ proto.onos.config.snapshot.network.DeviceSnapshotRef.prototype.getDeviceSnapshot
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.network.DeviceSnapshotRef} returns this
+ */
 proto.onos.config.snapshot.network.DeviceSnapshotRef.prototype.setDeviceSnapshotId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 

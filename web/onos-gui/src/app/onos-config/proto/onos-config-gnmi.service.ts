@@ -16,7 +16,7 @@
 
 import {Inject, Injectable} from '@angular/core';
 import * as grpcWeb from 'grpc-web';
-import {gNMIClient} from './github.com/openconfig/gnmi/proto/gnmi/gnmiServiceClientPb';
+import {gNMIClient} from './github.com/openconfig/gnmi/proto/gnmi/GnmiServiceClientPb';
 import {
     CapabilityRequest,
     CapabilityResponse,

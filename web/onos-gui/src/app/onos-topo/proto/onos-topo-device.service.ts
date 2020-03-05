@@ -15,7 +15,7 @@
  */
 
 import {Inject, Injectable} from '@angular/core';
-import {DeviceServiceClient} from './github.com/onosproject/onos-topo/api/device/deviceServiceClientPb';
+import {DeviceServiceClient} from './github.com/onosproject/onos-topo/api/device/DeviceServiceClientPb';
 import {
     ListRequest, ListResponse
 } from './github.com/onosproject/onos-topo/api/device/device_pb';

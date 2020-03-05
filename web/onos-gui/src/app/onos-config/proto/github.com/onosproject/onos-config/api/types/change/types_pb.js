@@ -206,9 +206,12 @@ proto.onos.config.change.Status.prototype.getPhase = function() {
 };
 
 
-/** @param {!proto.onos.config.change.Phase} value */
+/**
+ * @param {!proto.onos.config.change.Phase} value
+ * @return {!proto.onos.config.change.Status} returns this
+ */
 proto.onos.config.change.Status.prototype.setPhase = function(value) {
-  jspb.Message.setProto3EnumField(this, 1, value);
+  return jspb.Message.setProto3EnumField(this, 1, value);
 };
 
 
@@ -221,9 +224,12 @@ proto.onos.config.change.Status.prototype.getState = function() {
 };
 
 
-/** @param {!proto.onos.config.change.State} value */
+/**
+ * @param {!proto.onos.config.change.State} value
+ * @return {!proto.onos.config.change.Status} returns this
+ */
 proto.onos.config.change.Status.prototype.setState = function(value) {
-  jspb.Message.setProto3EnumField(this, 2, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 
@@ -236,9 +242,12 @@ proto.onos.config.change.Status.prototype.getReason = function() {
 };
 
 
-/** @param {!proto.onos.config.change.Reason} value */
+/**
+ * @param {!proto.onos.config.change.Reason} value
+ * @return {!proto.onos.config.change.Status} returns this
+ */
 proto.onos.config.change.Status.prototype.setReason = function(value) {
-  jspb.Message.setProto3EnumField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 3, value);
 };
 
 
@@ -251,9 +260,12 @@ proto.onos.config.change.Status.prototype.getMessage = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.change.Status} returns this
+ */
 proto.onos.config.change.Status.prototype.setMessage = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -266,9 +278,12 @@ proto.onos.config.change.Status.prototype.getIncarnation = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.change.Status} returns this
+ */
 proto.onos.config.change.Status.prototype.setIncarnation = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 

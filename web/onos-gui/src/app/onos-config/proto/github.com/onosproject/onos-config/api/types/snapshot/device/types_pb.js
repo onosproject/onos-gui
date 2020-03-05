@@ -323,9 +323,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -338,9 +341,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getDeviceId = functio
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setDeviceId = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -353,9 +359,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getDeviceVersion = fu
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setDeviceVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -368,9 +377,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getDeviceType = funct
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setDeviceType = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -383,9 +395,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getRevision = functio
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setRevision = function(value) {
-  jspb.Message.setProto3IntField(this, 5, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -399,17 +414,21 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getNetworkSnapshot = 
 };
 
 
-/** @param {?proto.onos.config.snapshot.device.NetworkSnapshotRef|undefined} value */
+/**
+ * @param {?proto.onos.config.snapshot.device.NetworkSnapshotRef|undefined} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+*/
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setNetworkSnapshot = function(value) {
-  jspb.Message.setWrapperField(this, 6, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearNetworkSnapshot = function() {
-  this.setNetworkSnapshot(undefined);
+  return this.setNetworkSnapshot(undefined);
 };
 
 
@@ -431,9 +450,12 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getMaxNetworkChangeIn
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+ */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setMaxNetworkChangeIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 
@@ -447,17 +469,21 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getStatus = function(
 };
 
 
-/** @param {?proto.onos.config.snapshot.Status|undefined} value */
+/**
+ * @param {?proto.onos.config.snapshot.Status|undefined} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+*/
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setStatus = function(value) {
-  jspb.Message.setWrapperField(this, 8, value);
+  return jspb.Message.setWrapperField(this, 8, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearStatus = function() {
-  this.setStatus(undefined);
+  return this.setStatus(undefined);
 };
 
 
@@ -480,17 +506,21 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getCreated = function
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+*/
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setCreated = function(value) {
-  jspb.Message.setWrapperField(this, 9, value);
+  return jspb.Message.setWrapperField(this, 9, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearCreated = function() {
-  this.setCreated(undefined);
+  return this.setCreated(undefined);
 };
 
 
@@ -513,17 +543,21 @@ proto.onos.config.snapshot.device.DeviceSnapshot.prototype.getUpdated = function
 };
 
 
-/** @param {?proto.google.protobuf.Timestamp|undefined} value */
+/**
+ * @param {?proto.google.protobuf.Timestamp|undefined} value
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
+*/
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.setUpdated = function(value) {
-  jspb.Message.setWrapperField(this, 10, value);
+  return jspb.Message.setWrapperField(this, 10, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.onos.config.snapshot.device.DeviceSnapshot} returns this
  */
 proto.onos.config.snapshot.device.DeviceSnapshot.prototype.clearUpdated = function() {
-  this.setUpdated(undefined);
+  return this.setUpdated(undefined);
 };
 
 
@@ -669,9 +703,12 @@ proto.onos.config.snapshot.device.NetworkSnapshotRef.prototype.getId = function(
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.NetworkSnapshotRef} returns this
+ */
 proto.onos.config.snapshot.device.NetworkSnapshotRef.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -684,9 +721,12 @@ proto.onos.config.snapshot.device.NetworkSnapshotRef.prototype.getIndex = functi
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.device.NetworkSnapshotRef} returns this
+ */
 proto.onos.config.snapshot.device.NetworkSnapshotRef.prototype.setIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -893,9 +933,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setId = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -908,9 +951,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getDeviceId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setDeviceId = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -923,9 +969,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getDeviceVersion = function
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setDeviceVersion = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -938,9 +987,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getDeviceType = function() 
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setDeviceType = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -953,9 +1005,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getSnapshotId = function() 
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setSnapshotId = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
@@ -968,9 +1023,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getChangeIndex = function()
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+ */
 proto.onos.config.snapshot.device.Snapshot.prototype.setChangeIndex = function(value) {
-  jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 
@@ -984,9 +1042,12 @@ proto.onos.config.snapshot.device.Snapshot.prototype.getValuesList = function() 
 };
 
 
-/** @param {!Array<!proto.onos.config.change.device.PathValue>} value */
+/**
+ * @param {!Array<!proto.onos.config.change.device.PathValue>} value
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
+*/
 proto.onos.config.snapshot.device.Snapshot.prototype.setValuesList = function(value) {
-  jspb.Message.setRepeatedWrapperField(this, 7, value);
+  return jspb.Message.setRepeatedWrapperField(this, 7, value);
 };
 
 
@@ -1002,9 +1063,10 @@ proto.onos.config.snapshot.device.Snapshot.prototype.addValues = function(opt_va
 
 /**
  * Clears the list making it empty but non-null.
+ * @return {!proto.onos.config.snapshot.device.Snapshot} returns this
  */
 proto.onos.config.snapshot.device.Snapshot.prototype.clearValuesList = function() {
-  this.setValuesList([]);
+  return this.setValuesList([]);
 };
 
 
