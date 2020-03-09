@@ -21,6 +21,8 @@ import {
     LogService,
     NavService
 } from 'gui2-fw-lib';
+import {K8sClientService} from '../k8sclient.service';
+import {kubernetes_api_proxy} from '../../environments/environment';
 
 /**
  * ONOS GUI -- Navigation Module
@@ -44,6 +46,10 @@ import {
             transition('0 => 1', animate('100ms ease-in')),
             transition('1 => 0', animate('100ms ease-out'))
         ])
+    ],
+    providers: [
+        {provide: 'kubernetes_api_proxy', useValue: kubernetes_api_proxy},
+        {provide: K8sClientService, useClass: K8sClientService}
     ]
 })
 export class NavComponent implements OnInit, OnDestroy {
@@ -53,6 +59,7 @@ export class NavComponent implements OnInit, OnDestroy {
         private log: LogService,
         private lion: LionService,
         public ns: NavService,
+        private k8s: K8sClientService,
     ) {
         this.log.debug('NavComponent constructed');
     }
@@ -71,6 +78,13 @@ export class NavComponent implements OnInit, OnDestroy {
             this.doLion();
         }
         this.ns.getUiViews();
+        this.k8s.monitorRunningServices().subscribe(
+            (resp: string) => {
+                console.log('K8s service', resp, 'detected');
+            },
+            error => console.log('Error', error),
+            () => console.log('End of K8s responses')
+        );
     }
 
     /**
