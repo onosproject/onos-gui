@@ -20,10 +20,12 @@ import {CommonModule} from '@angular/common';
 import {OnosComponent} from './onos.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ConsoleLoggerService, Gui2FwLibModule, LogService} from 'gui2-fw-lib';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {OnosRoutingModule} from './onos-routing.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NavComponent} from './nav/nav.component';
+import {K8sClientService} from './k8sclient.service';
+import {kubernetes_api_proxy} from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -41,6 +43,7 @@ import {NavComponent} from './nav/nav.component';
     providers: [
         {provide: 'Window', useValue: window},
         {provide: LogService, useClass: ConsoleLoggerService},
+        {provide: HttpClient, useClass: HttpClient},
     ],
     bootstrap: [OnosComponent]
 })

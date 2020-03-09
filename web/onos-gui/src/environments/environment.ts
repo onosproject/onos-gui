@@ -22,8 +22,9 @@ export const environment = {
   production: false
 };
 
-export const grpc_web_config_proxy = 'http://onos-config-envoy:8080';
-export const grpc_web_topo_proxy = 'http://onos-topo-envoy:8080';
+export const kubernetes_api_proxy = 'http://localhost:8001';
+export const grpc_web_topo_proxy = 'http://localhost:8080';
+export const grpc_web_config_proxy = 'http://localhost:8081';
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
