@@ -90,8 +90,9 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Topo Devices gRPC error', String(err.code), err.message,
-                'Please ensure onos-config is reachable']);
+                'Topo Devices service gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable',
+                'Choose a different application from the menu']);
             },
             (type, device) => {
                 if (type === ListResponse.Type.ADDED || type === ListResponse.Type.NONE) {
@@ -101,14 +102,16 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
 
         this.watchNetworkChanges((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Network Changes gRPC error', String(err.code), err.message,
-                'Please ensure onos-config is reachable']);
+                'Network Changes service gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable',
+                'Choose a different application from the menu']);
         });
 
         this.deviceService.watchSnapshots((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Device Snapshot gRPC error', String(err.code), err.message,
-                'Please ensure onos-config is reachable']);
+                'Device Snapshot service gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable',
+                'Choose a different application from the menu']);
         });
         console.log('ConfigDashboardComponent initialized');
     }

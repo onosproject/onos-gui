@@ -14,29 +14,14 @@
 ~ limitations under the License.
 -->
 <nav id="nav" [@navState]="ns.showNav">
-    <div id="platform" class="nav-hdr">Platform</div>
-    <div *ngFor="let uiView of ns.uiPlatformViews">
-        <a id="{{uiView.id}}" (click)="ns.hideNav()"
-           routerLink="/{{uiView.id}}">
-            <onos-icon iconId="{{ uiView.icon }}"></onos-icon>
-            {{ uiView.label }}</a>
-    </div>
-
-    <div id="network" class="nav-hdr">Network</div>
-    <div *ngFor="let uiView of ns.uiNetworkViews">
-        <a id="{{uiView.id}}" (click)="ns.hideNav()"
-           routerLink="/{{uiView.id}}">
-            <onos-icon iconId="{{ uiView.icon }}"></onos-icon>
-            {{ uiView.label }}</a>
-    </div>
-
-    <div *ngIf="ns.uiOtherViews.length > 0" id="other"
-         class="nav-hdr">Config</div>
-    <div *ngFor="let uiView of ns.uiOtherViews">
-        <a id="{{uiView.id}}" (click)="ns.hideNav()"
-           routerLink="/{{uiView.id}}">
-            <onos-icon iconId="{{ uiView.icon }}"></onos-icon>
-            {{ uiView.label }}</a>
+    <div *ngFor="let navSection of navSections">
+        <div id="header" class="nav-hdr">{{navSection.title}}</div>
+        <div *ngFor="let uiView of navSection.views">
+            <a id="{{uiView.id}}" (click)="ns.hideNav()"
+               routerLink="{{navSection.service_name}}/{{uiView.id}}">
+                <onos-icon iconId="{{ uiView.icon }}"></onos-icon>
+                {{ uiView.label }}</a>
+        </div>
     </div>
 
 </nav>

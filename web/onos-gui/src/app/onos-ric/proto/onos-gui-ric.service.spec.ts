@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-present Open Networking Foundation
+ * Copyright 2020-present Open Networking Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-export const environment = {
-  production: true
-};
+import {TestBed} from '@angular/core/testing';
 
-export const kubernetes_api_proxy = 'http://' + window.location.host + '/kubernetes-api';
-export const grpc_web_config_proxy = 'http://' + window.location.host + '/onos-config';
-export const grpc_web_topo_proxy = 'http://' + window.location.host + '/onos-topo';
-export const grpc_web_ric_proxy = 'http://' + window.location.host + '/onos-ric';
-export const grpc_web_sim_proxy = 'http://' + window.location.host + '/ran-simulator';
+import {OnosGuiRicService} from './onos-gui-ric.service';
+
+describe('OnosGuiRicService', () => {
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+    });
+
+    it('should be created', () => {
+        const service: OnosGuiRicService = TestBed.get(OnosGuiRicService);
+        expect(service).toBeTruthy();
+    });
+});

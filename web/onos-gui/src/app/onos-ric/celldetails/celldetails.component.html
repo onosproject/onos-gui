@@ -1,0 +1,74 @@
+<!--
+~ Copyright 2020-present Open Networking Foundation
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<div id="cell-detail-panel" class="floatpanel"
+     [@cellDetailState]="cellId!=='' && !closed">
+    <div class="container">
+        <div class="top">
+            <div class="close-btn">
+                <onos-icon class="close-btn" classes="active-close"
+                           iconId="close" iconSize="20"
+                           (click)="close()"></onos-icon>
+            </div>
+            <div class="dev-icon">
+                <onos-icon classes="{{ 'details-icon'}}" iconId="'device'"
+                           [iconSize]="40"></onos-icon>
+            </div>
+            <h2 class="clickable">Station: {{station?.getEcgi().getPlmnid()}}
+                :{{cellId}}</h2>
+            <div class="top-content">
+                <div class="top-tables">
+                    <div class="left">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="label" width="110">PLMN :</td>
+                                <td class="value"
+                                    width="80">{{station?.getEcgi().getPlmnid()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label" width="110">ECID :</td>
+                                <td class="value"
+                                    width="80">{{station?.getEcgi().getEcid()}}</td>
+                            </tr>
+                            <tr>
+                                <td class="label" width="110">Max UEs :</td>
+                                <td class="value"
+                                    width="80">{{station?.getMaxnumconnectedues()}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="middle">
+            <h2 class="changes-title">
+                Neighbours: {{stationLinkInfo?.getNeighborecgiList().length}}</h2>
+            <table>
+                <tbody>
+                <tr *ngFor="let n of stationLinkInfo?.getNeighborecgiList()">
+                    <td class="link" width="110"
+                        (click)="alternateSelected(n)">{{n.getPlmnid()}}
+                        :{{n.getEcid()}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

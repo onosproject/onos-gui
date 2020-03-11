@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 
 import {
@@ -23,6 +23,22 @@ import {
 } from 'gui2-fw-lib';
 import {K8sClientService} from '../k8sclient.service';
 import {kubernetes_api_proxy} from '../../environments/environment';
+
+export interface UiView {
+    // id:  Must correspond to the path in that Routes[] for that module
+    id: string;
+    icon: string;
+    label: string;
+}
+
+export interface NavSection {
+    // title: The displayed title for the Nav Menu Section
+    title: string;
+    // service_name: The K8S service name
+    service_name: string;
+    // views: The list of Views shown when the service is enabled.
+    views: Array<UiView>;
+}
 
 /**
  * ONOS GUI -- Navigation Module
@@ -47,66 +63,128 @@ import {kubernetes_api_proxy} from '../../environments/environment';
             transition('1 => 0', animate('100ms ease-out'))
         ])
     ],
-    providers: [
-        {provide: 'kubernetes_api_proxy', useValue: kubernetes_api_proxy},
-        {provide: K8sClientService, useClass: K8sClientService}
-    ]
 })
-export class NavComponent implements OnInit, OnDestroy {
-    lionFn; // Function
+export class NavComponent implements OnInit {
+    navSections: NavSection[];
 
     constructor(
         private log: LogService,
-        private lion: LionService,
         public ns: NavService,
         private k8s: K8sClientService,
     ) {
+        this.navSections = new Array<NavSection>();
+        this.navSections.push(this.createDummySection());
         this.log.debug('NavComponent constructed');
     }
 
-    /**
-     * If LION is not ready we make do with a dummy function
-     * As soon a lion gets loaded this function will be replaced with
-     * the real thing
-     */
     ngOnInit() {
-        if (this.lion.ubercache.length === 0) {
-            this.lionFn = this.dummyLion;
-            this.lion.loadCbs.set('nav', () => this.doLion());
-            this.log.debug('LION not available when NavComponent initialized');
-        } else {
-            this.doLion();
-        }
-        this.ns.getUiViews();
+        // Load the menu at startup and refresh every 10 seconds
+        this.updateNav();
+        setInterval(() => this.updateNav(), 5000);
+    }
+
+    updateNav() {
+        const updatedSections = new Array<NavSection>();
         this.k8s.monitorRunningServices().subscribe(
             (resp: string) => {
-                console.log('K8s service', resp, 'detected');
+                switch (resp) {
+                    case 'onos-config':
+                        updatedSections.push(this.createConfigSection());
+                        break;
+                    case 'onos-topo':
+                        updatedSections.push(this.createTopoSection());
+                        break;
+                    case 'onos-ric':
+                        updatedSections.push(this.createRicSection());
+                        break;
+                    // case 'ran-simulator':
+                    //     updatedSections.push(this.createRanSimSection());
+                    //     break;
+                }
             },
-            error => console.log('Error', error),
-            () => console.log('End of K8s responses')
+            error => {
+                console.log('K8S API not available');
+                this.navSections.length = 0;
+                this.navSections.push(this.createDummySection());
+            },
+            () => {
+                this.navSections.length = 0;
+                if (updatedSections.length > 0) {
+                    this.navSections.push(...updatedSections);
+                } else {
+                    this.navSections.push(this.createDummySection());
+                }
+            }
         );
     }
 
-    /**
-     * Nav component should never be closed, but in case it does, it's
-     * safer to tidy up after itself
-     */
-    ngOnDestroy() {
-        this.lion.loadCbs.delete('nav');
+    createConfigSection(): NavSection {
+        const configNavSection = {
+            title: 'Configuration',
+            service_name: 'onos-config',
+            views: new Array<UiView>()
+        } as NavSection;
+        configNavSection.views.push({
+            id: 'dashboard',
+            label: 'Dashboard'
+        } as UiView);
+        configNavSection.views.push({
+            id: 'models',
+            label: 'Models'
+        } as UiView);
+
+        return configNavSection;
     }
 
-    /**
-     * Read the LION bundle for App and set up the lionFn
-     */
-    doLion() {
-        this.lionFn = this.lion.bundle('core.fw.Nav');
+    createTopoSection(): NavSection {
+        const topoNavSection = {
+            title: 'Topology',
+            service_name: 'onos-topo',
+            views: new Array<UiView>()
+        } as NavSection;
+        topoNavSection.views.push({
+            id: 'devices',
+            label: 'Devices'
+        } as UiView);
+
+        return topoNavSection;
     }
 
-    /**
-     * A dummy implementation of the lionFn until the response is received and the LION
-     * bundle is received from the WebSocket
-     */
-    dummyLion(key: string): string {
-        return '%' + key + '%';
+    createRicSection(): NavSection {
+        const ricNavSection = {
+            title: 'RAN Controller',
+            service_name: 'onos-ric',
+            views: new Array<UiView>()
+        } as NavSection;
+        ricNavSection.views.push({
+            id: 'uelinks',
+            label: 'UE Links'
+        } as UiView);
+
+        return ricNavSection;
+    }
+
+    createRanSimSection(): NavSection {
+        const ranSimNavSection = {
+            title: 'RAN Simulator',
+            service_name: 'ran-simulator',
+            views: new Array<UiView>()
+        } as NavSection;
+        ranSimNavSection.views.push({
+            id: 'mapview',
+            label: 'Map View'
+        } as UiView);
+
+        return ranSimNavSection;
+    }
+
+    createDummySection(): NavSection {
+        const dummyNavSection = {
+            title: 'No Services Detected',
+            service_name: '',
+            views: new Array<UiView>()
+        } as NavSection;
+
+        return dummyNavSection;
     }
 }
