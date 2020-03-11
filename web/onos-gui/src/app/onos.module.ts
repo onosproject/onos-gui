@@ -44,6 +44,8 @@ import {kubernetes_api_proxy} from '../environments/environment';
         {provide: 'Window', useValue: window},
         {provide: LogService, useClass: ConsoleLoggerService},
         {provide: HttpClient, useClass: HttpClient},
+        {provide: 'kubernetes_api_proxy', useValue: kubernetes_api_proxy},
+        {provide: K8sClientService, useClass: K8sClientService}
     ],
     bootstrap: [OnosComponent]
 })

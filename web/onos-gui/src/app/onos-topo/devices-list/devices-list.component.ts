@@ -63,8 +63,9 @@ export class DevicesListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Topo Devices gRPC error', String(err.code), err.message,
-                'Please ensure onos-topo is reachable']);
+                'Topo Devices service gRPC error', String(err.code), err.message,
+                'Please ensure onos-topo is reachable',
+                'Choose a different application from the menu']);
         });
     }
 

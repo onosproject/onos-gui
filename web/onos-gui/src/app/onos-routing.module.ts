@@ -22,16 +22,20 @@ import {Routes, RouterModule} from '@angular/router';
  */
 const onosRoutes: Routes = [
     {
-        path: 'config',
+        path: 'onos-config',
         loadChildren: './onos-config/onos-config.module#OnosConfigModule'
     },
     {
-        path: 'topology',
+        path: 'onos-topo',
         loadChildren: './onos-topo/onos-topo.module#OnosTopoModule'
     },
     {
+        path: 'onos-ric',
+        loadChildren: './onos-ric/onos-ric.module#OnosRicModule'
+    },
+    {
         path: '',
-        redirectTo: 'config',
+        redirectTo: 'onos-config',
         pathMatch: 'full'
     }
 ];

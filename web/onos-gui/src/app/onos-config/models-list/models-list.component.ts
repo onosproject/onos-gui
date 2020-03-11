@@ -81,8 +81,9 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         this.tableData = this.modelService.modelInfoList;
         this.modelService.loadModelList((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Model list gRPC error', String(err.code), err.message,
-                'Please ensure onos-config is reachable']);
+                'Model list service gRPC error', String(err.code), err.message,
+                'Please ensure onos-config is reachable',
+                'Choose a different application from the menu']);
         });
     }
 
@@ -104,18 +105,5 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             // }
         }
         this.newConfigTitle = '';
-    }
-
-    toggleRefreshNew() {
-        this.autoRefresh = !this.autoRefresh;
-        if (this.autoRefresh) {
-            this.modelService.loadModelList((err: grpcWeb.Error) => {
-                this.connectivityService.showVeil([
-                    'Model list gRPC error', String(err.code), err.message,
-                    'Please ensure onos-config is reachable']);
-            });
-        } else {
-            this.modelService.close();
-        }
     }
 }

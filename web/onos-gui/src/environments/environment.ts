@@ -23,8 +23,11 @@ export const environment = {
 };
 
 export const kubernetes_api_proxy = 'http://localhost:8001';
-export const grpc_web_topo_proxy = 'http://localhost:8080';
-export const grpc_web_config_proxy = 'http://localhost:8081';
+export const grpc_web_topo_proxy = 'http://localhost:8081';
+export const grpc_web_config_proxy = 'http://localhost:8082';
+export const grpc_web_ric_proxy = 'http://localhost:8083';
+export const grpc_web_sim_proxy = 'http://localhost:8084';
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

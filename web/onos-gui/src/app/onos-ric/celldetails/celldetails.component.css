@@ -1,0 +1,122 @@
+/*
+ * Copyright 2020-present Open Networking Foundation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+#cell-detail-panel.floatpanel {
+    z-index: 0;
+    font-size: 10pt;
+    top: 185px;
+}
+
+#cell-detail-panel.floatpanel a {
+    font-weight: bold;
+}
+
+#cell-detail-panel .container {
+    padding: 0 30px;
+}
+
+#cell-detail-panel .close-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+}
+
+#cell-detail-panel .dev-icon {
+    display: inline-block;
+    padding: 0 6px 0 0;
+    vertical-align: middle;
+}
+
+#cell-detail-panel h2 {
+    display: inline-block;
+    margin: 8px 0;
+    font-weight: bold;
+    font-size: 16pt;
+}
+
+#cell-detail-panel h2 input {
+    font-size: 0.90em;
+    width: 106%;
+}
+
+#cell-detail-panel .actionBtns div {
+    padding: 12px 6px;
+}
+
+#cell-detail-panel hr {
+    width: 100%;
+    margin: 2px auto;
+}
+
+#cell-detail-panel .top-tables {
+    font-size: 10pt;
+    white-space: nowrap;
+}
+
+#cell-detail-panel td.label {
+    font-weight: bold;
+    text-align: right;
+    padding-right: 6px;
+}
+
+#cell-detail-panel .bottom table {
+    border-spacing: 0;
+    height: 358px;
+    width: 520px;
+    overflow: auto;
+    display: block;
+}
+
+#cell-detail-panel .bottom th {
+    letter-spacing: 0.02em;
+}
+
+#cell-detail-panel .bottom th,
+#cell-detail-panel .bottom td {
+    padding: 6px 12px;
+    text-align: center;
+}
+
+#cell-detail-panel .top div.left {
+    float: left;
+    text-align: left;
+    padding: 0 10px 0 0;
+}
+
+#cell-detail-panel .top div.right {
+    display: inline-block;
+}
+
+#cell-detail-panel .editable {
+    border-bottom: 1px dashed #ca504b;
+}
+
+#cell-detail-panel .clickable {
+    cursor: pointer;
+}
+
+#cell-detail-panel .bottom thead tr {
+    background-color: #e5e5e6;
+}
+
+#cell-detail-panel td.link {
+    color: #00b0ff;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+}
