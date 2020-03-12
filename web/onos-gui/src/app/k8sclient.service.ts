@@ -18,6 +18,7 @@ import {Inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {from, Observable} from 'rxjs';
 import {pluck, mergeMap, map} from 'rxjs/operators';
+import {Meta} from '@angular/platform-browser';
 
 const namespacesResource = '/api/v1/namespaces';
 const serviceResource = '/services';
@@ -48,13 +49,16 @@ interface K8sServices {
     providedIn: 'root'
 })
 export class K8sClientService {
-    namespace: string = 'micro-onos';
+    namespace: string;
 
     constructor(
         @Inject('kubernetes_api_proxy') private kubernetesApiUrl: string,
         private http: HttpClient,
+        private meta: Meta,
     ) {
-        console.log('Constructing k8s Client service', kubernetesApiUrl);
+        const nsMeta = this.meta.getTag('name=namespace');
+        this.namespace = nsMeta.content;
+        console.log('Constructing k8s Client service', this.namespace, kubernetesApiUrl);
     }
 
     // Returns an observable of names of services running in the Kubernetes namespace

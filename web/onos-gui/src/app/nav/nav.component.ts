@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, Inject} from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 
 import {
-    LionService,
     LogService,
     NavService
 } from 'gui2-fw-lib';
@@ -71,10 +71,12 @@ export class NavComponent implements OnInit {
         private log: LogService,
         public ns: NavService,
         private k8s: K8sClientService,
+        private meta: Meta,
     ) {
         this.navSections = new Array<NavSection>();
         this.navSections.push(this.createDummySection());
-        this.log.debug('NavComponent constructed');
+        const nsMeta = this.meta.getTag('name=namespace');
+        this.log.debug('NavComponent constructed', nsMeta.content);
     }
 
     ngOnInit() {
