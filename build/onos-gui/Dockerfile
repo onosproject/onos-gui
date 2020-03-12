@@ -8,9 +8,8 @@ RUN apk add --update ca-certificates curl bash \
     && rm /var/cache/apk/*
 
 COPY web/onos-gui/dist/onos-gui /usr/share/nginx/html
-
 COPY build/onos-gui/startup.sh /usr/local/bin
-
+COPY build/onos-gui/docker-entrypoint.sh /usr/local/bin
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["/usr/local/bin/startup.sh"]
 EXPOSE 80
-
-ENTRYPOINT ["/usr/local/bin/startup.sh"]
