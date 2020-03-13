@@ -13,19 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import {TestBed} from '@angular/core/testing';
 
-import {OnosRicC1Service} from './onos-ric-c1.service';
+import {RanSimulatorTrafficsimService} from './ran-simulator-trafficsim.service';
 
-describe('OnosRicC1Service', () => {
+describe('RanSimulatorTrafficsimService', () => {
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        TestBed.configureTestingModule({
+            providers: [
+                {
+                    provide: RanSimulatorTrafficsimService,
+                    useValue: new RanSimulatorTrafficsimService('http://localhost:8080')
+                }
+            ]
+        });
     });
 
     it('should be created', () => {
-        const service: OnosRicC1Service = TestBed.get(OnosRicC1Service);
+        const service: RanSimulatorTrafficsimService = TestBed.get(RanSimulatorTrafficsimService);
         expect(service).toBeTruthy();
     });
 });

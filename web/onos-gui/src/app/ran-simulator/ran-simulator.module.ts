@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {FormsModule} from '@angular/forms';
-import {grpc_web_ric_proxy} from '../../environments/environment';
-import {UelinksComponent} from './uelinks/uelinks.component';
-import {OnosRicC1Service} from './proto/onos-ric-c1.service';
+import {MapviewComponent} from './mapview/mapview.component';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
-import { CellDetailsComponent } from './celldetails/celldetails.component';
+import {RouterModule} from '@angular/router';
+import {RanSimulatorTrafficsimService} from './proto/ran-simulator-trafficsim.service';
+import {grpc_web_sim_proxy} from '../../environments/environment';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
-    declarations: [UelinksComponent, CellDetailsComponent],
+    declarations: [MapviewComponent],
     imports: [
         CommonModule,
-        FormsModule,
         Gui2FwLibModule,
+        FormsModule,
         RouterModule.forChild([
-            {path: 'uelinks', component: UelinksComponent},
-            {path: '', component: UelinksComponent, pathMatch: 'full'}
-        ]),
+            {path: 'mapview', component: MapviewComponent},
+            {path: '', component: MapviewComponent, pathMatch: 'full'}
+        ])
     ],
     providers: [
         {
-            provide: OnosRicC1Service,
-            useValue: new OnosRicC1Service(grpc_web_ric_proxy)
+            provide: RanSimulatorTrafficsimService,
+            useValue: new RanSimulatorTrafficsimService(grpc_web_sim_proxy)
         }
     ]
 })
-export class OnosRicModule {
+export class RanSimulatorModule {
 }

@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {OnosRicC1Service} from './onos-ric-c1.service';
+import {MapviewComponent} from './mapview.component';
 
-describe('OnosRicC1Service', () => {
+describe('MapviewComponent', () => {
+    let component: MapviewComponent;
+    let fixture: ComponentFixture<MapviewComponent>;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [MapviewComponent]
+        })
+            .compileComponents();
+    }));
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        fixture = TestBed.createComponent(MapviewComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
     });
 
-    it('should be created', () => {
-        const service: OnosRicC1Service = TestBed.get(OnosRicC1Service);
-        expect(service).toBeTruthy();
+    it('should create', () => {
+        expect(component).toBeTruthy();
     });
 });

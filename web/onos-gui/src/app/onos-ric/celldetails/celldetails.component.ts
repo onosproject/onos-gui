@@ -21,7 +21,7 @@ import {
     OnInit, Output,
     SimpleChanges
 } from '@angular/core';
-import {OnosGuiRicService} from '../proto/onos-gui-ric.service';
+import {OnosRicC1Service} from '../proto/onos-ric-c1.service';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {
     DetailsPanelBaseImpl,
@@ -71,7 +71,7 @@ export class CellDetailsComponent extends DetailsPanelBaseImpl implements OnInit
         protected log: LogService,
         protected wss: WebSocketService,
         protected is: IconService,
-        private onosGuiRicService: OnosGuiRicService,
+        private onosGuiRicService: OnosRicC1Service,
     ) {
         super(fs, log, wss, cellId);
     }

@@ -66,6 +66,7 @@ export interface NavSection {
 })
 export class NavComponent implements OnInit {
     navSections: NavSection[];
+    timer: any;
 
     constructor(
         private log: LogService,
@@ -82,7 +83,7 @@ export class NavComponent implements OnInit {
     ngOnInit() {
         // Load the menu at startup and refresh every 10 seconds
         this.updateNav();
-        setInterval(() => this.updateNav(), 5000);
+        this.timer = setInterval(() => this.updateNav(), 5000);
     }
 
     updateNav() {
@@ -99,15 +100,16 @@ export class NavComponent implements OnInit {
                     case 'onos-ric':
                         updatedSections.push(this.createRicSection());
                         break;
-                    // case 'ran-simulator':
-                    //     updatedSections.push(this.createRanSimSection());
-                    //     break;
+                    case 'ran-simulator':
+                        updatedSections.push(this.createRanSimSection());
+                        break;
                 }
             },
             error => {
                 console.log('K8S API not available');
                 this.navSections.length = 0;
                 this.navSections.push(this.createDummySection());
+                clearInterval(this.timer); // Cancel retry - development mode
             },
             () => {
                 this.navSections.length = 0;
