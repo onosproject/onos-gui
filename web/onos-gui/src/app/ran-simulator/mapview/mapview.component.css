@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+.map-container {
+    margin: 2px;
+}
 
-import {TestBed} from '@angular/core/testing';
+.map-frame {
+    height: 90vh;
+}
 
-import {OnosRicC1Service} from './onos-ric-c1.service';
-
-describe('OnosRicC1Service', () => {
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({});
-    });
-
-    it('should be created', () => {
-        const service: OnosRicC1Service = TestBed.get(OnosRicC1Service);
-        expect(service).toBeTruthy();
-    });
-});
+#map {
+    height: 100%;
+}

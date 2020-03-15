@@ -26,7 +26,7 @@ import {
 import * as grpcWeb from 'grpc-web';
 
 @Injectable()
-export class OnosGuiRicService {
+export class OnosRicC1Service {
 
     c1InterfaceClient: C1InterfaceServiceClient;
 

@@ -129,7 +129,8 @@
     },
     "linterOptions": {
         "exclude": [
-            "src/app/onos-ric/proto/github.com/onosproject/onos-ric/**/*"
+            "src/app/onos-ric/proto/github.com/onosproject/onos-ric/**/*",
+            "src/app/ran-simulator/proto/github.com/onosproject/ran-simulator/**/*"
         ]
     }
 }

@@ -19,7 +19,7 @@ import {
     ChannelQuality, ECGI, StationInfo,
     UELinkInfo
 } from '../proto/github.com/onosproject/onos-ric/api/nb/c1-interface_pb';
-import {OnosGuiRicService} from '../proto/onos-gui-ric.service';
+import {OnosRicC1Service} from '../proto/onos-ric-c1.service';
 import {Subscription} from 'rxjs';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
@@ -46,7 +46,7 @@ export class UelinksComponent implements OnInit, OnDestroy {
     selectedStation: StationInfo;
 
     constructor(
-        private onosGuiRicService: OnosGuiRicService,
+        private onosGuiRicService: OnosRicC1Service,
         private connectivityService: ConnectivityService
     ) {
         this.ueLinks = new Map<string, UELinkInfo>();

@@ -34,6 +34,10 @@ const onosRoutes: Routes = [
         loadChildren: './onos-ric/onos-ric.module#OnosRicModule'
     },
     {
+        path: 'ran-simulator',
+        loadChildren: './ran-simulator/ran-simulator.module#RanSimulatorModule'
+    },
+    {
         path: '',
         redirectTo: 'onos-config',
         pathMatch: 'full'
