@@ -25,7 +25,7 @@ describe('OnosRicC1Service', () => {
     });
 
     it('should be created', () => {
-        const service: OnosRicC1Service = TestBed.get(OnosRicC1Service);
+        const service: OnosRicC1Service = TestBed.inject(OnosRicC1Service);
         expect(service).toBeTruthy();
     });
 });

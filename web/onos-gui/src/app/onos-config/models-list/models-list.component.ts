@@ -77,6 +77,7 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     }
 
     ngOnInit() {
+        this.connectivityService.hideVeil();
         this.selId = undefined;
         this.tableData = this.modelService.modelInfoList;
         this.modelService.loadModelList((err: grpcWeb.Error) => {

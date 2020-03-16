@@ -64,18 +64,18 @@ describe('ModelTempIndexService', () => {
     }));
 
     it('should be created', () => {
-        const service: ModelTempIndexService = TestBed.get(ModelTempIndexService);
+        const service: ModelTempIndexService = TestBed.inject(ModelTempIndexService);
         expect(service).toBeTruthy();
     });
 
     it('should add model info', () => {
-        const service: ModelTempIndexService = TestBed.get(ModelTempIndexService);
+        const service: ModelTempIndexService = TestBed.inject(ModelTempIndexService);
         service.addModelInfo(testModelInfo);
         expect(service.modelInfo.getReadWritePathList().length).toBe(4);
     });
 
     it('should calculate extra paths', () => {
-        const service: ModelTempIndexService = TestBed.get(ModelTempIndexService);
+        const service: ModelTempIndexService = TestBed.inject(ModelTempIndexService);
         service.addModelInfo(testModelInfo);
 
         service.addIndex('/a/b[x=1,y=1]/c/d[z=1/0]/e');

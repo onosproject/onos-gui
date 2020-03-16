@@ -142,6 +142,7 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.connectivityService.hideVeil();
         this.ar.params.subscribe(params => {
             const cn: string = params['configName'];
 
@@ -155,7 +156,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
         this.models.loadModelList((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
                 'Device Changes gRPC error', String(err.code), err.message,
-                'Please ensure onos-config is reachable']);
+                'Please ensure onos-config is reachable',
+                'Choose a different application from the menu']);
         });
     }
 
@@ -192,12 +194,14 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
             this.watchDeviceChanges(this.device, this.version, (err: grpcWeb.Error) => {
                 this.connectivityService.showVeil([
                     'Device Changes gRPC error', String(err.code), err.message,
-                    'Please ensure onos-config is reachable']);
+                    'Please ensure onos-config is reachable',
+                    'Choose a different application from the menu']);
             });
             this.watchSnapshot(this.device, this.version, (err: grpcWeb.Error) => {
                 this.connectivityService.showVeil([
                     'Snapshot gRPC error', String(err.code), err.message,
-                    'Please ensure onos-config is reachable']);
+                    'Please ensure onos-config is reachable',
+                    'Choose a different application from the menu']);
             });
         }
     }
@@ -278,7 +282,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.watchOpState(this.device, (err: grpcWeb.Error) => {
                     this.connectivityService.showVeil([
                         'OpState gRPC error', String(err.code), err.message,
-                        'Please ensure onos-config is reachable']);
+                        'Please ensure onos-config is reachable',
+                        'Choose a different application from the menu']);
                 });
             } else {
                 this.hierarchy.removeLayer(this.device);
@@ -291,7 +296,8 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.watchSnapshot(this.device, this.version, (err: grpcWeb.Error) => {
                     this.connectivityService.showVeil([
                         'OpState gRPC error', String(err.code), err.message,
-                        'Please ensure onos-config is reachable']);
+                        'Please ensure onos-config is reachable',
+                        'Choose a different application from the menu']);
                 });
             } else {
                 this.hierarchy.removeLayer(SNAPSHOT);

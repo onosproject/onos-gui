@@ -30,6 +30,12 @@ export class ConnectivityService {
         this.vcd.show(messages);
     }
 
+    hideVeil() {
+        this.vcd.enabled = false;
+        this.vcd.messages = [];
+        this.vcd.hide();
+    }
+
     setVeilDelegate(veil: any) {
         this.vcd = veil;
     }

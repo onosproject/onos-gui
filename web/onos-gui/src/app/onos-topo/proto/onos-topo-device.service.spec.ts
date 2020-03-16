@@ -22,7 +22,7 @@ describe('OnosTopoDeviceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: OnosTopoDeviceService = TestBed.get(OnosTopoDeviceService);
+    const service: OnosTopoDeviceService = TestBed.inject(OnosTopoDeviceService);
     expect(service).toBeTruthy();
   });
 });

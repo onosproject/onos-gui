@@ -29,7 +29,7 @@ describe('OnosConfigGnmiService', () => {
     }));
 
     it('should be created', () => {
-        const service: OnosConfigGnmiService = TestBed.get(OnosConfigGnmiService);
+        const service: OnosConfigGnmiService = TestBed.inject(OnosConfigGnmiService);
         expect(service).toBeTruthy();
     });
 });

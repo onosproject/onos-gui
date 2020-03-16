@@ -61,6 +61,7 @@ export class DevicesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.connectivityService.hideVeil();
         this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
                 'Topo Devices service gRPC error', String(err.code), err.message,

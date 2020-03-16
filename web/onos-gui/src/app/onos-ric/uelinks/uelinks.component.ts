@@ -56,6 +56,7 @@ export class UelinksComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.connectivityService.hideVeil();
         this.getUeLinks();
         this.getStations();
         this.timer = setInterval(() => {

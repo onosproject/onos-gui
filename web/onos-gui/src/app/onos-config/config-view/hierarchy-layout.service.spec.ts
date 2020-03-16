@@ -29,12 +29,12 @@ describe('HierarchyLayoutService', () => {
     }));
 
     it('should be created', () => {
-        const service: HierarchyLayoutService = TestBed.get(HierarchyLayoutService);
+        const service: HierarchyLayoutService = TestBed.inject(HierarchyLayoutService);
         expect(service).toBeTruthy();
     });
 
     it('should find root', () => {
-        const service: HierarchyLayoutService = TestBed.get(HierarchyLayoutService);
+        const service: HierarchyLayoutService = TestBed.inject(HierarchyLayoutService);
         service.setResizeCallback((treeWidth) => {
             expect(treeWidth).toBeGreaterThan(0);
         });
