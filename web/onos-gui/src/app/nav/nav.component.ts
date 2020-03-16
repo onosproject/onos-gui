@@ -22,7 +22,6 @@ import {
     NavService
 } from 'gui2-fw-lib';
 import {K8sClientService} from '../k8sclient.service';
-import {kubernetes_api_proxy} from '../../environments/environment';
 
 export interface UiView {
     // id:  Must correspond to the path in that Routes[] for that module

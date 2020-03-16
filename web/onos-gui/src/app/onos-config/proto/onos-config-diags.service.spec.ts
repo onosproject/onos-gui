@@ -30,7 +30,7 @@ describe('OnosConfigDiagsService', () => {
     ));
 
     it('should be created', () => {
-        const service: OnosConfigDiagsService = TestBed.get(OnosConfigDiagsService);
+        const service: OnosConfigDiagsService = TestBed.inject(OnosConfigDiagsService);
         expect(service).toBeTruthy();
     });
 });

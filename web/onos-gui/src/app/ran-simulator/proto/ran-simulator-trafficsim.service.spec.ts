@@ -31,7 +31,7 @@ describe('RanSimulatorTrafficsimService', () => {
     });
 
     it('should be created', () => {
-        const service: RanSimulatorTrafficsimService = TestBed.get(RanSimulatorTrafficsimService);
+        const service: RanSimulatorTrafficsimService = TestBed.inject(RanSimulatorTrafficsimService);
         expect(service).toBeTruthy();
     });
 });

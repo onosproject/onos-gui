@@ -29,7 +29,7 @@ describe('OnosConfigAdminService', () => {
     }));
 
     it('should be created', () => {
-        const service: OnosConfigAdminService = TestBed.get(OnosConfigAdminService);
+        const service: OnosConfigAdminService = TestBed.inject(OnosConfigAdminService);
         expect(service).toBeTruthy();
     });
 });

@@ -75,6 +75,7 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        this.connectivityService.hideVeil();
         this.trafficSimService.requestGetMapLayout().subscribe(
             (mapLayout) => {
                 this.zoom = mapLayout.getZoom();

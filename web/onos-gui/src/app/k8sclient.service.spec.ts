@@ -22,7 +22,7 @@ describe('K8sClientService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: K8sClientService = TestBed.get(K8sClientService);
+        const service: K8sClientService = TestBed.inject(K8sClientService);
         expect(service).toBeTruthy();
     });
 });
