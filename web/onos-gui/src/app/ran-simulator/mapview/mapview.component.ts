@@ -21,14 +21,27 @@ import {RanSimulatorTrafficsimService} from '../proto/ran-simulator-trafficsim.s
 import * as L from 'leaflet';
 import {
     Point,
-    Tower
+    Tower,
+    Route,
+    Ue,
 } from '../proto/github.com/onosproject/ran-simulator/api/types/types_pb';
-import {Type} from '../proto/github.com/onosproject/ran-simulator/api/trafficsim/trafficsim_pb';
+import {
+    ListUesResponse,
+    Type,
+    UpdateType
+} from '../proto/github.com/onosproject/ran-simulator/api/trafficsim/trafficsim_pb';
 
 const CIRCLE_MIN_DIA = 200;
 const CIRCLE_DEFAULT_DIA = 500;
 const CIRCLE_MAX_DIA = 2000;
 const FLASH_FOR_MS = 500;
+
+export const CAR_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.032 47.032"><path style="fill: #000000; stroke-width: 1; stroke: #000001; transform-origin: 50% 50%; transform: rotate(0deg)"
+ d="M29.395,0H17.636c-3.117,0-5.643,3.467-5.643,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759
+c3.116,0,5.644-2.527,5.644-5.644V6.584C35.037,3.467,32.511,0,29.395,0z M34.05,14.188v11.665l-2.729,0.351v-4.806L34.05,14.188z
+ M32.618,10.773c-1.016,3.9-2.219,8.51-2.219,8.51H16.631l-2.222-8.51C14.41,10.773,23.293,7.755,32.618,10.773z M15.741,21.713
+v4.492l-2.73-0.349V14.502L15.741,21.713z M13.011,37.938V27.579l2.73,0.343v8.196L13.011,37.938z M14.568,40.882l2.218-3.336
+h13.771l2.219,3.336H14.568z M31.321,35.805v-7.872l2.729-0.355v10.048L31.321,35.805z"/></svg>`;
 
 const iconRetinaUrl = 'assets/sd-ran-a-letter-82.png';
 const iconUrl = 'assets/sd-ran-a-letter-41.png';
@@ -37,11 +50,11 @@ const iconDefault = L.icon({
     iconRetinaUrl,
     iconUrl,
     shadowUrl,
-    iconSize: [40, 51],
-    iconAnchor: [19, 25],
+    iconSize: [20, 25],
+    iconAnchor: [10, 12],
     popupAnchor: [1, -34],
-    tooltipAnchor: [16, -28],
-    shadowSize: [41, 50]
+    tooltipAnchor: [10, -12],
+    shadowSize: [20, 25]
 });
 L.Marker.prototype.options.icon = iconDefault;
 
@@ -51,7 +64,8 @@ L.Marker.prototype.options.icon = iconDefault;
     styleUrls: ['./mapview.component.css']
 })
 export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
-    private map;
+    private map: L.Map;
+    private tiles: L.TileLayer;
     zoom: number = 13;
     showRoutes = true;
     showMap = false;
@@ -65,6 +79,9 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     powerCircleMap: Map<string, L.circle>;
     towerMarkers: Map<string, L.marker>;
+    routePolylines: Map<string, L.polyline>;
+    ueMap: Map<string, L.marker>;
+    ueLineMap: Map<string, L.polyline>;
 
     constructor(
         private trafficSimService: RanSimulatorTrafficsimService,
@@ -72,6 +89,9 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
     ) {
         this.powerCircleMap = new Map<string, L.circle>();
         this.towerMarkers = new Map<string, L.marker>();
+        this.routePolylines = new Map<string, L.polyline>();
+        this.ueMap = new Map<string, L.marker>();
+        this.ueLineMap = new Map<string, L.polyline>();
     }
 
     ngOnInit() {
@@ -107,7 +127,7 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
             } else if (resp.getType() === Type.REMOVED) {
                 this.deleteTower(resp.getTower());
             } else {
-                console.warn('Unhandled Route response type', resp.getType(), 'for', resp.getTower().getEcid());
+                console.warn('Unhandled Tower response type', resp.getType(), 'for', resp.getTower().getEcid());
             }
         }, err => {
             this.connectivityService.showVeil([
@@ -115,6 +135,46 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
                 'Please ensure ran-simulator is reachable',
                 'Choose a different application from the menu']);
             console.error('Tower', err);
+        });
+
+        // Get the list of routes - we're doing this here because we need to wait until `map` object is populated
+        this.routesSub = this.trafficSimService.requestListRoutes().subscribe((resp) => {
+            if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
+                this.initRoute(resp.getRoute());
+            } else if (resp.getType() === Type.UPDATED) {
+                this.updateRoute(resp.getRoute());
+            } else if (resp.getType() === Type.REMOVED) {
+                this.deleteRoute(resp.getRoute());
+            } else {
+                console.warn('Unhandled Route response type', resp.getType(), 'for', resp.getRoute().getName());
+            }
+        }, err => {
+            this.connectivityService.showVeil([
+                'ListRoutes gRPC error', String(err.code), err.message,
+                'Please ensure ran-simulator is reachable',
+                'Choose a different application from the menu']);
+            console.error('Routes', err);
+        });
+
+        this.uesSub = this.trafficSimService.requestListUes().subscribe((resp: ListUesResponse) => {
+            if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
+                this.initUe(resp.getUe());
+            } else if (resp.getType() === Type.UPDATED) {
+                this.updateUe(resp.getUe(), resp.getUpdateType());
+            } else if (resp.getType() === Type.REMOVED) {
+                this.ueMap.get(resp.getUe().getName()).remove();
+                this.ueMap.delete(resp.getUe().getName());
+                this.ueLineMap.get(resp.getUe().getName()).remove();
+                this.ueLineMap.delete(resp.getUe().getName());
+            } else {
+                console.warn('Unhandled Ue response type', resp.getType(), 'for', resp.getUe().getName());
+            }
+        }, err => {
+            this.connectivityService.showVeil([
+                'ListRoutes gRPC error', String(err.code), err.message,
+                'Please ensure ran-simulator is reachable',
+                'Choose a different application from the menu']);
+            console.error('UEs', err);
         });
     }
 
@@ -134,15 +194,17 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('Creating map at Lat,Lng: ', centre.getLat(), centre.getLng(), zoom);
         this.map = L.map('map', {
             center: [centre.getLat(), centre.getLng()],
-            zoom: zoom
+            zoom: zoom,
+            renderer: L.svg()
         });
 
-        const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        this.tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: `&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>`,
+            opacity: (this.showMap ? 0.8 : 0.3),
         });
 
-        tiles.addTo(this.map);
+        this.tiles.addTo(this.map);
     }
 
     changeNumUes(numUEs: number) {
@@ -168,7 +230,8 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private initTower(tower: Tower, zoom: number): void {
         const towerMarker = L.marker([tower.getLocation().getLat(), tower.getLocation().getLng()],
-            {title: tower.getEcid() + ' ' + this.roundNumber(tower.getTxpowerdb(), 'dB')});
+            {title: tower.getEcid() + ' ' + this.roundNumber(tower.getTxpowerdb(), 'dB'),
+             color: tower.getColor()});
         towerMarker.addTo(this.map);
         this.towerMarkers.set(tower.getEcid(), towerMarker);
 
@@ -230,10 +293,124 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
         return Math.round(value * scale) / scale + suffix;
     }
 
+    private initRoute(route: Route): void {
+        const latLngs = new Array();
+        route.getWaypointsList().forEach((point: Point) => {
+            latLngs.push([point.getLat(), point.getLng()] as number[]);
+        });
+        const polyline = new L.polyline(latLngs, {
+            color: route.getColor(),
+            dashArray: [4],
+            opacity: 0.8,
+            weight: 2
+        });
+        this.routePolylines.set(route.getName(), polyline);
+        polyline.addTo(this.map);
+    }
+
+    private updateRoute(route: Route) {
+        console.log('Recalculate new route', route.getName());
+        const latLngs = new Array();
+        route.getWaypointsList().forEach((point: Point) => {
+            latLngs.push([point.getLat(), point.getLng()] as number[]);
+        });
+        this.routePolylines.get(route.getName()).setLatLngs(latLngs);
+        this.routePolylines.get(route.getName()).setStyle({
+            color: route.getColor(),
+        });
+    }
+
+    private deleteRoute(route: Route): void {
+        const routePolyline = this.routePolylines.get(route.getName());
+        routePolyline.remove();
+        this.routePolylines.delete(route.getName());
+    }
+
+    private initUe(ue: Ue): void {
+        const ueIcon = L.divIcon({
+            html: CAR_ICON,
+            className: 'ue-div-icon',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10],
+        });
+
+        const ueMarker = L.marker([ue.getPosition().getLat(), ue.getPosition().getLng()],
+            {icon: ueIcon});
+        ueMarker.bindPopup('<p>' + ue.getName() + '<br>Serving: ' +
+            ue.getServingTower() + '<br>1st:' + ue.getTower1() +
+            '<br>2nd:' + ue.getTower2() + '<br>3rd: ' + ue.getTower3() + '</p>').openPopup();
+        this.ueMap.set(ue.getName(), ueMarker);
+        ueMarker.addTo(this.map);
+
+        const tower = this.towerMarkers.get(ue.getServingTower());
+        let towerPos: L.LatLng;
+        let towerColor: string;
+        if (tower === undefined) { // May happen at startup - will be corrected on update
+            towerPos = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
+            towerColor = 'black';
+        } else {
+            towerPos = tower.getLatLng();
+            towerColor = tower.options.color;
+        }
+        const ueLine = L.polyline([
+                [ue.getPosition().getLat(), ue.getPosition().getLng()],
+                towerPos
+            ], {color: towerColor, weight: 2});
+        this.ueLineMap.set(ue.getName(), ueLine);
+        ueLine.addTo(this.map);
+    }
+
+    private updateUe(ue: Ue, updateType: UpdateType): void {
+        const uePosition = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
+        const servingTower = this.towerMarkers.get(ue.getServingTower());
+        this.ueMap.get(ue.getName()).setLatLng(uePosition);
+        const rotation = (270 - ue.getRotation()) + 'deg';
+        const ueIcon = L.divIcon({
+            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
+            className: 'ue-div-icon',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10],
+        });
+        const ueIconLarge = L.divIcon({
+            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
+            className: 'ue-div-icon',
+            iconSize: [30, 30],
+            iconAnchor: [10, 10],
+            popupAnchor: [0, -10],
+        });
+        if (updateType === UpdateType.HANDOVER) {
+            this.ueMap.get(ue.getName()).setIcon(ueIconLarge);
+            console.log('HANDOVER on', ue.getName(), 'to', ue.getServingTower());
+            setTimeout(() => {
+                this.ueMap.get(ue.getName()).setIcon(ueIcon);
+            }, 2000);
+        } else {
+            this.ueMap.get(ue.getName()).setIcon(ueIcon);
+        }
+
+        this.ueLineMap.get(ue.getName()).setLatLngs([uePosition, servingTower.getLatLng()]);
+        this.ueLineMap.get(ue.getName()).setStyle({color: servingTower.options.color});
+    }
+
     updateRoutes(update: boolean) {
+        this.routePolylines.forEach((r) => {
+            if (update) {
+                r.addTo(this.map);
+            } else {
+                r.remove();
+            }
+        });
     }
 
     updateMap(update: boolean) {
+        if (update) {
+            this.tiles.setOpacity(0.8);
+        } else {
+            this.tiles.setOpacity(0.3);
+        }
+        console.log('Map opacity set to', this.map.options.opacity);
     }
 
     updatePower(update: boolean) {
