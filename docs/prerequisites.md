@@ -97,13 +97,11 @@ Angular: 8.2.14
 ``` 
 
 ## Angular dependencies
-Back out at the project folder, the Angular dependencies must be installed.
-This is as simple as running `npm install web/onos-gui` in the folder. This
-takes the dependencies listed in `package.json` and installs them in the
-temporary folder `web/onos_gui/node_modules`:
+Staying inside the `web/onos-gui` folder, the Angular dependencies must be installed.
+This is as simple as running `npm install` in the folder. This takes the dependencies
+listed in `package.json` and installs them in the temporary folder `node_modules`:
 ```bash
-cd ../..
-npm install web/onos-gui
+npm install
 ```
 
 ## Docker
