@@ -14,8 +14,9 @@ protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.c
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/openconfig/gnmi/proto/gnmi/gnmi.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/openconfig/gnmi/proto/gnmi_ext/gnmi_ext.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/device/device.proto
-protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/admin/admin.proto
-protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/diags/diags.proto
+protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/onos-ric/api/nb/c1-interface.proto
+protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/ran-simulator/api/trafficsim/trafficsim.proto
+protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/onosproject/ran-simulator/api/types/types.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:. ${GOPATH}/src/github.com/gogo/protobuf/gogoproto/gogo.proto
 
 # Currently a bug in the below command outputs to "Github.com" (uppercase G)
@@ -32,15 +33,19 @@ protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext
 protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/openconfig/gnmi/proto/gnmi/gnmi.proto
 protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/openconfig/gnmi/proto/gnmi_ext/gnmi_ext.proto
 protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/device/device.proto
-protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/admin/admin.proto
-protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/onos-topo/api/diags/diags.proto
+protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/onos-ric/api/nb/c1-interface.proto
+protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/ran-simulator/api/trafficsim/trafficsim.proto
+protoc -I=$proto_imports --grpc-web_out=import_style=typescript,mode=grpcwebtext:. ${GOPATH}/src/github.com/onosproject/ran-simulator/api/types/types.proto
 
 cp -r github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/proto/github.com/onosproject/onos-config/
 cp -r github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
 cp -r github.com/onosproject/onos-topo/* web/onos-gui/src/app/onos-topo/proto/github.com/onosproject/onos-topo/
+cp -r github.com/onosproject/onos-ric/* web/onos-gui/src/app/onos-ric/proto/github.com/onosproject/onos-ric/
+cp -r github.com/onosproject/ran-simulator/* web/onos-gui/src/app/ran-simulator/proto/github.com/onosproject/ran-simulator/
 rm -rf github.com
 cp -r gogoproto/* web/onos-gui/src/app/onos-topo/proto/gogoproto/
 cp -r gogoproto/* web/onos-gui/src/app/onos-config/proto/gogoproto/
+cp -r gogoproto/* web/onos-gui/src/app/ran-simulator/proto/gogoproto/
 rm -rf gogoproto
 #cp -r github.com/onosproject/onos-config/* web/onos-gui/src/app/onos-config/proto/github.com/onosproject/onos-config/
 #cp -r github.com/openconfig/* web/onos-gui/src/app/onos-config/proto/github.com/openconfig/
@@ -48,11 +53,11 @@ rm -rf gogoproto
 #rm -rf Github.com
 
 # Add the license text to generated files
-for f in $(find web/onos-gui/src/app/onos-*/proto/github.com/ -type f -name "*.d.ts"); do
+for f in $(find web/onos-gui/src/app/*-*/proto/github.com/ -type f -name "*.d.ts"); do
   cat ../build-tools/licensing/boilerplate.generatego.txt | sed -e '$a\\' | cat - $f > tempf && mv tempf $f
 done
 
 # Remove unused import for gogoproto
-for f in $(find web/onos-gui/src/app/onos-* -type f -name "*ts"); do
+for f in $(find web/onos-gui/src/app/*-* -type f -name "*ts"); do
   sed -i "s/import \* as gogoproto_gogo_pb from '..\/..\/..\/..\/..\/..\/gogoproto\/gogo_pb';//g" $f
 done

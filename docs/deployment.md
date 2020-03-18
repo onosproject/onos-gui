@@ -7,7 +7,7 @@ with an atomix controller deployed in a namespace.
 
 > The onos-gui deployment consists of 2 containers:
 >
-> * onos-gui - containing an nginx web server and the compiled GUI
+> * onos-gui - containing an nginx web server, kubectl and the compiled GUI
 > * onos-envoy - containing a grpc-web proxy for connecting to onos-topo, onos-config etc.
 
 If you don't have a cluster running and want to try on your local machine please follow first
@@ -39,14 +39,10 @@ created by it. To list the charts that are installed and view their statuses, ru
 
 ```bash
 helm ls -n micro-onos
-NAME          	REVISION	UPDATED                 	STATUS  	CHART                    	APP VERSION	NAMESPACE
+NAME        REVISION	UPDATED                 STATUS  	CHART           APP VERSION	NAMESPACE
 ...
-onos-gui	1       	Sun Dec 8 18:56:39 2019	DEPLOYED	onos-gui-0.1.0	        0.1.0      	default
+onos-gui	1       	Sun Dec 8 18:56:39 2019	DEPLOYED	onos-gui-0.1.0	0.1.0      	default
 ```
-
-> onos-gui is dependent on onos-topo and onos-config services in the same namespace
-> each being available with gRPC at port 5150. If these are not available at startup
-> time, then K8S will repeat the startup until they become available.
 
 ### Installing the chart in a different namespace.
 
@@ -109,21 +105,24 @@ kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui 
 
 and open in your browser to access the GUI at: **http://192.168.0.2:8181**.
 
-## Developer mode
+## Developer mode only
 To run the GUI locally on a development machine
 
 - install the prerequisites as described in [Prerequisites]
 - run ONIT in Kubernetes as above
 - Forward the ports of the envoy proxy in 2 separate terminals
 ```bash
-kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8080:8080
-kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8081:8081
+kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=gui -o name) 8081
 ```
+> Depending on the service you are developing you might want to forward a different ports (or all ports)
+>
+> * 8081 is for onos-config
+> * 8082 is for onos-topo
+> * 8083 is for onos-ric
+> * 8084 is for ran-simulator
 
-- run the Angular CLI in `ng serve --configuration=kind` mode from the `web/onos-gui` folder
+- run the Angular CLI in `ng serve` mode from the `web/onos-gui` folder
 - browse to [http://localhost:4200](http://localhost:4200)
-- ensure that the models page shows the 4 loaded model plugins (this
-ensures that the gRPC requests are proxied correctly through the envoy proxy)
 
 [Helm]: https://helm.sh/
 [Kubernetes]: https://kubernetes.io/

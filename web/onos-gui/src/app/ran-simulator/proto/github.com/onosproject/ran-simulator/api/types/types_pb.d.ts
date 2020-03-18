@@ -228,6 +228,9 @@ export class Tower extends jspb.Message {
   getCrntiindex(): number;
   setCrntiindex(value: number): void;
 
+  getPort(): number;
+  setPort(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Tower.AsObject;
   static toObject(includeInstance: boolean, msg: Tower): Tower.AsObject;
@@ -247,6 +250,7 @@ export namespace Tower {
     txpowerdb: number,
     crntimapMap: Array<[string, string]>,
     crntiindex: number,
+    port: number,
   }
 }
 

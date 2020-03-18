@@ -1,4 +1,4 @@
-// source: github.com/onosproject/ran-simulator/api/nb/c1-interface.proto
+// source: github.com/onosproject/onos-ric/api/nb/c1-interface.proto
 /**
  * @fileoverview
  * @enhanceable
