@@ -4,6 +4,9 @@ language: node_js
 node_js:
   - "12"
 
+services:
+  - docker
+
 notifications:
   email: false
 
@@ -18,23 +21,17 @@ addons:
 
 cache:
   directories:
-    - ./node_modules
-
-before_install:
-  - cd web/onos-gui
+    - ./web/onos-gui/node_modules
 
 install:
-  - npm install
-
-script:
-  - npm run lint
-  - npm run test -- --no-watch --no-progress --browsers=ChromiumHeadless
-
-after_script:
-  - cd ../..
+  - npm install -g @angular/cli
+  - cd web/onos-gui && npm install && cd ../..
 
 jobs:
   include:
+    - stage: tests
+      script:
+        - make test
     - stage: docs build
       if: type != pull_request
       script:
