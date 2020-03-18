@@ -29,3 +29,16 @@ install:
 script:
   - npm run lint
   - npm run test -- --no-watch --no-progress --browsers=ChromiumHeadless
+
+after_script:
+  - cd ../..
+
+jobs:
+  include:
+    - stage: docs build
+      if: type != pull_request
+      script:
+        - sh build/bin/trigger-docs-travis $TRAVIS_ACCESS_TOKEN
+    - stage: push
+      script:
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./build/bin/push-images; fi'
