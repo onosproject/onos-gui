@@ -11,8 +11,7 @@ through a gRPC proxy.
 
 [Nginx](https://nginx.org/) acts as a web server and web Proxy, while
 [Envoy](https://www.envoyproxy.io/) proxy server acts as a grpc-web proxy and
-all are deployed on [Docker](https://www.docker.com/community/open-source) or
-[Kubernetes](https://kubernetes.io/).
+all are deployed on [Kubernetes](https://kubernetes.io/).
 
 While 2 proxies seem to be an overhead, it is unavoidable at present because:
 
@@ -28,3 +27,17 @@ There are some alternatives to using grpc-web to allow web browsers to access
 gRPC directly, but grpc-web is the recommended solution as per the gRPC [website](https://grpc.io/docs/tutorials/basic/web/).
 
 See also [this article on hacker noon](https://hackernoon.com/interface-grpc-with-web-using-grpc-web-and-envoy-possibly-the-best-way-forward-3ae9671af67).
+
+## Access to Kubernetes API
+An instance of `kubectl proxy` runs inside the `onos-gui` pod alongside `nginx`.
+This exposes the Kubernetes REST API on port 8001.
+
+The `nginx` server then proxies that to http://localhost:80/kubernetes-api
+
+The application can then access the API like:
+```
+HTTP GET http://localhost:80/kubernetes-api/api/v1/namespaces/onos/services
+```
+
+The `onos-gui` pod needs to be given RBAC permission of `list` and `get` to be able
+to read these services. This is granted in the Helm Chart. 

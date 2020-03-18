@@ -1657,7 +1657,8 @@ proto.ran.trafficsim.types.Tower.toObject = function(includeInstance, msg) {
     neighborsList: (f = jspb.Message.getRepeatedField(msg, 6)) == null ? undefined : f,
     txpowerdb: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
     crntimapMap: (f = msg.getCrntimapMap()) ? f.toObject(includeInstance, undefined) : [],
-    crntiindex: jspb.Message.getFieldWithDefault(msg, 10, 0)
+    crntiindex: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    port: jspb.Message.getFieldWithDefault(msg, 11, 0)
   };
 
   if (includeInstance) {
@@ -1732,6 +1733,10 @@ proto.ran.trafficsim.types.Tower.deserializeBinaryFromReader = function(msg, rea
     case 10:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setCrntiindex(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setPort(value);
       break;
     default:
       reader.skipField();
@@ -1820,6 +1825,13 @@ proto.ran.trafficsim.types.Tower.serializeBinaryToWriter = function(message, wri
   if (f !== 0) {
     writer.writeUint32(
       10,
+      f
+    );
+  }
+  f = message.getPort();
+  if (f !== 0) {
+    writer.writeUint32(
+      11,
       f
     );
   }
@@ -2027,6 +2039,24 @@ proto.ran.trafficsim.types.Tower.prototype.getCrntiindex = function() {
  */
 proto.ran.trafficsim.types.Tower.prototype.setCrntiindex = function(value) {
   return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * optional uint32 port = 11;
+ * @return {number}
+ */
+proto.ran.trafficsim.types.Tower.prototype.getPort = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.ran.trafficsim.types.Tower} returns this
+ */
+proto.ran.trafficsim.types.Tower.prototype.setPort = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
 };
 
 

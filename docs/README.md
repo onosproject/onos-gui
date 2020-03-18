@@ -8,21 +8,26 @@ It provides GUI interfaces for all of the core projects such as
 * [onos-config]
 * onos-topo
 * onos-control (future)
-* onos-ran (future)
+* [onos-ric]
 
-In the first iteration (Jan '20) the Configuration GUI is the main target, but generally
-the architecture will support UI extensions for any project, as libraries.
+The list of GUI views in the Navigation menu is dependent on the services running
+in Kubernetes.
+
+![onos-gui-nav-menu](images/onos-gui-nav-menu.png)
+
+> If a service is stopped the option will disappear from the menu. If the current
+> view's service is stopped, the Nav menu can be used to change to another view
+> without refreshing.
 
 ## Deploying and Running the GUI
-onos-gui can only be run in a Kubernetes cluster.
+`onos-gui` can only be run in a Kubernetes cluster.
 
 Use the [Helm Chart] to load it.
 
 ## Browser access
-When deployed, the onos-gui is available to a browser at the Cluster IP address.
-This may be found by running:
+When deployed, the onos-gui is available to a browser by forwarding port 80 by running:
 ```bash
-kubectl -n onos get services -l app.kubernetes.io/instance=onos-gui
+kubectl -n onos port-forward $(kubectl -n onos get pods -l type=gui -o name) 8182:80
 ```
 See [Helm Chart] for other options.
 
@@ -32,3 +37,4 @@ See [Architecture] for an architectural description.
 [Helm Chart]: ./deployment.md
 [Architecture]: ./architecture.md
 [onos-config]: ./config-gui.md
+[onos-ric]: ./ran-gui.md
