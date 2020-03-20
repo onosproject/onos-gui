@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {ConnectivityService} from '../../connectivity.service';
 import {RanSimulatorTrafficsimService} from '../proto/ran-simulator-trafficsim.service';
@@ -63,7 +63,7 @@ L.Marker.prototype.options.icon = iconDefault;
     templateUrl: './mapview.component.html',
     styleUrls: ['./mapview.component.css']
 })
-export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
+export class MapviewComponent implements OnInit, OnDestroy {
     private map: L.Map;
     private tiles: L.TileLayer;
     zoom: number = 13;
@@ -108,6 +108,11 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.numRoutes = mapLayout.getMinUes();
                 }
                 this.initMap(mapLayout.getCenter(), mapLayout.getZoom());
+
+                // Only after the map tiles have loaded can we start listening for streams
+                this.startListeningTowers();
+                this.startListeningRoutes();
+                this.startListeningUEs();
             },
             (err) => {
                 this.connectivityService.showVeil([
@@ -118,7 +123,7 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
-    ngAfterViewInit(): void {
+    private startListeningTowers(): void {
         this.towerSub = this.trafficSimService.requestListTowers().subscribe((resp) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
                 this.initTower(resp.getTower(), this.zoom);
@@ -136,7 +141,9 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
                 'Choose a different application from the menu']);
             console.error('Tower', err);
         });
+    }
 
+    private startListeningRoutes() {
         // Get the list of routes - we're doing this here because we need to wait until `map` object is populated
         this.routesSub = this.trafficSimService.requestListRoutes().subscribe((resp) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
@@ -155,7 +162,9 @@ export class MapviewComponent implements OnInit, OnDestroy, AfterViewInit {
                 'Choose a different application from the menu']);
             console.error('Routes', err);
         });
+    }
 
+    private startListeningUEs() {
         this.uesSub = this.trafficSimService.requestListUes().subscribe((resp: ListUesResponse) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
                 this.initUe(resp.getUe());
