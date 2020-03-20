@@ -107,6 +107,9 @@ export class Ue extends jspb.Message {
   hasMetrics(): boolean;
   clearMetrics(): void;
 
+  getImsi(): number;
+  setImsi(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Ue.AsObject;
   static toObject(includeInstance: boolean, msg: Ue): Ue.AsObject;
@@ -133,6 +136,7 @@ export namespace Ue {
     crnti: string,
     admitted: boolean,
     metrics?: UeMetrics.AsObject,
+    imsi: number,
   }
 }
 

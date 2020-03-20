@@ -595,7 +595,8 @@ proto.ran.trafficsim.types.Ue.toObject = function(includeInstance, msg) {
     tower3Dist: jspb.Message.getFloatingPointFieldWithDefault(msg, 14, 0.0),
     crnti: jspb.Message.getFieldWithDefault(msg, 15, ""),
     admitted: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
-    metrics: (f = msg.getMetrics()) && proto.ran.trafficsim.types.UeMetrics.toObject(includeInstance, f)
+    metrics: (f = msg.getMetrics()) && proto.ran.trafficsim.types.UeMetrics.toObject(includeInstance, f),
+    imsi: jspb.Message.getFieldWithDefault(msg, 18, 0)
   };
 
   if (includeInstance) {
@@ -697,6 +698,10 @@ proto.ran.trafficsim.types.Ue.deserializeBinaryFromReader = function(msg, reader
       var value = new proto.ran.trafficsim.types.UeMetrics;
       reader.readMessage(value,proto.ran.trafficsim.types.UeMetrics.deserializeBinaryFromReader);
       msg.setMetrics(value);
+      break;
+    case 18:
+      var value = /** @type {number} */ (reader.readUint64());
+      msg.setImsi(value);
       break;
     default:
       reader.skipField();
@@ -839,6 +844,13 @@ proto.ran.trafficsim.types.Ue.serializeBinaryToWriter = function(message, writer
       17,
       f,
       proto.ran.trafficsim.types.UeMetrics.serializeBinaryToWriter
+    );
+  }
+  f = message.getImsi();
+  if (f !== 0) {
+    writer.writeUint64(
+      18,
+      f
     );
   }
 };
@@ -1167,6 +1179,24 @@ proto.ran.trafficsim.types.Ue.prototype.clearMetrics = function() {
  */
 proto.ran.trafficsim.types.Ue.prototype.hasMetrics = function() {
   return jspb.Message.getField(this, 17) != null;
+};
+
+
+/**
+ * optional uint64 imsi = 18;
+ * @return {number}
+ */
+proto.ran.trafficsim.types.Ue.prototype.getImsi = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 18, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.ran.trafficsim.types.Ue} returns this
+ */
+proto.ran.trafficsim.types.Ue.prototype.setImsi = function(value) {
+  return jspb.Message.setProto3IntField(this, 18, value);
 };
 
 

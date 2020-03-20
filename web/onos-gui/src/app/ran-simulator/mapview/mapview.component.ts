@@ -346,7 +346,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
 
         const ueMarker = L.marker([ue.getPosition().getLat(), ue.getPosition().getLng()],
             {icon: ueIcon});
-        ueMarker.bindPopup('<p>' + ue.getName() + '<br>Serving: ' +
+        ueMarker.bindPopup('<p>' + ue.getName() + '<br>Imsi: ' +
+            ue.getImsi() + '<br>Serving: ' +
             ue.getServingTower() + '<br>1st:' + ue.getTower1() +
             '<br>2nd:' + ue.getTower2() + '<br>3rd: ' + ue.getTower3() + '</p>').openPopup();
         this.ueMap.set(ue.getName(), ueMarker);
