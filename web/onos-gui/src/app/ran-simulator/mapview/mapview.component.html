@@ -19,12 +19,15 @@
 <input type="checkbox" [(ngModel)]="showMap" (ngModelChange)="updateMap($event)">
 <label><small> Power</small></label>
 <input type="checkbox" [(ngModel)]="showPower" (ngModelChange)="updatePower($event)">
-
 <label>  Number of UEs:  </label>
 <span *ngFor="let opt of numRoutesOptions">
     <label><small> {{opt}}</small></label>
     <input type="radio" [id]="opt" name="'numues'" [value]="opt" [checked]="opt === numRoutes" [title]="opt" (click)="changeNumUes(opt)">
 </span>
+<label>   Connected</label>
+<input type="checkbox" [(ngModel)]="connected" (ngModelChange)="connectMap($event)">
+<label></label>
+<input type="button" value="Refresh" [disabled]="connected" (click)="refreshMap()">
 <!-- inspired by https://alligator.io/angular/angular-and-leaflet/ -->
 <div class="map-container">
     <div class="map-frame">

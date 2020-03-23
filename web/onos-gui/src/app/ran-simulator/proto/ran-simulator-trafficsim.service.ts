@@ -59,9 +59,9 @@ export class RanSimulatorTrafficsimService {
         return getMapLayoutObs;
     }
 
-    requestListTowers(): Observable<ListTowersResponse> {
+    requestListTowers(asStream: boolean): Observable<ListTowersResponse> {
         const req = new ListTowersRequest();
-        req.setSubscribe(true);
+        req.setSubscribe(asStream);
         const stream = this.trafficClient.listTowers(req, {});
 
         const listTowersObs = new Observable<ListTowersResponse>((observer: Subscriber<ListTowersResponse>) => {
@@ -82,9 +82,9 @@ export class RanSimulatorTrafficsimService {
         return listTowersObs;
     }
 
-    requestListRoutes(): Observable<ListRoutesResponse> {
+    requestListRoutes(asStream: boolean): Observable<ListRoutesResponse> {
         const routeReq = new ListRoutesRequest();
-        routeReq.setSubscribe(true);
+        routeReq.setSubscribe(asStream);
         routeReq.setWithoutreplay(false);
         const stream = this.trafficClient.listRoutes(routeReq, {});
 
@@ -104,9 +104,9 @@ export class RanSimulatorTrafficsimService {
         return listRoutesObs;
     }
 
-    requestListUes(): Observable<ListUesResponse> {
+    requestListUes(asStream: boolean): Observable<ListUesResponse> {
         const routeReq = new ListRoutesRequest();
-        routeReq.setSubscribe(true);
+        routeReq.setSubscribe(asStream);
         routeReq.setWithoutreplay(false);
         const stream = this.trafficClient.listUes(routeReq, {});
 
