@@ -70,6 +70,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
     showRoutes = true;
     showMap = false;
     showPower = true;
+    connected = true;
 
     towerSub: Subscription;
     routesSub: Subscription;
@@ -110,9 +111,11 @@ export class MapviewComponent implements OnInit, OnDestroy {
                 this.initMap(mapLayout.getCenter(), mapLayout.getZoom());
 
                 // Only after the map tiles have loaded can we start listening for streams
-                this.startListeningTowers();
-                this.startListeningRoutes();
-                this.startListeningUEs();
+                this.startListeningTowers(true);
+                setTimeout(() => { // Wait for initial towers to arrive
+                    this.startListeningRoutes(true);
+                    this.startListeningUEs(true);
+                }, 200);
             },
             (err) => {
                 this.connectivityService.showVeil([
@@ -123,8 +126,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
             });
     }
 
-    private startListeningTowers(): void {
-        this.towerSub = this.trafficSimService.requestListTowers().subscribe((resp) => {
+    private startListeningTowers(asStream: boolean): void {
+        this.towerSub = this.trafficSimService.requestListTowers(asStream).subscribe((resp) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
                 this.initTower(resp.getTower(), this.zoom);
             } else if (resp.getType() === Type.UPDATED) {
@@ -143,9 +146,9 @@ export class MapviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    private startListeningRoutes() {
+    private startListeningRoutes(asStream: boolean) {
         // Get the list of routes - we're doing this here because we need to wait until `map` object is populated
-        this.routesSub = this.trafficSimService.requestListRoutes().subscribe((resp) => {
+        this.routesSub = this.trafficSimService.requestListRoutes(asStream).subscribe((resp) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
                 this.initRoute(resp.getRoute());
             } else if (resp.getType() === Type.UPDATED) {
@@ -164,8 +167,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
         });
     }
 
-    private startListeningUEs() {
-        this.uesSub = this.trafficSimService.requestListUes().subscribe((resp: ListUesResponse) => {
+    private startListeningUEs(asStream: boolean) {
+        this.uesSub = this.trafficSimService.requestListUes(asStream).subscribe((resp: ListUesResponse) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
                 this.initUe(resp.getUe());
             } else if (resp.getType() === Type.UPDATED) {
@@ -336,8 +339,10 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private initUe(ue: Ue): void {
+        const servingTower = this.towerMarkers.get(ue.getServingTower());
+        const rotation = (270 - ue.getRotation()) + 'deg';
         const ueIcon = L.divIcon({
-            html: CAR_ICON,
+            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
             className: 'ue-div-icon',
             iconSize: [20, 20],
             iconAnchor: [10, 10],
@@ -353,15 +358,14 @@ export class MapviewComponent implements OnInit, OnDestroy {
         this.ueMap.set(ue.getName(), ueMarker);
         ueMarker.addTo(this.map);
 
-        const tower = this.towerMarkers.get(ue.getServingTower());
         let towerPos: L.LatLng;
         let towerColor: string;
-        if (tower === undefined) { // May happen at startup - will be corrected on update
+        if (servingTower === undefined) { // May happen at startup - will be corrected on update
             towerPos = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
             towerColor = 'black';
         } else {
-            towerPos = tower.getLatLng();
-            towerColor = tower.options.color;
+            towerPos = servingTower.getLatLng();
+            towerColor = servingTower.options.color;
         }
         const ueLine = L.polyline([
                 [ue.getPosition().getLat(), ue.getPosition().getLng()],
@@ -433,4 +437,43 @@ export class MapviewComponent implements OnInit, OnDestroy {
         });
     }
 
+    connectMap(connected: boolean) {
+        if (connected) {
+            console.log('Connected to gRPC streams');
+            this.clearMapAndRefresh(true);
+        } else {
+            console.log('Disconnected from gRPC streams');
+            this.uesSub.unsubscribe();
+            this.routesSub.unsubscribe();
+            this.towerSub.unsubscribe();
+        }
+    }
+
+    refreshMap() {
+        if (!this.connected) {
+            this.clearMapAndRefresh(false);
+        }
+    }
+
+    private clearMapAndRefresh(streaming: boolean) {
+        if (!this.connected || streaming) {
+            console.log('Clearing map and refreshing map. Streaming?', streaming);
+            this.ueLineMap.forEach((u) => u.remove());
+            this.ueLineMap.clear();
+            this.ueMap.forEach((ue) => ue.remove());
+            this.ueMap.clear();
+            this.routePolylines.forEach((r) => r.remove());
+            this.routePolylines.clear();
+            this.powerCircleMap.forEach((p) => p.remove());
+            this.powerCircleMap.clear();
+            this.towerMarkers.forEach((t) => t.remove());
+            this.towerMarkers.clear();
+
+            this.startListeningTowers(streaming);
+            setTimeout(() => { // Wait for towers to finish
+                this.startListeningRoutes(streaming);
+                this.startListeningUEs(streaming);
+            }, 200);
+        }
+    }
 }

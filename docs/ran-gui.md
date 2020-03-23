@@ -26,8 +26,19 @@ on and off). The color of the route matched the UE.
 A line connects each UE to its **serving tower**. The color of the line changes   
 depending on the tower.
 
-The number of UEs can be varied by clicking the readio buttons at the top. The
+The number of UEs can be varied by clicking the radio buttons at the top. The
 minimum and maximum values are set through the startup parameters of the 
-`ran-simulator` - see [ran-simulator/docs/README.md](https://github.com/onosproject/ran-simulator/blob/master/docs/README.md) 
+`ran-simulator` - see [ran-simulator/docs/README.md](https://github.com/onosproject/ran-simulator/blob/master/docs/README.md)
+
+Normally the MapView connects to the `ran-simulator` microservice and constantly
+listens to streaming gRPC messages updating the towers and UE's. This can be
+disconnected however by clicking on the "Connected" checkbox.
+
+> This removes the burden of streaming from the `ran-simulator` while not connected.
+> While making latency measurements all GUIs should be disconnected
+
+Single updates of the current state can be had by clicking the "Refresh" button.
+
+> This can be useful to get a visual snapshot of UE counts and positions
 
 ![onos-gui-ran-simulator-mapview](images/onos-gui-ran-simulator-mapview.png)
