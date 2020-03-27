@@ -134,6 +134,9 @@ export class UELinkListRequest extends jspb.Message {
   getSubscribe(): boolean;
   setSubscribe(value: boolean): void;
 
+  getNoreplay(): boolean;
+  setNoreplay(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UELinkListRequest.AsObject;
   static toObject(includeInstance: boolean, msg: UELinkListRequest): UELinkListRequest.AsObject;
@@ -147,6 +150,7 @@ export namespace UELinkListRequest {
     crnti: string,
     ecgi?: ECGI.AsObject,
     subscribe: boolean,
+    noreplay: boolean,
   }
 }
 

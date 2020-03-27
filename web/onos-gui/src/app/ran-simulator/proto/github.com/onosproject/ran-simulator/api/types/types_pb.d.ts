@@ -27,8 +27,8 @@ export namespace Point {
 }
 
 export class Route extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
+  getName(): number;
+  setName(value: number): void;
 
   getWaypointsList(): Array<Point>;
   setWaypointsList(value: Array<Point>): void;
@@ -48,15 +48,15 @@ export class Route extends jspb.Message {
 
 export namespace Route {
   export type AsObject = {
-    name: string,
+    name: number,
     waypointsList: Array<Point.AsObject>,
     color: string,
   }
 }
 
 export class Ue extends jspb.Message {
-  getName(): string;
-  setName(value: string): void;
+  getImsi(): number;
+  setImsi(value: number): void;
 
   getType(): string;
   setType(value: string): void;
@@ -69,29 +69,34 @@ export class Ue extends jspb.Message {
   getRotation(): number;
   setRotation(value: number): void;
 
-  getRoute(): string;
-  setRoute(value: string): void;
-
-  getServingTower(): string;
-  setServingTower(value: string): void;
+  getServingTower(): ECGI | undefined;
+  setServingTower(value?: ECGI): void;
+  hasServingTower(): boolean;
+  clearServingTower(): void;
 
   getServingTowerDist(): number;
   setServingTowerDist(value: number): void;
 
-  getTower1(): string;
-  setTower1(value: string): void;
+  getTower1(): ECGI | undefined;
+  setTower1(value?: ECGI): void;
+  hasTower1(): boolean;
+  clearTower1(): void;
 
   getTower1Dist(): number;
   setTower1Dist(value: number): void;
 
-  getTower2(): string;
-  setTower2(value: string): void;
+  getTower2(): ECGI | undefined;
+  setTower2(value?: ECGI): void;
+  hasTower2(): boolean;
+  clearTower2(): void;
 
   getTower2Dist(): number;
   setTower2Dist(value: number): void;
 
-  getTower3(): string;
-  setTower3(value: string): void;
+  getTower3(): ECGI | undefined;
+  setTower3(value?: ECGI): void;
+  hasTower3(): boolean;
+  clearTower3(): void;
 
   getTower3Dist(): number;
   setTower3Dist(value: number): void;
@@ -107,9 +112,6 @@ export class Ue extends jspb.Message {
   hasMetrics(): boolean;
   clearMetrics(): void;
 
-  getImsi(): number;
-  setImsi(value: number): void;
-
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Ue.AsObject;
   static toObject(includeInstance: boolean, msg: Ue): Ue.AsObject;
@@ -120,23 +122,21 @@ export class Ue extends jspb.Message {
 
 export namespace Ue {
   export type AsObject = {
-    name: string,
+    imsi: number,
     type: string,
     position?: Point.AsObject,
     rotation: number,
-    route: string,
-    servingTower: string,
+    servingTower?: ECGI.AsObject,
     servingTowerDist: number,
-    tower1: string,
+    tower1?: ECGI.AsObject,
     tower1Dist: number,
-    tower2: string,
+    tower2?: ECGI.AsObject,
     tower2Dist: number,
-    tower3: string,
+    tower3?: ECGI.AsObject,
     tower3Dist: number,
     crnti: string,
     admitted: boolean,
     metrics?: UeMetrics.AsObject,
-    imsi: number,
   }
 }
 
@@ -146,6 +146,9 @@ export class UeMetrics extends jspb.Message {
 
   getHoReportTimestamp(): number;
   setHoReportTimestamp(value: number): void;
+
+  getIsfirst(): boolean;
+  setIsfirst(value: boolean): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UeMetrics.AsObject;
@@ -159,6 +162,7 @@ export namespace UeMetrics {
   export type AsObject = {
     hoLatency: number,
     hoReportTimestamp: number,
+    isfirst: boolean,
   }
 }
 
@@ -200,12 +204,33 @@ export namespace TowersParams {
   }
 }
 
-export class Tower extends jspb.Message {
+export class ECGI extends jspb.Message {
   getEcid(): string;
   setEcid(value: string): void;
 
   getPlmnid(): string;
   setPlmnid(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ECGI.AsObject;
+  static toObject(includeInstance: boolean, msg: ECGI): ECGI.AsObject;
+  static serializeBinaryToWriter(message: ECGI, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ECGI;
+  static deserializeBinaryFromReader(message: ECGI, reader: jspb.BinaryReader): ECGI;
+}
+
+export namespace ECGI {
+  export type AsObject = {
+    ecid: string,
+    plmnid: string,
+  }
+}
+
+export class Tower extends jspb.Message {
+  getEcgi(): ECGI | undefined;
+  setEcgi(value?: ECGI): void;
+  hasEcgi(): boolean;
+  clearEcgi(): void;
 
   getLocation(): Point | undefined;
   setLocation(value?: Point): void;
@@ -218,15 +243,15 @@ export class Tower extends jspb.Message {
   getMaxues(): number;
   setMaxues(value: number): void;
 
-  getNeighborsList(): Array<string>;
-  setNeighborsList(value: Array<string>): void;
+  getNeighborsList(): Array<ECGI>;
+  setNeighborsList(value: Array<ECGI>): void;
   clearNeighborsList(): void;
-  addNeighbors(value: string, index?: number): void;
+  addNeighbors(value?: ECGI, index?: number): ECGI;
 
   getTxpowerdb(): number;
   setTxpowerdb(value: number): void;
 
-  getCrntimapMap(): jspb.Map<string, string>;
+  getCrntimapMap(): jspb.Map<string, number>;
   clearCrntimapMap(): void;
 
   getCrntiindex(): number;
@@ -245,14 +270,13 @@ export class Tower extends jspb.Message {
 
 export namespace Tower {
   export type AsObject = {
-    ecid: string,
-    plmnid: string,
+    ecgi?: ECGI.AsObject,
     location?: Point.AsObject,
     color: string,
     maxues: number,
-    neighborsList: Array<string>,
+    neighborsList: Array<ECGI.AsObject>,
     txpowerdb: number,
-    crntimapMap: Array<[string, string]>,
+    crntimapMap: Array<[string, number]>,
     crntiindex: number,
     port: number,
   }
