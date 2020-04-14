@@ -1,6 +1,7 @@
 .PHONY: build
 
 ONOS_GUI_VERSION := latest
+ONOS_PROTOC_VERSION := v0.5.0
 
 build: # @HELP build the Web GUI and run all validations (default)
 build:
@@ -27,7 +28,7 @@ protos: # @HELP compile the protobuf files (using protoc-go Docker)
 	docker run -it -v `pwd`/..:/go/src/github.com/onosproject \
 		-w /go/src/github.com/onosproject/onos-gui \
 		--entrypoint build/bin/compile-protos-ts.sh \
-		onosproject/protoc-go:stable
+		onosproject/protoc-go:${ONOS_PROTOC_VERSION}
 
 onos-gui-docker: # @HELP build onos-gui Docker image
 	docker build . -f build/onos-gui/Dockerfile \

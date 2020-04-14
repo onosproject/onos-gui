@@ -19,6 +19,7 @@ import {
   ListUesRequest,
   ListUesResponse,
   MapLayoutRequest,
+  ResetMetricsMsg,
   SetNumberUEsRequest,
   SetNumberUEsResponse} from './trafficsim_pb';
 
@@ -139,6 +140,28 @@ export class TrafficClient {
       request,
       metadata || {},
       this.methodInfoSetNumberUEs,
+      callback);
+  }
+
+  methodInfoResetMetrics = new grpcWeb.AbstractClientBase.MethodInfo(
+    ResetMetricsMsg,
+    (request: ResetMetricsMsg) => {
+      return request.serializeBinary();
+    },
+    ResetMetricsMsg.deserializeBinary
+  );
+
+  resetMetrics(
+    request: ResetMetricsMsg,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: ResetMetricsMsg) => void) {
+    return this.client_.rpcCall(
+      this.hostname_ +
+        '/ran.trafficsim.Traffic/ResetMetrics',
+      request,
+      metadata || {},
+      this.methodInfoResetMetrics,
       callback);
   }
 
