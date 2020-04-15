@@ -38,6 +38,7 @@ export class OnosRicC1Service {
 
     requestListUeLinks(): Observable<UELinkInfo> {
         const req = new UELinkListRequest();
+        req.setNoimsi(false);
         const stream = this.c1InterfaceClient.listUELinks(req, {});
         const listUeLinksObs = new Observable<UELinkInfo>((observer: Subscriber<UELinkInfo>) => {
             stream.on('data', (uelink: UELinkInfo) => {

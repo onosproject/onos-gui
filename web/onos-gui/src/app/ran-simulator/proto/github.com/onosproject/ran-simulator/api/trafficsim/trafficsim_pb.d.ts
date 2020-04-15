@@ -196,6 +196,20 @@ export namespace SetNumberUEsResponse {
   }
 }
 
+export class ResetMetricsMsg extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ResetMetricsMsg.AsObject;
+  static toObject(includeInstance: boolean, msg: ResetMetricsMsg): ResetMetricsMsg.AsObject;
+  static serializeBinaryToWriter(message: ResetMetricsMsg, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ResetMetricsMsg;
+  static deserializeBinaryFromReader(message: ResetMetricsMsg, reader: jspb.BinaryReader): ResetMetricsMsg;
+}
+
+export namespace ResetMetricsMsg {
+  export type AsObject = {
+  }
+}
+
 export enum Type { 
   NONE = 0,
   ADDED = 1,
