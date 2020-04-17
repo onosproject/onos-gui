@@ -39,7 +39,7 @@ const onosRoutes: Routes = [
     },
     {
         path: '',
-        redirectTo: 'onos-config',
+        redirectTo: 'onos-topo',
         pathMatch: 'full'
     }
 ];
