@@ -22,6 +22,7 @@ import {
     NavService
 } from 'gui2-fw-lib';
 import {K8sClientService} from '../k8sclient.service';
+import {Router} from '@angular/router';
 
 export interface UiView {
     // id:  Must correspond to the path in that Routes[] for that module
@@ -66,12 +67,18 @@ export interface NavSection {
 export class NavComponent implements OnInit {
     navSections: NavSection[];
     timer: any;
+    configSection = this.createConfigSection();
+    topoSection = this.createTopoSection();
+    ricSection = this.createRicSection();
+    ranSimSection = this.createRanSimSection();
+    dummySection = this.createDummySection();
 
     constructor(
         private log: LogService,
         public ns: NavService,
         private k8s: K8sClientService,
         private meta: Meta,
+        protected router: Router,
     ) {
         this.navSections = new Array<NavSection>();
         this.navSections.push(this.createDummySection());
@@ -80,48 +87,60 @@ export class NavComponent implements OnInit {
     }
 
     ngOnInit() {
-        // Load the menu at startup and refresh every 10 seconds
-        this.updateNav();
-        this.timer = setInterval(() => this.updateNav(), 5000);
+        // Load the menu at startup and refresh every 5 seconds
+        this.updateNav(true);
+        this.timer = setInterval(() => this.updateNav(false), 5000);
     }
 
-    updateNav() {
+    updateNav(init: boolean) {
         const updatedSections = new Array<NavSection>();
         this.k8s.monitorRunningServices().subscribe(
             (resp: string) => {
                 switch (resp) {
                     case 'onos-config':
-                        updatedSections.push(this.createConfigSection());
+                        updatedSections.push(this.configSection);
                         break;
                     case 'onos-topo':
-                        updatedSections.push(this.createTopoSection());
+                        updatedSections.push(this.topoSection);
                         break;
                     case 'onos-ric':
-                        updatedSections.push(this.createRicSection());
+                        updatedSections.push(this.ricSection);
                         break;
                     case 'ran-simulator':
-                        updatedSections.push(this.createRanSimSection());
+                        updatedSections.push(this.ranSimSection);
                         break;
                 }
             },
             error => {
                 console.log('K8S API not available');
                 this.navSections.length = 0;
-                this.navSections.push(this.createDummySection());
+                this.navSections.push(this.dummySection);
                 clearInterval(this.timer); // Cancel retry - development mode
             },
             () => {
                 this.navSections.length = 0;
                 if (updatedSections.length > 0) {
                     this.navSections.push(...updatedSections);
+                    if (init) {
+                        const rsIdx = updatedSections.findIndex((ns) => ns.service_name === 'ran-simulator');
+                        const ocIdx = updatedSections.findIndex((ns) => ns.service_name === 'onos-config');
+                        // Default is onos-topo
+                        if (rsIdx > -1) {
+                            // if ran-sim exists use it instead
+                            this.router.navigate(['ran-simulator']);
+                        } else if (ocIdx > -1) {
+                            // if not, but onos-config exists use it instead
+                            this.router.navigate(['onos-config']);
+                        }
+                    }
                 } else {
-                    this.navSections.push(this.createDummySection());
+                    this.navSections.push(this.dummySection);
                 }
             }
         );
     }
 
-    createConfigSection(): NavSection {
+    private createConfigSection(): NavSection {
         const configNavSection = {
             title: 'Configuration',
             service_name: 'onos-config',
@@ -139,7 +158,7 @@ export class NavComponent implements OnInit {
         return configNavSection;
     }
 
-    createTopoSection(): NavSection {
+    private createTopoSection(): NavSection {
         const topoNavSection = {
             title: 'Topology',
             service_name: 'onos-topo',
@@ -153,7 +172,7 @@ export class NavComponent implements OnInit {
         return topoNavSection;
     }
 
-    createRicSection(): NavSection {
+    private createRicSection(): NavSection {
         const ricNavSection = {
             title: 'RAN Controller',
             service_name: 'onos-ric',
@@ -167,7 +186,7 @@ export class NavComponent implements OnInit {
         return ricNavSection;
     }
 
-    createRanSimSection(): NavSection {
+    private createRanSimSection(): NavSection {
         const ranSimNavSection = {
             title: 'RAN Simulator',
             service_name: 'ran-simulator',
@@ -181,7 +200,7 @@ export class NavComponent implements OnInit {
         return ranSimNavSection;
     }
 
-    createDummySection(): NavSection {
+    private createDummySection(): NavSection {
         const dummyNavSection = {
             title: 'No Services Detected',
             service_name: '',
