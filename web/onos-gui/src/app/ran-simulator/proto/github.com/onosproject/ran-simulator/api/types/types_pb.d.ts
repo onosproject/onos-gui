@@ -26,6 +26,28 @@ export namespace Point {
   }
 }
 
+export class Sector extends jspb.Message {
+  getAzimuth(): number;
+  setAzimuth(value: number): void;
+
+  getArc(): number;
+  setArc(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Sector.AsObject;
+  static toObject(includeInstance: boolean, msg: Sector): Sector.AsObject;
+  static serializeBinaryToWriter(message: Sector, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Sector;
+  static deserializeBinaryFromReader(message: Sector, reader: jspb.BinaryReader): Sector;
+}
+
+export namespace Sector {
+  export type AsObject = {
+    azimuth: number,
+    arc: number,
+  }
+}
+
 export class Route extends jspb.Message {
   getName(): number;
   setName(value: number): void;
@@ -182,8 +204,11 @@ export class TowersParams extends jspb.Message {
   getLocationsscale(): number;
   setLocationsscale(value: number): void;
 
-  getMaxuespertower(): number;
-  setMaxuespertower(value: number): void;
+  getMaxuespercell(): number;
+  setMaxuespercell(value: number): void;
+
+  getAvgcellspertower(): number;
+  setAvgcellspertower(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): TowersParams.AsObject;
@@ -200,7 +225,8 @@ export namespace TowersParams {
     towerspacingvert: number,
     towerspacinghoriz: number,
     locationsscale: number,
-    maxuespertower: number,
+    maxuespercell: number,
+    avgcellspertower: number,
   }
 }
 
@@ -226,7 +252,7 @@ export namespace ECGI {
   }
 }
 
-export class Tower extends jspb.Message {
+export class Cell extends jspb.Message {
   getEcgi(): ECGI | undefined;
   setEcgi(value?: ECGI): void;
   hasEcgi(): boolean;
@@ -236,6 +262,11 @@ export class Tower extends jspb.Message {
   setLocation(value?: Point): void;
   hasLocation(): boolean;
   clearLocation(): void;
+
+  getSector(): Sector | undefined;
+  setSector(value?: Sector): void;
+  hasSector(): boolean;
+  clearSector(): void;
 
   getColor(): string;
   setColor(value: string): void;
@@ -261,17 +292,18 @@ export class Tower extends jspb.Message {
   setPort(value: number): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Tower.AsObject;
-  static toObject(includeInstance: boolean, msg: Tower): Tower.AsObject;
-  static serializeBinaryToWriter(message: Tower, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Tower;
-  static deserializeBinaryFromReader(message: Tower, reader: jspb.BinaryReader): Tower;
+  toObject(includeInstance?: boolean): Cell.AsObject;
+  static toObject(includeInstance: boolean, msg: Cell): Cell.AsObject;
+  static serializeBinaryToWriter(message: Cell, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Cell;
+  static deserializeBinaryFromReader(message: Cell, reader: jspb.BinaryReader): Cell;
 }
 
-export namespace Tower {
+export namespace Cell {
   export type AsObject = {
     ecgi?: ECGI.AsObject,
     location?: Point.AsObject,
+    sector?: Sector.AsObject,
     color: string,
     maxues: number,
     neighborsList: Array<ECGI.AsObject>,
