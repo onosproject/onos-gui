@@ -43,6 +43,11 @@ c3.116,0,5.644-2.527,5.644-5.644V6.584C35.037,3.467,32.511,0,29.395,0z M34.05,14
 v4.492l-2.73-0.349V14.502L15.741,21.713z M13.011,37.938V27.579l2.73,0.343v8.196L13.011,37.938z M14.568,40.882l2.218-3.336
 h13.771l2.219,3.336H14.568z M31.321,35.805v-7.872l2.729-0.355v10.048L31.321,35.805z"/></svg>`;
 
+export const BEAM_ICON = `<svg xmlns:svg="http://www.w3.org/2000/svg" width="200" height="200">
+<path fill-opacity="0.3" fill="#000000" stroke-width="1" stroke="#000000" transform="rotate(30 100 100)"
+d="M100 100 C 80 100, 50 0, 100 0 S 120 100, 100 100"/>
+</svg>`;
+
 const iconRetinaUrl = 'assets/sd-ran-a-letter-82.png';
 const iconUrl = 'assets/sd-ran-a-letter-41.png';
 const shadowUrl = 'assets/sd-ran-a-shadow-skew-41.png';
@@ -247,6 +252,24 @@ export class MapviewComponent implements OnInit, OnDestroy {
         cellMarker.addTo(this.map);
         this.cellMarkers.set(String(cell.getEcgi()), cellMarker);
 
+        const azimuth = cell.getSector().getAzimuth() + ' 100 100';
+        const scale = 'scale(' + (cell.getSector().getArc() / 60) + ',' + (this.powerToRadius(cell.getTxpowerdb()) / 1500 ) + ')';
+        console.log('Cell', azimuth, scale);
+        const beamIcon = L.divIcon({
+            html: BEAM_ICON
+                .replace('#000000', cell.getColor())
+                .replace('30 100 100', azimuth)
+                .replace('scale(1,1)', scale),
+            className: 'ue-div-icon',
+            iconSize: [200, 200],
+            iconAnchor: [100, 100],
+            popupAnchor: [0, -10],
+        });
+
+        const beamMarker = L.marker([cell.getLocation().getLat(), cell.getLocation().getLng()],
+            {icon: beamIcon});
+        // beamMarker.addTo(this.map);
+
         const powerCircle = L.circle([cell.getLocation().getLat(), cell.getLocation().getLng()],
             this.powerToRadius(cell.getTxpowerdb()),
             {
@@ -408,6 +431,20 @@ export class MapviewComponent implements OnInit, OnDestroy {
 
         this.ueLineMap.get(ue.getImsi()).setLatLngs([uePosition, servingCell.getLatLng()]);
         this.ueLineMap.get(ue.getImsi()).setStyle({color: servingCell.options.color});
+    }
+
+    private calculateBeam(azimuth: number, arc: number, power: number): string {
+        const basex = 0, basey = 0;
+        const cp1x = -20, cp1y = 0;
+        const cp2x = -50, cp2y = -100;
+        const tipy = -100;
+        const svgPrefix = '<svg xmlns:svg="http://www.w3.org/2000/svg" width="200" height="200">';
+        const pathPrefix = '<path fill-opacity="0.3" fill="#000000" stroke-width="1" stroke="#000000"';
+        const data = 'd="M' + basex + ' ' + basey +
+            ' C ' + cp1x + ' ' + cp1y + ', ' + cp2x + ' ' + cp2y + ', ' + basex + ' ' + tipy +
+            ' S ' + -cp1x + ' ' + cp1y + ', ' + basex + ' ' + basey + '"/>';
+        const svgSuffix = '</svg>';
+        return svgPrefix + pathPrefix + data + svgSuffix;
     }
 
     updateRoutes(update: boolean) {
