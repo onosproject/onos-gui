@@ -12,10 +12,10 @@ import * as grpcWeb from 'grpc-web';
 import * as github_com_onosproject_ran$simulator_api_types_types_pb from '../../../../../github.com/onosproject/ran-simulator/api/types/types_pb';
 
 import {
+  ListCellsRequest,
+  ListCellsResponse,
   ListRoutesRequest,
   ListRoutesResponse,
-  ListTowersRequest,
-  ListTowersResponse,
   ListUesRequest,
   ListUesResponse,
   MapLayoutRequest,
@@ -64,23 +64,23 @@ export class TrafficClient {
       callback);
   }
 
-  methodInfoListTowers = new grpcWeb.AbstractClientBase.MethodInfo(
-    ListTowersResponse,
-    (request: ListTowersRequest) => {
+  methodInfoListCells = new grpcWeb.AbstractClientBase.MethodInfo(
+    ListCellsResponse,
+    (request: ListCellsRequest) => {
       return request.serializeBinary();
     },
-    ListTowersResponse.deserializeBinary
+    ListCellsResponse.deserializeBinary
   );
 
-  listTowers(
-    request: ListTowersRequest,
+  listCells(
+    request: ListCellsRequest,
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/ran.trafficsim.Traffic/ListTowers',
+        '/ran.trafficsim.Traffic/ListCells',
       request,
       metadata || {},
-      this.methodInfoListTowers);
+      this.methodInfoListCells);
   }
 
   methodInfoListRoutes = new grpcWeb.AbstractClientBase.MethodInfo(

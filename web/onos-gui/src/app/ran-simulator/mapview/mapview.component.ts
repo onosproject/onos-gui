@@ -21,7 +21,7 @@ import {RanSimulatorTrafficsimService} from '../proto/ran-simulator-trafficsim.s
 import * as L from 'leaflet';
 import {
     Point,
-    Tower,
+    Cell,
     Route,
     Ue, ECGI,
 } from '../proto/github.com/onosproject/ran-simulator/api/types/types_pb';
@@ -42,6 +42,11 @@ c3.116,0,5.644-2.527,5.644-5.644V6.584C35.037,3.467,32.511,0,29.395,0z M34.05,14
  M32.618,10.773c-1.016,3.9-2.219,8.51-2.219,8.51H16.631l-2.222-8.51C14.41,10.773,23.293,7.755,32.618,10.773z M15.741,21.713
 v4.492l-2.73-0.349V14.502L15.741,21.713z M13.011,37.938V27.579l2.73,0.343v8.196L13.011,37.938z M14.568,40.882l2.218-3.336
 h13.771l2.219,3.336H14.568z M31.321,35.805v-7.872l2.729-0.355v10.048L31.321,35.805z"/></svg>`;
+
+export const BEAM_ICON = `<svg xmlns:svg="http://www.w3.org/2000/svg" width="200" height="200">
+<path fill-opacity="0.3" fill="#000000" stroke-width="1" stroke="#000000" transform="rotate(30 100 100)"
+d="M100 100 C 80 100, 50 0, 100 0 S 120 100, 100 100"/>
+</svg>`;
 
 const iconRetinaUrl = 'assets/sd-ran-a-letter-82.png';
 const iconUrl = 'assets/sd-ran-a-letter-41.png';
@@ -72,14 +77,14 @@ export class MapviewComponent implements OnInit, OnDestroy {
     showPower = true;
     connected = true;
 
-    towerSub: Subscription;
+    cellSub: Subscription;
     routesSub: Subscription;
     uesSub: Subscription;
     numRoutesOptions: number[] = [];
     numRoutes = 3;
 
-    powerCircleMap: Map<string, L.circle>;
-    towerMarkers: Map<string, L.marker>;
+    powerArcMap: Map<string, L.circle>;
+    cellMarkers: Map<string, L.marker>;
     routePolylines: Map<number, L.polyline>;
     ueMap: Map<number, L.marker>;
     ueLineMap: Map<number, L.polyline>;
@@ -88,8 +93,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
         private trafficSimService: RanSimulatorTrafficsimService,
         private connectivityService: ConnectivityService
     ) {
-        this.powerCircleMap = new Map<string, L.circle>();
-        this.towerMarkers = new Map<string, L.marker>();
+        this.powerArcMap = new Map<string, L.circle>();
+        this.cellMarkers = new Map<string, L.marker>();
         this.routePolylines = new Map<number, L.polyline>();
         this.ueMap = new Map<number, L.marker>();
         this.ueLineMap = new Map<number, L.polyline>();
@@ -111,8 +116,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
                 this.initMap(mapLayout.getCenter(), mapLayout.getZoom());
 
                 // Only after the map tiles have loaded can we start listening for streams
-                this.startListeningTowers(true);
-                setTimeout(() => { // Wait for initial towers to arrive
+                this.startListeningCells(true);
+                setTimeout(() => { // Wait for initial cells to arrive
                     this.startListeningRoutes(true);
                     this.startListeningUEs(true);
                 }, 200);
@@ -126,23 +131,23 @@ export class MapviewComponent implements OnInit, OnDestroy {
             });
     }
 
-    private startListeningTowers(asStream: boolean): void {
-        this.towerSub = this.trafficSimService.requestListTowers(asStream).subscribe((resp) => {
+    private startListeningCells(asStream: boolean): void {
+        this.cellSub = this.trafficSimService.requestListCells(asStream).subscribe((resp) => {
             if (resp.getType() === Type.NONE || resp.getType() === Type.ADDED) {
-                this.initTower(resp.getTower(), this.zoom);
+                this.initCell(resp.getCell(), this.zoom);
             } else if (resp.getType() === Type.UPDATED) {
-                this.updateTower(resp.getTower());
+                this.updateCell(resp.getCell());
             } else if (resp.getType() === Type.REMOVED) {
-                this.deleteTower(resp.getTower());
+                this.deleteCell(resp.getCell());
             } else {
-                console.warn('Unhandled Tower response type', resp.getType(), 'for', resp.getTower().getEcgi());
+                console.warn('Unhandled Cell response type', resp.getType(), 'for', resp.getCell().getEcgi());
             }
         }, err => {
             this.connectivityService.showVeil([
-                'ListTowers gRPC error', String(err.code), err.message,
+                'ListCells gRPC error', String(err.code), err.message,
                 'Please ensure ran-simulator is reachable',
                 'Choose a different application from the menu']);
-            console.error('Tower', err);
+            console.error('Cell', err);
         });
     }
 
@@ -191,8 +196,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.towerSub !== undefined) {
-            this.towerSub.unsubscribe();
+        if (this.cellSub !== undefined) {
+            this.cellSub.unsubscribe();
         }
         if (this.routesSub !== undefined) {
             this.routesSub.unsubscribe();
@@ -240,31 +245,49 @@ export class MapviewComponent implements OnInit, OnDestroy {
         return options;
     }
 
-    private initTower(tower: Tower, zoom: number): void {
-        const towerMarker = L.marker([tower.getLocation().getLat(), tower.getLocation().getLng()],
-            {title: tower.getEcgi().getEcid() + ' ' + this.roundNumber(tower.getTxpowerdb(), 'dB'),
-             color: tower.getColor()});
-        towerMarker.addTo(this.map);
-        this.towerMarkers.set(String(tower.getEcgi()), towerMarker);
+    private initCell(cell: Cell, zoom: number): void {
+        const cellMarker = L.marker([cell.getLocation().getLat(), cell.getLocation().getLng()],
+            {title: cell.getEcgi().getEcid() + ' ' + this.roundNumber(cell.getTxpowerdb(), 'dB'),
+             color: cell.getColor()});
+        cellMarker.addTo(this.map);
+        this.cellMarkers.set(String(cell.getEcgi()), cellMarker);
 
-        const powerCircle = L.circle([tower.getLocation().getLat(), tower.getLocation().getLng()],
-            this.powerToRadius(tower.getTxpowerdb()),
+        const azimuth = cell.getSector().getAzimuth() + ' 100 100';
+        const scale = 'scale(' + (cell.getSector().getArc() / 60) + ',' + (this.powerToRadius(cell.getTxpowerdb()) / 1500 ) + ')';
+        console.log('Cell', azimuth, scale);
+        const beamIcon = L.divIcon({
+            html: BEAM_ICON
+                .replace('#000000', cell.getColor())
+                .replace('30 100 100', azimuth)
+                .replace('scale(1,1)', scale),
+            className: 'ue-div-icon',
+            iconSize: [200, 200],
+            iconAnchor: [100, 100],
+            popupAnchor: [0, -10],
+        });
+
+        const beamMarker = L.marker([cell.getLocation().getLat(), cell.getLocation().getLng()],
+            {icon: beamIcon});
+        // beamMarker.addTo(this.map);
+
+        const powerCircle = L.circle([cell.getLocation().getLat(), cell.getLocation().getLng()],
+            this.powerToRadius(cell.getTxpowerdb()),
             {
                 fillOpacity: 0,
-                color: tower.getColor(), // strokeColor
+                color: cell.getColor(), // strokeColor
                 weight: 0.9, // strokeWeight
                 opacity: this.showPower ? 1 : 0 // strokeopacity
             });
         powerCircle.addTo(this.map);
-        this.powerCircleMap.set(String(tower.getEcgi()), powerCircle);
+        this.powerArcMap.set(String(cell.getEcgi()), powerCircle);
     }
 
-    private updateTower(tower: Tower): void {
-        console.log('Updated tower power', tower.getEcgi(), this.roundNumber(tower.getTxpowerdb(), 'dB'));
-        this.powerCircleMap.get(String(tower.getEcgi())).setRadius(this.powerToRadius(tower.getTxpowerdb()));
+    private updateCell(cell: Cell): void {
+        console.log('Updated cell power', cell.getEcgi(), this.roundNumber(cell.getTxpowerdb(), 'dB'));
+        this.powerArcMap.get(String(cell.getEcgi())).setRadius(this.powerToRadius(cell.getTxpowerdb()));
 
-        const previousIcon = this.towerMarkers.get(String(tower.getEcgi())).getIcon();
-        this.towerMarkers.get(String(tower.getEcgi())).setIcon(L.icon({
+        const previousIcon = this.cellMarkers.get(String(cell.getEcgi())).getIcon();
+        this.cellMarkers.get(String(cell.getEcgi())).setIcon(L.icon({
             iconRetinaUrl,
             iconUrl,
             shadowUrl,
@@ -275,17 +298,17 @@ export class MapviewComponent implements OnInit, OnDestroy {
             shadowSize: [41, 50]
         }));
         // TODO check this is effective
-        this.towerMarkers.get(String(tower.getEcgi())).bindTooltip(tower.getEcgi() + ' ' + this.roundNumber(tower.getTxpowerdb(), 'dB'));
+        this.cellMarkers.get(String(cell.getEcgi())).bindTooltip(cell.getEcgi() + ' ' + this.roundNumber(cell.getTxpowerdb(), 'dB'));
         setTimeout(() => {
-            this.towerMarkers.get(String(tower.getEcgi())).setIcon(previousIcon);
+            this.cellMarkers.get(String(cell.getEcgi())).setIcon(previousIcon);
         }, FLASH_FOR_MS);
     }
 
-    private deleteTower(tower: Tower) {
-        this.towerMarkers.get(String(tower.getEcgi())).remove();
-        this.towerMarkers.delete(String(tower.getEcgi()));
-        this.powerCircleMap.get(String(tower.getEcgi())).remove();
-        this.powerCircleMap.delete(String(tower.getEcgi()));
+    private deleteCell(cell: Cell) {
+        this.cellMarkers.get(String(cell.getEcgi())).remove();
+        this.cellMarkers.delete(String(cell.getEcgi()));
+        this.powerArcMap.get(String(cell.getEcgi())).remove();
+        this.powerArcMap.delete(String(cell.getEcgi()));
     }
 
     private powerToRadius(powerdB: number): number {
@@ -322,7 +345,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
 
     private updateRoute(route: Route) {
         console.log('Recalculate new route', route.getName());
-        const latLngs = new Array();
+        const latLngs = [];
         route.getWaypointsList().forEach((point: Point) => {
             latLngs.push([point.getLat(), point.getLng()] as number[]);
         });
@@ -339,10 +362,10 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private initUe(ue: Ue): void {
-        const servingTower = this.towerMarkers.get(String(ue.getServingTower()));
+        const servingCell = this.cellMarkers.get(String(ue.getServingTower()));
         const rotation = (270 - ue.getRotation()) + 'deg';
         const ueIcon = L.divIcon({
-            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
+            html: CAR_ICON.replace('#000000', servingCell.options.color).replace('0deg', rotation),
             className: 'ue-div-icon',
             iconSize: [20, 20],
             iconAnchor: [10, 10],
@@ -358,37 +381,37 @@ export class MapviewComponent implements OnInit, OnDestroy {
         this.ueMap.set(ue.getImsi(), ueMarker);
         ueMarker.addTo(this.map);
 
-        let towerPos: L.LatLng;
-        let towerColor: string;
-        if (servingTower === undefined) { // May happen at startup - will be corrected on update
-            towerPos = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
-            towerColor = 'black';
+        let cellPos: L.LatLng;
+        let cellColor: string;
+        if (servingCell === undefined) { // May happen at startup - will be corrected on update
+            cellPos = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
+            cellColor = 'black';
         } else {
-            towerPos = servingTower.getLatLng();
-            towerColor = servingTower.options.color;
+            cellPos = servingCell.getLatLng();
+            cellColor = servingCell.options.color;
         }
         const ueLine = L.polyline([
                 [ue.getPosition().getLat(), ue.getPosition().getLng()],
-                towerPos
-            ], {color: towerColor, weight: 2});
+                cellPos
+            ], {color: cellColor, weight: 2});
         this.ueLineMap.set(ue.getImsi(), ueLine);
         ueLine.addTo(this.map);
     }
 
     private updateUe(ue: Ue, updateType: UpdateType): void {
         const uePosition = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
-        const servingTower = this.towerMarkers.get(String(ue.getServingTower()));
+        const servingCell = this.cellMarkers.get(String(ue.getServingTower()));
         this.ueMap.get(ue.getImsi()).setLatLng(uePosition);
         const rotation = (270 - ue.getRotation()) + 'deg';
         const ueIcon = L.divIcon({
-            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
+            html: CAR_ICON.replace('#000000', servingCell.options.color).replace('0deg', rotation),
             className: 'ue-div-icon',
             iconSize: [20, 20],
             iconAnchor: [10, 10],
             popupAnchor: [0, -10],
         });
         const ueIconLarge = L.divIcon({
-            html: CAR_ICON.replace('#000000', servingTower.options.color).replace('0deg', rotation),
+            html: CAR_ICON.replace('#000000', servingCell.options.color).replace('0deg', rotation),
             className: 'ue-div-icon',
             iconSize: [30, 30],
             iconAnchor: [10, 10],
@@ -406,8 +429,22 @@ export class MapviewComponent implements OnInit, OnDestroy {
             this.ueMap.get(ue.getImsi()).setIcon(ueIcon);
         }
 
-        this.ueLineMap.get(ue.getImsi()).setLatLngs([uePosition, servingTower.getLatLng()]);
-        this.ueLineMap.get(ue.getImsi()).setStyle({color: servingTower.options.color});
+        this.ueLineMap.get(ue.getImsi()).setLatLngs([uePosition, servingCell.getLatLng()]);
+        this.ueLineMap.get(ue.getImsi()).setStyle({color: servingCell.options.color});
+    }
+
+    private calculateBeam(azimuth: number, arc: number, power: number): string {
+        const basex = 0, basey = 0;
+        const cp1x = -20, cp1y = 0;
+        const cp2x = -50, cp2y = -100;
+        const tipy = -100;
+        const svgPrefix = '<svg xmlns:svg="http://www.w3.org/2000/svg" width="200" height="200">';
+        const pathPrefix = '<path fill-opacity="0.3" fill="#000000" stroke-width="1" stroke="#000000"';
+        const data = 'd="M' + basex + ' ' + basey +
+            ' C ' + cp1x + ' ' + cp1y + ', ' + cp2x + ' ' + cp2y + ', ' + basex + ' ' + tipy +
+            ' S ' + -cp1x + ' ' + cp1y + ', ' + basex + ' ' + basey + '"/>';
+        const svgSuffix = '</svg>';
+        return svgPrefix + pathPrefix + data + svgSuffix;
     }
 
     updateRoutes(update: boolean) {
@@ -430,7 +467,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     updatePower(update: boolean) {
-        this.powerCircleMap.forEach((pc) => {
+        this.powerArcMap.forEach((pc) => {
             if (update) {
                 pc.addTo(this.map);
             } else {
@@ -447,7 +484,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
             console.log('Disconnected from gRPC streams');
             this.uesSub.unsubscribe();
             this.routesSub.unsubscribe();
-            this.towerSub.unsubscribe();
+            this.cellSub.unsubscribe();
         }
     }
 
@@ -466,13 +503,13 @@ export class MapviewComponent implements OnInit, OnDestroy {
             this.ueMap.clear();
             this.routePolylines.forEach((r) => r.remove());
             this.routePolylines.clear();
-            this.powerCircleMap.forEach((p) => p.remove());
-            this.powerCircleMap.clear();
-            this.towerMarkers.forEach((t) => t.remove());
-            this.towerMarkers.clear();
+            this.powerArcMap.forEach((p) => p.remove());
+            this.powerArcMap.clear();
+            this.cellMarkers.forEach((t) => t.remove());
+            this.cellMarkers.clear();
 
-            this.startListeningTowers(streaming);
-            setTimeout(() => { // Wait for towers to finish
+            this.startListeningCells(streaming);
+            setTimeout(() => { // Wait for cells to finish
                 this.startListeningRoutes(streaming);
                 this.startListeningUEs(streaming);
             }, 200);

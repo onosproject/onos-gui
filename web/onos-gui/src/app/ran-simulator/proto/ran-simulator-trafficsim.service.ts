@@ -17,12 +17,12 @@
 import {Inject, Injectable} from '@angular/core';
 import {TrafficClient} from './github.com/onosproject/ran-simulator/api/trafficsim/TrafficsimServiceClientPb';
 import {Observable, Subscriber} from 'rxjs';
-import {MapLayout, Tower} from './github.com/onosproject/ran-simulator/api/types/types_pb';
+import {MapLayout, Cell} from './github.com/onosproject/ran-simulator/api/types/types_pb';
 import {
     ListRoutesRequest,
     ListRoutesResponse,
-    ListTowersRequest,
-    ListTowersResponse,
+    ListCellsRequest,
+    ListCellsResponse,
     ListUesResponse,
     MapLayoutRequest, SetNumberUEsRequest,
     SetNumberUEsResponse
@@ -59,13 +59,13 @@ export class RanSimulatorTrafficsimService {
         return getMapLayoutObs;
     }
 
-    requestListTowers(asStream: boolean): Observable<ListTowersResponse> {
-        const req = new ListTowersRequest();
+    requestListCells(asStream: boolean): Observable<ListCellsResponse> {
+        const req = new ListCellsRequest();
         req.setSubscribe(asStream);
-        const stream = this.trafficClient.listTowers(req, {});
+        const stream = this.trafficClient.listCells(req, {});
 
-        const listTowersObs = new Observable<ListTowersResponse>((observer: Subscriber<ListTowersResponse>) => {
-            stream.on('data', (tower: ListTowersResponse) => {
+        const listTowersObs = new Observable<ListCellsResponse>((observer: Subscriber<ListCellsResponse>) => {
+            stream.on('data', (tower: ListCellsResponse) => {
                 observer.next(tower);
             });
             stream.on('error', (error: grpcWeb.Error) => {

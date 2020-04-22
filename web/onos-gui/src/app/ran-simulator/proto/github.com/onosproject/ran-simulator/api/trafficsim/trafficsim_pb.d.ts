@@ -18,7 +18,7 @@ export namespace MapLayoutRequest {
   }
 }
 
-export class ListTowersRequest extends jspb.Message {
+export class ListCellsRequest extends jspb.Message {
   getSubscribe(): boolean;
   setSubscribe(value: boolean): void;
 
@@ -26,40 +26,40 @@ export class ListTowersRequest extends jspb.Message {
   setWithoutreplay(value: boolean): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ListTowersRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: ListTowersRequest): ListTowersRequest.AsObject;
-  static serializeBinaryToWriter(message: ListTowersRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ListTowersRequest;
-  static deserializeBinaryFromReader(message: ListTowersRequest, reader: jspb.BinaryReader): ListTowersRequest;
+  toObject(includeInstance?: boolean): ListCellsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListCellsRequest): ListCellsRequest.AsObject;
+  static serializeBinaryToWriter(message: ListCellsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListCellsRequest;
+  static deserializeBinaryFromReader(message: ListCellsRequest, reader: jspb.BinaryReader): ListCellsRequest;
 }
 
-export namespace ListTowersRequest {
+export namespace ListCellsRequest {
   export type AsObject = {
     subscribe: boolean,
     withoutreplay: boolean,
   }
 }
 
-export class ListTowersResponse extends jspb.Message {
-  getTower(): github_com_onosproject_ran$simulator_api_types_types_pb.Tower | undefined;
-  setTower(value?: github_com_onosproject_ran$simulator_api_types_types_pb.Tower): void;
-  hasTower(): boolean;
-  clearTower(): void;
+export class ListCellsResponse extends jspb.Message {
+  getCell(): github_com_onosproject_ran$simulator_api_types_types_pb.Cell | undefined;
+  setCell(value?: github_com_onosproject_ran$simulator_api_types_types_pb.Cell): void;
+  hasCell(): boolean;
+  clearCell(): void;
 
   getType(): Type;
   setType(value: Type): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): ListTowersResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: ListTowersResponse): ListTowersResponse.AsObject;
-  static serializeBinaryToWriter(message: ListTowersResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): ListTowersResponse;
-  static deserializeBinaryFromReader(message: ListTowersResponse, reader: jspb.BinaryReader): ListTowersResponse;
+  toObject(includeInstance?: boolean): ListCellsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ListCellsResponse): ListCellsResponse.AsObject;
+  static serializeBinaryToWriter(message: ListCellsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListCellsResponse;
+  static deserializeBinaryFromReader(message: ListCellsResponse, reader: jspb.BinaryReader): ListCellsResponse;
 }
 
-export namespace ListTowersResponse {
+export namespace ListCellsResponse {
   export type AsObject = {
-    tower?: github_com_onosproject_ran$simulator_api_types_types_pb.Tower.AsObject,
+    cell?: github_com_onosproject_ran$simulator_api_types_types_pb.Cell.AsObject,
     type: Type,
   }
 }
