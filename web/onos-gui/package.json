@@ -28,7 +28,8 @@
     "rxjs": "~6.5.4",
     "topojson-client": "^3.0.0",
     "zone.js": "~0.10.2",
-    "leaflet": "^1.6.0"
+    "leaflet": "^1.6.0",
+    "leaflet-curve": "~1.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.901.1",
@@ -38,6 +39,8 @@
     "@types/node": "~10.14.22",
     "@types/jasmine": "3.4.0",
     "@types/jasminewd2": "2.0.8",
+    "@types/leaflet": "~1.5.12",
+    "@types/leaflet-curve": "~0.1.2",
     "codelyzer": "5.2.1",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",

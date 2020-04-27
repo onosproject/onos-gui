@@ -122,6 +122,62 @@ export namespace StationLinkInfo {
   }
 }
 
+export class UEListRequest extends jspb.Message {
+  getCrnti(): string;
+  setCrnti(value: string): void;
+
+  getEcgi(): ECGI | undefined;
+  setEcgi(value?: ECGI): void;
+  hasEcgi(): boolean;
+  clearEcgi(): void;
+
+  getSubscribe(): boolean;
+  setSubscribe(value: boolean): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UEListRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UEListRequest): UEListRequest.AsObject;
+  static serializeBinaryToWriter(message: UEListRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UEListRequest;
+  static deserializeBinaryFromReader(message: UEListRequest, reader: jspb.BinaryReader): UEListRequest;
+}
+
+export namespace UEListRequest {
+  export type AsObject = {
+    crnti: string,
+    ecgi?: ECGI.AsObject,
+    subscribe: boolean,
+  }
+}
+
+export class UEInfo extends jspb.Message {
+  getCrnti(): string;
+  setCrnti(value: string): void;
+
+  getEcgi(): ECGI | undefined;
+  setEcgi(value?: ECGI): void;
+  hasEcgi(): boolean;
+  clearEcgi(): void;
+
+  getImsi(): string;
+  setImsi(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UEInfo.AsObject;
+  static toObject(includeInstance: boolean, msg: UEInfo): UEInfo.AsObject;
+  static serializeBinaryToWriter(message: UEInfo, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UEInfo;
+  static deserializeBinaryFromReader(message: UEInfo, reader: jspb.BinaryReader): UEInfo;
+}
+
+export namespace UEInfo {
+  export type AsObject = {
+    crnti: string,
+    ecgi?: ECGI.AsObject,
+    imsi: string,
+  }
+}
+
 export class UELinkListRequest extends jspb.Message {
   getCrnti(): string;
   setCrnti(value: string): void;

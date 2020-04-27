@@ -18,8 +18,10 @@ import {
   StationLinkInfo,
   StationLinkListRequest,
   StationListRequest,
+  UEInfo,
   UELinkInfo,
-  UELinkListRequest} from './c1-interface_pb';
+  UELinkListRequest,
+  UEListRequest} from './c1-interface_pb';
 
 export class C1InterfaceServiceClient {
   client_: grpcWeb.AbstractClientBase;
@@ -95,6 +97,25 @@ export class C1InterfaceServiceClient {
       request,
       metadata || {},
       this.methodInfoListUELinks);
+  }
+
+  methodInfoListUEs = new grpcWeb.AbstractClientBase.MethodInfo(
+    UEInfo,
+    (request: UEListRequest) => {
+      return request.serializeBinary();
+    },
+    UEInfo.deserializeBinary
+  );
+
+  listUEs(
+    request: UEListRequest,
+    metadata?: grpcWeb.Metadata) {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/interface.c1.C1InterfaceService/ListUEs',
+      request,
+      metadata || {},
+      this.methodInfoListUEs);
   }
 
   methodInfoTriggerHandOver = new grpcWeb.AbstractClientBase.MethodInfo(

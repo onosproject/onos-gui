@@ -33,6 +33,11 @@ export class Sector extends jspb.Message {
   getArc(): number;
   setArc(value: number): void;
 
+  getCentroid(): Point | undefined;
+  setCentroid(value?: Point): void;
+  hasCentroid(): boolean;
+  clearCentroid(): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Sector.AsObject;
   static toObject(includeInstance: boolean, msg: Sector): Sector.AsObject;
@@ -45,6 +50,7 @@ export namespace Sector {
   export type AsObject = {
     azimuth: number,
     arc: number,
+    centroid?: Point.AsObject,
   }
 }
 
@@ -188,48 +194,6 @@ export namespace UeMetrics {
   }
 }
 
-export class TowersParams extends jspb.Message {
-  getTowerrows(): number;
-  setTowerrows(value: number): void;
-
-  getTowercols(): number;
-  setTowercols(value: number): void;
-
-  getTowerspacingvert(): number;
-  setTowerspacingvert(value: number): void;
-
-  getTowerspacinghoriz(): number;
-  setTowerspacinghoriz(value: number): void;
-
-  getLocationsscale(): number;
-  setLocationsscale(value: number): void;
-
-  getMaxuespercell(): number;
-  setMaxuespercell(value: number): void;
-
-  getAvgcellspertower(): number;
-  setAvgcellspertower(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): TowersParams.AsObject;
-  static toObject(includeInstance: boolean, msg: TowersParams): TowersParams.AsObject;
-  static serializeBinaryToWriter(message: TowersParams, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): TowersParams;
-  static deserializeBinaryFromReader(message: TowersParams, reader: jspb.BinaryReader): TowersParams;
-}
-
-export namespace TowersParams {
-  export type AsObject = {
-    towerrows: number,
-    towercols: number,
-    towerspacingvert: number,
-    towerspacinghoriz: number,
-    locationsscale: number,
-    maxuespercell: number,
-    avgcellspertower: number,
-  }
-}
-
 export class ECGI extends jspb.Message {
   getEcid(): string;
   setEcid(value: string): void;
@@ -341,6 +305,9 @@ export class MapLayout extends jspb.Message {
   getCurrentRoutes(): number;
   setCurrentRoutes(value: number): void;
 
+  getLocationsscale(): number;
+  setLocationsscale(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): MapLayout.AsObject;
   static toObject(includeInstance: boolean, msg: MapLayout): MapLayout.AsObject;
@@ -359,6 +326,7 @@ export namespace MapLayout {
     minUes: number,
     maxUes: number,
     currentRoutes: number,
+    locationsscale: number,
   }
 }
 
