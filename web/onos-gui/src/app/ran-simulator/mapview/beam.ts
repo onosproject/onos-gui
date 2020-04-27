@@ -33,26 +33,9 @@ interface Hexagon {
 
 /**
  * Create a bezier cubic curve for the beam.
- * Points are start, cp1, cp2, tip, cp4, end=start
- * cp3 is mirrored from cp2 by 'S'
- * See https://www.w3.org/TR/SVG/paths.html#PathDataCubicBezierCommands
- *            tip
- * cp2 o-------O-------o  cp3
- *          /     \
- *         |      |
- *         \      /
- *          \    /
- * cp1   o----O----o  cp4
- *         start=end
- * Example:
- *  <svg xmlns:svg="http://www.w3.org/2000/svg" width="300" height="300" viewBox="-150 -150 300 300">
- *     <path fill-opacity="0.3" fill="#7B7D7D" stroke-width="0" transform="rotate(0 0 0)"
- *          d="M 0 0 C -20 0, -140 -100, 0 -100 S 20 0, 0 0">
- *     </path>
- * </svg>
- * @param azimuth The rotation of the beam
- * @param arc The width of the beam in degrees
- * @param power The power level
+ * It is approximating a hexagonal shape - to start it's made of 3 identical polylines:
+ *
+ * the 3 are named left, top and right sides and are rotated 0, 120 and 240 degrees
  */
 export class BeamCalculator {
 
@@ -219,7 +202,7 @@ export class BeamCalculator {
         } as Side;
     }
 
-    rotatePoint(point: L.LatLng, angle: number, centre?: Point): L.LatLng {
+    private rotatePoint(point: L.LatLng, angle: number, centre?: Point): L.LatLng {
         if (angle === 0) {
             return point;
         }
@@ -237,6 +220,20 @@ export class BeamCalculator {
         );
     }
 
+    /**
+     * Each side is a cubic bezier curve
+     * The centre is 0,0 and the start is 1 unit below the centre. The end is rotated
+     * 120 degrees from this. The tension of the control points is 0.5 - increasing it
+     * would give rounder corners.
+     *
+     *            O end
+     *         /  \
+     * cp2  o      \
+     *              \
+     * cp1  o--------O
+     *            start
+     *
+     */
     private standardSide(): Side {
         return {
             cp1: new L.LatLng(-1, -0.5),
@@ -244,95 +241,4 @@ export class BeamCalculator {
             end: new L.LatLng(0.5, -0.866)
         } as Side;
     }
-
-    // based on a hex centred at 0,0 with internal radius 1.0
-    private calculateLeftSide(arc: number = 60): Side {
-        const tension = 0.5;
-        const alpha = arc / 2;
-        const startX = 0, startY = -1;
-
-        const side = {
-            cp1: new L.LatLng(-1, -tension),
-            end: new L.LatLng(
-                Math.sin(alpha * Math.PI / 180),
-                -Math.cos(alpha * Math.PI / 180)
-            )
-        } as Side;
-        side.cp2 = new L.LatLng(
-            side.end.lat - tension * Math.sin((90 - alpha) * Math.PI / 180),
-            side.end.lng - tension * Math.cos((90 - alpha) * Math.PI / 180)
-        );
-
-        return side;
-    }
-
-
-    // static calculateBeam(azimuth: number, arc: number, power: number, color: string): string {
-    //     const BOXSIZE = 300; // If changed, must also update iconSize and iconAnchor of L.divIcon
-    //
-    //     const dist = this.powerToCentroid(power);
-    //     const radius = this.radiusFromCentroid(dist, arc);
-    //     const tipy = -radius;
-    //     const alpha = 2 * Math.PI * arc / 2 / 360;
-    //     const cp1x = tipy * Math.tan(alpha) / 3;
-    //     const cp2x = tipy * Math.tan(alpha);
-    //     const svgPrefix = '<svg xmlns:svg="http://www.w3.org/2000/svg" width="' + BOXSIZE + '" height="' + BOXSIZE + '"';
-    //     const viewBox = ' viewBox="' + (BOXSIZE / -2) + ' ' + (BOXSIZE / -2) + ' ' + BOXSIZE + ' ' + BOXSIZE + '">';
-    //     const pathPrefix = '<path fill-opacity="0.3"' +
-    //         ' fill="' + color + '"' +
-    //         ' stroke-width="0"' +
-    //         ' transform="rotate(' + azimuth + ' 0 0)"';
-    //     const data = ' d="M 0 0' + // start
-    //         ' C ' + cp1x + ' 0,' + // cp1
-    //         ' ' + cp2x + ' ' + tipy + ',' + // cp2
-    //         ' 0 ' + tipy + // tip
-    //         ' S ' + // cp3 is mirrored from cp2
-    //         '' + -cp1x + ' 0, ' + // cp4
-    //         '0 0' + // end = start
-    //         '"/>';
-    //     const svgSuffix = '</svg>';
-    //     return svgPrefix + viewBox + pathPrefix + data + svgSuffix;
-    // }
-
-    /**
-     * Use the centroid of a circular sector
-     * Inverse of value for Circular Sector- ref https://en.wikipedia.org/wiki/List_of_centroids
-     * @param centroid dist from centre to centroid of sector
-     * @param arc The arc of the sector in degrees
-     */
-    // static radiusFromCentroid(centroid: number, arc: number) {
-    //     const alpha = 2 * Math.PI * arc / 360 / 2;
-    //     return 3 * alpha * centroid / 2 / Math.sin(alpha);
-    // }
-
-    /**
-     * Convert the power in dB to a distance, based on a fudge factor
-     * @param powerdB the power of the cell
-     */
-    // static powerToCentroid(powerdB: number): number {
-    //     const power = Math.pow(10, powerdB / 10);
-    //     const distance = Math.sqrt(power) * DIST_SCALE;
-    //     // console.log('Power calc:', powerUnsigneddB, this.powerSigned(powerUnsigneddB), power, distance);
-    //     if (distance < CIRCLE_MIN_DIA) {
-    //         return CIRCLE_MIN_DIA;
-    //     } else if (distance > CIRCLE_MAX_DIA) {
-    //         return CIRCLE_MAX_DIA;
-    //     }
-    //     return distance;
-    // }
-
-    /**
-     * Calculate the Lat, Lng of the centroid of the sector
-     * @param centre the location of the tower
-     * @param dist the dist of the centroid to the tower
-     * @param azimuth the angle between north and the centroid clockwise degrees
-     */
-    // static centroidPosition(centre: Point, dist: number, azimuth: number): Point {
-    //     const azRads = 2 * Math.PI * (90 - azimuth) / 360;
-    //
-    //     const centroid = new Point();
-    //     centroid.setLat(centre.getLat() + Math.sin(azRads) * dist);
-    //     centroid.setLng(centre.getLng() + Math.cos(azRads) * dist);
-    //     return centroid;
-    // }
 }
