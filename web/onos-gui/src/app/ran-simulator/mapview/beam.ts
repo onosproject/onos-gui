@@ -44,11 +44,11 @@ const END = 2;
  */
 export class BeamCalculator {
     private readonly centre: Point;
-    private readonly origCentroid: Point;
-    private readonly origCentrDist: number;
     private readonly aspectRatio: number;
     private readonly rotationAngle: number;
     private readonly arc: number;
+    private origCentrDist: number;
+    private origCentroid: Point;
     beamCurve: L.Curve;
 
     constructor(centre: Point, azimuth: number, arc: number, centroid: Point, aspectRatio: number) {
@@ -71,7 +71,8 @@ export class BeamCalculator {
     }
 
     updateCentroid(centroid: Point): number {
-        const scale = this.centroidScale(centroid);
+        const newDist = Math.hypot(centroid.getLat() - this.centre.getLat(), centroid.getLng() - this.centre.getLng());
+        const scale =  newDist / this.origCentrDist;
         // Only scale pts 3-5, 7-8, 10-11
         for (let i = 3; i < 12; i++) {
             if (i === 6 || i === 9) {
@@ -88,13 +89,10 @@ export class BeamCalculator {
 
             // console.log('Pt:', scale, lat, scaledLat, lng, scaledLng);
         }
+        this.origCentroid = centroid;
+        this.origCentrDist = newDist;
 
         return scale;
-    }
-
-    private centroidScale(newCentroid: Point): number {
-        const newDist = Math.hypot(newCentroid.getLat() - this.centre.getLat(), newCentroid.getLng() - this.centre.getLng());
-        return newDist / this.origCentrDist;
     }
 
     private convertHexToCurve(hex: Hexagon): L.Curve {

@@ -318,6 +318,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
         this.cellMarkers.delete(String(cell.getEcgi()));
         this.beamCurves.get(String(cell.getEcgi())).remove();
         this.beamCurves.delete(String(cell.getEcgi()));
+        this.beamCalcs.delete(String(cell.getEcgi()));
         this.centroidPLines.get(String(cell.getEcgi())).remove();
         this.centroidPLines.delete(String(cell.getEcgi()));
     }
@@ -494,6 +495,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
             this.routePolylines.clear();
             this.beamCurves.forEach((bc) => bc.remove());
             this.beamCurves.clear();
+            this.beamCalcs.clear();
             this.centroidPLines.forEach((cm) => cm.remove());
             this.centroidPLines.clear();
             this.cellMarkers.forEach((t) => t.remove());
