@@ -88,6 +88,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
     ueMap: Map<number, L.Marker>;
     ueLineMap: Map<number, L.Polyline>;
 
+    private aspectRatio: number;
+
     constructor(
         private trafficSimService: RanSimulatorTrafficsimService,
         private connectivityService: ConnectivityService
@@ -220,7 +222,9 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private initMap(centre: Point, zoom: number): void {
-        console.log('Creating map at Lat,Lng: ', centre.getLat(), centre.getLng(), zoom);
+        this.aspectRatio = Math.cos(centre.getLat() * Math.PI / 180);
+
+        console.log('Creating map at Lat,Lng: ', centre.getLat(), centre.getLng(), zoom, this.aspectRatio);
         this.map = new L.Map('map', {
             center: [centre.getLat(), centre.getLng()],
             zoom: zoom,
@@ -255,11 +259,13 @@ export class MapviewComponent implements OnInit, OnDestroy {
         const beamCalc = new BeamCalculator(
             cell.getLocation(),
             cell.getSector().getAzimuth(),
-            cell.getSector().getArc());
-        const beamCurve = beamCalc.updateCentroid(cell.getSector().getCentroid());
-        beamCurve.options.color = cell.getColor();
-        beamCurve.addTo(this.map);
-        this.beamCurves.set(String(cell.getEcgi()), beamCurve);
+            cell.getSector().getArc(),
+            cell.getSector().getCentroid(),
+            this.aspectRatio,
+        );
+        beamCalc.beamCurve.options.color = cell.getColor();
+        beamCalc.beamCurve.addTo(this.map);
+        this.beamCurves.set(String(cell.getEcgi()), beamCalc.beamCurve);
         this.beamCalcs.set(String(cell.getEcgi()), beamCalc);
 
         const centroidPLine = new L.Polyline([
@@ -276,7 +282,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private updateCell(cell: Cell): void {
-        console.log('Updated cell power', cell.getEcgi(), cell.getTxpowerdb(), 'dB. Centroid: ',
+        console.log('Updated cell power', cell.getEcgi().getEcid(), cell.getTxpowerdb(), 'dB. Centroid: ',
             cell.getSector().getCentroid().getLat(), cell.getSector().getCentroid().getLng());
 
         this.centroidPLines.get(String(cell.getEcgi())).setLatLngs([
@@ -284,11 +290,10 @@ export class MapviewComponent implements OnInit, OnDestroy {
             [cell.getSector().getCentroid().getLat(), cell.getSector().getCentroid().getLng()]
         ]);
 
-        const beamCurve = this.beamCalcs.get(String(cell.getEcgi())).updateCentroid(cell.getSector().getCentroid());
-        beamCurve.options.color = cell.getColor();
         this.beamCurves.get(String(cell.getEcgi())).remove();
-        this.beamCurves.set(String(cell.getEcgi()), beamCurve);
-        beamCurve.addTo(this.map);
+        const beamCalc = this.beamCalcs.get(String(cell.getEcgi()));
+        beamCalc.updateCentroid(cell.getSector().getCentroid());
+        beamCalc.beamCurve.addTo(this.map);
 
         const previousIcon = this.cellMarkers.get(String(cell.getEcgi())).getIcon();
         this.cellMarkers.get(String(cell.getEcgi())).setIcon(new L.Icon({
