@@ -25,7 +25,7 @@ describe('BeamCalculator', () => {
     centre.setLng(13);
 
     const centroid = new Point();
-    centroid.setLat(52);
+    centroid.setLat(52.01);
     centroid.setLng(13);
 
     beforeEach(() => {
@@ -33,9 +33,21 @@ describe('BeamCalculator', () => {
     });
 
     it('should calculate beam', () => {
-        const original = new L.LatLng(-1, -1);
-        const bc = new BeamCalculator(centre, centroid);
-        expect(bc.beamCurve).toBeTruthy();
+        const bc = new BeamCalculator(centre, 0, 60);
+        expect(bc).toBeTruthy();
+
+        const curve = bc.updateCentroid(centroid);
+        expect(curve).toBeTruthy();
+
+        expect(curve.getPath().length).toEqual(13);
+        expect(curve.getPath()[0]).toEqual('M');
+        expect(String(curve.getPath()[1])).toEqual('52,13');
+        expect(curve.getPath()[2]).toEqual('C');
+        expect(String(curve.getPath()[3])).toEqual('52,12.99192169262337');
+        expect(curve.getPath()[6]).toEqual('S');
+        expect(curve.getPath()[9]).toEqual('S');
+        expect(curve.getPath()[12]).toEqual('Z');
+
     });
 
 });

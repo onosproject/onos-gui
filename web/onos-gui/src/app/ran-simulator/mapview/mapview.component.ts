@@ -82,6 +82,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
 
     cellMarkers: Map<string, L.Marker>;
     beamCurves: Map<string, L.Curve>;
+    beamCalcs: Map<string, BeamCalculator>;
     centroidPLines: Map<string, L.Polyline>;
     routePolylines: Map<number, L.Polyline>;
     ueMap: Map<number, L.Marker>;
@@ -93,6 +94,7 @@ export class MapviewComponent implements OnInit, OnDestroy {
     ) {
         this.cellMarkers = new Map<string, L.Marker>();
         this.beamCurves = new Map<string, L.Curve>();
+        this.beamCalcs = new Map<string, BeamCalculator>();
         this.centroidPLines = new Map<string, L.Polyline>();
         this.routePolylines = new Map<number, L.Polyline>();
         this.ueMap = new Map<number, L.Marker>();
@@ -250,10 +252,15 @@ export class MapviewComponent implements OnInit, OnDestroy {
         cellMarker.addTo(this.map);
         this.cellMarkers.set(String(cell.getEcgi()), cellMarker);
 
-        const beamCalc = new BeamCalculator(cell.getLocation(), cell.getSector().getCentroid());
-        beamCalc.beamCurve.options.color = cell.getColor();
-        beamCalc.beamCurve.addTo(this.map);
-        this.beamCurves.set(String(cell.getEcgi()), beamCalc.beamCurve);
+        const beamCalc = new BeamCalculator(
+            cell.getLocation(),
+            cell.getSector().getAzimuth(),
+            cell.getSector().getArc());
+        const beamCurve = beamCalc.updateCentroid(cell.getSector().getCentroid());
+        beamCurve.options.color = cell.getColor();
+        beamCurve.addTo(this.map);
+        this.beamCurves.set(String(cell.getEcgi()), beamCurve);
+        this.beamCalcs.set(String(cell.getEcgi()), beamCalc);
 
         const centroidPLine = new L.Polyline([
             [cell.getLocation().getLat(), cell.getLocation().getLng()],
@@ -269,12 +276,19 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private updateCell(cell: Cell): void {
-        console.log('Updated cell power', cell.getEcgi(), Utils.roundNumber(cell.getTxpowerdb(), 'dB'));
+        console.log('Updated cell power', cell.getEcgi(), cell.getTxpowerdb(), 'dB. Centroid: ',
+            cell.getSector().getCentroid().getLat(), cell.getSector().getCentroid().getLng());
 
         this.centroidPLines.get(String(cell.getEcgi())).setLatLngs([
             [cell.getLocation().getLat(), cell.getLocation().getLng()],
             [cell.getSector().getCentroid().getLat(), cell.getSector().getCentroid().getLng()]
         ]);
+
+        const beamCurve = this.beamCalcs.get(String(cell.getEcgi())).updateCentroid(cell.getSector().getCentroid());
+        beamCurve.options.color = cell.getColor();
+        this.beamCurves.get(String(cell.getEcgi())).remove();
+        this.beamCurves.set(String(cell.getEcgi()), beamCurve);
+        beamCurve.addTo(this.map);
 
         const previousIcon = this.cellMarkers.get(String(cell.getEcgi())).getIcon();
         this.cellMarkers.get(String(cell.getEcgi())).setIcon(new L.Icon({
