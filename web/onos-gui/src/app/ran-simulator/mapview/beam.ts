@@ -19,17 +19,22 @@ import * as L from 'leaflet';
 import 'leaflet-curve';
 
 interface Side {
-    cp1: L.LatLng;
-    cp2: L.LatLng;
-    end: L.LatLng;
+    pts: L.LatLng[];
 }
 
 interface Hexagon {
     start: L.LatLng;
-    leftSide: Side;
-    topSide: Side;
-    rightSide: Side;
+    sides: Side[];
 }
+
+const INITIAL_SCALE = 0.01;
+const CENTROID_SCALE = 40;
+const LEFT = 0;
+const TOP = 1;
+const RIGHT = 2;
+const CP1 = 0;
+const CP2 = 1;
+const END = 2;
 
 /**
  * Create a bezier cubic curve for the beam.
@@ -38,167 +43,129 @@ interface Hexagon {
  * the 3 are named left, top and right sides and are rotated 0, 120 and 240 degrees
  */
 export class BeamCalculator {
+    private readonly centre: Point;
+    private readonly aspectRatio: number;
+    private readonly rotationAngle: number;
+    private readonly hex: Hexagon;
+    private readonly arc: number;
 
-    beamCurve: L.Curve;
-    aspectRatio: number;
+    constructor(centre: Point, azimuth: number, arc: number) {
+        this.centre = centre;
+        this.arc = arc;
+        this.rotationAngle = 90 - azimuth;
+        this.aspectRatio = Math.cos(centre.getLat() * Math.PI / 180);
 
-    constructor(centre: Point, centroid: Point) {
-        this.aspectRatio = Math.cos(centre.getLat());
-        this.beamCurve = this.calculateBeam(centre, centroid, 60);
+        this.hex = this.calculateHexagon();
     }
 
-    calculateBeam(centre: Point, centroid: Point, arc: number): any {
-        const hex = this.calculateHexagon();
-        const rotationAngle = 180 * Math.atan2(centroid.getLat() - centre.getLat(), centroid.getLng() - centre.getLng()) / Math.PI;
+    updateCentroid(centroid: Point): L.Curve {
+        const centroidDist = Math.hypot(centroid.getLat() - this.centre.getLat(), centroid.getLng() - centroid.getLat());
+        console.log('Centroid dist', centroidDist);
+        const newHex = this.transformHexagon(centroidDist / CENTROID_SCALE, this.centre, this.hex, this.arc);
 
-        const newHex = this.transformHexagon(0.008, centre, hex);
+        const rotated = this.rotateBeam(newHex, this.rotationAngle - 90, this.centre);
 
-        const rotated = this.rotateBeam(newHex, rotationAngle - 90, centre);
+        const adjusted = this.aspectAdjust(rotated, this.centre, this.aspectRatio);
 
-        const adjusted = this.aspectAdjust(rotated, centre, this.aspectRatio);
-
-        const beamCurve = this.convertHexToCurve(adjusted);
-
-        // console.log('Hexagon', rotationAngle, this.aspectRatio, hex, rotated, newHex, adjusted, beamCurve);
-
-        return beamCurve;
+        return this.convertHexToCurve(adjusted);
     }
 
-    private convertHexToCurve(hex: Hexagon): L.Path {
+    private convertHexToCurve(hex: Hexagon): L.Curve {
         const beamCurve = L.curve(['M', [hex.start.lat, hex.start.lng], 'C',
-            [hex.leftSide.cp1.lat, hex.leftSide.cp1.lng],
-            [hex.leftSide.cp2.lat, hex.leftSide.cp2.lng],
-            [hex.leftSide.end.lat, hex.leftSide.end.lng],
-            [hex.topSide.cp1.lat, hex.topSide.cp1.lng],
-            [hex.topSide.cp2.lat, hex.topSide.cp2.lng],
-            [hex.topSide.end.lat, hex.topSide.end.lng],
-            [hex.rightSide.cp1.lat, hex.rightSide.cp1.lng],
-            [hex.rightSide.cp2.lat, hex.rightSide.cp2.lng],
-            [hex.rightSide.end.lat, hex.rightSide.end.lng], 'Z'],
-            {color: 'red', fill: true, stroke: false, opacity: 0.5 }
+                [hex.sides[LEFT].pts[CP1].lat, hex.sides[LEFT].pts[CP1].lng],
+                [hex.sides[LEFT].pts[CP2].lat, hex.sides[LEFT].pts[CP2].lng],
+                [hex.sides[LEFT].pts[END].lat, hex.sides[LEFT].pts[END].lng],
+                'S', // Smooth to CP2 of previous
+                [hex.sides[TOP].pts[CP2].lat, hex.sides[TOP].pts[CP2].lng],
+                [hex.sides[TOP].pts[END].lat, hex.sides[TOP].pts[END].lng],
+                'S', // Smooth to CP2 of previous
+                [hex.sides[RIGHT].pts[CP2].lat, hex.sides[RIGHT].pts[CP2].lng],
+                [hex.sides[RIGHT].pts[END].lat, hex.sides[RIGHT].pts[END].lng], 'Z'],
+            {fill: true, stroke: false, opacity: 0.5}
         );
 
         return beamCurve;
     }
 
     private rotateBeam(hex: Hexagon, angle: number, centre?: Point): Hexagon {
+        const sides = [];
+        for (let i = LEFT; i <= RIGHT; i++) {
+            sides[i] = {pts: []} as Side;
+            for (let j = CP1; j <= END; j++) {
+                sides[i].pts[j] = this.rotatePoint(hex.sides[i].pts[j], angle, centre);
+            }
+        }
         return {
             start: hex.start,
-            leftSide: {
-                cp1: this.rotatePoint(hex.leftSide.cp1, angle, centre),
-                cp2: this.rotatePoint(hex.leftSide.cp2, angle, centre),
-                end: this.rotatePoint(hex.leftSide.end, angle, centre)
-            },
-            topSide: {
-                cp1: this.rotatePoint(hex.topSide.cp1, angle, centre),
-                cp2: this.rotatePoint(hex.topSide.cp2, angle, centre),
-                end: this.rotatePoint(hex.topSide.end, angle, centre)
-            },
-            rightSide: {
-                cp1: this.rotatePoint(hex.rightSide.cp1, angle, centre),
-                cp2: this.rotatePoint(hex.rightSide.cp2, angle, centre),
-                end: this.rotatePoint(hex.rightSide.end, angle, centre)
-            }
+            sides: sides
         } as Hexagon;
     }
 
     private aspectAdjust(hex: Hexagon, centre: Point, aspectRatio: number): Hexagon {
+        const sides: Side[] = [];
+        for (let i = LEFT; i <= RIGHT; i++) {
+            sides[i] = {pts: []} as Side;
+            for (let j = CP1; j <= END; j++) {
+                sides[i].pts[j] = new L.LatLng(
+                    hex.sides[i].pts[j].lat,
+                    this.adjust(hex.sides[i].pts[j].lng, centre.getLng(), aspectRatio));
+            }
+        }
         return {
             start: new L.LatLng(hex.start.lat, this.adjust(hex.start.lng, centre.getLng(), aspectRatio)),
-            leftSide: {
-                cp1: new L.LatLng(
-                    hex.leftSide.cp1.lat,
-                    this.adjust(hex.leftSide.cp1.lng, centre.getLng(), aspectRatio)),
-                cp2: new L.LatLng(
-                    hex.leftSide.cp2.lat,
-                    this.adjust(hex.leftSide.cp2.lng, centre.getLng(), aspectRatio)),
-                end: new L.LatLng(
-                    hex.leftSide.end.lat,
-                    this.adjust(hex.leftSide.end.lng, centre.getLng(), aspectRatio)),
-            } as Side,
-            topSide: {
-                cp1: new L.LatLng(
-                    hex.topSide.cp1.lat,
-                    this.adjust(hex.topSide.cp1.lng, centre.getLng(), aspectRatio)),
-                cp2: new L.LatLng(
-                    hex.topSide.cp2.lat,
-                    this.adjust(hex.topSide.cp2.lng, centre.getLng(), aspectRatio)),
-                end: new L.LatLng(
-                    hex.topSide.end.lat,
-                    this.adjust(hex.topSide.end.lng, centre.getLng(), aspectRatio)),
-            } as Side,
-            rightSide: {
-                cp1: new L.LatLng(
-                    hex.rightSide.cp1.lat,
-                    this.adjust(hex.rightSide.cp1.lng, centre.getLng(), aspectRatio)),
-                cp2: new L.LatLng(
-                    hex.rightSide.cp2.lat,
-                    this.adjust(hex.rightSide.cp2.lng, centre.getLng(), aspectRatio)),
-                end: new L.LatLng(
-                    hex.rightSide.end.lat,
-                    this.adjust(hex.rightSide.end.lng, centre.getLng(), aspectRatio)),
-            } as Side,
-        } as Hexagon;
+            sides: sides } as Hexagon;
     }
 
     private adjust(pointLng: number, centreLng: number, aspectRatio): number {
-        return pointLng + (centreLng - pointLng) * aspectRatio;
+        return pointLng - (centreLng - pointLng) * aspectRatio;
     }
 
-    private transformHexagon(scale: number, to: Point, hex: Hexagon): Hexagon {
+    private transformHexagon(lengthScale: number, to: Point, hex: Hexagon, arc: number = 60): Hexagon {
+        const widthScale = arc / 60;
+        const sides: Side[] = [];
+        for (let i = LEFT; i <= RIGHT; i++) {
+            sides[i] = {pts: []} as Side;
+            for (let j = CP1; j <= END; j++) {
+                sides[i].pts[j] = new L.LatLng(
+                    (hex.sides[i].pts[j].lat + 1) * INITIAL_SCALE + to.getLat(),
+                    hex.sides[i].pts[j].lng * INITIAL_SCALE + to.getLng());
+            }
+        }
+        // exceptions to scale the beam width
+        sides[LEFT].pts[CP2].lng = hex.sides[LEFT].pts[CP2].lng * INITIAL_SCALE * widthScale + to.getLng();
+        sides[LEFT].pts[CP2].lat = (hex.sides[LEFT].pts[CP2].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
+        sides[LEFT].pts[END].lng = hex.sides[LEFT].pts[END].lng * INITIAL_SCALE * widthScale + to.getLng();
+        sides[LEFT].pts[END].lat = (hex.sides[LEFT].pts[END].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
+        // sides[TOP].pts[CP1] - is not used in the end
+        sides[TOP].pts[CP2].lng = hex.sides[TOP].pts[CP2].lng * INITIAL_SCALE * widthScale + to.getLng();
+        sides[TOP].pts[CP2].lat = (hex.sides[TOP].pts[CP2].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
+        sides[TOP].pts[END].lng = hex.sides[TOP].pts[END].lng * INITIAL_SCALE * widthScale + to.getLng();
+        sides[TOP].pts[END].lat = (hex.sides[TOP].pts[END].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
+        // sides[RIGHT].pts[CP1] - is not used in the end
+
         return {
-            start: new L.LatLng((hex.start.lat + 1) * scale + to.getLat(), hex.start.lng * scale + to.getLng()),
-            leftSide: {
-                cp1: new L.LatLng(
-                    (hex.leftSide.cp1.lat + 1) * scale + to.getLat(),
-                    hex.leftSide.cp1.lng * scale + to.getLng()),
-                cp2: new L.LatLng(
-                    (hex.leftSide.cp2.lat + 1) * scale + to.getLat(),
-                    hex.leftSide.cp2.lng * scale + to.getLng()),
-                end: new L.LatLng(
-                    (hex.leftSide.end.lat + 1) * scale + to.getLat(),
-                    hex.leftSide.end.lng * scale + to.getLng()),
-            } as Side,
-            topSide: {
-                cp1: new L.LatLng(
-                    (hex.topSide.cp1.lat + 1) * scale + to.getLat(),
-                    hex.topSide.cp1.lng * scale + to.getLng()),
-                cp2: new L.LatLng(
-                    (hex.topSide.cp2.lat + 1) * scale + to.getLat(),
-                    hex.topSide.cp2.lng * scale + to.getLng()),
-                end: new L.LatLng(
-                    (hex.topSide.end.lat + 1) * scale + to.getLat(),
-                    hex.topSide.end.lng * scale + to.getLng()),
-            } as Side,
-            rightSide: {
-                cp1: new L.LatLng(
-                    (hex.rightSide.cp1.lat + 1) * scale + to.getLat(),
-                    hex.rightSide.cp1.lng * scale + to.getLng()),
-                cp2: new L.LatLng(
-                    (hex.rightSide.cp2.lat + 1) * scale + to.getLat(),
-                    hex.rightSide.cp2.lng * scale + to.getLng()),
-                end: new L.LatLng((
-                    hex.rightSide.end.lat + 1) * scale + to.getLat(),
-                    hex.rightSide.end.lng * scale + to.getLng()),
-            } as Side,
+            start: new L.LatLng((hex.start.lat + 1) * INITIAL_SCALE + to.getLat(), hex.start.lng * INITIAL_SCALE + to.getLng()),
+            sides: sides,
         } as Hexagon;
     }
 
     private calculateHexagon(): Hexagon {
-        const hex = {start: new L.LatLng(-1, 0)} as Hexagon;
+        const hex = {start: new L.LatLng(-1, 0), sides: []} as Hexagon;
         const side = this.standardSide();
-        hex.leftSide = side;
-        hex.topSide = this.rotateSide(side, -120);
-        hex.rightSide = this.rotateSide(side, -240);
+        hex.sides[LEFT] = side;
+        hex.sides[TOP] = this.rotateSide(side, -120);
+        hex.sides[RIGHT] = this.rotateSide(side, -240);
 
         return hex;
     }
 
     private rotateSide(side: Side, angle: number): Side {
         return {
-            cp1: this.rotatePoint(side.cp1, angle),
-            cp2: this.rotatePoint(side.cp2, angle),
-            end: this.rotatePoint(side.end, angle),
+            pts: [
+                this.rotatePoint(side.pts[CP1], angle),
+                this.rotatePoint(side.pts[CP2], angle),
+                this.rotatePoint(side.pts[END], angle),
+            ]
         } as Side;
     }
 
@@ -230,15 +197,17 @@ export class BeamCalculator {
      *         /  \
      * cp2  o      \
      *              \
-     * cp1  o--------O
+     * pts  o--------O
      *            start
      *
      */
     private standardSide(): Side {
         return {
-            cp1: new L.LatLng(-1, -0.5),
-            cp2: new L.LatLng(0.067, -1.116),
-            end: new L.LatLng(0.5, -0.866)
+            pts: [
+                new L.LatLng(-1, -0.5),
+                new L.LatLng(0.067, -1.116),
+                new L.LatLng(0.5, -0.866)
+            ]
         } as Side;
     }
 }
