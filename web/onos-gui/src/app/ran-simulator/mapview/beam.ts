@@ -28,7 +28,7 @@ interface Hexagon {
 }
 
 const INITIAL_SCALE = 0.01;
-const CENTROID_SCALE = 40;
+const CENTROID_SCALE = 0.1;
 const LEFT = 0;
 const TOP = 1;
 const RIGHT = 2;
@@ -44,30 +44,57 @@ const END = 2;
  */
 export class BeamCalculator {
     private readonly centre: Point;
+    private readonly origCentroid: Point;
+    private readonly origCentrDist: number;
     private readonly aspectRatio: number;
     private readonly rotationAngle: number;
-    private readonly hex: Hexagon;
     private readonly arc: number;
+    beamCurve: L.Curve;
 
-    constructor(centre: Point, azimuth: number, arc: number) {
+    constructor(centre: Point, azimuth: number, arc: number, centroid: Point, aspectRatio: number) {
         this.centre = centre;
+        this.origCentroid = centroid;
+        this.origCentrDist = Math.hypot(centroid.getLat() - this.centre.getLat(), centroid.getLng() - this.centre.getLng());
         this.arc = arc;
         this.rotationAngle = 90 - azimuth;
-        this.aspectRatio = Math.cos(centre.getLat() * Math.PI / 180);
+        this.aspectRatio = aspectRatio;
 
-        this.hex = this.calculateHexagon();
-    }
+        const hex = this.calculateHexagon();
 
-    updateCentroid(centroid: Point): L.Curve {
-        const centroidDist = Math.hypot(centroid.getLat() - this.centre.getLat(), centroid.getLng() - centroid.getLat());
-        console.log('Centroid dist', centroidDist);
-        const newHex = this.transformHexagon(centroidDist / CENTROID_SCALE, this.centre, this.hex, this.arc);
+        const newHex = this.transformHexagon(this.centre, hex, this.arc);
 
         const rotated = this.rotateBeam(newHex, this.rotationAngle - 90, this.centre);
 
-        const adjusted = this.aspectAdjust(rotated, this.centre, this.aspectRatio);
+        const adjusted = this.aspectAdjust(rotated);
 
-        return this.convertHexToCurve(adjusted);
+        this.beamCurve = this.convertHexToCurve(adjusted);
+    }
+
+    updateCentroid(centroid: Point): number {
+        const scale = this.centroidScale(centroid);
+        // Only scale pts 3-5, 7-8, 10-11
+        for (let i = 3; i < 12; i++) {
+            if (i === 6 || i === 9) {
+                continue;
+            }
+            const lat: number = <number><unknown>(this.beamCurve.getPath()[i][0]);
+            const scaledLat = (lat - this.centre.getLat()) * scale + this.centre.getLat();
+            // @ts-ignore
+            this.beamCurve.getPath()[i][0] = String(scaledLat);
+            const lng: number = <number><unknown>(this.beamCurve.getPath()[i][1]);
+            const scaledLng = (lng - this.centre.getLng()) * scale + this.centre.getLng();
+            // @ts-ignore
+            this.beamCurve.getPath()[i][1] = String(scaledLng);
+
+            // console.log('Pt:', scale, lat, scaledLat, lng, scaledLng);
+        }
+
+        return scale;
+    }
+
+    private centroidScale(newCentroid: Point): number {
+        const newDist = Math.hypot(newCentroid.getLat() - this.centre.getLat(), newCentroid.getLng() - this.centre.getLng());
+        return newDist / this.origCentrDist;
     }
 
     private convertHexToCurve(hex: Hexagon): L.Curve {
@@ -101,27 +128,28 @@ export class BeamCalculator {
         } as Hexagon;
     }
 
-    private aspectAdjust(hex: Hexagon, centre: Point, aspectRatio: number): Hexagon {
+    private aspectAdjust(hex: Hexagon): Hexagon {
         const sides: Side[] = [];
         for (let i = LEFT; i <= RIGHT; i++) {
             sides[i] = {pts: []} as Side;
             for (let j = CP1; j <= END; j++) {
                 sides[i].pts[j] = new L.LatLng(
                     hex.sides[i].pts[j].lat,
-                    this.adjust(hex.sides[i].pts[j].lng, centre.getLng(), aspectRatio));
+                    this.adjust(hex.sides[i].pts[j].lng, this.centre.getLng(), this.aspectRatio));
             }
         }
         return {
-            start: new L.LatLng(hex.start.lat, this.adjust(hex.start.lng, centre.getLng(), aspectRatio)),
-            sides: sides } as Hexagon;
+            start: new L.LatLng(hex.start.lat, hex.start.lng),
+            sides: sides
+        } as Hexagon;
     }
 
     private adjust(pointLng: number, centreLng: number, aspectRatio): number {
         return pointLng - (centreLng - pointLng) * aspectRatio;
     }
 
-    private transformHexagon(lengthScale: number, to: Point, hex: Hexagon, arc: number = 60): Hexagon {
-        const widthScale = arc / 60;
+    private transformHexagon(to: Point, hex: Hexagon, arc: number = 60): Hexagon {
+        const widthScale = arc / 60 / 1.5;
         const sides: Side[] = [];
         for (let i = LEFT; i <= RIGHT; i++) {
             sides[i] = {pts: []} as Side;
@@ -133,14 +161,10 @@ export class BeamCalculator {
         }
         // exceptions to scale the beam width
         sides[LEFT].pts[CP2].lng = hex.sides[LEFT].pts[CP2].lng * INITIAL_SCALE * widthScale + to.getLng();
-        sides[LEFT].pts[CP2].lat = (hex.sides[LEFT].pts[CP2].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
         sides[LEFT].pts[END].lng = hex.sides[LEFT].pts[END].lng * INITIAL_SCALE * widthScale + to.getLng();
-        sides[LEFT].pts[END].lat = (hex.sides[LEFT].pts[END].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
         // sides[TOP].pts[CP1] - is not used in the end
         sides[TOP].pts[CP2].lng = hex.sides[TOP].pts[CP2].lng * INITIAL_SCALE * widthScale + to.getLng();
-        sides[TOP].pts[CP2].lat = (hex.sides[TOP].pts[CP2].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
         sides[TOP].pts[END].lng = hex.sides[TOP].pts[END].lng * INITIAL_SCALE * widthScale + to.getLng();
-        sides[TOP].pts[END].lat = (hex.sides[TOP].pts[END].lat + 1) * INITIAL_SCALE * lengthScale + to.getLat();
         // sides[RIGHT].pts[CP1] - is not used in the end
 
         return {
