@@ -277,6 +277,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
             opacity: 0.6,
             weight: 3
         });
+        centroidPLine
+            .bindTooltip(cell.getEcgi() + ' ' + Utils.roundNumber(cell.getTxpowerdb(), 'dB'));
         centroidPLine.addTo(this.map);
         this.centroidPLines.set(String(cell.getEcgi()), centroidPLine);
     }
@@ -289,6 +291,8 @@ export class MapviewComponent implements OnInit, OnDestroy {
             [cell.getLocation().getLat(), cell.getLocation().getLng()],
             [cell.getSector().getCentroid().getLat(), cell.getSector().getCentroid().getLng()]
         ]);
+        this.centroidPLines.get(String(cell.getEcgi()))
+            .bindTooltip(cell.getEcgi() + ' ' + Utils.roundNumber(cell.getTxpowerdb(), 'dB'));
 
         this.beamCurves.get(String(cell.getEcgi())).remove();
         const beamCalc = this.beamCalcs.get(String(cell.getEcgi()));
@@ -306,8 +310,6 @@ export class MapviewComponent implements OnInit, OnDestroy {
             tooltipAnchor: [16, -28],
             shadowSize: [41, 50]
         }));
-        // TODO check this is effective
-        this.cellMarkers.get(String(cell.getEcgi())).bindTooltip(cell.getEcgi() + ' ' + Utils.roundNumber(cell.getTxpowerdb(), 'dB'));
         setTimeout(() => {
             this.cellMarkers.get(String(cell.getEcgi())).setIcon(previousIcon);
         }, FLASH_FOR_MS);
@@ -372,10 +374,6 @@ export class MapviewComponent implements OnInit, OnDestroy {
 
         const ueMarker = new L.Marker([ue.getPosition().getLat(), ue.getPosition().getLng()],
             {icon: ueIcon});
-        ueMarker.bindPopup('<p>' + ue.getImsi() + '<br>Imsi: ' +
-            ue.getImsi() + '<br>Serving: ' +
-            ue.getServingTower() + '<br>1st:' + ue.getTower1() +
-            '<br>2nd:' + ue.getTower2() + '<br>3rd: ' + ue.getTower3() + '</p>').openPopup();
         this.ueMap.set(ue.getImsi(), ueMarker);
         ueMarker.addTo(this.map);
 
@@ -397,12 +395,26 @@ export class MapviewComponent implements OnInit, OnDestroy {
         ueLine.addTo(this.map);
     }
 
+    private printQuality(strength: number): string {
+        const cqi = Math.round(strength) + 7;
+
+        return ': ' + strength.toFixed(1) + 'dB, CQI:' + cqi.toFixed(0);
+    }
+
     private updateUe(ue: Ue, updateType: UpdateType): void {
         const uePosition = new L.LatLng(ue.getPosition().getLat(), ue.getPosition().getLng());
         const servingCell: L.Polyline = this.centroidPLines.get(String(ue.getServingTower()));
         const scColor = servingCell.options.color;
         this.ueMap.get(ue.getImsi()).setLatLng(uePosition);
         const rotation = (270 - ue.getRotation()) + 'deg';
+        this.ueMap.get(ue.getImsi()).bindTooltip('<p>' +
+            'Imsi: ' + ue.getImsi() +
+            '<br>Serving: ' + ue.getServingTower() + this.printQuality(ue.getServingTowerStrength()) +
+            '<br>1st: ' + ue.getTower1() + this.printQuality(ue.getTower1Strength()) +
+            '<br>2nd: ' + ue.getTower2() + this.printQuality(ue.getTower2Strength()) +
+            '<br>3rd: ' + ue.getTower3() + this.printQuality(ue.getTower3Strength()) +
+            '</p>');
+            // .openTooltip();
         const ueIcon = new L.DivIcon({
             html: CAR_ICON
                 .replace('#000000', scColor)
