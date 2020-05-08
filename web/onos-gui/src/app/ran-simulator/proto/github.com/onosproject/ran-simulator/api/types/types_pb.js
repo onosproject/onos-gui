@@ -261,11 +261,11 @@ proto.ran.trafficsim.types.Point.deserializeBinaryFromReader = function(msg, rea
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readDouble());
       msg.setLat(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readDouble());
       msg.setLng(value);
       break;
     default:
@@ -299,14 +299,14 @@ proto.ran.trafficsim.types.Point.serializeBinaryToWriter = function(message, wri
   var f = undefined;
   f = message.getLat();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       1,
       f
     );
   }
   f = message.getLng();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       2,
       f
     );
@@ -315,7 +315,7 @@ proto.ran.trafficsim.types.Point.serializeBinaryToWriter = function(message, wri
 
 
 /**
- * optional float lat = 1;
+ * optional double lat = 1;
  * @return {number}
  */
 proto.ran.trafficsim.types.Point.prototype.getLat = function() {
@@ -333,7 +333,7 @@ proto.ran.trafficsim.types.Point.prototype.setLat = function(value) {
 
 
 /**
- * optional float lng = 2;
+ * optional double lng = 2;
  * @return {number}
  */
 proto.ran.trafficsim.types.Point.prototype.getLng = function() {
@@ -818,13 +818,13 @@ proto.ran.trafficsim.types.Ue.toObject = function(includeInstance, msg) {
     position: (f = msg.getPosition()) && proto.ran.trafficsim.types.Point.toObject(includeInstance, f),
     rotation: jspb.Message.getFieldWithDefault(msg, 5, 0),
     servingTower: (f = msg.getServingTower()) && proto.ran.trafficsim.types.ECGI.toObject(includeInstance, f),
-    servingTowerDist: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
+    servingTowerStrength: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
     tower1: (f = msg.getTower1()) && proto.ran.trafficsim.types.ECGI.toObject(includeInstance, f),
-    tower1Dist: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
+    tower1Strength: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
     tower2: (f = msg.getTower2()) && proto.ran.trafficsim.types.ECGI.toObject(includeInstance, f),
-    tower2Dist: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0),
+    tower2Strength: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0),
     tower3: (f = msg.getTower3()) && proto.ran.trafficsim.types.ECGI.toObject(includeInstance, f),
-    tower3Dist: jspb.Message.getFloatingPointFieldWithDefault(msg, 14, 0.0),
+    tower3Strength: jspb.Message.getFloatingPointFieldWithDefault(msg, 14, 0.0),
     crnti: jspb.Message.getFieldWithDefault(msg, 15, ""),
     admitted: jspb.Message.getBooleanFieldWithDefault(msg, 16, false),
     metrics: (f = msg.getMetrics()) && proto.ran.trafficsim.types.UeMetrics.toObject(includeInstance, f)
@@ -887,8 +887,8 @@ proto.ran.trafficsim.types.Ue.deserializeBinaryFromReader = function(msg, reader
       msg.setServingTower(value);
       break;
     case 8:
-      var value = /** @type {number} */ (reader.readFloat());
-      msg.setServingTowerDist(value);
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setServingTowerStrength(value);
       break;
     case 9:
       var value = new proto.ran.trafficsim.types.ECGI;
@@ -896,8 +896,8 @@ proto.ran.trafficsim.types.Ue.deserializeBinaryFromReader = function(msg, reader
       msg.setTower1(value);
       break;
     case 10:
-      var value = /** @type {number} */ (reader.readFloat());
-      msg.setTower1Dist(value);
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setTower1Strength(value);
       break;
     case 11:
       var value = new proto.ran.trafficsim.types.ECGI;
@@ -905,8 +905,8 @@ proto.ran.trafficsim.types.Ue.deserializeBinaryFromReader = function(msg, reader
       msg.setTower2(value);
       break;
     case 12:
-      var value = /** @type {number} */ (reader.readFloat());
-      msg.setTower2Dist(value);
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setTower2Strength(value);
       break;
     case 13:
       var value = new proto.ran.trafficsim.types.ECGI;
@@ -914,8 +914,8 @@ proto.ran.trafficsim.types.Ue.deserializeBinaryFromReader = function(msg, reader
       msg.setTower3(value);
       break;
     case 14:
-      var value = /** @type {number} */ (reader.readFloat());
-      msg.setTower3Dist(value);
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setTower3Strength(value);
       break;
     case 15:
       var value = /** @type {string} */ (reader.readString());
@@ -996,9 +996,9 @@ proto.ran.trafficsim.types.Ue.serializeBinaryToWriter = function(message, writer
       proto.ran.trafficsim.types.ECGI.serializeBinaryToWriter
     );
   }
-  f = message.getServingTowerDist();
+  f = message.getServingTowerStrength();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       8,
       f
     );
@@ -1011,9 +1011,9 @@ proto.ran.trafficsim.types.Ue.serializeBinaryToWriter = function(message, writer
       proto.ran.trafficsim.types.ECGI.serializeBinaryToWriter
     );
   }
-  f = message.getTower1Dist();
+  f = message.getTower1Strength();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       10,
       f
     );
@@ -1026,9 +1026,9 @@ proto.ran.trafficsim.types.Ue.serializeBinaryToWriter = function(message, writer
       proto.ran.trafficsim.types.ECGI.serializeBinaryToWriter
     );
   }
-  f = message.getTower2Dist();
+  f = message.getTower2Strength();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       12,
       f
     );
@@ -1041,9 +1041,9 @@ proto.ran.trafficsim.types.Ue.serializeBinaryToWriter = function(message, writer
       proto.ran.trafficsim.types.ECGI.serializeBinaryToWriter
     );
   }
-  f = message.getTower3Dist();
+  f = message.getTower3Strength();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       14,
       f
     );
@@ -1202,10 +1202,10 @@ proto.ran.trafficsim.types.Ue.prototype.hasServingTower = function() {
 
 
 /**
- * optional float serving_tower_dist = 8;
+ * optional double serving_tower_strength = 8;
  * @return {number}
  */
-proto.ran.trafficsim.types.Ue.prototype.getServingTowerDist = function() {
+proto.ran.trafficsim.types.Ue.prototype.getServingTowerStrength = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 8, 0.0));
 };
 
@@ -1214,7 +1214,7 @@ proto.ran.trafficsim.types.Ue.prototype.getServingTowerDist = function() {
  * @param {number} value
  * @return {!proto.ran.trafficsim.types.Ue} returns this
  */
-proto.ran.trafficsim.types.Ue.prototype.setServingTowerDist = function(value) {
+proto.ran.trafficsim.types.Ue.prototype.setServingTowerStrength = function(value) {
   return jspb.Message.setProto3FloatField(this, 8, value);
 };
 
@@ -1257,10 +1257,10 @@ proto.ran.trafficsim.types.Ue.prototype.hasTower1 = function() {
 
 
 /**
- * optional float tower1_dist = 10;
+ * optional double tower1_strength = 10;
  * @return {number}
  */
-proto.ran.trafficsim.types.Ue.prototype.getTower1Dist = function() {
+proto.ran.trafficsim.types.Ue.prototype.getTower1Strength = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 10, 0.0));
 };
 
@@ -1269,7 +1269,7 @@ proto.ran.trafficsim.types.Ue.prototype.getTower1Dist = function() {
  * @param {number} value
  * @return {!proto.ran.trafficsim.types.Ue} returns this
  */
-proto.ran.trafficsim.types.Ue.prototype.setTower1Dist = function(value) {
+proto.ran.trafficsim.types.Ue.prototype.setTower1Strength = function(value) {
   return jspb.Message.setProto3FloatField(this, 10, value);
 };
 
@@ -1312,10 +1312,10 @@ proto.ran.trafficsim.types.Ue.prototype.hasTower2 = function() {
 
 
 /**
- * optional float tower2_dist = 12;
+ * optional double tower2_strength = 12;
  * @return {number}
  */
-proto.ran.trafficsim.types.Ue.prototype.getTower2Dist = function() {
+proto.ran.trafficsim.types.Ue.prototype.getTower2Strength = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 12, 0.0));
 };
 
@@ -1324,7 +1324,7 @@ proto.ran.trafficsim.types.Ue.prototype.getTower2Dist = function() {
  * @param {number} value
  * @return {!proto.ran.trafficsim.types.Ue} returns this
  */
-proto.ran.trafficsim.types.Ue.prototype.setTower2Dist = function(value) {
+proto.ran.trafficsim.types.Ue.prototype.setTower2Strength = function(value) {
   return jspb.Message.setProto3FloatField(this, 12, value);
 };
 
@@ -1367,10 +1367,10 @@ proto.ran.trafficsim.types.Ue.prototype.hasTower3 = function() {
 
 
 /**
- * optional float tower3_dist = 14;
+ * optional double tower3_strength = 14;
  * @return {number}
  */
-proto.ran.trafficsim.types.Ue.prototype.getTower3Dist = function() {
+proto.ran.trafficsim.types.Ue.prototype.getTower3Strength = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 14, 0.0));
 };
 
@@ -1379,7 +1379,7 @@ proto.ran.trafficsim.types.Ue.prototype.getTower3Dist = function() {
  * @param {number} value
  * @return {!proto.ran.trafficsim.types.Ue} returns this
  */
-proto.ran.trafficsim.types.Ue.prototype.setTower3Dist = function(value) {
+proto.ran.trafficsim.types.Ue.prototype.setTower3Strength = function(value) {
   return jspb.Message.setProto3FloatField(this, 14, value);
 };
 
@@ -1922,7 +1922,7 @@ proto.ran.trafficsim.types.Cell.deserializeBinaryFromReader = function(msg, read
       msg.addNeighbors(value);
       break;
     case 8:
-      var value = /** @type {number} */ (reader.readFloat());
+      var value = /** @type {number} */ (reader.readDouble());
       msg.setTxpowerdb(value);
       break;
     case 9:
@@ -2016,7 +2016,7 @@ proto.ran.trafficsim.types.Cell.serializeBinaryToWriter = function(message, writ
   }
   f = message.getTxpowerdb();
   if (f !== 0.0) {
-    writer.writeFloat(
+    writer.writeDouble(
       8,
       f
     );
@@ -2228,7 +2228,7 @@ proto.ran.trafficsim.types.Cell.prototype.clearNeighborsList = function() {
 
 
 /**
- * optional float txPowerdB = 8;
+ * optional double txPowerdB = 8;
  * @return {number}
  */
 proto.ran.trafficsim.types.Cell.prototype.getTxpowerdb = function() {

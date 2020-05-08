@@ -102,32 +102,32 @@ export class Ue extends jspb.Message {
   hasServingTower(): boolean;
   clearServingTower(): void;
 
-  getServingTowerDist(): number;
-  setServingTowerDist(value: number): void;
+  getServingTowerStrength(): number;
+  setServingTowerStrength(value: number): void;
 
   getTower1(): ECGI | undefined;
   setTower1(value?: ECGI): void;
   hasTower1(): boolean;
   clearTower1(): void;
 
-  getTower1Dist(): number;
-  setTower1Dist(value: number): void;
+  getTower1Strength(): number;
+  setTower1Strength(value: number): void;
 
   getTower2(): ECGI | undefined;
   setTower2(value?: ECGI): void;
   hasTower2(): boolean;
   clearTower2(): void;
 
-  getTower2Dist(): number;
-  setTower2Dist(value: number): void;
+  getTower2Strength(): number;
+  setTower2Strength(value: number): void;
 
   getTower3(): ECGI | undefined;
   setTower3(value?: ECGI): void;
   hasTower3(): boolean;
   clearTower3(): void;
 
-  getTower3Dist(): number;
-  setTower3Dist(value: number): void;
+  getTower3Strength(): number;
+  setTower3Strength(value: number): void;
 
   getCrnti(): string;
   setCrnti(value: string): void;
@@ -155,13 +155,13 @@ export namespace Ue {
     position?: Point.AsObject,
     rotation: number,
     servingTower?: ECGI.AsObject,
-    servingTowerDist: number,
+    servingTowerStrength: number,
     tower1?: ECGI.AsObject,
-    tower1Dist: number,
+    tower1Strength: number,
     tower2?: ECGI.AsObject,
-    tower2Dist: number,
+    tower2Strength: number,
     tower3?: ECGI.AsObject,
-    tower3Dist: number,
+    tower3Strength: number,
     crnti: string,
     admitted: boolean,
     metrics?: UeMetrics.AsObject,
