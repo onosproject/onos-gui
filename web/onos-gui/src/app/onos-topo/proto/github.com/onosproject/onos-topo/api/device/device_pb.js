@@ -1838,7 +1838,8 @@ proto.topo.device.Device.toObject = function(includeInstance, msg) {
     role: jspb.Message.getFieldWithDefault(msg, 10, ""),
     attributesMap: (f = msg.getAttributesMap()) ? f.toObject(includeInstance, undefined) : [],
     protocolsList: jspb.Message.toObjectList(msg.getProtocolsList(),
-    proto.topo.device.ProtocolState.toObject, includeInstance)
+    proto.topo.device.ProtocolState.toObject, includeInstance),
+    displayname: jspb.Message.getFieldWithDefault(msg, 13, "")
   };
 
   if (includeInstance) {
@@ -1928,6 +1929,10 @@ proto.topo.device.Device.deserializeBinaryFromReader = function(msg, reader) {
       var value = new proto.topo.device.ProtocolState;
       reader.readMessage(value,proto.topo.device.ProtocolState.deserializeBinaryFromReader);
       msg.addProtocols(value);
+      break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDisplayname(value);
       break;
     default:
       reader.skipField();
@@ -2041,6 +2046,13 @@ proto.topo.device.Device.serializeBinaryToWriter = function(message, writer) {
       12,
       f,
       proto.topo.device.ProtocolState.serializeBinaryToWriter
+    );
+  }
+  f = message.getDisplayname();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
     );
   }
 };
@@ -2340,6 +2352,24 @@ proto.topo.device.Device.prototype.addProtocols = function(opt_value, opt_index)
  */
 proto.topo.device.Device.prototype.clearProtocolsList = function() {
   return this.setProtocolsList([]);
+};
+
+
+/**
+ * optional string displayname = 13;
+ * @return {string}
+ */
+proto.topo.device.Device.prototype.getDisplayname = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.topo.device.Device} returns this
+ */
+proto.topo.device.Device.prototype.setDisplayname = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
 };
 
 

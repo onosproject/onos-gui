@@ -251,6 +251,9 @@ export class Device extends jspb.Message {
   clearProtocolsList(): void;
   addProtocols(value?: ProtocolState, index?: number): ProtocolState;
 
+  getDisplayname(): string;
+  setDisplayname(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Device.AsObject;
   static toObject(includeInstance: boolean, msg: Device): Device.AsObject;
@@ -273,6 +276,7 @@ export namespace Device {
     role: string,
     attributesMap: Array<[string, string]>,
     protocolsList: Array<ProtocolState.AsObject>,
+    displayname: string,
   }
 }
 
