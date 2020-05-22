@@ -40,6 +40,10 @@
                         <onos-icon classes="active-sort" [iconSize]="10"
                                    [iconId]="sortIcon('id')"></onos-icon>
                     </td>
+                    <td colId="display" (click)="onSort('display')">Display
+                        <onos-icon classes="active-sort" [iconSize]="10"
+                                   [iconId]="sortIcon('display')"></onos-icon>
+                    </td>
                     <td colId="version" (click)="onSort('version')">Version
                         <onos-icon classes="active-sort" [iconSize]="10"
                                    [iconId]="sortIcon('version')"></onos-icon>
@@ -76,6 +80,7 @@
                 <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue"
                     (click)="selectCallback($event, device.key, device.value)">
                     <td>{{ device.value.getId() }}</td>
+                    <td>{{ device.value.getDisplayname() }}</td>
                     <td>{{ device.value.getVersion() }}</td>
                     <td>{{ device.value.getType() }}</td>
                     <td>{{ device.value.getAddress() }}</td>
