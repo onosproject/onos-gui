@@ -76,7 +76,6 @@ export class DeviceDetailComponent extends DetailsPanelBaseImpl implements OnIni
     ngOnChanges(changes: SimpleChanges) {
         if (changes['id']) {
             this.detailsData = this.device;
-            console.log(" " + this.detailsData.getAttributesMap()['map_']);
             if (this.id === '' || this.id === undefined) {
                 this.closed = false;
             }
