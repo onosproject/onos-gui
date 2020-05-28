@@ -106,37 +106,11 @@
             <h2 class="changes-title">Attributes</h2>
             <table>
                 <tbody>
-                    <tr>
-                        <td class="label" width="110">Longitude :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['longitude']['value']}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">Latitude :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['latitude']['value']}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">grpcport :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['grpcport']['value']}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">ecid :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['ecid']['value']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">azimuth :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['azimuth']['value']}}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">arc :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['arc']['value']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">plmnid :</td>
-                        <td class="value" width="80">{{detailsData?.getAttributesMap()['map_']['plmnid']['value']}}</td>
+                    <tr *ngFor="let attribute of detailsData?.getAttributesMap()['map_'] | keyvalue">
+                        <td class="label" width="110"> {{attribute.key}} : </td>
+                        <td class="value" width="80">
+                            {{attribute.value.value}}
+                    </td>
                     </tr>
                 </tbody>
             </table>
