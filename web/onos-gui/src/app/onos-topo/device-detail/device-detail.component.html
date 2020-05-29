@@ -15,18 +15,15 @@
 -->
 
 
-<div id="device-detail-panel" class="floatpanel"
-     [@deviceDetailState]="id!=='' && !closed">
+<div id="device-detail-panel" class="floatpanel" [@deviceDetailState]="id!=='' && !closed">
     <div class="container">
         <div class="top">
             <div class="close-btn">
-                <onos-icon class="close-btn" classes="active-close"
-                           iconId="close" iconSize="20"
-                           (click)="close()"></onos-icon>
+                <onos-icon class="close-btn" classes="active-close" iconId="close" iconSize="20" (click)="close()">
+                </onos-icon>
             </div>
             <div class="dev-icon">
-                <onos-icon classes="{{ 'details-icon'}}" iconId="'device'"
-                           [iconSize]="40"></onos-icon>
+                <onos-icon classes="{{ 'details-icon'}}" iconId="'device'" [iconSize]="40"></onos-icon>
             </div>
             <h2 class="editable clickable">{{detailsData?.getId()}}</h2>
             <div class="top-content">
@@ -34,37 +31,32 @@
                     <div class="left">
                         <table>
                             <tbody>
-                            <tr>
-                                <td class="label" width="110">Version :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getVersion()}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Type :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getType()}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Address</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getAddress()}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Revision</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getRevision()}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Timeout</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.getTimeout()}}</td>
-                            </tr>
-                            <tr>
-                                <td class="label" width="110">Configuration</td>
-                                <td class="value"
-                                    width="80"><a
-                                    [routerLink]="['/onos-config','configview', detailsData?.getId() + ':' + detailsData?.getVersion() ]">{{ detailsData?.getId() + ':' + detailsData?.getVersion() }}</a></td>
-                            </tr>
+                                <tr>
+                                    <td class="label" width="110">Version :</td>
+                                    <td class="value" width="80">{{detailsData?.getVersion()}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" width="110">Type :</td>
+                                    <td class="value" width="80">{{detailsData?.getType()}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" width="110">Address</td>
+                                    <td class="value" width="80">{{detailsData?.getAddress()}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" width="110">Revision</td>
+                                    <td class="value" width="80">{{detailsData?.getRevision()}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" width="110">Timeout</td>
+                                    <td class="value" width="80">{{detailsData?.getTimeout()}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label" width="110">Configuration</td>
+                                    <td class="value" width="80"><a
+                                            [routerLink]="['/onos-config','configview', detailsData?.getId() + ':' + detailsData?.getVersion() ]">{{ detailsData?.getId() + ':' + detailsData?.getVersion() }}</a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -76,47 +68,50 @@
             <h2 class="changes-title">Credentials</h2>
             <table>
                 <tbody>
-                <tr>
-                    <td class="label" width="110">User :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getCredentials().getUser()}}</td>
-                </tr>
-                <tr>
-                    <td class="label" width="110">Password :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getCredentials().getPassword()}}</td>
-                </tr>
+                    <tr>
+                        <td class="label" width="110">User :</td>
+                        <td class="value" width="80">{{detailsData?.getCredentials().getUser()}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label" width="110">Password :</td>
+                        <td class="value" width="80">{{detailsData?.getCredentials().getPassword()}}</td>
+                    </tr>
                 </tbody>
             </table>
             <h2 class="changes-title">TLS Parameters</h2>
             <table>
                 <tbody>
-                <tr>
-                    <td class="label" width="110">Cert Authority :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getTls().getCacert()}}</td>
-                </tr>
-                <tr>
-                    <td class="label" width="110">Client Cert :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getTls().getCert()}}</td>
-                </tr>
-                <tr>
-                    <td class="label" width="110">Client Key:</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getTls().getKey()}}</td>
-                </tr>
-                <tr>
-                    <td class="label" width="110">Plain connection :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getTls().getPlain()}}</td>
-                </tr>
-                <tr>
-                    <td class="label" width="110">Insecure connection :</td>
-                    <td class="value"
-                        width="80">{{detailsData?.getTls().getInsecure()}}</td>
-                </tr>
-
+                    <tr>
+                        <td class="label" width="110">Cert Authority :</td>
+                        <td class="value" width="80">{{detailsData?.getTls().getCacert()}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label" width="110">Client Cert :</td>
+                        <td class="value" width="80">{{detailsData?.getTls().getCert()}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label" width="110">Client Key:</td>
+                        <td class="value" width="80">{{detailsData?.getTls().getKey()}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label" width="110">Plain connection :</td>
+                        <td class="value" width="80">{{detailsData?.getTls().getPlain()}}</td>
+                    </tr>
+                    <tr>
+                        <td class="label" width="110">Insecure connection :</td>
+                        <td class="value" width="80">{{detailsData?.getTls().getInsecure()}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2 class="changes-title">Attributes</h2>
+            <table>
+                <tbody>
+                    <tr *ngFor="let attribute of detailsData?.getAttributesMap()['map_'] | keyvalue">
+                        <td class="label" width="110"> {{attribute.key}} : </td>
+                        <td class="value" width="80">
+                            {{attribute.value.value}}
+                    </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
