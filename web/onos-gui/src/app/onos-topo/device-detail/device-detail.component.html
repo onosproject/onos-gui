@@ -32,11 +32,11 @@
                         <table>
                             <tbody>
                                 <tr>
-                                    <td class="label" width="110">Version :</td>
+                                    <td class="label" width="110">Version</td>
                                     <td class="value" width="80">{{detailsData?.getVersion()}}</td>
                                 </tr>
                                 <tr>
-                                    <td class="label" width="110">Type :</td>
+                                    <td class="label" width="110">Type</td>
                                     <td class="value" width="80">{{detailsData?.getType()}}</td>
                                 </tr>
                                 <tr>
@@ -65,16 +65,21 @@
             <hr>
         </div>
         <div class="middle">
+            <h2 class="changes-title">Attributes</h2>
+            <table>
+                <tbody>
+                    <span *ngFor="let attribute of detailsData?.getAttributesMap()['map_'] | keyvalue">
+                        <td class="label" width="110"> {{attribute.key}}</td>
+                        <td class="value" width="80">{{attribute.value.value}}</td>
+                    </span>
+                </tbody>
+            </table>
             <h2 class="changes-title">Credentials</h2>
             <table>
                 <tbody>
                     <tr>
-                        <td class="label" width="110">User :</td>
+                        <td class="label" width="110">User</td>
                         <td class="value" width="80">{{detailsData?.getCredentials().getUser()}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">Password :</td>
-                        <td class="value" width="80">{{detailsData?.getCredentials().getPassword()}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -82,35 +87,22 @@
             <table>
                 <tbody>
                     <tr>
-                        <td class="label" width="110">Cert Authority :</td>
+                        <td class="label" width="110">Cert Authority</td>
                         <td class="value" width="80">{{detailsData?.getTls().getCacert()}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">Client Cert :</td>
+
+                        <td class="label" width="110">Client Cert</td>
                         <td class="value" width="80">{{detailsData?.getTls().getCert()}}</td>
                     </tr>
                     <tr>
-                        <td class="label" width="110">Client Key:</td>
+                        <td class="label" width="110">Client Key</td>
                         <td class="value" width="80">{{detailsData?.getTls().getKey()}}</td>
-                    </tr>
-                    <tr>
-                        <td class="label" width="110">Plain connection :</td>
+
+                        <td class="label" width="110"> Plain connection</td>
                         <td class="value" width="80">{{detailsData?.getTls().getPlain()}}</td>
                     </tr>
                     <tr>
-                        <td class="label" width="110">Insecure connection :</td>
+                        <td class="label" width="110"> Insecure connection</td>
                         <td class="value" width="80">{{detailsData?.getTls().getInsecure()}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h2 class="changes-title">Attributes</h2>
-            <table>
-                <tbody>
-                    <tr *ngFor="let attribute of detailsData?.getAttributesMap()['map_'] | keyvalue">
-                        <td class="label" width="110"> {{attribute.key}} : </td>
-                        <td class="value" width="80">
-                            {{attribute.value.value}}
-                    </td>
                     </tr>
                 </tbody>
             </table>

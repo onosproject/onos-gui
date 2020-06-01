@@ -27,8 +27,8 @@ import {
     LogService,
     WebSocketService
 } from 'gui2-fw-lib';
-import {Device} from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { Device } from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'onos-device-detail',
@@ -72,7 +72,8 @@ export class DeviceDetailComponent extends DetailsPanelBaseImpl implements OnIni
         console.debug('Device Detail Component initialized:', this.id);
     }
 
-    // the config name can be changes any time
+
+    // the config name can be changed any time
     ngOnChanges(changes: SimpleChanges) {
         if (changes['id']) {
             this.detailsData = this.device;
@@ -81,4 +82,5 @@ export class DeviceDetailComponent extends DetailsPanelBaseImpl implements OnIni
             }
         }
     }
+
 }
