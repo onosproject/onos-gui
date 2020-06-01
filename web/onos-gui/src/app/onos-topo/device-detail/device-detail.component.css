@@ -35,6 +35,8 @@
     z-index: 0;
     font-size: 10pt;
     top: 185px;
+    height: 400px;
+    overflow-y: scroll;
 }
 
 #device-detail-panel.floatpanel a {
