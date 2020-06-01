@@ -83,17 +83,4 @@ export class DeviceDetailComponent extends DetailsPanelBaseImpl implements OnIni
         }
     }
 
-    objToArr(data) {
-        if (data == null) {
-            return;
-        }
-        const arr = [];
-        for (const item in data) {
-            if (data.hasOwnProperty(item)) {
-                arr.push(data[item]);
-
-            }
-        }
-        return arr;
-    }
 }
