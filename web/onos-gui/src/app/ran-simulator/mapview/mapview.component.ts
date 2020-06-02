@@ -396,7 +396,12 @@ export class MapviewComponent implements OnInit, OnDestroy {
     }
 
     private printQuality(strength: number): string {
-        const cqi = Math.round(strength) + 7;
+        let cqi = Math.round(strength) + 7;
+        if (cqi > 15) {
+            cqi = 15;
+        } else if (cqi < 0) {
+            cqi = 0;
+        }
 
         return ': ' + strength.toFixed(1) + 'dB, CQI:' + cqi.toFixed(0);
     }
