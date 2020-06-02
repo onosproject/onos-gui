@@ -23,6 +23,12 @@ cache:
   directories:
     - ./web/onos-gui/node_modules
 
+before_install:
+  - 'if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" ]] ; then
+       openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .ssh/id_rsa.enc -out ~/.ssh/id_rsa -d &&
+       chmod 600 ~/.ssh/id_rsa;
+     fi'
+
 install:
   - npm install -g @angular/cli
   - cd web/onos-gui && npm install && cd ../..
@@ -38,4 +44,7 @@ jobs:
         - sh build/bin/trigger-docs-travis $TRAVIS_ACCESS_TOKEN
     - stage: push
       script:
-        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./build/bin/push-images; fi'
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+               bash ./build/bin/push-images &&
+               bash -x ../build-tools/release-merge-commit;
+           fi'
