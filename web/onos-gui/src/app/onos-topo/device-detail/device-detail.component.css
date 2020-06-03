@@ -35,12 +35,16 @@
     z-index: 0;
     font-size: 10pt;
     top: 185px;
-    height: 400px;
-    overflow-y: scroll;
+    height: 40vh;
+    overflow-y: auto;
 }
 
 #device-detail-panel.floatpanel a {
     font-weight: bold;
+}
+
+#device-detail-panel .middle {
+    height: 40vh;
 }
 
 #device-detail-panel .container {
