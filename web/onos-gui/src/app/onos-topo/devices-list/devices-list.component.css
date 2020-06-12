@@ -18,14 +18,15 @@
  ONOS GUI -- Topology Device View -- CSS file
  */
 
-#ov-devices .tabular-header {
+ #ov-devices .tabular-header {
     text-align: left;
 }
 
 
+
 #ov-devices div.summary-list .table-sticky thead, tbody tr {
     display: table;
-    width: 100%;
+    width: 95%;
     margin-left: auto;
     table-layout: fixed;
     margin-right: auto;
@@ -48,7 +49,7 @@
 }
 
 #ov-devices div.summary-list .table-sticky tbody {
-    height: calc(100vh - 162px); 
+    height: 250px;
     table-layout: fixed;
     display:block;
     overflow-y: auto;
