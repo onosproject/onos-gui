@@ -21,60 +21,49 @@
             <div class="separator"></div>
         </div>
         <div class="search">
-<!--            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"-->
-<!--                   type="search" #search placeholder="Search"/>-->
-<!--            <select [(ngModel)]="tableDataFilter.queryBy">-->
-<!--                <option value="" disabled>Search By</option>-->
-<!--                &lt;!&ndash;                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in  &ndash;&gt;-->
-<!--                <option value="id">Id</option>-->
-<!--                <option value="version">Version</option>-->
-<!--            </select>-->
+            <!--            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"-->
+            <!--                   type="search" #search placeholder="Search"/>-->
+            <!--            <select [(ngModel)]="tableDataFilter.queryBy">-->
+            <!--                <option value="" disabled>Search By</option>-->
+            <!--                &lt;!&ndash;                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in  &ndash;&gt;-->
+            <!--                <option value="id">Id</option>-->
+            <!--                <option value="version">Version</option>-->
+            <!--            </select>-->
         </div>
     </div>
 
-    <div id="summary-list" class="summary-list" onosTableResize>
-        <div class="table-header">
-            <table>
+    <div id="summary-list" class="summary-list">
+        <table class="table table-sticky">
+            <thead>
                 <tr>
-                    <td colId="id" (click)="onSort('id')">Id
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('id')"></onos-icon>
-                    </td>
-                    <td colId="display" (click)="onSort('display')">Display
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('display')"></onos-icon>
-                    </td>
-                    <td colId="version" (click)="onSort('version')">Version
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('version')"></onos-icon>
-                    </td>
-                    <td colId="version" (click)="onSort('version')">Type
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('type')"></onos-icon>
-                    </td>
-                    <td colId="address" (click)="onSort('address')">Address
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('address')"></onos-icon>
-                    </td>
-                    <td colId="revision" (click)="onSort('revision')">Revision
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('revision')"></onos-icon>
-                    </td>
-                    <td colId="target" (click)="onSort('target')">Target
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('target')"></onos-icon>
-                    </td>
-                    <td colId="timeout" (click)="onSort('timeout')">Timeout
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('timeout')"></onos-icon>
-                    </td>
+                    <th colId="id" (click)="onSort('id')">Id
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('id')"></onos-icon>
+                    </th>
+                    <th colId="display" (click)="onSort('display')">Display
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('display')"></onos-icon>
+                    </th>
+                    <th colId="version" (click)="onSort('version')">Version
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')"></onos-icon>
+                    </th>
+                    <th colId="version" (click)="onSort('version')">Type
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('type')"></onos-icon>
+                    </th>
+                    <th colId="address" (click)="onSort('address')">Address
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('address')"></onos-icon>
+                    </th>
+                    <th colId="revision" (click)="onSort('revision')">Revision
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('revision')"></onos-icon>
+                    </th>
+                    <th colId="target" (click)="onSort('target')">Target
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('target')"></onos-icon>
+                    </th>
+                    <th colId="timeout" (click)="onSort('timeout')">Timeout
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('timeout')"></onos-icon>
+                    </th>
                 </tr>
-            </table>
-        </div>
-        <div class="table-body">
-            <table>
-                <tr class="table-body" *ngIf="topoDeviceService.deviceList.size === 0"
-                    class="no-data">
+            </thead>
+            <tbody>
+                <tr *ngIf="topoDeviceService.deviceList.size === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
                 <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue"
@@ -88,11 +77,10 @@
                     <td>{{ device.value.getTarget() }}</td>
                     <td>{{ device.value.getTimeout() }}</td>
                 </tr>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 
-    <onos-device-detail class="floatpanels" id="{{selId}}"
-                        [device]="selectedChange"
-                        (closeEvent)="deselectRow($event)"></onos-device-detail>
+    <onos-device-detail class="floatpanels" id="{{selId}}" [device]="selectedChange" (closeEvent)="deselectRow($event)">
+    </onos-device-detail>
 </div>
