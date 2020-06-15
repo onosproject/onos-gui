@@ -25,12 +25,11 @@
     "google-protobuf": "~3.11.4",
     "grpc-web": "~1.0.7",
     "gui2-fw-lib": "^2.3.3",
-    "leaflet": "^1.6.0",
-    "leaflet-curve": "~1.0.0",
-    "nan": "^2.14.1",
     "rxjs": "~6.5.4",
     "topojson-client": "^3.0.0",
-    "zone.js": "~0.10.2"
+    "zone.js": "~0.10.2",
+    "leaflet": "^1.6.0",
+    "leaflet-curve": "~1.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.901.8",
