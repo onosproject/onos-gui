@@ -16,22 +16,22 @@
 
 <div id="ov-models">
     <onos-loading [theme]="'light'" [running]="loadingIconShown"></onos-loading>
-    <onos-flash id="appMsgFlash" message="{{ alertMsg }}" dwell="5000" warning="true" (closed)="alertMsg = ''"></onos-flash>
-    <onos-name-input [title]="newConfigTitle" [pattern]="'[a-zA-Z0-9\-:_]{40}'" (chosen)="newConfigCreate($event)"></onos-name-input>
+    <onos-flash id="appMsgFlash" message="{{ alertMsg }}" dwell="5000" warning="true" (closed)="alertMsg = ''">
+    </onos-flash>
+    <onos-name-input [title]="newConfigTitle" [pattern]="'[a-zA-Z0-9\-:_]{40}'" (chosen)="newConfigCreate($event)">
+    </onos-name-input>
     <div class="tabular-header">
         <h2>Models ({{ tableData.length }} total)</h2>
         <div class="ctrl-btns">
             <div class="separator"></div>
             <div (click)="newConfig(selectedChange)">
-<!--                <onos-icon classes="{{ selId !== undefined && pending.hasPendingChange && pending.pendingNewConfiguration === undefined ? 'active-rect':undefined}}"-->
-                <onos-icon classes="{{ selId !== undefined }}"
-                           iconId="plus" iconSize="42"
-                           toolTip="Add config"></onos-icon>
+                <!--                <onos-icon classes="{{ selId !== undefined && pending.hasPendingChange && pending.pendingNewConfiguration === undefined ? 'active-rect':undefined}}"-->
+                <onos-icon classes="{{ selId !== undefined }}" iconId="plus" iconSize="42" toolTip="Add config">
+                </onos-icon>
             </div>
         </div>
         <div class="search">
-            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"
-                   type="search" #search placeholder="Search"/>
+            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr" type="search" #search placeholder="Search" />
             <select [(ngModel)]="tableDataFilter.queryBy">
                 <option value="" disabled>Search By</option>
                 <!--                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in -->
@@ -41,41 +41,35 @@
         </div>
     </div>
 
-    <div id="summary-list" class="summary-list" onosTableResize>
-        <div class="table-header">
-            <table>
+    <div id="summary-list" class="summary-list">
+        <table class="table table-sticky">
+            <thead>
                 <tr>
-                    <td colId="name" (click)="onSort('name')">Name
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('name')"></onos-icon>
-                    </td>
-                    <td colId="version" (click)="onSort('version')">Version
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('version')"></onos-icon>
-                    </td>
-                    <td colId="module" (click)="onSort('module')">Module
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('module')"></onos-icon>
-                    </td>
-                    <td colId="numrwpaths" (click)="onSort('numrwpaths')"># RW Paths
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('numrwpaths')"></onos-icon>
-                    </td>
-                    <td colId="numropaths" (click)="onSort('numropaths')"># RO Paths
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('numropaths')"></onos-icon>
-                    </td>
-                    <td colId="numyangs" (click)="onSort('numyangs')"># Yangs
-                        <onos-icon classes="active-sort" [iconSize]="10"
-                                   [iconId]="sortIcon('numyangs')"></onos-icon>
-                    </td>
+                    <th colId="name" (click)="onSort('name')">Name
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('name')"></onos-icon>
+                    </th>
+                    <th colId="version" (click)="onSort('version')">Version
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')"></onos-icon>
+                    </th>
+                    <th colId="module" (click)="onSort('module')">Module
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('module')"></onos-icon>
+                    </th>
+                    <th colId="numrwpaths" (click)="onSort('numrwpaths')"># RW Paths
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('numrwpaths')">
+                        </onos-icon>
+                    </th>
+                    <th colId="numropaths" (click)="onSort('numropaths')"># RO Paths
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('numropaths')">
+                        </onos-icon>
+                    </th>
+                    <th colId="numyangs" (click)="onSort('numyangs')"># Yangs
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('numyangs')">
+                        </onos-icon>
+                    </th>
                 </tr>
-            </table>
-        </div>
-        <div class="table-body">
-            <table>
-                <tr class="table-body" *ngIf="tableData.length === 0"
-                    class="no-data">
+            </thead>
+            <tbody>
+                <tr class="table-body" *ngIf="tableData.length === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
                 <tr *ngFor="let model of tableData | filter : tableDataFilter"
@@ -88,11 +82,10 @@
                     <td>{{ model.numropaths }}</td>
                     <td>{{ model.numyangs }}</td>
                 </tr>
-            </table>
-        </div>
+            </tbody>
+        </table>
     </div>
 
-    <onos-model-detail class="floatpanels" id="{{selId}}"
-                       [modelInfo]="selectedChange"
-                       (closeEvent)="deselectRow($event)"></onos-model-detail>
+    <onos-model-detail class="floatpanels" id="{{selId}}" [modelInfo]="selectedChange"
+        (closeEvent)="deselectRow($event)"></onos-model-detail>
 </div>

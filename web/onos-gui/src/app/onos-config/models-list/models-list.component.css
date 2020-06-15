@@ -26,6 +26,36 @@
     display: inline-block;
 }
 
-#ov-models, div.ctrl-btns {
+#ov-models div.summary-list .table-sticky thead, tbody tr {
+    display: table;
+    width: 100%;
+    margin-left: auto;
+    table-layout: fixed;
+    margin-right: auto;
 }
+
+#ov-models div.summary-list .table-sticky thead th {
+    position: sticky;
+    top: 0;
+    font-weight: bold;
+    font-variant: small-caps;
+    text-transform: uppercase;
+    font-size: 10pt;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    background-color: #e5e5e6;
+    color: #3c3a3a;
+}
+
+#ov-models div.summary-list .table-sticky tbody {
+    height: calc(100vh - 162px); 
+    table-layout: fixed;
+    display:block;
+    overflow-y: auto;
+}
+
+/* #ov-models, div.ctrl-btns {
+} */
 
