@@ -19,7 +19,8 @@
     z-index: 0;
     font-size: 10pt;
     top: 185px;
-    height: 550px;
+    height: calc(100vh - 270px);
+    overflow-y: auto;
 }
 
 #device-detail-panel.floatpanel a {

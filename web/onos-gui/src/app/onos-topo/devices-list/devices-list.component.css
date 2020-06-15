@@ -22,7 +22,19 @@
     text-align: left;
 }
 
-#ov-devices div.summary-list .table-header td {
+
+#ov-devices div.summary-list .table-sticky thead, tbody tr {
+    display: table;
+    width: 100%;
+    margin-left: auto;
+    table-layout: fixed;
+    margin-right: auto;
+}
+
+
+#ov-devices div.summary-list .table-sticky thead th {
+    position: sticky;
+    top: 0;
     font-weight: bold;
     font-variant: small-caps;
     text-transform: uppercase;
@@ -35,16 +47,19 @@
     color: #3c3a3a;
 }
 
-#ov-devices div.summary-list .table-body {
-    overflow: scroll;
+#ov-devices div.summary-list .table-sticky tbody {
+    height: calc(100vh - 162px); 
+    table-layout: fixed;
+    display:block;
+    overflow-y: auto;
 }
 
 #ov-devices h2 {
     display: inline-block;
 }
 
-#ov-devices, div.ctrl-btns {
-}
+/* #ov-devices, div.ctrl-btns {
+} */
 
 #ov-devices th, td {
     text-align: left;
