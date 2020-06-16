@@ -18,7 +18,7 @@
     z-index: 0;
     font-size: 10pt;
     top: 185px;
-    height: calc(100vh - 500px);
+    height: calc(100vh - 450px);
     min-height:200px;
     overflow-y: auto;
 }
