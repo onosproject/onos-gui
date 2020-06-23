@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ModelService} from '../model.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ModelService } from '../model.service';
 import {
     FnService, IconService,
     LogService, NameInputResult, SortDir, TableAnnots,
     TableBaseImpl, TableFilter,
     WebSocketService
 } from 'gui2-fw-lib';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
-import {ConnectivityService} from '../../connectivity.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ModelInfo } from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import { ConnectivityService } from '../../connectivity.service';
 import * as grpcWeb from 'grpc-web';
 
 
@@ -110,11 +110,4 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         }
         this.newConfigTitle = '';
     }
-
-    // onSort(colname: string) {
-    //     this.modelService.modelInfoList.sort((m1: ModelInfo, m2: ModelInfo) => {
-    //         return m1.colname - m2.colname;
-    //     });
-    // }
-
 }
