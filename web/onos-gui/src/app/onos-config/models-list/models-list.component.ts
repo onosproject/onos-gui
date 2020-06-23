@@ -65,10 +65,10 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             secondDir: SortDir.desc,
         };
 
-        this.tableDataFilter = <TableFilter>{ 
+        this.tableDataFilter = <TableFilter>{
             // This is here until table pipe bug is fixed
             queryStr: '',
-            queryBy: 'name', 
+            queryBy: 'name',
             // Default should be $ all fields
         };
 
@@ -113,8 +113,8 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
 
     // onSort(colname: string) {
     //     this.modelService.modelInfoList.sort((m1: ModelInfo, m2: ModelInfo) => {
-    //         return m1.colname - m2.colname; 
-    //     }); 
+    //         return m1.colname - m2.colname;
+    //     });
     // }
 
 }
