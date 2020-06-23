@@ -24,7 +24,7 @@
     "d3": "~5.15.0",
     "google-protobuf": "~3.11.4",
     "grpc-web": "~1.0.7",
-    "gui2-fw-lib": "^2.3.3",
+    "gui2-fw-lib": "^2.3.5",
     "rxjs": "~6.5.4",
     "topojson-client": "^3.0.0",
     "zone.js": "~0.10.2",

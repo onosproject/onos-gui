@@ -34,9 +34,9 @@
             <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr" type="search" #search placeholder="Search" />
             <select [(ngModel)]="tableDataFilter.queryBy">
                 <option value="" disabled>Search By</option>
-                <!--                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in -->
                 <option value="name">Name</option>
                 <option value="version">Version</option>
+                <option value="module">Module</option>
             </select>
         </div>
     </div>
@@ -86,6 +86,7 @@
         </table>
     </div>
 
-    <onos-model-detail class="floatpanels" id="{{selId}}" [modelInfo]="selectedChange"
+    <onos-model-detail class="floatpanels" id="{{selId}}" 
+    [modelInfo]="selectedChange"
         (closeEvent)="deselectRow($event)"></onos-model-detail>
 </div>
