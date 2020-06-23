@@ -37,6 +37,7 @@ export class ModelService {
             (modelInfo: ModelInfo) => {
                     modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
                     modelInfo['name'] = modelInfo.getName(); // To make it selectable
+                    modelInfo['module'] = modelInfo.getModule(); // To make it selectable
                     modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
                     modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
                     modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display

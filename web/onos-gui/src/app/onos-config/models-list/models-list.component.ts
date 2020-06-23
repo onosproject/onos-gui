@@ -27,6 +27,7 @@ import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/a
 import {ConnectivityService} from '../../connectivity.service';
 import * as grpcWeb from 'grpc-web';
 
+
 @Component({
     selector: 'onos-models-list',
     templateUrl: './models-list.component.html',
@@ -64,9 +65,11 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             secondDir: SortDir.desc,
         };
 
-        this.tableDataFilter = <TableFilter>{ // This is here until table pipe bug is fixed
+        this.tableDataFilter = <TableFilter>{ 
+            // This is here until table pipe bug is fixed
             queryStr: '',
-            queryBy: 'name', // Default should be $ all fields
+            queryBy: 'name', 
+            // Default should be $ all fields
         };
 
         this.annots = <TableAnnots>{
@@ -107,4 +110,11 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         }
         this.newConfigTitle = '';
     }
+
+    // onSort(colname: string) {
+    //     this.modelService.modelInfoList.sort((m1: ModelInfo, m2: ModelInfo) => {
+    //         return m1.colname - m2.colname; 
+    //     }); 
+    // }
+
 }
