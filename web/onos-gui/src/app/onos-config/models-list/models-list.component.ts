@@ -113,8 +113,8 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
 
     // onSort(colname: string) {
     //     this.modelService.modelInfoList.sort((m1: ModelInfo, m2: ModelInfo) => {
-    //         return m1.colname - m2.colname; 
-    //     }); 
+    //         return m1.colname - m2.colname;
+    //     });
     // }
 
 }
