@@ -22,12 +22,106 @@ import {
 import {Observable, Subscription} from 'rxjs';
 import {ErrorCallback} from './device.service';
 
+
+export enum ModelSortCriterion {
+    NAME,
+    VERSION,
+    MODULE,
+    NUMRWPATHS,
+    NUMROPATHS,
+    NUMYANGS
+}
+
 @Injectable()
 export class ModelService {
     modelInfoList: ModelInfo[] = [];
     modelInfoSub: Subscription;
 
     constructor(private configAdminService: OnosConfigAdminService) {
+    }
+
+    static modelSorterForwardName(a: ModelInfo, b: ModelInfo): number {
+        const aName = a.getName();
+        const bName = b.getName();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aName < bName ? -1 : (aName > bName) ? 1 : 0;
+    }
+
+    static modelSorterReverseName(a: ModelInfo, b: ModelInfo): number {
+        const aName = a.getName();
+        const bName = b.getName();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aName < bName ? 1 : (aName > bName) ? -1 : 0;
+    }
+
+    static modelSorterForwardVersion(a: ModelInfo, b: ModelInfo): number {
+        const aVersion = a.getVersion();
+        const bVersion = b.getVersion();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aVersion < bVersion ? -1 : (aVersion > bVersion) ? 1 : 0;
+    }
+
+    static modelSorterReverseVersion(a: ModelInfo, b: ModelInfo): number {
+        const aVersion = a.getVersion();
+        const bVersion = b.getVersion();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aVersion < bVersion ? 1 : (aVersion > bVersion) ? -1 : 0;
+    }
+
+    static modelSorterForwardModule(a: ModelInfo, b: ModelInfo): number {
+        const aModule = a.getModule();
+        const bModule = b.getModule();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aModule < bModule ? -1 : (aModule > bModule) ? 1 : 0;
+    }
+
+    static modelSorterReverseModule(a: ModelInfo, b: ModelInfo): number {
+        const aModule = a.getModule();
+        const bModule = b.getModule();
+        // console.log("aType " + aType + " bType " + bType);
+        return  aModule < bModule ? 1 : (aModule > bModule) ? -1 : 0;
+    }
+
+    static modelSorterForwardNumRWPaths(a: ModelInfo, b: ModelInfo): number {
+        const aNumrwpaths = a.getReadWritePathList().length;
+        const bNumropaths = b.getReadWritePathList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumrwpaths < bNumropaths ? -1 : (aNumrwpaths > bNumropaths) ? 1 : 0;
+    }
+
+    static modelSorterReverseNumRWPaths(a: ModelInfo, b: ModelInfo): number {
+        const aNumrwpaths = a.getReadWritePathList().length;
+        const bNumropaths = b.getReadWritePathList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumrwpaths < bNumropaths ? 1 : (aNumrwpaths > bNumropaths) ? -1 : 0;
+    }
+
+    static modelSorterForwardNumROPaths(a: ModelInfo, b: ModelInfo): number {
+        const aNumropaths = a.getReadOnlyPathList().length;
+        const bNumropaths = b.getReadOnlyPathList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumropaths < bNumropaths ? -1 : (aNumropaths > bNumropaths) ? 1 : 0;
+    }
+
+    static modelSorterReverseNumROPaths(a: ModelInfo, b: ModelInfo): number {
+        const aNumropaths = a.getReadOnlyPathList().length;
+        const bNumropaths = b.getReadOnlyPathList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumropaths < bNumropaths ? 1 : (aNumropaths > bNumropaths) ? -1 : 0;
+    }
+
+    static modelSorterForwardNumYangs(a: ModelInfo, b: ModelInfo): number {
+        const aNumyangs = a.getModelDataList().length;
+        const bNumYangs = b.getModelDataList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumyangs < bNumYangs ? -1 : (aNumyangs > bNumYangs) ? 1 : 0;
+    }
+
+    static modelSorterReverseNumYangs(a: ModelInfo, b: ModelInfo): number {
+        const aNumyangs = a.getModelDataList().length;
+        const bNumYangs = b.getModelDataList().length;
+        // console.log("aType " + aType + " bType " + bType);
+        return  aNumyangs < bNumYangs ? 1 : (aNumyangs > bNumYangs) ? -1 : 0;
     }
 
     loadModelList(errCb: ErrorCallback): void {

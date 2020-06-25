@@ -110,4 +110,35 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         }
         this.newConfigTitle = '';
     }
+
+    // onSortCol(colName: String, direction: String) : void {
+    //     if (this.sortParams.firstCol === colName) {
+    //         if (this.sortParams.firstDir === SortDir.desc) {
+    //             this.sortParams.firstDir = SortDir.asc;
+    //             return;
+    //         } else {
+    //             this.sortParams.firstDir = SortDir.desc;
+    //             return;
+    //         }
+    //     } else {
+    //         this.sortParams.secondCol = this.sortParams.firstCol;
+    //         this.sortParams.secondDir = this.sortParams.firstDir;
+    //         this.sortParams.firstCol = colName;
+    //         this.sortParams.firstDir = SortDir.desc;
+    //     }
+    //     this.log.debug('Sort params', this.sortParams);
+    //     this.requestTableData();
+    // }
+
+    sortIcon(column: string): string {
+        if (this.sortParams.firstCol === column) {
+            if (this.sortParams.firstDir === SortDir.asc) {
+                return 'upArrow';
+            } else {
+                return 'downArrow';
+            }
+        } else {
+            return '';
+        }
+    } 
 }
