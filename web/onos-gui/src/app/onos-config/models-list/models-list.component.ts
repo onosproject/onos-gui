@@ -15,7 +15,7 @@
  */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModelService } from '../model.service';
+import { ModelService, ModelSortCriterion } from '../model.service';
 import {
     FnService, IconService,
     LogService, NameInputResult, SortDir, TableAnnots,
@@ -42,6 +42,9 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     selectedChange: ModelInfo; // The complete row - not just the selId
     alertMsg: string;
     newConfigTitle: string = '';
+    sortReverse: boolean = false;
+    sortCriterion: ModelSortCriterion = ModelSortCriterion.NAME;
+    topoDeviceSortCriterion = ModelService.modelSorterForwardVersion;
 
     constructor(
         protected fs: FnService,
@@ -109,5 +112,37 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             // }
         }
         this.newConfigTitle = '';
+    }
+
+    onSortCol(colName: string, direction: string): void {
+        // if (this.sortParams.firstCol === colName) {
+        //     if (this.sortParams.firstDir === SortDir.desc) {
+        //         this.sortParams.firstDir = SortDir.asc;
+        //         return;
+        //     } else {
+        //         this.sortParams.firstDir = SortDir.desc;
+        //         return;
+        //     }
+        // } else {
+        //     this.sortParams.secondCol = this.sortParams.firstCol;
+        //     this.sortParams.secondDir = this.sortParams.firstDir;
+        //     this.sortParams.firstCol = colName;
+        //     this.sortParams.firstDir = SortDir.desc;
+        // }
+
+        // this.log.debug('Sort params', this.sortParams);
+        // this.requestTableData();
+    }
+
+    sortIcon(column: string): string {
+        if (this.sortParams.firstCol === column) {
+            if (this.sortParams.firstDir === SortDir.asc) {
+                return 'upArrow';
+            } else {
+                return 'downArrow';
+            }
+        } else {
+            return '';
+        }
     }
 }

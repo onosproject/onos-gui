@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
     Device,
     ListResponse,
     Protocol
 } from './proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import * as grpcWeb from 'grpc-web';
-import {Subscription} from 'rxjs';
-import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
+import { Subscription } from 'rxjs';
+import { OnosTopoDeviceService } from './proto/onos-topo-device.service';
+import { KeyValue } from '@angular/common';
+
+export enum TopoDeviceSortCriterion {
+    ID,
+    DISPLAY,
+    TYPE,
+    VERSION,
+    ADDRESS,
+    REVISION,
+    TARGET,
+    TIMEOUT
+}
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +51,117 @@ export class TopoDeviceService {
         this.onosTopoDeviceService = onosTopoDeviceService;
     }
 
+    static topoDeviceSorterForwardId(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aId = a.value.getId();
+        const bId = b.value.getId();
+        // console.log("aId " + aId + " bId " + bId);
+        return aId < bId ? -1 : (aId > bId) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseId(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aId = a.value.getId();
+        const bId = b.value.getId();
+        // console.log("aId " + aId + " bId " + bId);
+        return aId < bId ? 1 : (aId > bId) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardDisplay(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aDisplayname = a.value.getDisplayname();
+        const bDisplayname = b.value.getDisplayname();
+        // console.log("aType " + aType + " bType " + bType);
+        return aDisplayname < bDisplayname ? -1 : (aDisplayname > bDisplayname) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseDisplay(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aDisplayname = a.value.getDisplayname();
+        const bDisplayname = b.value.getDisplayname();
+        // console.log("aType " + aType + " bType " + bType);
+        return aDisplayname < bDisplayname ? 1 : (aDisplayname > bDisplayname) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aType = a.value.getType();
+        const bType = b.value.getType();
+        // console.log("aType " + aType + " bType " + bType);
+        return aType < bType ? -1 : (aType > bType) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aType = a.value.getType();
+        const bType = b.value.getType();
+        // console.log("aType " + aType + " bType " + bType);
+        return aType < bType ? 1 : (aType > bType) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aVersion = a.value.getVersion();
+        const bVersion = b.value.getVersion();
+        // console.log("aType " + aType + " bType " + bType);
+        return aVersion < bVersion ? -1 : (aVersion > bVersion) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aVersion = a.value.getVersion();
+        const bVersion = b.value.getVersion();
+        // console.log("aType " + aType + " bType " + bType);
+        return aVersion < bVersion ? 1 : (aVersion > bVersion) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardAddress(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aAddress = a.value.getAddress();
+        const bAddress = b.value.getAddress();
+        // console.log("aType " + aType + " bType " + bType);
+        return aAddress < bAddress ? -1 : (aAddress > bAddress) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseAddress(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aAddress = a.value.getAddress();
+        const bAddress = b.value.getAddress();
+        // console.log("aType " + aType + " bType " + bType);
+        return aAddress < bAddress ? 1 : (aAddress > bAddress) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardRevision(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aRevision = a.value.getRevision();
+        const bRevision = b.value.getRevision();
+        // console.log("aType " + aType + " bType " + bType);
+        return aRevision < bRevision ? -1 : (aRevision > bRevision) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseRevision(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aRevision = a.value.getRevision();
+        const bRevision = b.value.getRevision();
+        // console.log("aType " + aType + " bType " + bType);
+        return aRevision < bRevision ? 1 : (aRevision > bRevision) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardTarget(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTarget = a.value.getTarget();
+        const bTarget = b.value.getTarget();
+        // console.log("aType " + aType + " bType " + bType);
+        return aTarget < bTarget ? -1 : (aTarget > bTarget) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseTarget(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTarget = a.value.getTarget();
+        const bTarget = b.value.getTarget();
+        // console.log("aType " + aType + " bType " + bType);
+        return aTarget < bTarget ? 1 : (aTarget > bTarget) ? -1 : 0;
+    }
+
+    static topoDeviceSorterForwardTimeout(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTimeout = a.value.getTimeout();
+        const bTimeout = b.value.getTimeout();
+        // console.log("aType " + aType + " bType " + bType);
+        return aTimeout < bTimeout ? -1 : (aTimeout > bTimeout) ? 1 : 0;
+    }
+
+    static topoDeviceSorterReverseTimeout(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+        const aTimeout = a.value.getTimeout();
+        const bTimeout = b.value.getTimeout();
+        // console.log("aType " + aType + " bType " + bType);
+        return aTimeout < bTimeout ? 1 : (aTimeout > bTimeout) ? -1 : 0;
+    }
     watchTopoDevices(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: ListResponse.Type, device: Device) => void) {
         this.topoDevicesSub = this.onosTopoDeviceService.requestListDevices(true).subscribe(
             (resp: ListResponse) => {
@@ -109,3 +232,4 @@ export class TopoDeviceService {
         return false;
     }
 }
+
