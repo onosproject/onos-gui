@@ -90,15 +90,15 @@ export class DevicesListComponent implements OnInit, OnDestroy {
 
     onSort(colName: string) {
         switch (colName) {
-            case "id":
+            case 'id':
                 this.sortCriterion = TopoDeviceSortCriterion.ID;
                 this.updateSort();
-                this.sortReverse == true ? this.sortReverse = false : this.sortReverse = true;
+                this.sortReverse === true ? this.sortReverse = false : this.sortReverse = true;
                 break;
-            case "type":
+            case 'type':
                 this.sortCriterion = TopoDeviceSortCriterion.TYPE;
                 this.updateSort();
-                this.sortReverse == true ? this.sortReverse = false : this.sortReverse = true;
+                this.sortReverse === true ? this.sortReverse = false : this.sortReverse = true;
                 break;
             default:
         }
@@ -108,67 +108,67 @@ export class DevicesListComponent implements OnInit, OnDestroy {
         console.log('Sort order updated', this.sortCriterion, this.sortReverse, this.sortCriterion | Number(this.sortReverse).valueOf());
         switch (this.sortCriterion | Number(this.sortReverse).valueOf()) {
             case TopoDeviceSortCriterion.ID | 1:
-                console.log("in reverse id sort");
+                console.log('in reverse id sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseId;
                 break;
             case TopoDeviceSortCriterion.ID | 0:
-                console.log("in forward id sort");
+                console.log('in forward id sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardId;
                 break;
             case TopoDeviceSortCriterion.TYPE | 1:
-                console.log("in reverse type sort");
+                console.log('in reverse type sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardType;
                 break;
             case TopoDeviceSortCriterion.TYPE | 0:
-                console.log("in forward type sort");
+                console.log('in forward type sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseType;
                 break;
             case TopoDeviceSortCriterion.DISPLAY | 1:
-                console.log("in reverse DISPLAY sort");
+                console.log('in reverse DISPLAY sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardDisplay;
                 break;
             case TopoDeviceSortCriterion.DISPLAY | 0:
-                console.log("in forward DISPLAY sort");
+                console.log('in forward DISPLAY sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseDisplay;
                 break;
             case TopoDeviceSortCriterion.VERSION | 1:
-                console.log("in reverse VERSION sort");
+                console.log('in reverse VERSION sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardVersion;
                 break;
             case TopoDeviceSortCriterion.VERSION | 0:
-                console.log("in forward VERSION sort");
+                console.log('in forward VERSION sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseVersion;
                 break;
             case TopoDeviceSortCriterion.ADDRESS | 1:
-                console.log("in reverse ADDRESS sort");
+                console.log('in reverse ADDRESS sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseAddress;
                 break;
             case TopoDeviceSortCriterion.ADDRESS | 0:
-                console.log("in forward ADDRESS sort");
+                console.log('in forward ADDRESS sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardAddress;
                 break;
             case TopoDeviceSortCriterion.TYPE | 1:
-                console.log("in reverse type sort");
+                console.log('in reverse type sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardType;
                 break;
             case TopoDeviceSortCriterion.TYPE | 0:
-                console.log("in forward type sort");
+                console.log('in forward type sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseType;
                 break;
             case TopoDeviceSortCriterion.DISPLAY | 1:
-                console.log("in reverse DISPLAY sort");
+                console.log('in reverse DISPLAY sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardDisplay;
                 break;
             case TopoDeviceSortCriterion.DISPLAY | 0:
-                console.log("in forward DISPLAY sort");
+                console.log('in forward DISPLAY sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseDisplay;
                 break;
             case TopoDeviceSortCriterion.VERSION | 1:
-                console.log("in reverse VERSION sort");
+                console.log('in reverse VERSION sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterForwardVersion;
                 break;
             case TopoDeviceSortCriterion.VERSION | 0:
-                console.log("in forward VERSION sort");
+                console.log('in forward VERSION sort');
                 this.topoDeviceSortCriterion = TopoDeviceService.topoDeviceSorterReverseVersion;
                 break;
             default:
@@ -180,7 +180,7 @@ export class DevicesListComponent implements OnInit, OnDestroy {
     }
 
     sortIcon(colname: string) {
-        if(this.sortReverse == false) {
+        if (this.sortReverse === false) {
             return 'upArrow';
         } else {
             return 'downArrow';
