@@ -66,7 +66,7 @@
                 <tr *ngIf="topoDeviceService.deviceList.size === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
-                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue:topoDeviceSortCriterion"
+                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue:topoDeviceService.sortParams.firstCriteria "
                     (click)="selectCallback($event, device.key, device.value)">
                     <td>{{ device.value.getId() }}</td>
                     <td>{{ device.value.getDisplayname() }}</td>

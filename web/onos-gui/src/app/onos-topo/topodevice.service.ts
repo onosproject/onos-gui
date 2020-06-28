@@ -43,6 +43,14 @@ export class TopoDeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     topoDevicesSub: Subscription;
     onosTopoDeviceService: OnosTopoDeviceService;
+    sortParams = {
+        firstCol: TopoDeviceSortCriterion.ID,
+        firstCriteria: TopoDeviceService.topoDeviceSorterForwardId,
+        firstCriteriaDir: 0,
+        secondCol: TopoDeviceSortCriterion.DISPLAY,
+        secondCriteria: TopoDeviceService.topoDeviceSorterForwardDisplay,
+        secondCriteriaDir: 0,
+    };
 
     constructor(
         onosTopoDeviceService: OnosTopoDeviceService
@@ -51,10 +59,199 @@ export class TopoDeviceService {
         this.onosTopoDeviceService = onosTopoDeviceService;
     }
 
+    sortParamsFirst(sortCriterion: TopoDeviceSortCriterion, sortDir: number) {
+        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
+            case TopoDeviceSortCriterion.ID * 2 | 1:
+                console.log('in reverse id sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseId;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.ID * 2 | 0:
+                console.log('in forward id sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardId;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.DISPLAY * 2 | 1:
+                console.log('in reverse DISPLAY sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardDisplay;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.DISPLAY * 2 | 0:
+                console.log('in forward DISPLAY sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseDisplay;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TYPE * 2 | 1:
+                console.log('in reverse type sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardType;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TYPE * 2 | 0:
+                console.log('in forward type sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseType;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.VERSION * 2 | 1:
+                console.log('in reverse VERSION sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardVersion;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.VERSION * 2 | 0:
+                console.log('in forward VERSION sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseVersion;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.ADDRESS * 2 | 1:
+                console.log('in reverse ADDRESS sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseAddress;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.ADDRESS * 2 | 0:
+                console.log('in forward ADDRESS sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardAddress;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.REVISION * 2 | 1:
+                console.log('in reverse REVISION sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardRevision;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.REVISION * 2 | 0:
+                console.log('in forward REVISION sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseRevision;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TARGET * 2 | 1:
+                console.log('in reverse TARGET sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardTarget;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TARGET * 2 | 0:
+                console.log('in forward TARGET sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseTarget;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TIMEOUT * 2 | 1:
+                console.log('in reverse TIMEOUT sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterForwardTimeout;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TIMEOUT * 2 | 0:
+                console.log('in forward TIMEOUT sort');
+                this.sortParams.firstCriteria = TopoDeviceService.topoDeviceSorterReverseTimeout;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            default:
+        }
+    }
+
+    sortParamsSecond(sortCriterion: TopoDeviceSortCriterion, sortDir: number) {
+        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
+            case TopoDeviceSortCriterion.ID * 2 | 1:
+                console.log('in reverse id sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseId;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.ID * 2 | 0:
+                console.log('in forward id sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardId;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.DISPLAY * 2 | 1:
+                console.log('in reverse DISPLAY sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardDisplay;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.DISPLAY * 2 | 0:
+                console.log('in forward DISPLAY sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseDisplay;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TYPE * 2 | 1:
+                console.log('in reverse type sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardType;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TYPE * 2 | 0:
+                console.log('in forward type sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseType;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.VERSION * 2 | 1:
+                console.log('in reverse VERSION sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardVersion;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.VERSION * 2 | 0:
+                console.log('in forward VERSION sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseVersion;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.ADDRESS * 2 | 1:
+                console.log('in reverse ADDRESS sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseAddress;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.ADDRESS * 2 | 0:
+                console.log('in forward ADDRESS sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardAddress;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.REVISION * 2 | 1:
+                console.log('in reverse REVISION sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardRevision;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.REVISION * 2 | 0:
+                console.log('in forward REVISION sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseRevision;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TARGET * 2 | 1:
+                console.log('in reverse TARGET sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardTarget;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TARGET * 2 | 0:
+                console.log('in forward TARGET sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseTarget;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case TopoDeviceSortCriterion.TIMEOUT * 2 | 1:
+                console.log('in reverse TIMEOUT sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterForwardTimeout;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case TopoDeviceSortCriterion.TIMEOUT * 2 | 0:
+                console.log('in forward TIMEOUT sort');
+                this.sortParams.secondCriteria = TopoDeviceService.topoDeviceSorterReverseTimeout;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            default:
+        }
+    }
+
+    switchSortCol(colNameCriteria: TopoDeviceSortCriterion, direction: number): void {
+        if (this.sortParams.firstCol === colNameCriteria) {
+            if (this.sortParams.firstCriteriaDir === 1) {
+                this.sortParamsFirst(colNameCriteria, 0);
+                return;
+            } else {
+                this.sortParamsFirst(colNameCriteria, 1);
+                return;
+            }
+        } else {
+            this.sortParamsSecond(this.sortParams.firstCol, this.sortParams.firstCriteriaDir);
+            this.sortParamsFirst(colNameCriteria, direction);
+        }
+
+        console.log('Sort params', this.sortParams);
+    }
+
+
     static topoDeviceSorterForwardId(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
         const aId = a.value.getId();
         const bId = b.value.getId();
-        // console.log("aId " + aId + " bId " + bId);
         return aId < bId ? -1 : (aId > bId) ? 1 : 0;
     }
 
@@ -122,16 +319,14 @@ export class TopoDeviceService {
     }
 
     static topoDeviceSorterForwardRevision(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aRevision = a.value.getRevision();
-        const bRevision = b.value.getRevision();
-        // console.log("aType " + aType + " bType " + bType);
+        const aRevision = Number(a.value.getRevision());
+        const bRevision = Number(b.value.getRevision());
         return aRevision < bRevision ? -1 : (aRevision > bRevision) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseRevision(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aRevision = a.value.getRevision();
-        const bRevision = b.value.getRevision();
-        // console.log("aType " + aType + " bType " + bType);
+        const aRevision = Number(a.value.getRevision());
+        const bRevision = Number(b.value.getRevision());
         return aRevision < bRevision ? 1 : (aRevision > bRevision) ? -1 : 0;
     }
 
@@ -162,6 +357,7 @@ export class TopoDeviceService {
         // console.log("aType " + aType + " bType " + bType);
         return aTimeout < bTimeout ? 1 : (aTimeout > bTimeout) ? -1 : 0;
     }
+
     watchTopoDevices(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: ListResponse.Type, device: Device) => void) {
         this.topoDevicesSub = this.onosTopoDeviceService.requestListDevices(true).subscribe(
             (resp: ListResponse) => {

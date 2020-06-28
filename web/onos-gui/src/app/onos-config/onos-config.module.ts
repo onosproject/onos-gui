@@ -44,6 +44,7 @@ import {LinkFilterPipe} from './config-view/link-filter.pipe';
 import {StringValueComponent} from './config-view/string-value/string-value.component';
 import {DeviceService} from './device.service';
 import {TopoDeviceService} from '../onos-topo/topodevice.service';
+import { OrderModule } from 'ngx-order-pipe';
 
 @NgModule({
     declarations: [
@@ -63,7 +64,7 @@ import {TopoDeviceService} from '../onos-topo/topodevice.service';
         NodeFilterPipe,
         ContainerSvgComponent,
         LinkFilterPipe,
-        StringValueComponent
+        StringValueComponent,
     ],
     imports: [
         CommonModule,
@@ -71,6 +72,7 @@ import {TopoDeviceService} from '../onos-topo/topodevice.service';
         ReactiveFormsModule,
         OnosConfigRoutingModule,
         Gui2FwLibModule,
+        OrderModule
     ],
     providers: [
         {
