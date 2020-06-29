@@ -52,15 +52,12 @@ export class ModelService {
     }
 
     static modelSorterForward(a: ModelInfo, b: ModelInfo): number {
-        console.log("a " + a);
-        return a < b ? -1 : (a > b) ? 1 :0;
+        return a < b ? -1 : (a > b) ? 1 : 0;
     }
 
     static modelSorterReverse(a: ModelInfo, b: ModelInfo): number {
         return a < b ? 1 : (a > b) ? -1 : 0;
     }
-
-
 
     sortParamsFirst(sortCriterion: ModelSortCriterion, sortDir: number) {
         switch (sortCriterion * 2 | Number(sortDir).valueOf()) {

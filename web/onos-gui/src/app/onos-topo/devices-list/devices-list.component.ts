@@ -26,7 +26,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as grpcWeb from 'grpc-web';
 import { TopoDeviceService, TopoDeviceSortCriterion } from '../topodevice.service';
 import { ConnectivityService } from '../../connectivity.service';
-import { DeviceSearchPipe } from '/Users/rajvigemawat/Desktop/onosproject/onos-gui/web/onos-gui/src/app/onos-topo/device-search.pipe';
 
 
 @Component({
@@ -37,7 +36,6 @@ import { DeviceSearchPipe } from '/Users/rajvigemawat/Desktop/onosproject/onos-g
         '../../fw/widget/table.css',
         '../../fw/widget/table.theme.css'
     ],
-    providers: [DeviceSearchPipe]
 })
 export class DevicesListComponent implements OnInit, OnDestroy {
     selectedChange: Device;
@@ -64,7 +62,7 @@ export class DevicesListComponent implements OnInit, OnDestroy {
         protected is: IconService,
         public topoDeviceService: TopoDeviceService,
         private connectivityService: ConnectivityService,
-        private deviceSearch: DeviceSearchPipe
+        // private deviceSearch: DeviceSearchPipe
     ) {
         this.is.loadIconDef('switch');
         this.is.loadIconDef('xClose');
