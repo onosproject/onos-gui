@@ -264,7 +264,9 @@ export class MapviewComponent implements OnInit, OnDestroy {
             this.aspectRatio,
         );
         beamCalc.beamCurve.options.color = cell.getColor();
-        beamCalc.beamCurve.addTo(this.map);
+        if (this.showPower) {
+            beamCalc.beamCurve.addTo(this.map);
+        }
         this.beamCurves.set(String(cell.getEcgi()), beamCalc.beamCurve);
         this.beamCalcs.set(String(cell.getEcgi()), beamCalc);
 
@@ -297,7 +299,9 @@ export class MapviewComponent implements OnInit, OnDestroy {
         this.beamCurves.get(String(cell.getEcgi())).remove();
         const beamCalc = this.beamCalcs.get(String(cell.getEcgi()));
         beamCalc.updateCentroid(cell.getSector().getCentroid());
-        beamCalc.beamCurve.addTo(this.map);
+        if (this.showPower) {
+            beamCalc.beamCurve.addTo(this.map);
+        }
 
         const previousIcon = this.cellMarkers.get(String(cell.getEcgi())).getIcon();
         this.cellMarkers.get(String(cell.getEcgi())).setIcon(new L.Icon({
@@ -337,7 +341,9 @@ export class MapviewComponent implements OnInit, OnDestroy {
             weight: 2
         });
         this.routePolylines.set(route.getName(), polyline);
-        polyline.addTo(this.map);
+        if (this.showRoutes) {
+            polyline.addTo(this.map);
+        }
     }
 
     private updateRoute(route: Route) {
