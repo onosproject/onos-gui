@@ -14,38 +14,216 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {OnosConfigAdminService} from './proto/onos-config-admin.service';
+import { Injectable } from '@angular/core';
+import { OnosConfigAdminService } from './proto/onos-config-admin.service';
 import {
     ModelInfo,
 } from './proto/github.com/onosproject/onos-config/api/admin/admin_pb';
-import {Observable, Subscription} from 'rxjs';
-import {ErrorCallback} from './device.service';
+import { Observable, Subscription } from 'rxjs';
+import { ErrorCallback } from './device.service';
+
+
+export enum ModelSortCriterion {
+    NAME,
+    VERSION,
+    MODULE,
+    NUMRWPATHS,
+    NUMROPATHS,
+    NUMYANGS
+}
 
 @Injectable()
 export class ModelService {
     modelInfoList: ModelInfo[] = [];
     modelInfoSub: Subscription;
+    modelSortColumn = ModelSortCriterion.NAME;
+    sortParams = {
+        firstCol: ModelSortCriterion.NAME,
+        firstColName: 'name',
+        firstCriteria: ModelService.modelSorterForward,
+        firstCriteriaDir: 0,
+        secondCol: ModelSortCriterion.VERSION,
+        secondColName: 'version',
+        secondCriteria: ModelService.modelSorterForward,
+        secondCriteriaDir: 0,
+    };
 
     constructor(private configAdminService: OnosConfigAdminService) {
     }
+
+    static modelSorterForward(a: ModelInfo, b: ModelInfo): number {
+        return a < b ? -1 : (a > b) ? 1 : 0;
+    }
+
+    static modelSorterReverse(a: ModelInfo, b: ModelInfo): number {
+        return a < b ? 1 : (a > b) ? -1 : 0;
+    }
+
+    sortParamsFirst(sortCriterion: ModelSortCriterion, sortDir: number) {
+        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
+            case ModelSortCriterion.NAME * 2 | 1:
+                this.sortParams.firstColName = 'name';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NAME * 2 | 0:
+                this.sortParams.firstColName = 'name';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.VERSION * 2 | 1:
+                this.sortParams.firstColName = 'version';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.VERSION * 2 | 0:
+                this.sortParams.firstColName = 'version';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.MODULE * 2 | 1:
+                this.sortParams.firstColName = 'module';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.MODULE * 2 | 0:
+                this.sortParams.firstColName = 'module';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMRWPATHS * 2 | 1:
+                this.sortParams.firstColName = 'numrwpaths';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMRWPATHS * 2 | 0:
+                this.sortParams.firstColName = 'numrwpaths';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMROPATHS * 2 | 1:
+                this.sortParams.firstColName = 'numropaths';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMROPATHS * 2 | 0:
+                this.sortParams.firstColName = 'numropaths';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMYANGS * 2 | 1:
+                this.sortParams.firstColName = 'numyangs';
+                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
+                this.sortParams.firstCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMYANGS * 2 | 0:
+                this.sortParams.firstColName = 'numyangs';
+                this.sortParams.firstCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            default:
+        }
+    }
+
+    sortParamsSecond(sortCriterion: ModelSortCriterion, sortDir: number) {
+        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
+            case ModelSortCriterion.NAME * 2 | 1:
+                this.sortParams.secondColName = 'name';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NAME * 2 | 0:
+                this.sortParams.secondColName = 'name';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.VERSION * 2 | 1:
+                this.sortParams.secondColName = 'version';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.VERSION * 2 | 0:
+                this.sortParams.secondColName = 'version';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.firstCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.MODULE * 2 | 1:
+                this.sortParams.secondColName = 'module';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.MODULE * 2 | 0:
+                this.sortParams.secondColName = 'module';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMRWPATHS * 2 | 1:
+                this.sortParams.secondColName = 'numrwpaths';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMRWPATHS * 2 | 0:
+                this.sortParams.secondColName = 'numrwpaths';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMROPATHS * 2 | 1:
+                this.sortParams.secondColName = 'numropaths';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMROPATHS * 2 | 0:
+                this.sortParams.secondColName = 'numropaths';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            case ModelSortCriterion.NUMYANGS * 2 | 1:
+                this.sortParams.secondColName = 'numyangs';
+                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
+                this.sortParams.secondCriteriaDir = 1;
+                break;
+            case ModelSortCriterion.NUMYANGS * 2 | 0:
+                this.sortParams.secondColName = 'numyangs';
+                this.sortParams.secondCriteria = ModelService.modelSorterForward;
+                this.sortParams.secondCriteriaDir = 0;
+                break;
+            default:
+        }
+    }
+
+    switchSortCol(colNameCriteria: ModelSortCriterion, direction: number): void {
+        if (this.sortParams.firstCol === colNameCriteria) {
+            if (this.sortParams.firstCriteriaDir === 1) {
+                this.sortParamsFirst(colNameCriteria, 0);
+                return;
+            } else {
+                this.sortParamsFirst(colNameCriteria, 1);
+                return;
+            }
+        } else {
+            this.sortParamsSecond(this.sortParams.firstCol, this.sortParams.firstCriteriaDir);
+            this.sortParamsFirst(colNameCriteria, direction);
+        }
+
+    }
+
 
     loadModelList(errCb: ErrorCallback): void {
         this.close();
         this.modelInfoList.length = 0;
         this.modelInfoSub = this.configAdminService.requestListRegisteredModels().subscribe(
             (modelInfo: ModelInfo) => {
-                    modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
-                    modelInfo['name'] = modelInfo.getName(); // To make it selectable
-                    modelInfo['module'] = modelInfo.getModule(); // To make it selectable
-                    modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
-                    modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
-                    modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display
-                    modelInfo['numyangs'] = modelInfo.getModelDataList().length; // For display
-                    this.modelInfoList.push(modelInfo);
-                    console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion(), modelInfo.getModule(),
-                        modelInfo['numropaths'], modelInfo['numrwpaths'], modelInfo['numyangs']);
-                },
+                modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
+                modelInfo['name'] = modelInfo.getName(); // To make it selectable
+                modelInfo['module'] = modelInfo.getModule(); // To make it selectable
+                modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
+                modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
+                modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display
+                modelInfo['numyangs'] = modelInfo.getModelDataList().length; // For display
+                this.modelInfoList.push(modelInfo);
+                console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion(), modelInfo.getModule(),
+                    modelInfo['numropaths'], modelInfo['numrwpaths'], modelInfo['numyangs']);
+            },
             (error) => {
                 console.log('Error on subscribe to registered models', error);
                 errCb(error);

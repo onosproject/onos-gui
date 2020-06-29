@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModelService } from '../model.service';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ModelService, ModelSortCriterion } from '../model.service';
 import {
     FnService, IconService,
     LogService, NameInputResult, SortDir, TableAnnots,
@@ -26,7 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModelInfo } from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 import { ConnectivityService } from '../../connectivity.service';
 import * as grpcWeb from 'grpc-web';
-
+import { OrderPipe } from 'ngx-order-pipe';
 
 @Component({
     selector: 'onos-models-list',
@@ -36,12 +36,21 @@ import * as grpcWeb from 'grpc-web';
         './models-list.theme.css',
         '../../fw/widget/table.css',
         '../../fw/widget/table.theme.css'
-    ]
+    ],
+    // providers: [OrderPipe]
 })
 export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDestroy {
     selectedChange: ModelInfo; // The complete row - not just the selId
     alertMsg: string;
     newConfigTitle: string = '';
+    sortDirMap = new Map([
+        ['name', 'upArrow'],
+        ['version', 'upArrow'],
+        ['module', 'upArrow'],
+        ['numrwpaths', 'upArrow'],
+        ['numropaths', 'upArrow'],
+        ['numyangs', 'upArrow'],
+    ]);
 
     constructor(
         protected fs: FnService,
@@ -51,6 +60,8 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         protected wss: WebSocketService,
         protected is: IconService,
         public modelService: ModelService,
+        private orderPipe: OrderPipe,
+        private cdr: ChangeDetectorRef,
         private connectivityService: ConnectivityService
         // public pending: PendingNetChangeService,
     ) {
@@ -58,18 +69,17 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         this.is.loadIconDef('plus');
         this.is.loadIconDef('xClose');
 
+
         this.sortParams = {
             firstCol: 'name',
             firstDir: SortDir.asc,
-            secondCol: 'version',
+            secondCol: 'id',
             secondDir: SortDir.desc,
         };
 
         this.tableDataFilter = <TableFilter>{
-            // This is here until table pipe bug is fixed
             queryStr: '',
             queryBy: 'name',
-            // Default should be $ all fields
         };
 
         this.annots = <TableAnnots>{
@@ -109,5 +119,47 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             // }
         }
         this.newConfigTitle = '';
+    }
+
+    onSortCol(colName: string): void {
+        const oldDir = this.sortDirMap.get(colName) === 'upArrow' ? 0 : 1;
+        const newDir = this.sortDirMap.get(colName) === 'upArrow' ? 'downArrow' : 'upArrow';
+        this.sortDirMap.set(colName, newDir);
+        switch (colName) {
+            case 'name':
+                this.modelService.switchSortCol(ModelSortCriterion.NAME, oldDir);
+                break;
+            case 'version':
+                this.modelService.switchSortCol(ModelSortCriterion.VERSION, oldDir);
+                break;
+            case 'module':
+                this.modelService.switchSortCol(ModelSortCriterion.MODULE, oldDir);
+                break;
+            case 'numrwpaths':
+                this.modelService.switchSortCol(ModelSortCriterion.NUMRWPATHS, oldDir);
+                break;
+            case 'numropaths':
+                this.modelService.switchSortCol(ModelSortCriterion.NUMROPATHS, oldDir);
+                break;
+            case 'numyangs':
+                this.modelService.switchSortCol(ModelSortCriterion.NUMYANGS, oldDir);
+                break;
+            default:
+        }
+    }
+
+
+
+    sortIcon(colName: string): string {
+        return this.sortDirMap.get(colName);
+        // if (this.sortParams.firstCol === column) {
+        //     if (this.sortParams.firstDir === SortDir.asc) {
+        //         return 'upArrow';
+        //     } else {
+        //         return 'downArrow';
+        //     }
+        // } else {
+        //     return '';
+        // }
     }
 }
