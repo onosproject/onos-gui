@@ -23,29 +23,14 @@ import { Observable, Subscription } from 'rxjs';
 import { ErrorCallback } from './device.service';
 
 
-export enum ModelSortCriterion {
-    NAME,
-    VERSION,
-    MODULE,
-    NUMRWPATHS,
-    NUMROPATHS,
-    NUMYANGS
-}
-
 @Injectable()
 export class ModelService {
     modelInfoList: ModelInfo[] = [];
     modelInfoSub: Subscription;
-    modelSortColumn = ModelSortCriterion.NAME;
     sortParams = {
-        firstCol: ModelSortCriterion.NAME,
-        firstColName: 'name',
+        firstColName: '',
         firstCriteria: ModelService.modelSorterForward,
-        firstCriteriaDir: 0,
-        secondCol: ModelSortCriterion.VERSION,
-        secondColName: 'version',
-        secondCriteria: ModelService.modelSorterForward,
-        secondCriteriaDir: 0,
+        firstCriteriaDir: 0
     };
 
     constructor(private configAdminService: OnosConfigAdminService) {
@@ -59,152 +44,24 @@ export class ModelService {
         return a < b ? 1 : (a > b) ? -1 : 0;
     }
 
-    sortParamsFirst(sortCriterion: ModelSortCriterion, sortDir: number) {
-        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
-            case ModelSortCriterion.NAME * 2 | 1:
-                this.sortParams.firstColName = 'name';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NAME * 2 | 0:
-                this.sortParams.firstColName = 'name';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.VERSION * 2 | 1:
-                this.sortParams.firstColName = 'version';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.VERSION * 2 | 0:
-                this.sortParams.firstColName = 'version';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.MODULE * 2 | 1:
-                this.sortParams.firstColName = 'module';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.MODULE * 2 | 0:
-                this.sortParams.firstColName = 'module';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMRWPATHS * 2 | 1:
-                this.sortParams.firstColName = 'numrwpaths';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMRWPATHS * 2 | 0:
-                this.sortParams.firstColName = 'numrwpaths';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMROPATHS * 2 | 1:
-                this.sortParams.firstColName = 'numropaths';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMROPATHS * 2 | 0:
-                this.sortParams.firstColName = 'numropaths';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMYANGS * 2 | 1:
-                this.sortParams.firstColName = 'numyangs';
-                this.sortParams.firstCriteria = ModelService.modelSorterReverse;
-                this.sortParams.firstCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMYANGS * 2 | 0:
-                this.sortParams.firstColName = 'numyangs';
-                this.sortParams.firstCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            default:
-        }
+    sortParamsFirst(sortCriterion: string, sortDir: number) {
+        sortDir === 0 ? (this.sortParams.firstCriteria = ModelService.modelSorterForward)
+            : (this.sortParams.firstCriteria = ModelService.modelSorterReverse);
+        this.sortParams.firstColName = sortCriterion;
+        this.sortParams.firstCriteriaDir = sortDir;
     }
 
-    sortParamsSecond(sortCriterion: ModelSortCriterion, sortDir: number) {
-        switch (sortCriterion * 2 | Number(sortDir).valueOf()) {
-            case ModelSortCriterion.NAME * 2 | 1:
-                this.sortParams.secondColName = 'name';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NAME * 2 | 0:
-                this.sortParams.secondColName = 'name';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.secondCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.VERSION * 2 | 1:
-                this.sortParams.secondColName = 'version';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.VERSION * 2 | 0:
-                this.sortParams.secondColName = 'version';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.firstCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.MODULE * 2 | 1:
-                this.sortParams.secondColName = 'module';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.MODULE * 2 | 0:
-                this.sortParams.secondColName = 'module';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.secondCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMRWPATHS * 2 | 1:
-                this.sortParams.secondColName = 'numrwpaths';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMRWPATHS * 2 | 0:
-                this.sortParams.secondColName = 'numrwpaths';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.secondCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMROPATHS * 2 | 1:
-                this.sortParams.secondColName = 'numropaths';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMROPATHS * 2 | 0:
-                this.sortParams.secondColName = 'numropaths';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.secondCriteriaDir = 0;
-                break;
-            case ModelSortCriterion.NUMYANGS * 2 | 1:
-                this.sortParams.secondColName = 'numyangs';
-                this.sortParams.secondCriteria = ModelService.modelSorterReverse;
-                this.sortParams.secondCriteriaDir = 1;
-                break;
-            case ModelSortCriterion.NUMYANGS * 2 | 0:
-                this.sortParams.secondColName = 'numyangs';
-                this.sortParams.secondCriteria = ModelService.modelSorterForward;
-                this.sortParams.secondCriteriaDir = 0;
-                break;
-            default:
-        }
-    }
 
-    switchSortCol(colNameCriteria: ModelSortCriterion, direction: number): void {
-        if (this.sortParams.firstCol === colNameCriteria) {
+    switchSortCol(colName: string, direction: number): void {
+        if (this.sortParams.firstColName === colName) {
             if (this.sortParams.firstCriteriaDir === 1) {
-                this.sortParamsFirst(colNameCriteria, 0);
-                return;
+                return this.sortParamsFirst(colName, 0);
             } else {
-                this.sortParamsFirst(colNameCriteria, 1);
-                return;
+                return this.sortParamsFirst(colName, 1);
             }
         } else {
-            this.sortParamsSecond(this.sortParams.firstCol, this.sortParams.firstCriteriaDir);
-            this.sortParamsFirst(colNameCriteria, direction);
+            return this.sortParamsFirst(colName, direction);
         }
-
     }
 
 

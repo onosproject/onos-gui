@@ -15,7 +15,7 @@
  */
 
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ModelService, ModelSortCriterion } from '../model.service';
+import { ModelService } from '../model.service';
 import {
     FnService, IconService,
     LogService, NameInputResult, SortDir, TableAnnots,
@@ -44,12 +44,12 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     alertMsg: string;
     newConfigTitle: string = '';
     sortDirMap = new Map([
-        ['name', 'upArrow'],
-        ['version', 'upArrow'],
-        ['module', 'upArrow'],
-        ['numrwpaths', 'upArrow'],
-        ['numropaths', 'upArrow'],
-        ['numyangs', 'upArrow'],
+        ['name', 1],
+        ['version', 1],
+        ['module', 1],
+        ['numrwpaths', 1],
+        ['numropaths', 1],
+        ['numyangs', 1],
     ]);
 
     constructor(
@@ -61,21 +61,12 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         protected is: IconService,
         public modelService: ModelService,
         private orderPipe: OrderPipe,
-        private cdr: ChangeDetectorRef,
         private connectivityService: ConnectivityService
         // public pending: PendingNetChangeService,
     ) {
         super(fs, log, wss, 'models', 'id');
         this.is.loadIconDef('plus');
         this.is.loadIconDef('xClose');
-
-
-        this.sortParams = {
-            firstCol: 'name',
-            firstDir: SortDir.asc,
-            secondCol: 'id',
-            secondDir: SortDir.desc,
-        };
 
         this.tableDataFilter = <TableFilter>{
             queryStr: '',
@@ -122,44 +113,20 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     }
 
     onSortCol(colName: string): void {
-        const oldDir = this.sortDirMap.get(colName) === 'upArrow' ? 0 : 1;
-        const newDir = this.sortDirMap.get(colName) === 'upArrow' ? 'downArrow' : 'upArrow';
+        this.modelService.switchSortCol(colName.toLowerCase(), this.sortDirMap.get(colName));
+        const newDir = this.sortDirMap.get(colName) === 0 ? 1 : 0;
         this.sortDirMap.set(colName, newDir);
-        switch (colName) {
-            case 'name':
-                this.modelService.switchSortCol(ModelSortCriterion.NAME, oldDir);
-                break;
-            case 'version':
-                this.modelService.switchSortCol(ModelSortCriterion.VERSION, oldDir);
-                break;
-            case 'module':
-                this.modelService.switchSortCol(ModelSortCriterion.MODULE, oldDir);
-                break;
-            case 'numrwpaths':
-                this.modelService.switchSortCol(ModelSortCriterion.NUMRWPATHS, oldDir);
-                break;
-            case 'numropaths':
-                this.modelService.switchSortCol(ModelSortCriterion.NUMROPATHS, oldDir);
-                break;
-            case 'numyangs':
-                this.modelService.switchSortCol(ModelSortCriterion.NUMYANGS, oldDir);
-                break;
-            default:
-        }
+        this.sortIcon(colName);
     }
 
 
-
     sortIcon(colName: string): string {
-        return this.sortDirMap.get(colName);
-        // if (this.sortParams.firstCol === column) {
-        //     if (this.sortParams.firstDir === SortDir.asc) {
-        //         return 'upArrow';
-        //     } else {
-        //         return 'downArrow';
-        //     }
-        // } else {
-        //     return '';
-        // }
+        if (colName === this.modelService.sortParams.firstColName) {
+            if (this.modelService.sortParams.firstCriteriaDir == 0) {
+                return 'downArrow';
+            } else {
+                return 'upArrow';
+            }
+        }
     }
 }
