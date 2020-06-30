@@ -36,8 +36,7 @@ import { OrderPipe } from 'ngx-order-pipe';
         './models-list.theme.css',
         '../../fw/widget/table.css',
         '../../fw/widget/table.theme.css'
-    ],
-    // providers: [OrderPipe]
+    ], 
 })
 export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDestroy {
     selectedChange: ModelInfo; // The complete row - not just the selId
