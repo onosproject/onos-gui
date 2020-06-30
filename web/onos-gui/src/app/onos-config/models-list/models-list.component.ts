@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModelService } from '../model.service';
 import {
     FnService, IconService,
@@ -26,7 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModelInfo } from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
 import { ConnectivityService } from '../../connectivity.service';
 import * as grpcWeb from 'grpc-web';
-
+import { OrderPipe } from 'ngx-order-pipe';
 
 @Component({
     selector: 'onos-models-list',
@@ -36,7 +36,7 @@ import * as grpcWeb from 'grpc-web';
         './models-list.theme.css',
         '../../fw/widget/table.css',
         '../../fw/widget/table.theme.css'
-    ]
+    ],
 })
 export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDestroy {
     selectedChange: ModelInfo; // The complete row - not just the selId
@@ -51,6 +51,7 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         protected wss: WebSocketService,
         protected is: IconService,
         public modelService: ModelService,
+        private orderPipe: OrderPipe,
         private connectivityService: ConnectivityService
         // public pending: PendingNetChangeService,
     ) {
@@ -58,18 +59,9 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
         this.is.loadIconDef('plus');
         this.is.loadIconDef('xClose');
 
-        this.sortParams = {
-            firstCol: 'name',
-            firstDir: SortDir.asc,
-            secondCol: 'version',
-            secondDir: SortDir.desc,
-        };
-
         this.tableDataFilter = <TableFilter>{
-            // This is here until table pipe bug is fixed
             queryStr: '',
             queryBy: 'name',
-            // Default should be $ all fields
         };
 
         this.annots = <TableAnnots>{
@@ -109,5 +101,25 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
             // }
         }
         this.newConfigTitle = '';
+    }
+
+    onSortCol(colName: string): void {
+        if (this.modelService.sortParams.firstColName === colName) {
+            this.modelService.switchSortCol(colName.toLowerCase(), this.modelService.sortParams.firstCriteriaDir);
+        } else {
+            this.modelService.switchSortCol(colName.toLowerCase(), 1);
+        }
+        this.sortIcon(colName);
+    }
+
+
+    sortIcon(colName: string): string {
+        if (colName === this.modelService.sortParams.firstColName) {
+            if (this.modelService.sortParams.firstCriteriaDir === 0) {
+                return 'downArrow';
+            } else {
+                return 'upArrow';
+            }
+        }
     }
 }
