@@ -30,15 +30,7 @@ export class ModelService {
     sortParams = {
         firstColName: '',
         firstCriteria: ModelService.modelSorterForward,
-        firstCriteriaDir: 0, 
-        sortDirMap: new Map([
-            ['name', 1],
-            ['version', 1],
-            ['module', 1],
-            ['numrwpaths', 1],
-            ['numropaths', 1],
-            ['numyangs', 1],
-        ]) 
+        firstCriteriaDir: 0
     };
 
     constructor(private configAdminService: OnosConfigAdminService) {

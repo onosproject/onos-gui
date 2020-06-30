@@ -105,9 +105,11 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     }
 
     onSortCol(colName: string): void {
-        this.modelService.switchSortCol(colName.toLowerCase(), this.modelService.sortParams.sortDirMap.get(colName));
-        const newDir = this.modelService.sortParams.sortDirMap.get(colName) === 0 ? 1 : 0;
-        this.modelService.sortParams.sortDirMap.set(colName, newDir);
+        if (this.modelService.sortParams.firstColName === colName) {
+            this.modelService.switchSortCol(colName.toLowerCase(), this.modelService.sortParams.firstCriteriaDir);
+        } else {
+            this.modelService.switchSortCol(colName.toLowerCase(), 1);
+        }
         this.sortIcon(colName);
     }
 
