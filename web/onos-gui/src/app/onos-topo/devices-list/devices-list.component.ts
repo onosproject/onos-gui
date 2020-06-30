@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, NgModule } from '@angular/core';
 import {
     Device,
 } from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
@@ -22,10 +22,10 @@ import {
     FnService, IconService,
     LogService, SortDir, TableAnnots,
 } from 'gui2-fw-lib';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as grpcWeb from 'grpc-web';
-import {TopoDeviceService} from '../topodevice.service';
-import {ConnectivityService} from '../../connectivity.service';
+import { TopoDeviceService } from '../topodevice.service';
+import { ConnectivityService } from '../../connectivity.service';
 
 @Component({
     selector: 'onos-devices-list',
@@ -36,6 +36,7 @@ import {ConnectivityService} from '../../connectivity.service';
         '../../fw/widget/table.theme.css'
     ]
 })
+
 export class DevicesListComponent implements OnInit, OnDestroy {
     selectedChange: Device;
     selId: string = undefined;
@@ -46,6 +47,7 @@ export class DevicesListComponent implements OnInit, OnDestroy {
         protected log: LogService,
         protected as: ActivatedRoute,
         protected router: Router,
+        private cdr: ChangeDetectorRef,
         protected is: IconService,
         public topoDeviceService: TopoDeviceService,
         private connectivityService: ConnectivityService
@@ -61,6 +63,8 @@ export class DevicesListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        console.log(this.topoDeviceService.deviceList.size);
+
         this.connectivityService.hideVeil();
         this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
@@ -84,11 +88,25 @@ export class DevicesListComponent implements OnInit, OnDestroy {
         this.selId = undefined;
     }
 
-    onSort(colname: string) {
-        // not yet implemented
+    onSort(colName: string) {
+        if (this.topoDeviceService.sortParams.firstColName === colName) {
+            this.topoDeviceService.switchSortCol(colName.toLowerCase(), this.topoDeviceService.sortParams.firstCriteriaDir);
+        } else {
+            this.topoDeviceService.switchSortCol(colName.toLowerCase(), 1);
+        }
+        this.sortIcon(colName);
+        this.topoDeviceService.deviceList.set('wakeup', new Device());
+        this.cdr.detectChanges();
+        this.topoDeviceService.deviceList.delete('wakeup');
     }
 
-    sortIcon(colname: string) {
-        // not yet implemented
+    sortIcon(colName: string) {
+        if (colName === this.topoDeviceService.sortParams.firstColName) {
+            if (this.topoDeviceService.sortParams.firstCriteriaDir === 0) {
+                return 'downArrow';
+            } else {
+                return 'upArrow';
+            }
+        }
     }
 }

@@ -45,7 +45,7 @@
                     <th colId="version" (click)="onSort('version')">Version
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')"></onos-icon>
                     </th>
-                    <th colId="version" (click)="onSort('version')">Type
+                    <th colId="version" (click)="onSort('type')">Type
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('type')"></onos-icon>
                     </th>
                     <th colId="address" (click)="onSort('address')">Address
@@ -66,7 +66,7 @@
                 <tr *ngIf="topoDeviceService.deviceList.size === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
-                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue"
+                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue: topoDeviceService.sortParams.firstCriteria"
                     (click)="selectCallback($event, device.key, device.value)">
                     <td>{{ device.value.getId() }}</td>
                     <td>{{ device.value.getDisplayname() }}</td>
