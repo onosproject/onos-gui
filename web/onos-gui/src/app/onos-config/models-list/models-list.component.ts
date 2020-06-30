@@ -43,14 +43,6 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     selectedChange: ModelInfo; // The complete row - not just the selId
     alertMsg: string;
     newConfigTitle: string = '';
-    sortDirMap = new Map([
-        ['name', 1],
-        ['version', 1],
-        ['module', 1],
-        ['numrwpaths', 1],
-        ['numropaths', 1],
-        ['numyangs', 1],
-    ]);
 
     constructor(
         protected fs: FnService,
@@ -113,9 +105,9 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
     }
 
     onSortCol(colName: string): void {
-        this.modelService.switchSortCol(colName.toLowerCase(), this.sortDirMap.get(colName));
-        const newDir = this.sortDirMap.get(colName) === 0 ? 1 : 0;
-        this.sortDirMap.set(colName, newDir);
+        this.modelService.switchSortCol(colName.toLowerCase(), this.modelService.sortParams.sortDirMap.get(colName));
+        const newDir = this.modelService.sortParams.sortDirMap.get(colName) === 0 ? 1 : 0;
+        this.modelService.sortParams.sortDirMap.set(colName, newDir);
         this.sortIcon(colName);
     }
 
