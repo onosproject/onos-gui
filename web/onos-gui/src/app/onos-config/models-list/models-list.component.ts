@@ -122,7 +122,7 @@ export class ModelsListComponent extends TableBaseImpl implements OnInit, OnDest
 
     sortIcon(colName: string): string {
         if (colName === this.modelService.sortParams.firstColName) {
-            if (this.modelService.sortParams.firstCriteriaDir == 0) {
+            if (this.modelService.sortParams.firstCriteriaDir === 0) {
                 return 'downArrow';
             } else {
                 return 'upArrow';
