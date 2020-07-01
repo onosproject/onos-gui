@@ -21,14 +21,18 @@
             <div class="separator"></div>
         </div>
         <div class="search">
-            <!--            <input id="searchinput" [(ngModel)]="tableDataFilter.queryStr"-->
-            <!--                   type="search" #search placeholder="Search"/>-->
-            <!--            <select [(ngModel)]="tableDataFilter.queryBy">-->
-            <!--                <option value="" disabled>Search By</option>-->
-            <!--                &lt;!&ndash;                <option value="$">All Fields</option> Disabled until bug fix in table pipe is in  &ndash;&gt;-->
-            <!--                <option value="id">Id</option>-->
-            <!--                <option value="version">Version</option>-->
-            <!--            </select>-->
+            <input id="searchinput" [(ngModel)]="queryStr" type="search" #search placeholder="Search" />
+            <select [(ngModel)]="queryBy">
+                <option value="" disabled>Search By</option>
+                <option value="id">Id</option>
+                <option value="display">Display</option>
+                <option value="version">Version</option>
+                <option value="type">Type</option>
+                <option value="address">Address</option>
+                <option value="revision">Revision</option>
+                <option value="target">Target</option>
+                <option value="timeout">Timeout</option>
+            </select>
         </div>
     </div>
 
@@ -66,7 +70,7 @@
                 <tr *ngIf="topoDeviceService.deviceList.size === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
-                <tr *ngFor="let device of topoDeviceService.deviceList | keyvalue: topoDeviceService.sortParams.firstCriteria"
+                <tr *ngFor="let device of topoDeviceService.deviceList | deviceSearch: queryBy : queryStr | keyvalue: topoDeviceService.sortParams.firstCriteria"
                     (click)="selectCallback($event, device.key, device.value)">
                     <td>{{ device.value.getId() }}</td>
                     <td>{{ device.value.getDisplayname() }}</td>

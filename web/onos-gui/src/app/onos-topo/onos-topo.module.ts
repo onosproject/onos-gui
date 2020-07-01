@@ -24,9 +24,10 @@ import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
 import { DevicesListComponent } from './devices-list/devices-list.component';
 import { DeviceDetailComponent } from './device-detail/device-detail.component';
 import {TopoDeviceService} from './topodevice.service';
+import { DeviceSearchPipe } from './device-search.pipe';
 
 @NgModule({
-    declarations: [DevicesListComponent, DeviceDetailComponent],
+    declarations: [DevicesListComponent, DeviceDetailComponent, DeviceSearchPipe],
     imports: [
         CommonModule,
         FormsModule,
