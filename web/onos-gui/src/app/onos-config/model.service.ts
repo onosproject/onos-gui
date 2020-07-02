@@ -28,7 +28,7 @@ export class ModelService {
     modelInfoList: ModelInfo[] = [];
     modelInfoSub: Subscription;
     sortParams = {
-        firstColName: '',
+        firstColName: 'name',
         firstCriteria: ModelService.modelSorterForward,
         firstCriteriaDir: 0
     };
@@ -51,7 +51,6 @@ export class ModelService {
         this.sortParams.firstCriteriaDir = sortDir;
     }
 
-
     switchSortCol(colName: string, direction: number): void {
         if (this.sortParams.firstColName === colName) {
             if (this.sortParams.firstCriteriaDir === 1) {
@@ -63,7 +62,6 @@ export class ModelService {
             return this.sortParamsFirst(colName, direction);
         }
     }
-
 
     loadModelList(errCb: ErrorCallback): void {
         this.close();
