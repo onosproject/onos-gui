@@ -41,6 +41,8 @@ export class DevicesListComponent implements OnInit, OnDestroy {
     selectedChange: Device;
     selId: string = undefined;
     public annots: TableAnnots;
+    public queryBy = '';
+    public queryStr = '';
 
     constructor(
         protected fs: FnService,
@@ -109,4 +111,6 @@ export class DevicesListComponent implements OnInit, OnDestroy {
             }
         }
     }
+
 }
+
