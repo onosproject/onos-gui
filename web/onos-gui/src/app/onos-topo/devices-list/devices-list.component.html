@@ -22,7 +22,7 @@
         </div>
         <div class="search">
             <input id="searchinput" [(ngModel)]="queryStr" type="search" #search placeholder="Search" />
-            <select [(ngModel)]="queryBy">
+            <select [(ngModel)]="queryBy" (click)="onSearch()">
                 <option value="" disabled>Search By</option>
                 <option value="id">Id</option>
                 <option value="display">Display</option>

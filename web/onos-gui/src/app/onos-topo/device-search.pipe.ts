@@ -25,7 +25,6 @@ import { Device } from './proto/github.com/onosproject/onos-topo/api/device/devi
 export class DeviceSearchPipe implements PipeTransform {
 
     transform(devices: Map<String, Device>, queryBy: string, queryStr: string): any {
-        console.log(queryBy + ' ' + queryStr);
         const filtered = new Map<String, Device>();
         if (!devices) {
             return devices;
