@@ -25,7 +25,7 @@ import {
     ListCellsResponse,
     ListUesResponse,
     MapLayoutRequest, SetNumberUEsRequest,
-    SetNumberUEsResponse
+    SetNumberUEsResponse, ListUesRequest
 } from './github.com/onosproject/ran-simulator/api/trafficsim/trafficsim_pb';
 import * as grpcWeb from 'grpc-web';
 
@@ -105,10 +105,10 @@ export class RanSimulatorTrafficsimService {
     }
 
     requestListUes(asStream: boolean): Observable<ListUesResponse> {
-        const routeReq = new ListRoutesRequest();
-        routeReq.setSubscribe(asStream);
-        routeReq.setWithoutreplay(false);
-        const stream = this.trafficClient.listUes(routeReq, {});
+        const ueReq = new ListUesRequest();
+        ueReq.setSubscribe(asStream);
+        ueReq.setWithoutreplay(false);
+        const stream = this.trafficClient.listUes(ueReq, {});
 
         const listUesObs = new Observable<ListUesResponse>((observer: Subscriber<ListUesResponse>) => {
             stream.on('data', (resp: ListUesResponse) => {
