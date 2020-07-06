@@ -51,6 +51,7 @@ goog.exportSymbol('proto.interface.c1.StationLinkListRequest', null, global);
 goog.exportSymbol('proto.interface.c1.StationListRequest', null, global);
 goog.exportSymbol('proto.interface.c1.StationPowerOffset', null, global);
 goog.exportSymbol('proto.interface.c1.UEInfo', null, global);
+goog.exportSymbol('proto.interface.c1.UEInfoType', null, global);
 goog.exportSymbol('proto.interface.c1.UELinkInfo', null, global);
 goog.exportSymbol('proto.interface.c1.UELinkListRequest', null, global);
 goog.exportSymbol('proto.interface.c1.UEListRequest', null, global);
@@ -1003,7 +1004,8 @@ proto.interface.c1.StationListRequest.prototype.toObject = function(opt_includeI
 proto.interface.c1.StationListRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     ecgi: (f = msg.getEcgi()) && proto.interface.c1.ECGI.toObject(includeInstance, f),
-    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+    noreplay: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -1049,6 +1051,10 @@ proto.interface.c1.StationListRequest.deserializeBinaryFromReader = function(msg
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setSubscribe(value);
       break;
+    case 3:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setNoreplay(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1090,6 +1096,13 @@ proto.interface.c1.StationListRequest.serializeBinaryToWriter = function(message
   if (f) {
     writer.writeBool(
       2,
+      f
+    );
+  }
+  f = message.getNoreplay();
+  if (f) {
+    writer.writeBool(
+      3,
       f
     );
   }
@@ -1151,6 +1164,24 @@ proto.interface.c1.StationListRequest.prototype.setSubscribe = function(value) {
 };
 
 
+/**
+ * optional bool noReplay = 3;
+ * @return {boolean}
+ */
+proto.interface.c1.StationListRequest.prototype.getNoreplay = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.interface.c1.StationListRequest} returns this
+ */
+proto.interface.c1.StationListRequest.prototype.setNoreplay = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 3, value);
+};
+
+
 
 
 
@@ -1184,7 +1215,7 @@ proto.interface.c1.StationInfo.prototype.toObject = function(opt_includeInstance
 proto.interface.c1.StationInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     ecgi: (f = msg.getEcgi()) && proto.interface.c1.ECGI.toObject(includeInstance, f),
-    maxnumconnectedues: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    maxnumconnectedues: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -1226,7 +1257,7 @@ proto.interface.c1.StationInfo.deserializeBinaryFromReader = function(msg, reade
       reader.readMessage(value,proto.interface.c1.ECGI.deserializeBinaryFromReader);
       msg.setEcgi(value);
       break;
-    case 3:
+    case 2:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setMaxnumconnectedues(value);
       break;
@@ -1270,7 +1301,7 @@ proto.interface.c1.StationInfo.serializeBinaryToWriter = function(message, write
   f = message.getMaxnumconnectedues();
   if (f !== 0) {
     writer.writeUint32(
-      3,
+      2,
       f
     );
   }
@@ -1315,11 +1346,11 @@ proto.interface.c1.StationInfo.prototype.hasEcgi = function() {
 
 
 /**
- * optional uint32 maxNumConnectedUes = 3;
+ * optional uint32 maxNumConnectedUes = 2;
  * @return {number}
  */
 proto.interface.c1.StationInfo.prototype.getMaxnumconnectedues = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -1328,7 +1359,7 @@ proto.interface.c1.StationInfo.prototype.getMaxnumconnectedues = function() {
  * @return {!proto.interface.c1.StationInfo} returns this
  */
 proto.interface.c1.StationInfo.prototype.setMaxnumconnectedues = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -1365,7 +1396,8 @@ proto.interface.c1.StationLinkListRequest.prototype.toObject = function(opt_incl
 proto.interface.c1.StationLinkListRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     ecgi: (f = msg.getEcgi()) && proto.interface.c1.ECGI.toObject(includeInstance, f),
-    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 2, false)
+    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
+    noreplay: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
   };
 
   if (includeInstance) {
@@ -1411,6 +1443,10 @@ proto.interface.c1.StationLinkListRequest.deserializeBinaryFromReader = function
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setSubscribe(value);
       break;
+    case 3:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setNoreplay(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1452,6 +1488,13 @@ proto.interface.c1.StationLinkListRequest.serializeBinaryToWriter = function(mes
   if (f) {
     writer.writeBool(
       2,
+      f
+    );
+  }
+  f = message.getNoreplay();
+  if (f) {
+    writer.writeBool(
+      3,
       f
     );
   }
@@ -1510,6 +1553,24 @@ proto.interface.c1.StationLinkListRequest.prototype.getSubscribe = function() {
  */
 proto.interface.c1.StationLinkListRequest.prototype.setSubscribe = function(value) {
   return jspb.Message.setProto3BooleanField(this, 2, value);
+};
+
+
+/**
+ * optional bool noReplay = 3;
+ * @return {boolean}
+ */
+proto.interface.c1.StationLinkListRequest.prototype.getNoreplay = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.interface.c1.StationLinkListRequest} returns this
+ */
+proto.interface.c1.StationLinkListRequest.prototype.setNoreplay = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 
@@ -1758,7 +1819,8 @@ proto.interface.c1.UEListRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     crnti: jspb.Message.getFieldWithDefault(msg, 1, ""),
     ecgi: (f = msg.getEcgi()) && proto.interface.c1.ECGI.toObject(includeInstance, f),
-    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 3, false)
+    subscribe: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
+    noreplay: jspb.Message.getBooleanFieldWithDefault(msg, 4, false)
   };
 
   if (includeInstance) {
@@ -1808,6 +1870,10 @@ proto.interface.c1.UEListRequest.deserializeBinaryFromReader = function(msg, rea
       var value = /** @type {boolean} */ (reader.readBool());
       msg.setSubscribe(value);
       break;
+    case 4:
+      var value = /** @type {boolean} */ (reader.readBool());
+      msg.setNoreplay(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1856,6 +1922,13 @@ proto.interface.c1.UEListRequest.serializeBinaryToWriter = function(message, wri
   if (f) {
     writer.writeBool(
       3,
+      f
+    );
+  }
+  f = message.getNoreplay();
+  if (f) {
+    writer.writeBool(
+      4,
       f
     );
   }
@@ -1935,6 +2008,24 @@ proto.interface.c1.UEListRequest.prototype.setSubscribe = function(value) {
 };
 
 
+/**
+ * optional bool noReplay = 4;
+ * @return {boolean}
+ */
+proto.interface.c1.UEListRequest.prototype.getNoreplay = function() {
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 4, false));
+};
+
+
+/**
+ * @param {boolean} value
+ * @return {!proto.interface.c1.UEListRequest} returns this
+ */
+proto.interface.c1.UEListRequest.prototype.setNoreplay = function(value) {
+  return jspb.Message.setProto3BooleanField(this, 4, value);
+};
+
+
 
 
 
@@ -1969,7 +2060,8 @@ proto.interface.c1.UEInfo.toObject = function(includeInstance, msg) {
   var f, obj = {
     crnti: jspb.Message.getFieldWithDefault(msg, 1, ""),
     ecgi: (f = msg.getEcgi()) && proto.interface.c1.ECGI.toObject(includeInstance, f),
-    imsi: jspb.Message.getFieldWithDefault(msg, 3, "")
+    imsi: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    type: jspb.Message.getFieldWithDefault(msg, 4, 0)
   };
 
   if (includeInstance) {
@@ -2019,6 +2111,10 @@ proto.interface.c1.UEInfo.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setImsi(value);
       break;
+    case 4:
+      var value = /** @type {!proto.interface.c1.UEInfoType} */ (reader.readEnum());
+      msg.setType(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2067,6 +2163,13 @@ proto.interface.c1.UEInfo.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getType();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      4,
       f
     );
   }
@@ -2143,6 +2246,24 @@ proto.interface.c1.UEInfo.prototype.getImsi = function() {
  */
 proto.interface.c1.UEInfo.prototype.setImsi = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional UEInfoType type = 4;
+ * @return {!proto.interface.c1.UEInfoType}
+ */
+proto.interface.c1.UEInfo.prototype.getType = function() {
+  return /** @type {!proto.interface.c1.UEInfoType} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {!proto.interface.c1.UEInfoType} value
+ * @return {!proto.interface.c1.UEInfo} returns this
+ */
+proto.interface.c1.UEInfo.prototype.setType = function(value) {
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
@@ -8830,6 +8951,14 @@ proto.interface.c1.StationPowerOffset = {
   PA_DB_1: 5,
   PA_DB_2: 6,
   PA_DB_3: 7
+};
+
+/**
+ * @enum {number}
+ */
+proto.interface.c1.UEInfoType = {
+  MESSAGE_TYPE_UPDATE_UE: 0,
+  MESSAGE_TYPE_DELETE_UE: 1
 };
 
 /**
