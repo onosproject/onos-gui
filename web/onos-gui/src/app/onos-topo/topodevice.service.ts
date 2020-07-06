@@ -34,7 +34,7 @@ export class TopoDeviceService {
     topoDevicesSub: Subscription;
     onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
-        firstColName: '',
+        firstColName: 'id',
         firstCriteria: TopoDeviceService.topoDeviceSorterForwardId,
         firstCriteriaDir: 0
     };
@@ -59,50 +59,50 @@ export class TopoDeviceService {
     }
 
     static topoDeviceSorterForwardDisplay(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aDisplayname = a.value.getDisplayname();
-        const bDisplayname = b.value.getDisplayname();
+        const aDisplayname = a.value.getDisplayname() + a.value.getId();
+        const bDisplayname = b.value.getDisplayname() + b.value.getId();
         return aDisplayname < bDisplayname ? -1 : (aDisplayname > bDisplayname) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseDisplay(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aDisplayname = a.value.getDisplayname();
-        const bDisplayname = b.value.getDisplayname();
+        const aDisplayname = a.value.getDisplayname() + a.value.getId();
+        const bDisplayname = b.value.getDisplayname() + b.value.getId();
         return aDisplayname < bDisplayname ? 1 : (aDisplayname > bDisplayname) ? -1 : 0;
     }
 
     static topoDeviceSorterForwardType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aType = a.value.getType();
-        const bType = b.value.getType();
+        const aType = a.value.getType() + a.value.getId();
+        const bType = b.value.getType() + b.value.getId();
         return aType < bType ? -1 : (aType > bType) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aType = a.value.getType();
-        const bType = b.value.getType();
+        const aType = a.value.getType() + a.value.getId();
+        const bType = b.value.getType() + b.value.getId();
         return aType < bType ? 1 : (aType > bType) ? -1 : 0;
     }
 
     static topoDeviceSorterForwardVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aVersion = a.value.getVersion();
-        const bVersion = b.value.getVersion();
+        const aVersion = a.value.getVersion() + a.value.getId();
+        const bVersion = b.value.getVersion() + b.value.getId();
         return aVersion < bVersion ? -1 : (aVersion > bVersion) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aVersion = a.value.getVersion();
-        const bVersion = b.value.getVersion();
+        const aVersion = a.value.getVersion() + a.value.getId();
+        const bVersion = b.value.getVersion() + b.value.getId();
         return aVersion < bVersion ? 1 : (aVersion > bVersion) ? -1 : 0;
     }
 
     static topoDeviceSorterForwardAddress(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aAddress = a.value.getAddress();
-        const bAddress = b.value.getAddress();
+        const aAddress = a.value.getAddress() + a.value.getId();
+        const bAddress = b.value.getAddress() + b.value.getId();
         return aAddress < bAddress ? -1 : (aAddress > bAddress) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseAddress(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aAddress = a.value.getAddress();
-        const bAddress = b.value.getAddress();
+        const aAddress = a.value.getAddress() + a.value.getId();
+        const bAddress = b.value.getAddress() + b.value.getId();
         return aAddress < bAddress ? 1 : (aAddress > bAddress) ? -1 : 0;
     }
 
@@ -119,26 +119,26 @@ export class TopoDeviceService {
     }
 
     static topoDeviceSorterForwardTarget(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTarget = a.value.getTarget();
-        const bTarget = b.value.getTarget();
+        const aTarget = a.value.getTarget() + a.value.getId();
+        const bTarget = b.value.getTarget() + b.value.getId();
         return aTarget < bTarget ? -1 : (aTarget > bTarget) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseTarget(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTarget = a.value.getTarget();
-        const bTarget = b.value.getTarget();
+        const aTarget = a.value.getTarget() + a.value.getId();
+        const bTarget = b.value.getTarget() + b.value.getId();
         return aTarget < bTarget ? 1 : (aTarget > bTarget) ? -1 : 0;
     }
 
     static topoDeviceSorterForwardTimeout(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTimeout = a.value.getTimeout();
-        const bTimeout = b.value.getTimeout();
+        const aTimeout = a.value.getTimeout() + a.value.getId();
+        const bTimeout = b.value.getTimeout() + b.value.getId();
         return aTimeout < bTimeout ? -1 : (aTimeout > bTimeout) ? 1 : 0;
     }
 
     static topoDeviceSorterReverseTimeout(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTimeout = a.value.getTimeout();
-        const bTimeout = b.value.getTimeout();
+        const aTimeout = a.value.getTimeout() + a.value.getId();
+        const bTimeout = b.value.getTimeout() + b.value.getId();
         return aTimeout < bTimeout ? 1 : (aTimeout > bTimeout) ? -1 : 0;
     }
 
@@ -286,6 +286,4 @@ export class TopoDeviceService {
         return false;
     }
 }
-
-
 

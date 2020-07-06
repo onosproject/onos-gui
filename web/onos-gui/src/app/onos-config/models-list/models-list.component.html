@@ -72,7 +72,7 @@
                 <tr class="table-body" *ngIf="tableData.length === 0" class="no-data">
                     <td colspan="9">{{ annots.noRowsMsg }}</td>
                 </tr>
-                <tr *ngFor="let model of tableData | orderBy: modelService.sortParams.firstColName : false : false : modelService.sortParams.firstCriteria | filter:tableDataFilter"
+                <tr *ngFor="let model of tableData | orderBy: [modelService.sortParams.firstColName,'name'] : false : false : modelService.sortParams.firstCriteria | filter:tableDataFilter"
                     (click)="selectCallback($event, model); selectedChange = model"
                     [ngClass]="{selected: model.id === selId, 'data-change': isChanged(model.id)}">
                     <td>{{ model.name }}</td>
