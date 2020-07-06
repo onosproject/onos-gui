@@ -33,6 +33,9 @@ export class StationListRequest extends jspb.Message {
   getSubscribe(): boolean;
   setSubscribe(value: boolean): void;
 
+  getNoreplay(): boolean;
+  setNoreplay(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): StationListRequest.AsObject;
   static toObject(includeInstance: boolean, msg: StationListRequest): StationListRequest.AsObject;
@@ -45,6 +48,7 @@ export namespace StationListRequest {
   export type AsObject = {
     ecgi?: ECGI.AsObject,
     subscribe: boolean,
+    noreplay: boolean,
   }
 }
 
@@ -81,6 +85,9 @@ export class StationLinkListRequest extends jspb.Message {
   getSubscribe(): boolean;
   setSubscribe(value: boolean): void;
 
+  getNoreplay(): boolean;
+  setNoreplay(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): StationLinkListRequest.AsObject;
   static toObject(includeInstance: boolean, msg: StationLinkListRequest): StationLinkListRequest.AsObject;
@@ -93,6 +100,7 @@ export namespace StationLinkListRequest {
   export type AsObject = {
     ecgi?: ECGI.AsObject,
     subscribe: boolean,
+    noreplay: boolean,
   }
 }
 
@@ -134,6 +142,9 @@ export class UEListRequest extends jspb.Message {
   getSubscribe(): boolean;
   setSubscribe(value: boolean): void;
 
+  getNoreplay(): boolean;
+  setNoreplay(value: boolean): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UEListRequest.AsObject;
   static toObject(includeInstance: boolean, msg: UEListRequest): UEListRequest.AsObject;
@@ -147,6 +158,7 @@ export namespace UEListRequest {
     crnti: string,
     ecgi?: ECGI.AsObject,
     subscribe: boolean,
+    noreplay: boolean,
   }
 }
 
@@ -162,6 +174,9 @@ export class UEInfo extends jspb.Message {
   getImsi(): string;
   setImsi(value: string): void;
 
+  getType(): UEInfoType;
+  setType(value: UEInfoType): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): UEInfo.AsObject;
   static toObject(includeInstance: boolean, msg: UEInfo): UEInfo.AsObject;
@@ -175,6 +190,7 @@ export namespace UEInfo {
     crnti: string,
     ecgi?: ECGI.AsObject,
     imsi: string,
+    type: UEInfoType,
   }
 }
 
@@ -1058,6 +1074,10 @@ export enum StationPowerOffset {
   PA_DB_1 = 5,
   PA_DB_2 = 6,
   PA_DB_3 = 7,
+}
+export enum UEInfoType { 
+  MESSAGE_TYPE_UPDATE_UE = 0,
+  MESSAGE_TYPE_DELETE_UE = 1,
 }
 export enum C1MessageType { 
   C1_MESSAGE_UNKNOWN = 0,

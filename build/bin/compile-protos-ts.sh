@@ -54,7 +54,7 @@ rm -rf gogoproto
 
 # Add the license text to generated files
 for f in $(find web/onos-gui/src/app/*-*/proto/github.com/ -type f -name "*.d.ts"); do
-  cat ../build-tools/licensing/boilerplate.generatego.txt | sed -e '$a\\' | cat - $f > tempf && mv tempf $f
+  cat ../build-tools/licensing/boilerplates/SPDX-Apache-2.0/boilerplate.generatego.txt | sed -e '$a\\' | cat - $f > tempf && mv tempf $f
 done
 
 # Remove unused import for gogoproto
