@@ -16,6 +16,8 @@
 import {TestBed} from '@angular/core/testing';
 
 import {RanSimulatorTrafficsimService} from './ran-simulator-trafficsim.service';
+import {LoggedinService} from '../../loggedin.service';
+import {GRPC_WEB_SIM_PROXY} from '../ran-simulator.module';
 
 describe('RanSimulatorTrafficsimService', () => {
 
@@ -23,8 +25,15 @@ describe('RanSimulatorTrafficsimService', () => {
         TestBed.configureTestingModule({
             providers: [
                 {
+                    provide: GRPC_WEB_SIM_PROXY,
+                    useValue: 'http://localhost:8080'
+                },
+                {
+                    provide: LoggedinService,
+                },
+                {
                     provide: RanSimulatorTrafficsimService,
-                    useValue: new RanSimulatorTrafficsimService('http://localhost:8080')
+                    deps: [LoggedinService, GRPC_WEB_SIM_PROXY]
                 }
             ]
         });

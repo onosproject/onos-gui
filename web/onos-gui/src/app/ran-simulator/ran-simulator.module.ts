@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
+import {InjectionToken, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MapviewComponent} from './mapview/mapview.component';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
@@ -22,6 +22,9 @@ import {RouterModule} from '@angular/router';
 import {RanSimulatorTrafficsimService} from './proto/ran-simulator-trafficsim.service';
 import {grpc_web_sim_proxy} from '../../environments/environment';
 import {FormsModule} from '@angular/forms';
+import {LoggedinService} from '../loggedin.service';
+
+export const GRPC_WEB_SIM_PROXY = new InjectionToken<string>('grpc.web.sim.proxy');
 
 @NgModule({
     declarations: [MapviewComponent],
@@ -36,8 +39,12 @@ import {FormsModule} from '@angular/forms';
     ],
     providers: [
         {
+            provide: GRPC_WEB_SIM_PROXY,
+            useValue: grpc_web_sim_proxy
+        },
+        {
             provide: RanSimulatorTrafficsimService,
-            useValue: new RanSimulatorTrafficsimService(grpc_web_sim_proxy)
+            deps: [LoggedinService, GRPC_WEB_SIM_PROXY]
         }
     ]
 })
