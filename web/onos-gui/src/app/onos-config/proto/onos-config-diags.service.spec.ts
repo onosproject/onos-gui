@@ -17,13 +17,23 @@
 import {TestBed} from '@angular/core/testing';
 
 import {OnosConfigDiagsService} from './onos-config-diags.service';
+import {GRPC_WEB_CONFIG_PROXY} from '../onos-config.module';
+import {LoggedinService} from '../../loggedin.service';
+import {OnosConfigAdminService} from './onos-config-admin.service';
 
 describe('OnosConfigDiagsService', () => {
     beforeEach(() => TestBed.configureTestingModule({
             providers: [
                 {
-                    provide: OnosConfigDiagsService,
-                    useValue: new OnosConfigDiagsService('http://localhost:8080')
+                    provide: GRPC_WEB_CONFIG_PROXY,
+                    useValue: 'http://localhost:8080'
+                },
+                {
+                    provide: LoggedinService,
+                },
+                {
+                    provide: OnosConfigAdminService,
+                    deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY]
                 }
             ]
         }

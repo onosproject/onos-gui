@@ -30,6 +30,7 @@ import {
     Extension,
     RegisteredExtension
 } from './github.com/openconfig/gnmi/proto/gnmi_ext/gnmi_ext_pb';
+import {LoggedinService} from '../../loggedin.service';
 
 type CapabilityCallback = (e: grpcWeb.Error, r: CapabilityResponse) => void;
 type GnmiGetCallback = (e: grpcWeb.Error, r: GetResponse) => void;
@@ -40,7 +41,10 @@ export class OnosConfigGnmiService {
 
     gnmiService: gNMIClient;
 
-    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
+    constructor(
+        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private onosConfigUrl: string
+    ) {
         this.gnmiService = new gNMIClient(onosConfigUrl);
         console.log('gNMI Url', onosConfigUrl);
     }
@@ -48,7 +52,9 @@ export class OnosConfigGnmiService {
     requestCapabilities(cb: CapabilityCallback): void {
         const capabilitiesRequest = new CapabilityRequest();
         console.log('capabilities Request sent to', this.onosConfigUrl);
-        this.gnmiService.capabilities(capabilitiesRequest, {}, cb);
+        this.gnmiService.capabilities(capabilitiesRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        }, cb);
     }
 
     requestGetAllByDevice(deviceId: string, cb: GnmiGetCallback): void {
@@ -58,7 +64,9 @@ export class OnosConfigGnmiService {
         const wholeDeviceRequest = new GetRequest();
         wholeDeviceRequest.setPrefix(prefixPath);
         console.log('gNMI get Request sent to', this.onosConfigUrl, wholeDeviceRequest);
-        this.gnmiService.get(wholeDeviceRequest, {}, cb);
+        this.gnmiService.get(wholeDeviceRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        }, cb);
     }
 
     requestPushConfigToServer(updates: Array<Update>, nwChangeName: string, cb: GnmiSetCallback, version?: string, deviceType?: string) {
@@ -78,7 +86,9 @@ export class OnosConfigGnmiService {
             gnmiSetRequest.getExtensionList().push(deviceTypeExt);
         }
 
-        this.gnmiService.set(gnmiSetRequest, {}, cb);
+        this.gnmiService.set(gnmiSetRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        }, cb);
     }
 
     private generateExtension(value: string, nbr: number): Extension {

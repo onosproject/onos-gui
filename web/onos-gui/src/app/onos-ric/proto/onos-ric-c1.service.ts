@@ -24,13 +24,17 @@ import {
     UELinkListRequest
 } from './github.com/onosproject/onos-ric/api/nb/c1-interface_pb';
 import * as grpcWeb from 'grpc-web';
+import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class OnosRicC1Service {
 
     c1InterfaceClient: C1InterfaceServiceClient;
 
-    constructor(@Inject('onosRicUrl') private onosRicUrl: string) {
+    constructor(
+        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private onosRicUrl: string
+    ) {
         this.c1InterfaceClient = new C1InterfaceServiceClient(onosRicUrl);
 
         console.log('onos-ric grpc-web Url ', onosRicUrl);
@@ -39,7 +43,9 @@ export class OnosRicC1Service {
     requestListUeLinks(): Observable<UELinkInfo> {
         const req = new UELinkListRequest();
         req.setNoimsi(false);
-        const stream = this.c1InterfaceClient.listUELinks(req, {});
+        const stream = this.c1InterfaceClient.listUELinks(req, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         const listUeLinksObs = new Observable<UELinkInfo>((observer: Subscriber<UELinkInfo>) => {
             stream.on('data', (uelink: UELinkInfo) => {
                 observer.next(uelink);
@@ -57,7 +63,9 @@ export class OnosRicC1Service {
 
     requestListStations(): Observable<StationInfo> {
         const req = new StationListRequest();
-        const stream = this.c1InterfaceClient.listStations(req, {});
+        const stream = this.c1InterfaceClient.listStations(req, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         const listStationsObs = new Observable<StationInfo>((observer: Subscriber<StationInfo>) => {
             stream.on('data', (stationInfo: StationInfo) => {
                 observer.next(stationInfo);
@@ -76,7 +84,9 @@ export class OnosRicC1Service {
     requestListStationLinks(ecgi: ECGI): Observable<StationLinkInfo> {
         const req = new StationLinkListRequest();
         // req.setEcgi(ecgi); Not implemented in onos-ric
-        const stream = this.c1InterfaceClient.listStationLinks(req, {});
+        const stream = this.c1InterfaceClient.listStationLinks(req, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         const listStationLinksObs = new Observable<StationLinkInfo>((observer: Subscriber<StationLinkInfo>) => {
             stream.on('data', (stationLinkInfo: StationLinkInfo) => {
                 observer.next(stationLinkInfo);

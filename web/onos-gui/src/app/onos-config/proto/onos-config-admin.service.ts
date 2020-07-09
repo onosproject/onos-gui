@@ -29,13 +29,17 @@ import * as grpcWeb from 'grpc-web';
 import {Snapshot} from './github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 import * as google_protobuf_duration_pb from 'google-protobuf/google/protobuf/duration_pb';
 import {Observable, Subscriber} from 'rxjs';
+import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class OnosConfigAdminService {
 
     adminServiceClient: ConfigAdminServiceClient;
 
-    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
+    constructor(
+        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private onosConfigUrl: string
+    ) {
         this.adminServiceClient = new ConfigAdminServiceClient(onosConfigUrl);
 
         console.log('Config Admin Url ', onosConfigUrl);
@@ -50,7 +54,9 @@ export class OnosConfigAdminService {
             rollbackReq.setComment('Rolled back from GUI');
         }
         const rollbackObs = new Observable<RollbackResponse>((observer: Subscriber<RollbackResponse>) => {
-            const call = this.adminServiceClient.rollbackNetworkChange(rollbackReq, {}, (err, resp) => {
+            const call = this.adminServiceClient.rollbackNetworkChange(rollbackReq, {
+                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            }, (err, resp) => {
                 if (err) {
                     observer.error(err);
                 } else {
@@ -74,7 +80,9 @@ export class OnosConfigAdminService {
     requestListRegisteredModels(): Observable<ModelInfo> {
         const modelRequest = new ListModelsRequest();
         modelRequest.setVerbose(true);
-        const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {});
+        const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
 
         const modelsObs = new Observable<ModelInfo>((observer: Subscriber<ModelInfo>) => {
@@ -97,7 +105,9 @@ export class OnosConfigAdminService {
         snapshotsRequest.setSubscribe(true);
         snapshotsRequest.setId(wildcard);
         const stream = this.adminServiceClient.listSnapshots(
-            snapshotsRequest, {}
+            snapshotsRequest, {
+                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            }
         );
         console.log('ListSnapshots sent to', this.onosConfigUrl);
 
@@ -123,7 +133,9 @@ export class OnosConfigAdminService {
         compactRequest.setRetentionPeriod(retentionDuration);
         console.log('Compacting changes older than', retensionSecs, 'second(s)');
         const compactchangesObs = new Observable<CompactChangesResponse>((observer: Subscriber<CompactChangesResponse>) => {
-            const call = this.adminServiceClient.compactChanges(compactRequest, {}, (err, resp) => {
+            const call = this.adminServiceClient.compactChanges(compactRequest, {
+                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            }, (err, resp) => {
                 if (err) {
                     observer.error(err);
                 } else {

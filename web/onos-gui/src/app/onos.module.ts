@@ -26,6 +26,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NavComponent} from './nav/nav.component';
 import {K8sClientService} from './k8sclient.service';
 import {kubernetes_api_proxy} from '../environments/environment';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import {kubernetes_api_proxy} from '../environments/environment';
         HttpClientModule,
         ReactiveFormsModule,
         OnosRoutingModule,
+        OAuthModule.forRoot(),
         Gui2FwLibModule
     ],
     providers: [

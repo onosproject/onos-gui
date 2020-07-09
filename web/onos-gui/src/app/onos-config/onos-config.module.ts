@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
+import {InjectionToken, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {grpc_web_config_proxy, grpc_web_topo_proxy} from '../../environments/environment';
 import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
@@ -45,6 +45,10 @@ import {StringValueComponent} from './config-view/string-value/string-value.comp
 import {DeviceService} from './device.service';
 import {TopoDeviceService} from '../onos-topo/topodevice.service';
 import { OrderModule } from 'ngx-order-pipe';
+import {LoggedinService} from '../loggedin.service';
+
+const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
+export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config.proxy');
 
 @NgModule({
     declarations: [
@@ -76,20 +80,28 @@ import { OrderModule } from 'ngx-order-pipe';
     ],
     providers: [
         {
+            provide: GRPC_WEB_TOPO_PROXY,
+            useValue: grpc_web_topo_proxy
+        },
+        {
+            provide: GRPC_WEB_CONFIG_PROXY,
+            useValue: grpc_web_config_proxy
+        },
+        {
             provide: OnosConfigDiagsService,
-            useValue: new OnosConfigDiagsService(grpc_web_config_proxy)
+            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosConfigAdminService,
-            useValue: new OnosConfigAdminService(grpc_web_config_proxy)
+            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosConfigGnmiService,
-            useValue: new OnosConfigGnmiService(grpc_web_config_proxy)
+            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosTopoDeviceService,
-            useValue: new OnosTopoDeviceService(grpc_web_topo_proxy)
+            deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
         },
         {
             provide: ModelService,

@@ -28,13 +28,17 @@ import {
 import {Observable, Subscriber} from 'rxjs';
 import {Metadata} from 'grpc-web';
 import * as grpcWeb from 'grpc-web';
+import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class OnosConfigDiagsService {
     diagsService: ChangeServiceClient;
     opStateService: OpStateDiagsClient;
 
-    constructor(@Inject('onosConfigUrl') private onosConfigUrl: string) {
+    constructor(
+        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private onosConfigUrl: string
+    ) {
         this.diagsService = new ChangeServiceClient(onosConfigUrl);
         this.opStateService = new OpStateDiagsClient(onosConfigUrl);
 
@@ -44,7 +48,9 @@ export class OnosConfigDiagsService {
     requestNetworkChanges(): Observable<ListNetworkChangeResponse> {
         const listNetworkChangeRequest = new ListNetworkChangeRequest();
         listNetworkChangeRequest.setSubscribe(true);
-        const stream = this.diagsService.listNetworkChanges(listNetworkChangeRequest, {});
+        const stream = this.diagsService.listNetworkChanges(listNetworkChangeRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         console.log('ListNetworkChangeRequest sent to', this.onosConfigUrl);
 
         const networkChangesObs = new Observable<ListNetworkChangeResponse>((observer: Subscriber<ListNetworkChangeResponse>) => {
@@ -70,7 +76,9 @@ export class OnosConfigDiagsService {
         listDeviceChangesRequest.setSubscribe(true);
         listDeviceChangesRequest.setDeviceId(deviceId);
         listDeviceChangesRequest.setDeviceVersion(version);
-        const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, <Metadata>{});
+        const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        } as Metadata);
         console.log('ListDeviceChangeRequest for', deviceId, version, 'sent to', this.onosConfigUrl);
         const devicechangeObs = new Observable<ListDeviceChangeResponse>((observer: Subscriber<ListDeviceChangeResponse>) => {
             stream.on('data', (resp: ListDeviceChangeResponse) => {
@@ -94,7 +102,9 @@ export class OnosConfigDiagsService {
         const opStateRequest = new OpStateRequest();
         opStateRequest.setDeviceid(deviceId);
         opStateRequest.setSubscribe(subscribe);
-        const stream = this.opStateService.getOpState(opStateRequest, {});
+        const stream = this.opStateService.getOpState(opStateRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        } as Metadata);
         console.log('GetOpStateRequest sent to', this.onosConfigUrl, 'for', deviceId);
 
         const opstateObs = new Observable<OpStateResponse>((observer: Subscriber<OpStateResponse>) => {

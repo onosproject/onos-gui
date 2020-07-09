@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
+import {InjectionToken, NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {OnosTopoRoutingModule} from './onos-topo-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -25,6 +25,9 @@ import { DevicesListComponent } from './devices-list/devices-list.component';
 import { DeviceDetailComponent } from './device-detail/device-detail.component';
 import {TopoDeviceService} from './topodevice.service';
 import { DeviceSearchPipe } from './device-search.pipe';
+import {LoggedinService} from '../loggedin.service';
+
+const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 
 @NgModule({
     declarations: [DevicesListComponent, DeviceDetailComponent, DeviceSearchPipe],
@@ -37,8 +40,12 @@ import { DeviceSearchPipe } from './device-search.pipe';
     ],
     providers: [
         {
+            provide: GRPC_WEB_TOPO_PROXY,
+            useValue: grpc_web_topo_proxy
+        },
+        {
             provide: OnosTopoDeviceService,
-            useValue: new OnosTopoDeviceService(grpc_web_topo_proxy)
+            deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
         },
         {
             provide: TopoDeviceService,

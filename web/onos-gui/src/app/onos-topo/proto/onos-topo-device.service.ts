@@ -21,22 +21,28 @@ import {
 } from './github.com/onosproject/onos-topo/api/device/device_pb';
 import {Observable, Subscriber} from 'rxjs';
 import * as grpcWeb from 'grpc-web';
+import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class OnosTopoDeviceService {
 
     deviceServiceClient: DeviceServiceClient;
 
-    constructor(@Inject('onosTopoUrl') private onosTopoUrl: string) {
+    constructor(
+        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private onosTopoUrl: string
+    ) {
         this.deviceServiceClient = new DeviceServiceClient(onosTopoUrl);
 
-        console.log('Topo Device Url', onosTopoUrl);
+        console.log('Topo Device Url', onosTopoUrl, loggedinService.email);
     }
 
     requestListDevices(subscribe: boolean): Observable<ListResponse> {
         const listRequest = new ListRequest();
         listRequest.setSubscribe(subscribe);
-        const stream = this.deviceServiceClient.list(listRequest, {});
+        const stream = this.deviceServiceClient.list(listRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+        });
         console.log('ListDevices sent to', this.onosTopoUrl);
         const topoObs = new Observable<ListResponse>((observer: Subscriber<ListResponse>) => {
             stream.on('data', (listResponse: ListResponse) => {
