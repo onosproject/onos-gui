@@ -53,7 +53,7 @@ export class OnosConfigGnmiService {
         const capabilitiesRequest = new CapabilityRequest();
         console.log('capabilities Request sent to', this.onosConfigUrl);
         this.gnmiService.capabilities(capabilitiesRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         }, cb);
     }
 
@@ -65,7 +65,7 @@ export class OnosConfigGnmiService {
         wholeDeviceRequest.setPrefix(prefixPath);
         console.log('gNMI get Request sent to', this.onosConfigUrl, wholeDeviceRequest);
         this.gnmiService.get(wholeDeviceRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         }, cb);
     }
 
@@ -87,7 +87,7 @@ export class OnosConfigGnmiService {
         }
 
         this.gnmiService.set(gnmiSetRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         }, cb);
     }
 

@@ -44,7 +44,7 @@ export class OnosRicC1Service {
         const req = new UELinkListRequest();
         req.setNoimsi(false);
         const stream = this.c1InterfaceClient.listUELinks(req, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         const listUeLinksObs = new Observable<UELinkInfo>((observer: Subscriber<UELinkInfo>) => {
             stream.on('data', (uelink: UELinkInfo) => {
@@ -64,7 +64,7 @@ export class OnosRicC1Service {
     requestListStations(): Observable<StationInfo> {
         const req = new StationListRequest();
         const stream = this.c1InterfaceClient.listStations(req, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         const listStationsObs = new Observable<StationInfo>((observer: Subscriber<StationInfo>) => {
             stream.on('data', (stationInfo: StationInfo) => {
@@ -85,7 +85,7 @@ export class OnosRicC1Service {
         const req = new StationLinkListRequest();
         // req.setEcgi(ecgi); Not implemented in onos-ric
         const stream = this.c1InterfaceClient.listStationLinks(req, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         const listStationLinksObs = new Observable<StationLinkInfo>((observer: Subscriber<StationLinkInfo>) => {
             stream.on('data', (stationLinkInfo: StationLinkInfo) => {

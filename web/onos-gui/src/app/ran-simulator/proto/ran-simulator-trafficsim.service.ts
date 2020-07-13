@@ -47,7 +47,7 @@ export class RanSimulatorTrafficsimService {
     requestGetMapLayout(): Observable<MapLayout> {
         const getMapLayoutObs = new Observable<MapLayout>( (observer: Subscriber<MapLayout>) => {
             const call = this.trafficClient.getMapLayout(new MapLayoutRequest(), {
-                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+                Authorization: 'Bearer ' + this.loggedinService.idToken,
             }, ((err, response) => {
                 if (err) {
                     observer.error(err);
@@ -69,7 +69,7 @@ export class RanSimulatorTrafficsimService {
         const req = new ListCellsRequest();
         req.setSubscribe(asStream);
         const stream = this.trafficClient.listCells(req, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
 
         const listTowersObs = new Observable<ListCellsResponse>((observer: Subscriber<ListCellsResponse>) => {
@@ -95,7 +95,7 @@ export class RanSimulatorTrafficsimService {
         routeReq.setSubscribe(asStream);
         routeReq.setWithoutreplay(false);
         const stream = this.trafficClient.listRoutes(routeReq, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
 
         const listRoutesObs = new Observable<ListRoutesResponse>((observer: Subscriber<ListRoutesResponse>) => {
@@ -119,7 +119,7 @@ export class RanSimulatorTrafficsimService {
         ueReq.setSubscribe(asStream);
         ueReq.setWithoutreplay(false);
         const stream = this.trafficClient.listUes(ueReq, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
 
         const listUesObs = new Observable<ListUesResponse>((observer: Subscriber<ListUesResponse>) => {
@@ -143,7 +143,7 @@ export class RanSimulatorTrafficsimService {
         req.setNumber(numUEs);
         const setNumUeObs = new Observable<SetNumberUEsResponse>((observer: Subscriber<SetNumberUEsResponse>) => {
             const call = this.trafficClient.setNumberUEs(req, {
-                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+                Authorization: 'Bearer ' + this.loggedinService.idToken,
             }, (err, resp) => {
                 if (err) {
                     observer.error(err);
