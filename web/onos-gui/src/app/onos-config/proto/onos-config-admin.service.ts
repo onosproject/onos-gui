@@ -55,7 +55,7 @@ export class OnosConfigAdminService {
         }
         const rollbackObs = new Observable<RollbackResponse>((observer: Subscriber<RollbackResponse>) => {
             const call = this.adminServiceClient.rollbackNetworkChange(rollbackReq, {
-                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+                Authorization: 'Bearer ' + this.loggedinService.idToken,
             }, (err, resp) => {
                 if (err) {
                     observer.error(err);
@@ -81,7 +81,7 @@ export class OnosConfigAdminService {
         const modelRequest = new ListModelsRequest();
         modelRequest.setVerbose(true);
         const stream = this.adminServiceClient.listRegisteredModels(modelRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         console.log('ListRegisteredModels sent to', this.onosConfigUrl);
 
@@ -106,7 +106,7 @@ export class OnosConfigAdminService {
         snapshotsRequest.setId(wildcard);
         const stream = this.adminServiceClient.listSnapshots(
             snapshotsRequest, {
-                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+                Authorization: 'Bearer ' + this.loggedinService.idToken,
             }
         );
         console.log('ListSnapshots sent to', this.onosConfigUrl);
@@ -134,7 +134,7 @@ export class OnosConfigAdminService {
         console.log('Compacting changes older than', retensionSecs, 'second(s)');
         const compactchangesObs = new Observable<CompactChangesResponse>((observer: Subscriber<CompactChangesResponse>) => {
             const call = this.adminServiceClient.compactChanges(compactRequest, {
-                Authorization: 'Bearer ' + this.loggedinService.accessToken,
+                Authorization: 'Bearer ' + this.loggedinService.idToken,
             }, (err, resp) => {
                 if (err) {
                     observer.error(err);

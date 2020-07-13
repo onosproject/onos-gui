@@ -49,7 +49,7 @@ export class OnosConfigDiagsService {
         const listNetworkChangeRequest = new ListNetworkChangeRequest();
         listNetworkChangeRequest.setSubscribe(true);
         const stream = this.diagsService.listNetworkChanges(listNetworkChangeRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         console.log('ListNetworkChangeRequest sent to', this.onosConfigUrl);
 
@@ -77,7 +77,7 @@ export class OnosConfigDiagsService {
         listDeviceChangesRequest.setDeviceId(deviceId);
         listDeviceChangesRequest.setDeviceVersion(version);
         const stream = this.diagsService.listDeviceChanges(listDeviceChangesRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         } as Metadata);
         console.log('ListDeviceChangeRequest for', deviceId, version, 'sent to', this.onosConfigUrl);
         const devicechangeObs = new Observable<ListDeviceChangeResponse>((observer: Subscriber<ListDeviceChangeResponse>) => {
@@ -103,7 +103,7 @@ export class OnosConfigDiagsService {
         opStateRequest.setDeviceid(deviceId);
         opStateRequest.setSubscribe(subscribe);
         const stream = this.opStateService.getOpState(opStateRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.accessToken,
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
         } as Metadata);
         console.log('GetOpStateRequest sent to', this.onosConfigUrl, 'for', deviceId);
 
