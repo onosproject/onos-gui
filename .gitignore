@@ -1,3 +1,5 @@
 .idea
 node_modules
 dist
+web/.DS_Store
+.DS_Store
