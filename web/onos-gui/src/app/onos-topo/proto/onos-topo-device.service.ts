@@ -14,25 +14,29 @@
  * limitations under the License.
  */
 
-import {Inject, Injectable} from '@angular/core';
-import {DeviceServiceClient} from './github.com/onosproject/onos-topo/api/device/DeviceServiceClientPb';
+import { Inject, Injectable } from '@angular/core';
+import { DeviceServiceClient } from './github.com/onosproject/onos-topo/api/device/DeviceServiceClientPb';
 import {
     ListRequest, ListResponse
 } from './github.com/onosproject/onos-topo/api/device/device_pb';
-import {Observable, Subscriber} from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import * as grpcWeb from 'grpc-web';
-import {LoggedinService} from '../../loggedin.service';
+import { LoggedinService } from '../../loggedin.service';
+import { TopoClient } from './github.com/onosproject/onos-topo/api/topo/TopoServiceClientPb';
+import { SubscribeResponse, SubscribeRequest } from './github.com/onosproject/onos-topo/api/topo/topo_pb';
 
 @Injectable()
 export class OnosTopoDeviceService {
 
     deviceServiceClient: DeviceServiceClient;
+    topoServiceClient: TopoClient;
 
     constructor(
         @Inject('loggedinService') public loggedinService: LoggedinService,
         private onosTopoUrl: string
     ) {
         this.deviceServiceClient = new DeviceServiceClient(onosTopoUrl);
+        this.topoServiceClient = new TopoClient(onosTopoUrl);
 
         console.log('Topo Device Url', onosTopoUrl, loggedinService.email);
     }
@@ -47,6 +51,28 @@ export class OnosTopoDeviceService {
         const topoObs = new Observable<ListResponse>((observer: Subscriber<ListResponse>) => {
             stream.on('data', (listResponse: ListResponse) => {
                 observer.next(listResponse);
+            });
+            stream.on('error', (error: grpcWeb.Error) => {
+                observer.error(error);
+            });
+            stream.on('end', () => {
+                observer.complete();
+            });
+            return () => stream.cancel();
+        });
+        return topoObs;
+    }
+
+    requestListTopo(subscribe: boolean): Observable<SubscribeResponse> {
+        const subscribeRequest = new SubscribeRequest();
+        // subscribeRequest.setSubscribe();
+        const stream = this.topoServiceClient.subscribe(subscribeRequest, {
+            Authorization: 'Bearer ' + this.loggedinService.idToken,
+        });
+        console.log('Topo data sent to', this.onosTopoUrl);
+        const topoObs = new Observable<SubscribeResponse>((observer: Subscriber<SubscribeResponse>) => {
+            stream.on('data', (subscribeResponse: SubscribeResponse) => {
+                observer.next(subscribeResponse);
             });
             stream.on('error', (error: grpcWeb.Error) => {
                 observer.error(error);
