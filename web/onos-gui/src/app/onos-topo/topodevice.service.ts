@@ -34,6 +34,7 @@ import { filter } from 'rxjs/operators';
 export class TopoDeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     topoDevicesSub: Subscription;
+    topoEntitySub: Subscription;
     entityList: Map<string, Entity>; // Expect <dev-id:dev-ver> as key
     onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
@@ -265,7 +266,7 @@ export class TopoDeviceService {
     }
 
     watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: Update.Type, entity: Entity) => void) {
-        this.topoDevicesSub = this.onosTopoDeviceService.requestListTopo().pipe(
+        this.topoEntitySub = this.onosTopoDeviceService.requestListTopo().pipe(
             filter(x => x.getUpdate().getObject().getType() === 1)
         ).subscribe(
             (resp: SubscribeResponse) => {
@@ -285,21 +286,6 @@ export class TopoDeviceService {
                 } else if (resp.getUpdate().getType() === Update.Type.MODIFY) {
                     const updated = resp.getUpdate().getObject().getEntity();
                     this.entityList.set(name, updated);
-                    // const protosHandled: Protocol[] = [];
-                    // this.entityList.get(name).getProtocolsList().forEach((protocol) => {
-                    //     protosHandled.push(protocol.getProtocol());
-                    //     const newProtoState =
-                    //         updated.getProtocolsList().find((p) => p.getProtocol() === protocol.getProtocol());
-                    //     if (protocol.getChannelstate() !== newProtoState.getChannelstate() ||
-                    //         protocol.getConnectivitystate() !== newProtoState.getConnectivitystate() ||
-                    //         protocol.getServicestate() !== newProtoState.getServicestate()) {
-                    //         this.entityList.set(name, resp.getUpdate().getObject().getEntity());
-                    //     }
-                    // });
-                    // In case there are some in the new set that are not in the old - just push them
-                    // updated.getProtocolsList().filter((p) => !protosHandled.includes(p.getProtocol())).forEach((p) => {
-                    //     this.entityList.set(name, resp.getUpdate().getObject().getEntity());
-                    // });
                 } else {
                     console.log('Unhandled Topo update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
                 }
@@ -353,6 +339,14 @@ export class TopoDeviceService {
             return true;
         }
         return false;
+    }
+
+    stopWatchingTopoEntity() {
+        this.entityList.clear();
+        if (this.topoEntitySub) {
+            this.topoEntitySub.unsubscribe();
+        }
+        console.log('Stopped watching topo devices');
     }
 }
 
