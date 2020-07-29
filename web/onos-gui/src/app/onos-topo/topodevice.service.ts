@@ -269,7 +269,7 @@ export class TopoDeviceService {
             filter(x => x.getUpdate().getObject().getType() === 1)
         ).subscribe(
             (resp: SubscribeResponse) => {
-                const name = resp.getUpdate().getObject().getType() + " " + resp.getUpdate().getObject().getId();
+                const name = resp.getUpdate().getObject().getType() + ' ' + resp.getUpdate().getObject().getId();
                 console.log('List Topo Entity response ', name);
                 if (!this.entityList.has(name) &&
                     (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
@@ -312,7 +312,7 @@ export class TopoDeviceService {
     }
 
 
-    removeEntity(name: string) : boolean {
+    removeEntity(name: string): boolean {
         if (this.entityList.has(name)) {
             this.entityList.delete(name);
             return true;
@@ -320,8 +320,8 @@ export class TopoDeviceService {
         return false;
     }
 
-    addTopoEntity(obj: Object) : boolean  {
-        const name = obj.getId(); 
+    addTopoEntity(obj: Object): boolean  {
+        const name = obj.getId();
         if (!this.deviceList.has(name)) {
             this.entityList.set(name, obj.getEntity());
             return true;
