@@ -45,7 +45,7 @@ export class OnosTopoDeviceService {
         const listRequest = new ListRequest();
         listRequest.setSubscribe(subscribe);
         const stream = this.deviceServiceClient.list(listRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            // Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         console.log('ListDevices sent to', this.onosTopoUrl);
         const topoObs = new Observable<ListResponse>((observer: Subscriber<ListResponse>) => {
@@ -63,13 +63,12 @@ export class OnosTopoDeviceService {
         return topoObs;
     }
 
-    requestListTopo(subscribe: boolean): Observable<SubscribeResponse> {
+    requestListTopo(): Observable<SubscribeResponse> {
         const subscribeRequest = new SubscribeRequest();
-        // subscribeRequest.setSubscribe();
         const stream = this.topoServiceClient.subscribe(subscribeRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            // Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
-        console.log('Topo data sent to', this.onosTopoUrl);
+        console.log('Topo entity data sent to', this.onosTopoUrl);
         const topoObs = new Observable<SubscribeResponse>((observer: Subscriber<SubscribeResponse>) => {
             stream.on('data', (subscribeResponse: SubscribeResponse) => {
                 observer.next(subscribeResponse);
@@ -85,3 +84,4 @@ export class OnosTopoDeviceService {
         return topoObs;
     }
 }
+
