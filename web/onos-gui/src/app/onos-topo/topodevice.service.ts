@@ -24,6 +24,8 @@ import * as grpcWeb from 'grpc-web';
 import { Subscription } from 'rxjs';
 import { OnosTopoDeviceService } from './proto/onos-topo-device.service';
 import { KeyValue } from '@angular/common';
+import { Entity, SubscribeResponse, Update, Object } from './proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import { filter } from 'rxjs/operators';
 
 
 @Injectable({
@@ -32,6 +34,8 @@ import { KeyValue } from '@angular/common';
 export class TopoDeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     topoDevicesSub: Subscription;
+    topoEntitySub: Subscription;
+    entityList: Map<string, Entity>; // Expect <dev-id:dev-ver> as key
     onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
         firstColName: 'id',
@@ -43,6 +47,7 @@ export class TopoDeviceService {
         onosTopoDeviceService: OnosTopoDeviceService
     ) {
         this.deviceList = new Map<string, Device>();
+        this.entityList = new Map<string, Entity>();
         this.onosTopoDeviceService = onosTopoDeviceService;
     }
 
@@ -260,6 +265,56 @@ export class TopoDeviceService {
         );
     }
 
+    watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: Update.Type, entity: Entity) => void) {
+        this.topoEntitySub = this.onosTopoDeviceService.requestListTopo().pipe(
+            filter(x => x.getUpdate().getObject().getType() === 1)
+        ).subscribe(
+            (resp: SubscribeResponse) => {
+                const name = resp.getUpdate().getObject().getType() + ' ' + resp.getUpdate().getObject().getId();
+                console.log('List Topo Entity response ', name);
+                if (!this.entityList.has(name) &&
+                    (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
+                    const added = this.addTopoEntity(resp.getUpdate().getObject());
+                    if (added && updateCb !== undefined) {
+                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject().getEntity());
+                    }
+                } else if (this.entityList.has(name) && resp.getUpdate().getType() === Update.Type.DELETE) {
+                    const removed = this.removeEntity(resp.getUpdate().getObject().getId());
+                    if (removed && updateCb) {
+                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject().getEntity());
+                    }
+                } else if (resp.getUpdate().getType() === Update.Type.MODIFY) {
+                    const updated = resp.getUpdate().getObject().getEntity();
+                    this.entityList.set(name, updated);
+                } else {
+                    console.log('Unhandled Topo update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
+                }
+            },
+            (error) => {
+                console.log('Error on topo entity subscription', error);
+                errorCb(error);
+            }
+        );
+    }
+
+
+    removeEntity(name: string): boolean {
+        if (this.entityList.has(name)) {
+            this.entityList.delete(name);
+            return true;
+        }
+        return false;
+    }
+
+    addTopoEntity(obj: Object): boolean  {
+        const name = obj.getId();
+        if (!this.deviceList.has(name)) {
+            this.entityList.set(name, obj.getEntity());
+            return true;
+        }
+        return false;
+    }
+
     stopWatchingTopoDevices() {
         this.deviceList.clear();
         if (this.topoDevicesSub) {
@@ -285,5 +340,14 @@ export class TopoDeviceService {
         }
         return false;
     }
+
+    stopWatchingTopoEntity() {
+        this.entityList.clear();
+        if (this.topoEntitySub) {
+            this.topoEntitySub.unsubscribe();
+        }
+        console.log('Stopped watching topo devices');
+    }
 }
+
 
