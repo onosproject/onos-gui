@@ -1,0 +1,82 @@
+<!--
+~ Copyright 2019-present Open Networking Foundation
+~
+~ Licensed under the Apache License, Version 2.0 (the "License");
+~ you may not use this file except in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~     http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing, software
+~ distributed under the License is distributed on an "AS IS" BASIS,
+~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+~ See the License for the specific language governing permissions and
+~ limitations under the License.
+-->
+
+<div id="ov-entity">
+    <div class="tabular-header">
+        <h2>Entities ({{ topoDeviceService.entityList.size }} total)</h2>
+        <div class="ctrl-btns">
+            <div class="separator"></div>
+        </div>
+        <div class="search">
+            <input id="searchinput" [(ngModel)]="queryStr" type="search" #search placeholder="Search" />
+            <!-- <select [(ngModel)]="queryBy">
+                <option value="" disabled>Search By</option>
+                <option value="id">Id</option>
+                <option value="display">Display</option>
+                <option value="version">Version</option>
+                <option value="type">Type</option>
+                <option value="address">Address</option>
+                <option value="revision">Revision</option>
+                <option value="target">Target</option>
+                <option value="timeout">Timeout</option>
+            </select> -->
+        </div>
+    </div>
+
+    <div id="summary-list" class="summary-list">
+        <table class="table table-sticky">
+            <thead>
+                <tr>
+                    <th colId="id" (click)="onSort('id')">Id
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('id')"></onos-icon>
+                    </th>
+                    <th colId="displayName" (click)="onSort('displayName')">Display Name
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('displayName')">
+                        </onos-icon>
+                    </th>
+                    <th colId="version" (click)="onSort('version')">Version
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')">
+                        </onos-icon>
+                    </th>
+                    <th colId="type" (click)="onSort('type')">Type
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('type')"></onos-icon>
+                    </th>
+                    <th colId="entity" (click)="onSort('entity')">Entity
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('entity')"></onos-icon>
+                    </th>
+                    <th colId="kind" (click)="onSort('kind')">Kind
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('kind')"></onos-icon>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngIf="topoDeviceService.entityList.size === 0" class="no-data">
+                    <td colspan="9">{{ annots.noRowsMsg }}</td>
+                </tr>
+                <tr *ngFor="let entity of topoDeviceService.entityList | keyvalue"
+                    (click)="selectCallback($event, entity.key, entity.value)">
+                    <td>{{ entity.value.getId() }}</td>
+                    <td>{{ printMapValue(entity.value.getAttributesMap(), 'displayname') }}</td>
+                    <td>{{ printMapValue(entity.value.getAttributesMap(), 'version') }}</td>
+                    <td>{{ entity.value.getType() }}</td>
+                    <td>{{ entity.value.getEntity() }}</td>
+                    <td>{{ entity.value.getKind() }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

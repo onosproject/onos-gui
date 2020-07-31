@@ -26,11 +26,12 @@ import { DeviceDetailComponent } from './device-detail/device-detail.component';
 import {TopoDeviceService} from './topodevice.service';
 import { DeviceSearchPipe } from './device-search.pipe';
 import {LoggedinService} from '../loggedin.service';
+import { EntityListComponent } from './entity-list/entity-list.component';
 
 const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 
 @NgModule({
-    declarations: [DevicesListComponent, DeviceDetailComponent, DeviceSearchPipe],
+    declarations: [DevicesListComponent, DeviceDetailComponent, DeviceSearchPipe, EntityListComponent],
     imports: [
         CommonModule,
         FormsModule,

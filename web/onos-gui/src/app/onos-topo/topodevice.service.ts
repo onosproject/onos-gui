@@ -35,7 +35,7 @@ export class TopoDeviceService {
     deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
     topoDevicesSub: Subscription;
     topoEntitySub: Subscription;
-    entityList: Map<string, Entity>; // Expect <dev-id:dev-ver> as key
+    entityList: Map<string, Object>; // Expect <dev-id:dev-ver> as key
     onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
         firstColName: 'id',
@@ -265,7 +265,7 @@ export class TopoDeviceService {
         );
     }
 
-    watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: Update.Type, entity: Entity) => void) {
+    watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: Update.Type, entity: Object) => void) {
         this.topoEntitySub = this.onosTopoDeviceService.requestListTopo().pipe(
             filter(x => x.getUpdate().getObject().getType() === 1)
         ).subscribe(
@@ -276,15 +276,15 @@ export class TopoDeviceService {
                     (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
                     const added = this.addTopoEntity(resp.getUpdate().getObject());
                     if (added && updateCb !== undefined) {
-                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject().getEntity());
+                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
                     }
                 } else if (this.entityList.has(name) && resp.getUpdate().getType() === Update.Type.DELETE) {
                     const removed = this.removeEntity(resp.getUpdate().getObject().getId());
                     if (removed && updateCb) {
-                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject().getEntity());
+                        updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
                     }
                 } else if (resp.getUpdate().getType() === Update.Type.MODIFY) {
-                    const updated = resp.getUpdate().getObject().getEntity();
+                    const updated = resp.getUpdate().getObject();
                     this.entityList.set(name, updated);
                 } else {
                     console.log('Unhandled Topo update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
@@ -297,7 +297,6 @@ export class TopoDeviceService {
         );
     }
 
-
     removeEntity(name: string): boolean {
         if (this.entityList.has(name)) {
             this.entityList.delete(name);
@@ -309,18 +308,10 @@ export class TopoDeviceService {
     addTopoEntity(obj: Object): boolean  {
         const name = obj.getId();
         if (!this.deviceList.has(name)) {
-            this.entityList.set(name, obj.getEntity());
+            this.entityList.set(name, obj);
             return true;
         }
         return false;
-    }
-
-    stopWatchingTopoDevices() {
-        this.deviceList.clear();
-        if (this.topoDevicesSub) {
-            this.topoDevicesSub.unsubscribe();
-        }
-        console.log('Stopped watching topo devices');
     }
 
     addTopoDevice(device: Device): boolean {
@@ -339,6 +330,14 @@ export class TopoDeviceService {
             return true;
         }
         return false;
+    }
+
+    stopWatchingTopoDevices() {
+        this.deviceList.clear();
+        if (this.topoDevicesSub) {
+            this.topoDevicesSub.unsubscribe();
+        }
+        console.log('Stopped watching topo devices');
     }
 
     stopWatchingTopoEntity() {

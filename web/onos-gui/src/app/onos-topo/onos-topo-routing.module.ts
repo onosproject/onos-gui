@@ -14,20 +14,26 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {Routes, RouterModule} from '@angular/router';
-import {DevicesListComponent} from './devices-list/devices-list.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { DevicesListComponent } from './devices-list/devices-list.component';
+import { EntityListComponent } from './entity-list/entity-list.component';
 
 const routes: Routes = [
     {
-      path: 'devices',
-      component: DevicesListComponent
+        path: 'devices',
+        component: DevicesListComponent
     },
     {
         path: '',
         component: DevicesListComponent,
         pathMatch: 'full'
-    }
+    },
+    {
+        path: 'entity',
+        component: EntityListComponent,
+        pathMatch: 'full'
+    },
 ];
 
 @NgModule({
