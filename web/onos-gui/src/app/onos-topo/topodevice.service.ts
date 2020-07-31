@@ -24,7 +24,7 @@ import * as grpcWeb from 'grpc-web';
 import { Subscription } from 'rxjs';
 import { OnosTopoDeviceService } from './proto/onos-topo-device.service';
 import { KeyValue } from '@angular/common';
-import { Entity, SubscribeResponse, Update, Object } from './proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import { SubscribeResponse, Update, Object } from './proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
 import { filter } from 'rxjs/operators';
 
 
@@ -47,7 +47,7 @@ export class TopoDeviceService {
         onosTopoDeviceService: OnosTopoDeviceService
     ) {
         this.deviceList = new Map<string, Device>();
-        this.entityList = new Map<string, Entity>();
+        this.entityList = new Map<string, Object>();
         this.onosTopoDeviceService = onosTopoDeviceService;
     }
 
