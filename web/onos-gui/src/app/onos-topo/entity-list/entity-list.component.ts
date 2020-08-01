@@ -16,9 +16,6 @@
 
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import {
-  Device,
-} from '../proto/github.com/onosproject/onos-topo/api/device/device_pb';
-import {
   FnService, IconService,
   LogService, TableAnnots
 } from 'gui2-fw-lib';
@@ -26,7 +23,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as grpcWeb from 'grpc-web';
 import { TopoDeviceService } from '../topodevice.service';
 import { ConnectivityService } from '../../connectivity.service';
-import { Entity, Object } from '../proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import { Object } from '../proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
 
 @Component({
   selector: 'onos-entity-list',

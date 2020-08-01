@@ -25,13 +25,6 @@
             <!-- <select [(ngModel)]="queryBy">
                 <option value="" disabled>Search By</option>
                 <option value="id">Id</option>
-                <option value="display">Display</option>
-                <option value="version">Version</option>
-                <option value="type">Type</option>
-                <option value="address">Address</option>
-                <option value="revision">Revision</option>
-                <option value="target">Target</option>
-                <option value="timeout">Timeout</option>
             </select> -->
         </div>
     </div>
@@ -51,14 +44,11 @@
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')">
                         </onos-icon>
                     </th>
-                    <th colId="type" (click)="onSort('type')">Type
-                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('type')"></onos-icon>
-                    </th>
-                    <th colId="entity" (click)="onSort('entity')">Entity
-                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('entity')"></onos-icon>
-                    </th>
                     <th colId="kind" (click)="onSort('kind')">Kind
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('kind')"></onos-icon>
+                    </th>
+                    <th colId="relations" (click)="onSort('relations')">Relationships
+                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('relations')"></onos-icon>
                     </th>
                 </tr>
             </thead>
@@ -71,9 +61,8 @@
                     <td>{{ entity.value.getId() }}</td>
                     <td>{{ printMapValue(entity.value.getAttributesMap(), 'displayname') }}</td>
                     <td>{{ printMapValue(entity.value.getAttributesMap(), 'version') }}</td>
-                    <td>{{ entity.value.getType() }}</td>
                     <td>{{ entity.value.getEntity() }}</td>
-                    <td>{{ entity.value.getKind() }}</td>
+                    <td></td>
                 </tr>
             </tbody>
         </table>
