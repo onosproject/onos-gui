@@ -168,6 +168,10 @@ export class NavComponent implements OnInit {
             id: 'devices',
             label: 'Devices'
         } as UiView);
+        topoNavSection.views.push({
+            id: 'entity',
+            label: 'Entity'
+        } as UiView);
 
         return topoNavSection;
     }
