@@ -57,7 +57,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
     @Input() id: string; // Has to be repeated from base class
     // Output closeEvent is inherited
     @Input() entity: Object;
-    displayname: string; 
+    displayname: string;
 
     constructor(
         protected fs: FnService,
@@ -83,10 +83,10 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
             if (this.detailsData !== undefined) {
                 const attributes = JSON.parse(JSON.stringify(this.detailsData?.getAttributesMap()));
                 const attributes_map = JSON.parse(JSON.stringify(attributes['map_']));
-                this.displayname = attributes_map['displayname'].value;  
+                this.displayname = attributes_map['displayname'].value;
             }
         }
-    } 
+    }
 
     hasId(): string {
         if (this.detailsData !== undefined) {
@@ -96,7 +96,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
                 return this.detailsData.getId();
             }
         }
-        return "";
+        return '';
     }
 
     displayId(): string {
@@ -104,10 +104,10 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
             if (this.displayname !== undefined) {
                 return this.detailsData?.getId();
             } else {
-                return "";
+                return '';
             }
          }
-        return "";
+        return '';
     }
 }
 

@@ -36,7 +36,7 @@ export class TopoDeviceService {
     topoDevicesSub: Subscription;
     topoEntitySub: Subscription;
     entityList: Map<string, Object>; // Expect <dev-id:dev-ver> as key
-    relationshipsList : Map<string, Object>;
+    relationshipsList: Map<string, Object>;
     onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
         firstColName: 'id',
@@ -272,7 +272,7 @@ export class TopoDeviceService {
             filter(x => x.getUpdate().getObject().getType() === 1 || x.getUpdate().getObject().getType() === 2)
         ).subscribe(
             (resp: SubscribeResponse) => {
-                if (resp.getUpdate().getObject().getType() == 1) {
+                if (resp.getUpdate().getObject().getType() === 1) {
                     const name = resp.getUpdate().getObject().getId();
                     console.log('List Topo Entity response ', name);
                     if (!this.entityList.has(name) &&
@@ -293,7 +293,8 @@ export class TopoDeviceService {
                         console.log('Unhandled Topo Entity update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
                     }
                 } else {
-                    const name = resp.getUpdate().getObject().getRelation().getSrcEntityId() + ' ' + resp.getUpdate().getObject().getRelation().getTgtEntityId() ;
+                    const name = resp.getUpdate().getObject().getRelation().getSrcEntityId() + ' '
+                        + resp.getUpdate().getObject().getRelation().getTgtEntityId();
                     console.log('List Topo Relations response ', name);
                     if (!this.relationshipsList.has(name) &&
                         (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
@@ -312,7 +313,7 @@ export class TopoDeviceService {
                     } else {
                         console.log('Unhandled Topo Relations update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
                     }
-                }  
+                }
             },
             (error) => {
                 console.log('Error on topo entity subscription', error);
@@ -329,7 +330,7 @@ export class TopoDeviceService {
         return false;
     }
 
-    addTopoEntity(obj: Object): boolean  {
+    addTopoEntity(obj: Object): boolean {
         const name = obj.getId();
         if (!this.deviceList.has(name)) {
             this.entityList.set(name, obj);
@@ -346,7 +347,7 @@ export class TopoDeviceService {
         return false;
     }
 
-    addTopoRelation(obj: Object): boolean  {
+    addTopoRelation(obj: Object): boolean {
         const name = obj.getRelation().getSrcEntityId() + ' ' + obj.getRelation().getTgtEntityId();
         if (!this.relationshipsList.has(name)) {
             this.relationshipsList.set(name, obj);
