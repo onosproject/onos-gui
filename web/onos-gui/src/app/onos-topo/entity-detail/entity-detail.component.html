@@ -25,12 +25,16 @@
             <div class="dev-icon">
                 <onos-icon classes="{{ 'details-icon'}}" iconId="'en'" [iconSize]="40"></onos-icon>
             </div>
-            <h2 class="editable clickable">{{detailsData?.getId()}}</h2>
+            <h2>{{hasId()}}</h2>
             <div class="top-content">
                 <div class="top-tables">
                     <div class="left">
                         <table>
                             <tbody>
+                                <tr>
+                                    <td class="label" width="110">Id</td>
+                                    <td class="value" width="80">{{displayId()}}</td>
+                                </tr>
                                 <tr>
                                     <td class="label" width="110">Kind</td>
                                     <td class="value" width="80">{{detailsData?.getEntity()}}</td>
@@ -56,7 +60,7 @@
             <h2 class="changes-title">Relationships</h2>
             <table>
                 <tbody>
-                    
+
                 </tbody>
             </table>
         </div>
