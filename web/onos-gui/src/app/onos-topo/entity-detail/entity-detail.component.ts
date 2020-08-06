@@ -83,7 +83,11 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
             if (this.detailsData !== undefined) {
                 const attributes = JSON.parse(JSON.stringify(this.detailsData?.getAttributesMap()));
                 const attributes_map = JSON.parse(JSON.stringify(attributes['map_']));
-                this.displayname = attributes_map['displayname'].value;
+                if (attributes_map['displayname'] !== undefined) {
+                    this.displayname = attributes_map['displayname'].value;
+                } else {
+                    this.displayname = undefined;
+                }
             }
         }
     }
@@ -101,7 +105,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
 
     displayId(): string {
         if (this.detailsData !== undefined) {
-            if (this.displayname === undefined) {
+            if (this.displayname !== undefined) {
                 return this.detailsData?.getId();
             } else {
                 return '';

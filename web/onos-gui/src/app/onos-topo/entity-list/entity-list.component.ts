@@ -102,8 +102,11 @@ export class EntityListComponent implements OnInit, OnDestroy {
     } else {
       const attributes = JSON.parse(JSON.stringify(map));
       const attributes_map = JSON.parse(JSON.stringify(attributes['map_']));
-      return attributes_map[attribute].value;
+      if (attributes_map[attribute] !== undefined) {
+        return attributes_map[attribute].value;
+      }
     }
+    return '';
   }
 
 }
