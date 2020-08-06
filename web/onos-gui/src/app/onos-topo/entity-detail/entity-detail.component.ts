@@ -101,7 +101,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
 
     displayId(): string {
         if (this.detailsData !== undefined) {
-            if (this.displayname == undefined) {
+            if (this.displayname === undefined) {
                 return this.detailsData?.getId();
             } else {
                 return '';
