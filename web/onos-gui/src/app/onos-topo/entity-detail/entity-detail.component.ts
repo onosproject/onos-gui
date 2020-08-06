@@ -29,6 +29,9 @@ import {
 } from 'gui2-fw-lib';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Object } from '../proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import * as grpcWeb from 'grpc-web';
+import { TopoDeviceService } from '../topodevice.service';
+import { ConnectivityService } from 'src/app/connectivity.service';
 
 @Component({
     selector: 'onos-entity-detail',
@@ -59,11 +62,14 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
     @Input() entity: Object;
     displayname: string;
 
+
     constructor(
         protected fs: FnService,
         protected log: LogService,
         protected wss: WebSocketService,
         protected is: IconService,
+        public topoDeviceService: TopoDeviceService,
+        private connectivityService: ConnectivityService
     ) {
         super(fs, log, wss, 'entity');
     }
@@ -71,6 +77,13 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
     ngOnInit() {
         this.init();
         console.debug('entity Detail Component initialized:', this.id);
+        this.connectivityService.hideVeil();
+        this.topoDeviceService.watchTopoEntity((err: grpcWeb.Error) => {
+            this.connectivityService.showVeil([
+              'Topo Entity service gRPC error', String(err.code), err.message,
+              'Please ensure onos-topo is reachable',
+              'Choose a different application from the menu']);
+          });
     }
 
     // the config name can be changed any time

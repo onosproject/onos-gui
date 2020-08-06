@@ -59,14 +59,24 @@
 
             <h2 class="changes-title">Relationships</h2>
             <table>
-                <thead>
-                    <td class="label" width="110">Source</td>
-                    <td class="label" width="110">Target</td>
-                    <td class="label" width="110">Id</td>
-                </thead>
-
                 <tbody>
-
+                    <tr>
+                        <td class="label" width="110">Source</td>
+                        <td class="label" width="110">Target</td>
+                        <td class="label" width="110">Relationship</td>
+                    </tr>
+                </tbody>
+                <tbody *ngFor="let relation of topoDeviceService.relationshipsList | keyvalue">
+                    <tr *ngIf="relation.value.getRelation().getSrcEntityId() === detailsData?.getId()">
+                        <td class="relation-value" width="110"> </td>
+                        <td class="relation-value" width="110"> {{ relation.value.getRelation().getTgtEntityId() }} </td>
+                        <td class="relation-value" width="110"> {{ relation.key }} </td>
+                    </tr>
+                    <tr *ngIf="relation.value.getRelation().getTgtEntityId() === detailsData?.getId()">
+                        <td class="relation-value" width="110"> {{ relation.value.getRelation().getSrcEntityId() }} </td>
+                        <td class="relation-value" width="110"> </td>
+                        <td class="relation-value" width="110"> {{ relation.key }} </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
