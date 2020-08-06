@@ -93,7 +93,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
             if (this.detailsData?.getId() !== undefined && this.displayname !== undefined) {
                 return this.displayname;
             } else {
-                return this.detailsData.getId();
+                return this.detailsData?.getId();
             }
         }
         return '';
@@ -101,7 +101,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
 
     displayId(): string {
         if (this.detailsData !== undefined) {
-            if (this.displayname !== undefined) {
+            if (this.displayname == undefined) {
                 return this.detailsData?.getId();
             } else {
                 return '';

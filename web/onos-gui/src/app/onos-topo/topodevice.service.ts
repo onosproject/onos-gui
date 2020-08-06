@@ -293,8 +293,7 @@ export class TopoDeviceService {
                         console.log('Unhandled Topo Entity update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
                     }
                 } else {
-                    const name = resp.getUpdate().getObject().getRelation().getSrcEntityId() + ' '
-                        + resp.getUpdate().getObject().getRelation().getTgtEntityId();
+                    const name = resp.getUpdate().getObject().getId();
                     console.log('List Topo Relations response ', name);
                     if (!this.relationshipsList.has(name) &&
                         (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
@@ -348,7 +347,7 @@ export class TopoDeviceService {
     }
 
     addTopoRelation(obj: Object): boolean {
-        const name = obj.getRelation().getSrcEntityId() + ' ' + obj.getRelation().getTgtEntityId();
+        const name = obj.getId();
         if (!this.relationshipsList.has(name)) {
             this.relationshipsList.set(name, obj);
             return true;
