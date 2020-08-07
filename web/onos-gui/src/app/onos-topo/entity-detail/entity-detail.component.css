@@ -79,6 +79,11 @@
     padding-right: 6px;
 }
 
+#entity-detail-panel td.relation-value {
+    text-align: right;
+    padding-right: 6px;
+}
+
 #entity-detail-panel .bottom table {
     border-spacing: 0;
     height: 358px;
