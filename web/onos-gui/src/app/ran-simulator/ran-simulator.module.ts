@@ -44,7 +44,7 @@ export const GRPC_WEB_SIM_PROXY = new InjectionToken<string>('grpc.web.sim.proxy
         },
         {
             provide: RanSimulatorTrafficsimService,
-            deps: [LoggedinService, GRPC_WEB_SIM_PROXY]
+            deps: [LoggedinService, GRPC_WEB_SIM_PROXY],
         }
     ]
 })

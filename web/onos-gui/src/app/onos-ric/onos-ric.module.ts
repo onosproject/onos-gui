@@ -21,7 +21,7 @@ import {grpc_web_ric_proxy} from '../../environments/environment';
 import {UelinksComponent} from './uelinks/uelinks.component';
 import {OnosRicC1Service} from './proto/onos-ric-c1.service';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
-import { CellDetailsComponent } from './celldetails/celldetails.component';
+import {CellDetailsComponent} from './celldetails/celldetails.component';
 import {LoggedinService} from '../loggedin.service';
 
 const GRPC_WEB_RIC_PROXY = new InjectionToken<string>('grpc.web.ric.proxy');
@@ -44,7 +44,7 @@ const GRPC_WEB_RIC_PROXY = new InjectionToken<string>('grpc.web.ric.proxy');
         },
         {
             provide: OnosRicC1Service,
-            deps: [LoggedinService, GRPC_WEB_RIC_PROXY]
+            deps: [LoggedinService, GRPC_WEB_RIC_PROXY],
         }
     ]
 })

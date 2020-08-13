@@ -37,7 +37,6 @@ export class TopoDeviceService {
     topoEntitySub: Subscription;
     entityList: Map<string, Object>; // Expect <dev-id:dev-ver> as key
     relationshipsList: Map<string, Object>;
-    onosTopoDeviceService: OnosTopoDeviceService;
     sortParams = {
         firstColName: 'id',
         firstCriteria: TopoDeviceService.topoDeviceSorterForwardId,
@@ -45,12 +44,11 @@ export class TopoDeviceService {
     };
 
     constructor(
-        onosTopoDeviceService: OnosTopoDeviceService
+        private onosTopoDeviceService: OnosTopoDeviceService
     ) {
         this.deviceList = new Map<string, Device>();
         this.entityList = new Map<string, Object>();
         this.relationshipsList = new Map<string, Object>();
-        this.onosTopoDeviceService = onosTopoDeviceService;
     }
 
     static topoDeviceSorterForwardId(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
