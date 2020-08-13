@@ -21,13 +21,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
 import {grpc_web_topo_proxy} from '../../environments/environment';
 import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
-import { DevicesListComponent } from './devices-list/devices-list.component';
-import { DeviceDetailComponent } from './device-detail/device-detail.component';
+import {DevicesListComponent} from './devices-list/devices-list.component';
+import {DeviceDetailComponent} from './device-detail/device-detail.component';
 import {TopoDeviceService} from './topodevice.service';
-import { DeviceSearchPipe } from './device-search.pipe';
+import {DeviceSearchPipe} from './device-search.pipe';
 import {LoggedinService} from '../loggedin.service';
-import { EntityListComponent } from './entity-list/entity-list.component';
-import { EntityDetailComponent } from './entity-detail/entity-detail.component';
+import {EntityListComponent} from './entity-list/entity-list.component';
+import {EntityDetailComponent} from './entity-detail/entity-detail.component';
 
 const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 
