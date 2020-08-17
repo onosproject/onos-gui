@@ -19,7 +19,9 @@ import {
     Input,
     OnChanges,
     OnInit,
-    SimpleChanges
+    SimpleChanges,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import {
     DetailsPanelBaseImpl,
@@ -61,7 +63,7 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
     // Output closeEvent is inherited
     @Input() entity: Object;
     displayname: string;
-
+    @Output() selectedEntity = new EventEmitter<string>();
 
     constructor(
         protected fs: FnService,
@@ -80,10 +82,14 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
         this.connectivityService.hideVeil();
         this.topoDeviceService.watchTopoEntity((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-              'Topo Entity service gRPC error', String(err.code), err.message,
-              'Please ensure onos-topo is reachable',
-              'Choose a different application from the menu']);
-          });
+                'Topo Entity service gRPC error', String(err.code), err.message,
+                'Please ensure onos-topo is reachable',
+                'Choose a different application from the menu']);
+        });
+    }
+
+    changeEntity(id: string) {
+        this.selectedEntity.emit(id);
     }
 
     // the config name can be changed any time
@@ -123,8 +129,25 @@ export class EntityDetailComponent extends DetailsPanelBaseImpl implements OnIni
             } else {
                 return '';
             }
-         }
+        }
         return '';
     }
+
+    printMapValue(attribute: string): string {
+        if (this.detailsData !== undefined) {
+            const map = this.detailsData.getAttributesMap();
+            if (map !== undefined) {
+                const attributes = JSON.parse(JSON.stringify(map));
+                const attributes_map = JSON.parse(JSON.stringify(attributes['map_']));
+                if (attributes_map[attribute] !== undefined) {
+                    return attributes_map[attribute].value;
+                }
+            }
+            return '';
+        }
+        return '';
+    }
+
 }
+
 
