@@ -75,12 +75,12 @@
 
 #entity-detail-panel td.label {
     font-weight: bold;
-    text-align: right;
+    text-align: left;
     padding-right: 6px;
 }
 
 #entity-detail-panel td.relation-value {
-    text-align: right;
+    text-align: left;
     padding-right: 6px;
 }
 

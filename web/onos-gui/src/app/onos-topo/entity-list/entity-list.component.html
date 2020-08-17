@@ -47,9 +47,6 @@
                     <th colId="kind" (click)="onSort('kind')">Kind
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('kind')"></onos-icon>
                     </th>
-                    <th colId="relations" (click)="onSort('relations')">Relationships
-                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('relations')"></onos-icon>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -62,13 +59,12 @@
                     <td>{{ printMapValue(entity.value.getAttributesMap(), 'displayname') }}</td>
                     <td>{{ printMapValue(entity.value.getAttributesMap(), 'version') }}</td>
                     <td>{{ entity.value.getEntity() }}</td>
-                    <td></td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <onos-entity-detail class="floatpanels" id="{{selId}}" [entity]="selectedChange" (closeEvent)="deselectRow($event)">
+    <onos-entity-detail class="floatpanels" id="{{selId}}" [entity]="selectedChange" (selectedEntity)="changeRow($event)" (closeEvent)="deselectRow($event)">
     </onos-entity-detail>
 
 </div>

@@ -87,6 +87,11 @@ export class EntityListComponent implements OnInit, OnDestroy {
     this.selId = undefined;
   }
 
+  changeRow(event: string) {
+    this.selId = event;
+    this.selectedChange = this.topoDeviceService.entityList.get(event);
+  }
+
   onSort(colName: string) {
     // unimplemented
   }
@@ -94,7 +99,6 @@ export class EntityListComponent implements OnInit, OnDestroy {
   sortIcon(colName: string) {
     // unimplemented
   }
-
 
   printMapValue(map: Map<string, string>, attribute: string): string {
     if (map === undefined) {
