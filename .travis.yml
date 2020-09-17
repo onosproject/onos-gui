@@ -39,15 +39,15 @@ install:
 jobs:
   include:
     - stage: tests
+      if: type == pull_request || fork == false
       script:
         - make test
     - stage: docs build
-      if: type != pull_request
+      if: type != pull_request && fork == false
       script:
         - sh build/bin/trigger-docs-travis $TRAVIS_ACCESS_TOKEN
-    - stage: push
+    - stage: release
+      if: type != pull_request && fork == false
       script:
-        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-               bash ./build/bin/push-images &&
-               bash -x ../build-tools/release-merge-commit;
-           fi'
+        - bash ./build/bin/push-images
+        - bash ../build-tools/release-merge-commit
