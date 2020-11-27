@@ -3,38 +3,69 @@
 import * as jspb from "google-protobuf"
 
 import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
+import * as github_com_onosproject_onos$topo_api_device_device_pb from '../../../../../github.com/onosproject/onos-topo/api/device/device_pb';
 
-export class SetRequest extends jspb.Message {
-  getObjectsList(): Array<Object>;
-  setObjectsList(value: Array<Object>): void;
-  clearObjectsList(): void;
-  addObjects(value?: Object, index?: number): Object;
+export class Event extends jspb.Message {
+  getType(): EventType;
+  setType(value: EventType): void;
+
+  getObject(): Object | undefined;
+  setObject(value?: Object): void;
+  hasObject(): boolean;
+  clearObject(): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SetRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: SetRequest): SetRequest.AsObject;
-  static serializeBinaryToWriter(message: SetRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SetRequest;
-  static deserializeBinaryFromReader(message: SetRequest, reader: jspb.BinaryReader): SetRequest;
+  toObject(includeInstance?: boolean): Event.AsObject;
+  static toObject(includeInstance: boolean, msg: Event): Event.AsObject;
+  static serializeBinaryToWriter(message: Event, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Event;
+  static deserializeBinaryFromReader(message: Event, reader: jspb.BinaryReader): Event;
 }
 
-export namespace SetRequest {
+export namespace Event {
   export type AsObject = {
-    objectsList: Array<Object.AsObject>,
+    type: EventType,
+    object?: Object.AsObject,
   }
 }
 
-export class SetResponse extends jspb.Message {
+export class CreateRequest extends jspb.Message {
+  getObject(): Object | undefined;
+  setObject(value?: Object): void;
+  hasObject(): boolean;
+  clearObject(): void;
+
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SetResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: SetResponse): SetResponse.AsObject;
-  static serializeBinaryToWriter(message: SetResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SetResponse;
-  static deserializeBinaryFromReader(message: SetResponse, reader: jspb.BinaryReader): SetResponse;
+  toObject(includeInstance?: boolean): CreateRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateRequest): CreateRequest.AsObject;
+  static serializeBinaryToWriter(message: CreateRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateRequest;
+  static deserializeBinaryFromReader(message: CreateRequest, reader: jspb.BinaryReader): CreateRequest;
 }
 
-export namespace SetResponse {
+export namespace CreateRequest {
   export type AsObject = {
+    object?: Object.AsObject,
+  }
+}
+
+export class CreateResponse extends jspb.Message {
+  getObject(): Object | undefined;
+  setObject(value?: Object): void;
+  hasObject(): boolean;
+  clearObject(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateResponse): CreateResponse.AsObject;
+  static serializeBinaryToWriter(message: CreateResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateResponse;
+  static deserializeBinaryFromReader(message: CreateResponse, reader: jspb.BinaryReader): CreateResponse;
+}
+
+export namespace CreateResponse {
+  export type AsObject = {
+    object?: Object.AsObject,
   }
 }
 
@@ -71,6 +102,46 @@ export class GetResponse extends jspb.Message {
 }
 
 export namespace GetResponse {
+  export type AsObject = {
+    object?: Object.AsObject,
+  }
+}
+
+export class UpdateRequest extends jspb.Message {
+  getObject(): Object | undefined;
+  setObject(value?: Object): void;
+  hasObject(): boolean;
+  clearObject(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateRequest): UpdateRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateRequest;
+  static deserializeBinaryFromReader(message: UpdateRequest, reader: jspb.BinaryReader): UpdateRequest;
+}
+
+export namespace UpdateRequest {
+  export type AsObject = {
+    object?: Object.AsObject,
+  }
+}
+
+export class UpdateResponse extends jspb.Message {
+  getObject(): Object | undefined;
+  setObject(value?: Object): void;
+  hasObject(): boolean;
+  clearObject(): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateResponse): UpdateResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateResponse;
+  static deserializeBinaryFromReader(message: UpdateResponse, reader: jspb.BinaryReader): UpdateResponse;
+}
+
+export namespace UpdateResponse {
   export type AsObject = {
     object?: Object.AsObject,
   }
@@ -123,10 +194,10 @@ export namespace ListRequest {
 }
 
 export class ListResponse extends jspb.Message {
-  getObject(): Object | undefined;
-  setObject(value?: Object): void;
-  hasObject(): boolean;
-  clearObject(): void;
+  getObjectsList(): Array<Object>;
+  setObjectsList(value: Array<Object>): void;
+  clearObjectsList(): void;
+  addObjects(value?: Object, index?: number): Object;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListResponse.AsObject;
@@ -138,86 +209,54 @@ export class ListResponse extends jspb.Message {
 
 export namespace ListResponse {
   export type AsObject = {
-    object?: Object.AsObject,
+    objectsList: Array<Object.AsObject>,
   }
 }
 
-export class SubscribeRequest extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
-
+export class WatchRequest extends jspb.Message {
   getNoreplay(): boolean;
   setNoreplay(value: boolean): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SubscribeRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: SubscribeRequest): SubscribeRequest.AsObject;
-  static serializeBinaryToWriter(message: SubscribeRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SubscribeRequest;
-  static deserializeBinaryFromReader(message: SubscribeRequest, reader: jspb.BinaryReader): SubscribeRequest;
+  toObject(includeInstance?: boolean): WatchRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: WatchRequest): WatchRequest.AsObject;
+  static serializeBinaryToWriter(message: WatchRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WatchRequest;
+  static deserializeBinaryFromReader(message: WatchRequest, reader: jspb.BinaryReader): WatchRequest;
 }
 
-export namespace SubscribeRequest {
+export namespace WatchRequest {
   export type AsObject = {
-    id: string,
     noreplay: boolean,
   }
 }
 
-export class SubscribeResponse extends jspb.Message {
-  getUpdate(): Update | undefined;
-  setUpdate(value?: Update): void;
-  hasUpdate(): boolean;
-  clearUpdate(): void;
+export class WatchResponse extends jspb.Message {
+  getEvent(): Event | undefined;
+  setEvent(value?: Event): void;
+  hasEvent(): boolean;
+  clearEvent(): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): SubscribeResponse.AsObject;
-  static toObject(includeInstance: boolean, msg: SubscribeResponse): SubscribeResponse.AsObject;
-  static serializeBinaryToWriter(message: SubscribeResponse, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): SubscribeResponse;
-  static deserializeBinaryFromReader(message: SubscribeResponse, reader: jspb.BinaryReader): SubscribeResponse;
+  toObject(includeInstance?: boolean): WatchResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: WatchResponse): WatchResponse.AsObject;
+  static serializeBinaryToWriter(message: WatchResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): WatchResponse;
+  static deserializeBinaryFromReader(message: WatchResponse, reader: jspb.BinaryReader): WatchResponse;
 }
 
-export namespace SubscribeResponse {
+export namespace WatchResponse {
   export type AsObject = {
-    update?: Update.AsObject,
-  }
-}
-
-export class Update extends jspb.Message {
-  getType(): Update.Type;
-  setType(value: Update.Type): void;
-
-  getObject(): Object | undefined;
-  setObject(value?: Object): void;
-  hasObject(): boolean;
-  clearObject(): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): Update.AsObject;
-  static toObject(includeInstance: boolean, msg: Update): Update.AsObject;
-  static serializeBinaryToWriter(message: Update, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): Update;
-  static deserializeBinaryFromReader(message: Update, reader: jspb.BinaryReader): Update;
-}
-
-export namespace Update {
-  export type AsObject = {
-    type: Update.Type,
-    object?: Object.AsObject,
-  }
-
-  export enum Type { 
-    UNSPECIFIED = 0,
-    INSERT = 1,
-    MODIFY = 2,
-    DELETE = 3,
+    event?: Event.AsObject,
   }
 }
 
 export class Object extends jspb.Message {
   getId(): string;
   setId(value: string): void;
+
+  getRevision(): number;
+  setRevision(value: number): void;
 
   getType(): Object.Type;
   setType(value: Object.Type): void;
@@ -253,6 +292,7 @@ export class Object extends jspb.Message {
 export namespace Object {
   export type AsObject = {
     id: string,
+    revision: number,
     type: Object.Type,
     entity?: Entity.AsObject,
     relation?: Relation.AsObject,
@@ -269,15 +309,20 @@ export namespace Object {
 
   export enum ObjCase { 
     OBJ_NOT_SET = 0,
-    ENTITY = 3,
-    RELATION = 4,
-    KIND = 5,
+    ENTITY = 4,
+    RELATION = 5,
+    KIND = 6,
   }
 }
 
 export class Entity extends jspb.Message {
   getKindId(): string;
   setKindId(value: string): void;
+
+  getProtocolsList(): Array<github_com_onosproject_onos$topo_api_device_device_pb.ProtocolState>;
+  setProtocolsList(value: Array<github_com_onosproject_onos$topo_api_device_device_pb.ProtocolState>): void;
+  clearProtocolsList(): void;
+  addProtocols(value?: github_com_onosproject_onos$topo_api_device_device_pb.ProtocolState, index?: number): github_com_onosproject_onos$topo_api_device_device_pb.ProtocolState;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Entity.AsObject;
@@ -290,6 +335,7 @@ export class Entity extends jspb.Message {
 export namespace Entity {
   export type AsObject = {
     kindId: string,
+    protocolsList: Array<github_com_onosproject_onos$topo_api_device_device_pb.ProtocolState.AsObject>,
   }
 }
 
@@ -341,3 +387,9 @@ export namespace Kind {
   }
 }
 
+export enum EventType { 
+  NONE = 0,
+  ADDED = 1,
+  UPDATED = 2,
+  REMOVED = 3,
+}
