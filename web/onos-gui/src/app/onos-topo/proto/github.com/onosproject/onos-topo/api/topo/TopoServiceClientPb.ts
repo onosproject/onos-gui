@@ -10,18 +10,21 @@
 import * as grpcWeb from 'grpc-web';
 
 import * as gogoproto_gogo_pb from '../../../../../gogoproto/gogo_pb';
+import * as github_com_onosproject_onos$topo_api_device_device_pb from '../../../../../github.com/onosproject/onos-topo/api/device/device_pb';
 
 import {
+  CreateRequest,
+  CreateResponse,
   DeleteRequest,
   DeleteResponse,
   GetRequest,
   GetResponse,
   ListRequest,
   ListResponse,
-  SetRequest,
-  SetResponse,
-  SubscribeRequest,
-  SubscribeResponse} from './topo_pb';
+  UpdateRequest,
+  UpdateResponse,
+  WatchRequest,
+  WatchResponse} from './topo_pb';
 
 export class TopoClient {
   client_: grpcWeb.AbstractClientBase;
@@ -42,25 +45,25 @@ export class TopoClient {
     this.options_ = options;
   }
 
-  methodInfoSet = new grpcWeb.AbstractClientBase.MethodInfo(
-    SetResponse,
-    (request: SetRequest) => {
+  methodInfoCreate = new grpcWeb.AbstractClientBase.MethodInfo(
+    CreateResponse,
+    (request: CreateRequest) => {
       return request.serializeBinary();
     },
-    SetResponse.deserializeBinary
+    CreateResponse.deserializeBinary
   );
 
-  set(
-    request: SetRequest,
+  create(
+    request: CreateRequest,
     metadata: grpcWeb.Metadata | null,
     callback: (err: grpcWeb.Error,
-               response: SetResponse) => void) {
+               response: CreateResponse) => void) {
     return this.client_.rpcCall(
       this.hostname_ +
-        '/topo.Topo/Set',
+        '/topo.Topo/Create',
       request,
       metadata || {},
-      this.methodInfoSet,
+      this.methodInfoCreate,
       callback);
   }
 
@@ -83,6 +86,28 @@ export class TopoClient {
       request,
       metadata || {},
       this.methodInfoGet,
+      callback);
+  }
+
+  methodInfoUpdate = new grpcWeb.AbstractClientBase.MethodInfo(
+    UpdateResponse,
+    (request: UpdateRequest) => {
+      return request.serializeBinary();
+    },
+    UpdateResponse.deserializeBinary
+  );
+
+  update(
+    request: UpdateRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: UpdateResponse) => void) {
+    return this.client_.rpcCall(
+      this.hostname_ +
+        '/topo.Topo/Update',
+      request,
+      metadata || {},
+      this.methodInfoUpdate,
       callback);
   }
 
@@ -118,32 +143,35 @@ export class TopoClient {
 
   list(
     request: ListRequest,
-    metadata?: grpcWeb.Metadata) {
-    return this.client_.serverStreaming(
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: ListResponse) => void) {
+    return this.client_.rpcCall(
       this.hostname_ +
         '/topo.Topo/List',
       request,
       metadata || {},
-      this.methodInfoList);
+      this.methodInfoList,
+      callback);
   }
 
-  methodInfoSubscribe = new grpcWeb.AbstractClientBase.MethodInfo(
-    SubscribeResponse,
-    (request: SubscribeRequest) => {
+  methodInfoWatch = new grpcWeb.AbstractClientBase.MethodInfo(
+    WatchResponse,
+    (request: WatchRequest) => {
       return request.serializeBinary();
     },
-    SubscribeResponse.deserializeBinary
+    WatchResponse.deserializeBinary
   );
 
-  subscribe(
-    request: SubscribeRequest,
+  watch(
+    request: WatchRequest,
     metadata?: grpcWeb.Metadata) {
     return this.client_.serverStreaming(
       this.hostname_ +
-        '/topo.Topo/Subscribe',
+        '/topo.Topo/Watch',
       request,
       metadata || {},
-      this.methodInfoSubscribe);
+      this.methodInfoWatch);
   }
 
 }

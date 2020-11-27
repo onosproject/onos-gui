@@ -23,7 +23,10 @@ import { Observable, Subscriber } from 'rxjs';
 import * as grpcWeb from 'grpc-web';
 import { LoggedinService } from '../../loggedin.service';
 import { TopoClient } from './github.com/onosproject/onos-topo/api/topo/TopoServiceClientPb';
-import { SubscribeResponse, SubscribeRequest } from './github.com/onosproject/onos-topo/api/topo/topo_pb';
+import {
+    WatchRequest,
+    WatchResponse
+} from './github.com/onosproject/onos-topo/api/topo/topo_pb';
 
 @Injectable()
 export class OnosTopoDeviceService {
@@ -63,14 +66,14 @@ export class OnosTopoDeviceService {
         return topoObs;
     }
 
-    requestListTopo(): Observable<SubscribeResponse> {
-        const subscribeRequest = new SubscribeRequest();
-        const stream = this.topoServiceClient.subscribe(subscribeRequest, {
+    requestListTopo(): Observable<WatchResponse> {
+        const subscribeRequest = new WatchRequest();
+        const stream = this.topoServiceClient.watch(subscribeRequest, {
             Authorization: 'Bearer ' + this.loggedinService.idToken,
         });
         console.log('Topo entity data sent to', this.onosTopoUrl);
-        const topoObs = new Observable<SubscribeResponse>((observer: Subscriber<SubscribeResponse>) => {
-            stream.on('data', (subscribeResponse: SubscribeResponse) => {
+        const topoObs = new Observable<WatchResponse>((observer: Subscriber<WatchResponse>) => {
+            stream.on('data', (subscribeResponse: WatchResponse) => {
                 observer.next(subscribeResponse);
             });
             stream.on('error', (error: grpcWeb.Error) => {

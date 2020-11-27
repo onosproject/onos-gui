@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
     Device,
     ListResponse,
     Protocol
 } from './proto/github.com/onosproject/onos-topo/api/device/device_pb';
 import * as grpcWeb from 'grpc-web';
-import { Subscription } from 'rxjs';
-import { OnosTopoDeviceService } from './proto/onos-topo-device.service';
-import { KeyValue } from '@angular/common';
-import { SubscribeResponse, Update, Object } from './proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
-import { filter } from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {OnosTopoDeviceService} from './proto/onos-topo-device.service';
+import {KeyValue} from '@angular/common';
+import {
+    EventType,
+    Object,
+    WatchResponse
+} from './proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import {filter} from 'rxjs/operators';
 
 
 @Injectable({
@@ -265,50 +269,50 @@ export class TopoDeviceService {
         );
     }
 
-    watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: Update.Type, entity: Object) => void) {
+    watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: EventType, entity: Object) => void) {
         this.topoEntitySub = this.onosTopoDeviceService.requestListTopo().pipe(
-            filter(x => x.getUpdate().getObject().getType() === 1 || x.getUpdate().getObject().getType() === 2)
+            filter(x => x.getEvent().getObject().getType() === 1 || x.getEvent().getObject().getType() === 2)
         ).subscribe(
-            (resp: SubscribeResponse) => {
-                if (resp.getUpdate().getObject().getType() === 1) {
-                    const name = resp.getUpdate().getObject().getId();
+            (resp: WatchResponse) => {
+                if (resp.getEvent().getObject().getType() === 1) {
+                    const name = resp.getEvent().getObject().getId();
                     console.log('List Topo Entity response ', name);
                     if (!this.entityList.has(name) &&
-                        (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
-                        const added = this.addTopoEntity(resp.getUpdate().getObject());
+                        (resp.getEvent().getType() === EventType.ADDED || resp.getEvent().getType() === EventType.NONE)) {
+                        const added = this.addTopoEntity(resp.getEvent().getObject());
                         if (added && updateCb !== undefined) {
-                            updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
+                            updateCb(resp.getEvent().getType(), resp.getEvent().getObject());
                         }
-                    } else if (this.entityList.has(name) && resp.getUpdate().getType() === Update.Type.DELETE) {
-                        const removed = this.removeEntity(resp.getUpdate().getObject().getId());
+                    } else if (this.entityList.has(name) && resp.getEvent().getType() === EventType.REMOVED) {
+                        const removed = this.removeEntity(resp.getEvent().getObject().getId());
                         if (removed && updateCb) {
-                            updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
+                            updateCb(resp.getEvent().getType(), resp.getEvent().getObject());
                         }
-                    } else if (resp.getUpdate().getType() === Update.Type.MODIFY) {
-                        const updated = resp.getUpdate().getObject();
+                    } else if (resp.getEvent().getType() === EventType.UPDATED) {
+                        const updated = resp.getEvent().getObject();
                         this.entityList.set(name, updated);
                     } else {
-                        console.log('Unhandled Topo Entity update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
+                        console.log('Unhandled Topo Entity update', resp.getEvent().getType(), resp.getEvent().getObject().getId());
                     }
                 } else {
-                    const name = resp.getUpdate().getObject().getId();
+                    const name = resp.getEvent().getObject().getId();
                     console.log('List Topo Relations response ', name);
                     if (!this.relationshipsList.has(name) &&
-                        (resp.getUpdate().getType() === Update.Type.INSERT || resp.getUpdate().getType() === Update.Type.UNSPECIFIED)) {
-                        const added = this.addTopoRelation(resp.getUpdate().getObject());
+                        (resp.getEvent().getType() === EventType.ADDED || resp.getEvent().getType() === EventType.NONE)) {
+                        const added = this.addTopoRelation(resp.getEvent().getObject());
                         if (added && updateCb !== undefined) {
-                            updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
+                            updateCb(resp.getEvent().getType(), resp.getEvent().getObject());
                         }
-                    } else if (this.relationshipsList.has(name) && resp.getUpdate().getType() === Update.Type.DELETE) {
+                    } else if (this.relationshipsList.has(name) && resp.getEvent().getType() === EventType.REMOVED) {
                         const removed = this.removeRelation(name);
                         if (removed && updateCb) {
-                            updateCb(resp.getUpdate().getType(), resp.getUpdate().getObject());
+                            updateCb(resp.getEvent().getType(), resp.getEvent().getObject());
                         }
-                    } else if (resp.getUpdate().getType() === Update.Type.MODIFY) {
-                        const updated = resp.getUpdate().getObject();
+                    } else if (resp.getEvent().getType() === EventType.UPDATED) {
+                        const updated = resp.getEvent().getObject();
                         this.relationshipsList.set(name, updated);
                     } else {
-                        console.log('Unhandled Topo Relations update', resp.getUpdate().getType(), resp.getUpdate().getObject().getId());
+                        console.log('Unhandled Topo Relations update', resp.getEvent().getType(), resp.getEvent().getObject().getId());
                     }
                 }
             },
