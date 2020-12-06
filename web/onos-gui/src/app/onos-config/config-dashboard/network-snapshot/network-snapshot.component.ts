@@ -15,12 +15,10 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NetworkSnapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/network/types_pb';
 import {DeviceService} from '../../device.service';
-import {OnosConfigAdminService} from '../../proto/onos-config-admin.service';
-import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
 import {KeyValue} from '@angular/common';
-import {Device} from '../../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
+import {OnosConfigAdminService} from '../../../onos-api/onos-config-admin.service';
+import {Object as EntityObject} from '../../../onos-api/onos/topo/topo_pb';
 
 @Component({
     selector: '[onos-network-snapshot]',
@@ -28,8 +26,8 @@ import {Device} from '../../../onos-topo/proto/github.com/onosproject/onos-topo/
     styleUrls: ['./network-snapshot.component.css']
 })
 export class NetworkSnapshotComponent implements OnInit {
-    @Input() deviceSortCriterion: (a: KeyValue<string, Device>, b: KeyValue<string, Device>) => number
-        = DeviceService.deviceSorterForwardAlpha;
+    @Input() deviceSortCriterion: (a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>) => number
+        = DeviceService.entitySorterForwardAlpha;
     @Output() dsSelected = new EventEmitter<string>();
 
     constructor(

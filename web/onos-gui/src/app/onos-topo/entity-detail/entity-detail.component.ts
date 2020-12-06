@@ -30,7 +30,7 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Object } from '../proto/github.com/onosproject/onos-topo/api/topo/topo_pb';
+import { Object } from '../../onos-api/onos/topo/topo_pb';
 import * as grpcWeb from 'grpc-web';
 import { TopoDeviceService } from '../topodevice.service';
 import { ConnectivityService } from 'src/app/connectivity.service';

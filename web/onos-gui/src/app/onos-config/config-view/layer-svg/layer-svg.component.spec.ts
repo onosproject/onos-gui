@@ -17,12 +17,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {ChangeValueObj, LayerSvgComponent} from './layer-svg.component';
-import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
+import {OnosConfigDiagsService} from '../../../onos-api/onos-config-diags.service';
 import {ContainerSvgComponent} from '../container-svg/container-svg.component';
 import {ChangeValuePipe} from '../../change-value.pipe';
 import {ChangeDetectorRef} from '@angular/core';
 import {PathUtil} from '../../path.util';
-import {TypedValue} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {TypedValue} from '../../../onos-api/onos/config/change/device/types_pb';
 
 class MockOnosConfigDiagsService {
 

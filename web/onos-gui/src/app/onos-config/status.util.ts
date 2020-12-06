@@ -17,7 +17,7 @@
 import {
     Phase, Reason,
     State, Status
-} from './proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+} from '../onos-api/onos/config/change/types_pb';
 
 /**
  * StatusUtil is for convering status values to strings, so they can be used as styles

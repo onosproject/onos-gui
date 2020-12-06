@@ -23,7 +23,7 @@ import {
     WebSocketService
 } from 'gui2-fw-lib';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ModelInfo } from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import { ModelInfo } from '../../onos-api/onos/config/admin/admin_pb';
 import { ConnectivityService } from '../../connectivity.service';
 import * as grpcWeb from 'grpc-web';
 import { OrderPipe } from 'ngx-order-pipe';

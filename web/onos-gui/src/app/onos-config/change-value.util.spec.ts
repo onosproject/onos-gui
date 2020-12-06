@@ -20,7 +20,7 @@ import {ChangeValueUtil} from './change-value.util';
 import {
     TypedValue,
     ValueType
-} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../onos-api/onos/config/change/device/types_pb';
 
 describe('ChangeValueUtil', () => {
     const enc = new TextEncoder();

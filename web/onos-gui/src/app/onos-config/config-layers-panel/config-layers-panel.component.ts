@@ -17,10 +17,10 @@
 import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {ACTIVE, SNAPSHOT, INACTIVE, MEDIUM, OPSTATE, RWPATHS} from '../config-view/config-view.component';
-import {DeviceChange} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {LayerType} from '../config-view/layer-svg/layer-svg.component';
 import {formatDate, KeyValue} from '@angular/common';
 import {StatusUtil} from '../status.util';
+import {DeviceChange} from '../../onos-api/onos/config/change/device/types_pb';
 
 export interface SelectedLayer {
     layerName: string;

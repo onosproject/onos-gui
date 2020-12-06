@@ -15,12 +15,12 @@
  */
 
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {NetworkChange} from '../../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
 import {DeviceService} from '../../device.service';
-import {Change} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {StatusUtil} from '../../status.util';
 import {formatDate, KeyValue} from '@angular/common';
-import {Device} from '../../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
+import {NetworkChange} from '../../../onos-api/onos/config/change/network/types_pb';
+import {Change} from '../../../onos-api/onos/config/change/device/types_pb';
+import {Object as EntityObject} from '../../../onos-api/onos/topo/topo_pb';
 
 @Component({
     selector: '[onos-network-change]',
@@ -29,8 +29,8 @@ import {Device} from '../../../onos-topo/proto/github.com/onosproject/onos-topo/
 })
 export class NetworkChangeComponent implements OnInit {
     @Input() networkChange: NetworkChange;
-    @Input() deviceSortCriterion: (a: KeyValue<string, Device>, b: KeyValue<string, Device>) => number
-        = DeviceService.deviceSorterForwardAlpha;
+    @Input() deviceSortCriterion: (a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>) => number
+        = DeviceService.entitySorterForwardAlpha;
     @Output() dcSelected = new EventEmitter<Change>();
     @Input() canRollback: boolean = false;
     @Output() rollbackSelected = new EventEmitter<boolean>();

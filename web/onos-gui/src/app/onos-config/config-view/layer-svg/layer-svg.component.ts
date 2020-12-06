@@ -22,7 +22,7 @@ import {
     Output,
     SimpleChanges
 } from '@angular/core';
-import {OnosConfigDiagsService} from '../../proto/onos-config-diags.service';
+import {OnosConfigDiagsService} from '../../../onos-api/onos-config-diags.service';
 import {ModelService} from '../../model.service';
 import {ModelTempIndexService} from '../model-temp-index.service';
 import {
@@ -30,15 +30,15 @@ import {
     HierarchyLayoutService,
     TreeLayoutNode
 } from '../hierarchy-layout.service';
-import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ReadWritePath} from '../../../onos-api/onos/config/admin/admin_pb';
 import {
     ChangeValue,
     DeviceChange,
     TypedValue
-} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../../../onos-api/onos/config/change/device/types_pb';
 import {DeviceService} from '../../device.service';
 import {PathUtil} from '../../path.util';
-import {OpStateResponse} from '../../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
+import {OpStateResponse} from '../../../onos-api/onos/config/diags/diags_pb';
 import {Subscription} from 'rxjs';
 
 const OFFSETY = 500;

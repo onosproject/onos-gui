@@ -16,17 +16,12 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DevicesListComponent } from './devices-list/devices-list.component';
 import { EntityListComponent } from './entity-list/entity-list.component';
 
 const routes: Routes = [
     {
-        path: 'devices',
-        component: DevicesListComponent
-    },
-    {
         path: '',
-        component: DevicesListComponent,
+        component: EntityListComponent,
         pathMatch: 'full'
     },
     {

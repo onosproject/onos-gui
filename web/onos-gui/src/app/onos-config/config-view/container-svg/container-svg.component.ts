@@ -28,7 +28,7 @@ import {HierarchyNode} from '../hierarchy-layout.service';
 import {
     TypedValue,
     ValueType
-} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../../../onos-api/onos/config/change/device/types_pb';
 
 @Component({
     selector: '[onos-container-svg]',

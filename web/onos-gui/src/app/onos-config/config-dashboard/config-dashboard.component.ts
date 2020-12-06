@@ -16,34 +16,27 @@
 
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {KeyValue} from '@angular/common';
-import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
-import {NetworkChange} from '../proto/github.com/onosproject/onos-config/api/types/change/network/types_pb';
-import {ListNetworkChangeResponse} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
 import {
     DeviceService,
     DeviceSortCriterion,
     ErrorCallback
 } from '../device.service';
-import {
-    Change,
-    ChangeValue,
-    PathValue
-} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
 import {IconService} from 'gui2-fw-lib';
 import {animate, state, style, transition, trigger} from '@angular/animations';
-import {
-    Phase,
-    State
-} from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
-import {
-    Device,
-    ListResponse
-} from '../../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
-import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
 import {Subscription} from 'rxjs';
 import {TopoDeviceService} from '../../onos-topo/topodevice.service';
+import {
+    Change,
+    ChangeValue, PathValue
+} from '../../onos-api/onos/config/change/device/types_pb';
+import {NetworkChange} from '../../onos-api/onos/config/change/network/types_pb';
+import {OnosConfigDiagsService} from '../../onos-api/onos-config-diags.service';
+import {OnosConfigAdminService} from '../../onos-api/onos-config-admin.service';
+import {EventType, Object as EntityObject} from '../../onos-api/onos/topo/topo_pb';
+import {ListNetworkChangeResponse} from '../../onos-api/onos/config/diags/diags_pb';
+import {Phase, State} from '../../onos-api/onos/config/change/types_pb';
 
 @Component({
     selector: 'onos-config-dashboard',
@@ -64,7 +57,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     networkChanges: Map<string, NetworkChange>;
     sortReverse: boolean = false;
     sortCriterion: DeviceSortCriterion = DeviceSortCriterion.ALPHABETICAL;
-    deviceSortCriterion = DeviceService.deviceSorterForwardAlpha;
+    deviceSortCriterion = DeviceService.entitySorterForwardAlpha;
     retenionSecs: number = 86400;
     compactChangesMsg: string = undefined;
     compactChangesConfirmMsg: string = undefined;
@@ -89,17 +82,18 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.connectivityService.hideVeil();
-        this.topoDeviceService.watchTopoDevices((err: grpcWeb.Error) => {
+
+        this.topoDeviceService.watchTopoEntity((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
-                'Topo Devices service gRPC error', String(err.code), err.message,
+                'Topo Entity service gRPC error', String(err.code), err.message,
                 'Please ensure onos-config is reachable',
                 'Choose a different application from the menu']);
-            },
-            (type, device) => {
-                if (type === ListResponse.Type.ADDED || type === ListResponse.Type.NONE) {
-                    this.deviceService.addTopoDevice(device);
-                }
-            });
+        },
+            (type, entity) => {
+            if (type === EventType.ADDED || type === EventType.NONE) {
+                this.deviceService.addTopoEntity(entity);
+            }
+        });
 
         this.watchNetworkChanges((err: grpcWeb.Error) => {
             this.connectivityService.showVeil([
@@ -118,7 +112,8 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.topoDeviceService.stopWatchingTopoDevices();
+        this.topoDeviceService.stopWatchingTopoEntity();
+        this.topoDeviceService.stopWatchingTopoRelations();
         this.deviceService.stopWatchingSnapshots();
         this.nwchangesSub.unsubscribe();
         console.log('Stopped watching NetworkChanges');
@@ -134,7 +129,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
                 } else if (!change.getDeleted()) {
                     this.networkChanges.set(change.getId(), change);
                     change.getChangesList().forEach((ch: Change) => {
-                        this.deviceService.addDevice(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion(), true, errCb);
+                        this.deviceService.addEntity(ch.getDeviceId(), ch.getDeviceType(), ch.getDeviceVersion(), true, errCb);
                     });
                     console.log('Network Change', change.getId(), 'updated');
                 }
@@ -194,35 +189,29 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
     updateSort() {
         console.log('Sort order updated', this.sortCriterion, this.sortReverse, this.sortCriterion | Number(this.sortReverse).valueOf());
         switch (this.sortCriterion * 2 | Number(this.sortReverse).valueOf()) {
-            case DeviceSortCriterion.TYPE * 2 | 1:
-                this.deviceSortCriterion = DeviceService.deviceSorterReverseType;
-                break;
-            case DeviceSortCriterion.TYPE * 2 | 0:
-                this.deviceSortCriterion = DeviceService.deviceSorterForwardType;
-                break;
             case DeviceSortCriterion.VERSION * 2 | 1:
-                this.deviceSortCriterion = DeviceService.deviceSorterReverseVersion;
+                this.deviceSortCriterion = DeviceService.entitySorterForwardKind;
                 break;
             case DeviceSortCriterion.VERSION * 2 | 0:
-                this.deviceSortCriterion = DeviceService.deviceSorterForwardVersion;
+                this.deviceSortCriterion = DeviceService.entitySorterReverseKind;
                 break;
             case DeviceSortCriterion.STATUS * 2 | 1:
-                this.deviceSortCriterion = DeviceService.deviceSorterReverseStatus;
+                this.deviceSortCriterion = DeviceService.entitySorterReverseStatus;
                 break;
             case DeviceSortCriterion.STATUS * 2 | 0:
-                this.deviceSortCriterion = DeviceService.deviceSorterForwardStatus;
+                this.deviceSortCriterion = DeviceService.entitySorterForwardStatus;
                 break;
             case DeviceSortCriterion.ALPHABETICAL * 2 | 1:
-                this.deviceSortCriterion = DeviceService.deviceSorterReverseAlpha;
+                this.deviceSortCriterion = DeviceService.entitySorterReverseAlpha;
                 break;
             case DeviceSortCriterion.ALPHABETICAL * 2 | 0:
             default:
-                this.deviceSortCriterion = DeviceService.deviceSorterForwardAlpha;
+                this.deviceSortCriterion = DeviceService.entitySorterForwardAlpha;
         }
         // Force a refresh by updating the data source
-        this.deviceService.deviceList.set('wakeup', new Device());
+        this.deviceService.entityList.set('wakeup', new EntityObject());
         this.cdr.detectChanges();
-        this.deviceService.deviceList.delete('wakeup');
+        this.deviceService.entityList.delete('wakeup');
     }
 
     compactChangesDialog() {

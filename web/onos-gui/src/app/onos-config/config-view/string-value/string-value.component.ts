@@ -21,9 +21,9 @@ import {
     OnChanges,
     Output, SimpleChanges
 } from '@angular/core';
-import {ReadWritePath} from '../../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ReadWritePath} from '../../../onos-api/onos/config/admin/admin_pb';
 import {ChangeValueUtil} from '../../change-value.util';
-import {TypedValue} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+import {TypedValue} from '../../../onos-api/onos/config/change/device/types_pb';
 
 @Component({
     selector: 'onos-string-value',
