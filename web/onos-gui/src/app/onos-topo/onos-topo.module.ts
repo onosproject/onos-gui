@@ -20,8 +20,8 @@ import {OnosTopoRoutingModule} from './onos-topo-routing.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
 import {grpc_web_topo_proxy} from '../../environments/environment';
-import {OnosTopoDeviceService} from '../onos-api/onos-topo-device.service';
-import {TopoDeviceService} from './topodevice.service';
+import {OnosTopoEntityService} from '../onos-api/onos-topo-entity.service';
+import {TopoEntityService} from './topo-entity.service';
 import {LoggedinService} from '../loggedin.service';
 import {EntityListComponent} from './entity-list/entity-list.component';
 import {EntityDetailComponent} from './entity-detail/entity-detail.component';
@@ -43,12 +43,12 @@ const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
             useValue: grpc_web_topo_proxy
         },
         {
-            provide: OnosTopoDeviceService,
+            provide: OnosTopoEntityService,
             deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
         },
         {
-            provide: TopoDeviceService,
-            useClass: TopoDeviceService
+            provide: TopoEntityService,
+            useClass: TopoEntityService
         }
     ],
 })

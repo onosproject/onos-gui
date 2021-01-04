@@ -16,13 +16,13 @@
 
 import { TestBed } from '@angular/core/testing';
 
-import { OnosTopoDeviceService } from './onos-topo-device.service';
+import { OnosTopoEntityService } from './onos-topo-entity.service';
 
 describe('OnosTopoDeviceService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: OnosTopoDeviceService = TestBed.inject(OnosTopoDeviceService);
+    const service: OnosTopoEntityService = TestBed.inject(OnosTopoEntityService);
     expect(service).toBeTruthy();
   });
 });

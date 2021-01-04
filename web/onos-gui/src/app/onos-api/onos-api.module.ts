@@ -22,7 +22,7 @@ import {
 } from '../../environments/environment';
 import {LoggedinService} from '../loggedin.service';
 import {OnosConfigDiagsService} from './onos-config-diags.service';
-import {OnosTopoDeviceService} from './onos-topo-device.service';
+import {OnosTopoEntityService} from './onos-topo-entity.service';
 import {OnosConfigAdminService} from './onos-config-admin.service';
 import {OnosConfigGnmiService} from './onos-config-gnmi.service';
 
@@ -57,7 +57,7 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
             deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
         },
         {
-            provide: OnosTopoDeviceService,
+            provide: OnosTopoEntityService,
             deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
         },
     ],

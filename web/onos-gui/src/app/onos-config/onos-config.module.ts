@@ -42,7 +42,7 @@ import {ContainerSvgComponent} from './config-view/container-svg/container-svg.c
 import {LinkFilterPipe} from './config-view/link-filter.pipe';
 import {StringValueComponent} from './config-view/string-value/string-value.component';
 import {DeviceService} from './device.service';
-import {TopoDeviceService} from '../onos-topo/topodevice.service';
+import {TopoEntityService} from '../onos-topo/topo-entity.service';
 import {OrderModule} from 'ngx-order-pipe';
 import {OnosApiModule} from '../onos-api/onos-api.module';
 
@@ -96,8 +96,8 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
             useClass: DeviceService
         },
         {
-            provide: TopoDeviceService,
-            useClass: TopoDeviceService
+            provide: TopoEntityService,
+            useClass: TopoEntityService
         }
     ],
     exports: [

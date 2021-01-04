@@ -21,7 +21,7 @@ import {
 } from 'gui2-fw-lib';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as grpcWeb from 'grpc-web';
-import { TopoDeviceService } from '../topodevice.service';
+import { TopoEntityService } from '../topo-entity.service';
 import { Object } from '../../onos-api/onos/topo/topo_pb';
 import { ConnectivityService } from '../../connectivity.service';
 
@@ -48,7 +48,7 @@ export class EntityListComponent implements OnInit, OnDestroy {
     protected as: ActivatedRoute,
     protected router: Router,
     protected is: IconService,
-    public topoDeviceService: TopoDeviceService,
+    public topoDeviceService: TopoEntityService,
     private connectivityService: ConnectivityService
   ) {
     this.is.loadIconDef('switch');

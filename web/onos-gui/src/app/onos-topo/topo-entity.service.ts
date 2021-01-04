@@ -18,14 +18,14 @@ import {Injectable} from '@angular/core';
 import * as grpcWeb from 'grpc-web';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {OnosTopoDeviceService} from '../onos-api/onos-topo-device.service';
+import {OnosTopoEntityService} from '../onos-api/onos-topo-entity.service';
 import {EventType, WatchResponse, Object as EntityObject} from '../onos-api/onos/topo/topo_pb';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class TopoDeviceService {
+export class TopoEntityService {
     topoEntitySub: Subscription;
     entityList: Map<string, EntityObject>; // Expect <dev-id:dev-ver> as key
     relationshipsList: Map<string, EntityObject>;
@@ -35,14 +35,14 @@ export class TopoDeviceService {
     };
 
     constructor(
-        private onosTopoDeviceService: OnosTopoDeviceService
+        private onosTopoEntityService: OnosTopoEntityService
     ) {
         this.entityList = new Map<string, EntityObject>();
         this.relationshipsList = new Map<string, EntityObject>();
     }
 
     watchTopoEntity(errorCb: (e: grpcWeb.Error) => void, updateCb?: (type: EventType, entity: EntityObject) => void) {
-        this.topoEntitySub = this.onosTopoDeviceService.requestListTopo().pipe(
+        this.topoEntitySub = this.onosTopoEntityService.requestListTopo().pipe(
             filter(x => x.getEvent().getObject().getType() === 1 || x.getEvent().getObject().getType() === 2)
         ).subscribe(
             (resp: WatchResponse) => {

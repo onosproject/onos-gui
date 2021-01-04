@@ -26,7 +26,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
 import {Subscription} from 'rxjs';
-import {TopoDeviceService} from '../../onos-topo/topodevice.service';
+import {TopoEntityService} from '../../onos-topo/topo-entity.service';
 import {
     Change,
     ChangeValue, PathValue
@@ -68,7 +68,7 @@ export class ConfigDashboardComponent implements OnInit, OnDestroy {
 
     constructor(
         private diags: OnosConfigDiagsService,
-        private topoDeviceService: TopoDeviceService,
+        private topoDeviceService: TopoEntityService,
         private admin: OnosConfigAdminService,
         public deviceService: DeviceService,
         private is: IconService,

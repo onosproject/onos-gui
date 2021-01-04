@@ -26,7 +26,7 @@ import {
 } from './onos/topo/topo_pb';
 
 @Injectable()
-export class OnosTopoDeviceService {
+export class OnosTopoEntityService {
 
     topoServiceClient: TopoClient;
 
@@ -36,7 +36,7 @@ export class OnosTopoDeviceService {
     ) {
         this.topoServiceClient = new TopoClient(onosTopoUrl);
 
-        console.log('Topo Device Url', onosTopoUrl, loggedinService.email);
+        console.log('Topo Entity Url', onosTopoUrl, loggedinService.email);
     }
 
     requestListTopo(): Observable<WatchResponse> {

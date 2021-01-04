@@ -16,13 +16,13 @@
 
 import {TestBed} from '@angular/core/testing';
 
-import {TopoDeviceService} from './topodevice.service';
+import {TopoEntityService} from './topo-entity.service';
 
 describe('TopoDeviceService', () => {
     beforeEach(() => TestBed.configureTestingModule({}));
 
     it('should be created', () => {
-        const service: TopoDeviceService = TestBed.inject(TopoDeviceService);
+        const service: TopoEntityService = TestBed.inject(TopoEntityService);
         expect(service).toBeTruthy();
     });
 });
