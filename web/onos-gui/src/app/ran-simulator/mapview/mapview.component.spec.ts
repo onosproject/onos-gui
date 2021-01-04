@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {MapviewComponent} from './mapview.component';
 import {RanSimulatorTrafficsimService} from '../proto/ran-simulator-trafficsim.service';
@@ -37,7 +37,7 @@ describe('MapviewComponent', () => {
     let component: MapviewComponent;
     let fixture: ComponentFixture<MapviewComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [MapviewComponent],
             providers: [

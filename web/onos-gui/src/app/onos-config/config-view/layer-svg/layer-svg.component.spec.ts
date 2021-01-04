@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ChangeValueObj, LayerSvgComponent} from './layer-svg.component';
 import {OnosConfigDiagsService} from '../../../onos-api/onos-config-diags.service';
@@ -32,7 +32,7 @@ describe('LayerSvgComponent', () => {
     let component: LayerSvgComponent;
     let fixture: ComponentFixture<LayerSvgComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
                 LayerSvgComponent,

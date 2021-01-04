@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {DeviceChangeComponent} from './device-change.component';
 
@@ -22,7 +22,7 @@ describe('DeviceChangeComponent', () => {
     let component: DeviceChangeComponent;
     let fixture: ComponentFixture<DeviceChangeComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [DeviceChangeComponent]
         })

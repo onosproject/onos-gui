@@ -52,7 +52,7 @@ const onosRoutes: Routes = [
  */
 @NgModule({
     imports: [
-        RouterModule.forRoot(onosRoutes, {useHash: true})
+        RouterModule.forRoot(onosRoutes, { useHash: true, relativeLinkResolution: 'legacy' })
     ],
     exports: [RouterModule],
     providers: []
