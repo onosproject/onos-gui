@@ -15,10 +15,10 @@
  */
 
 import { Injectable } from '@angular/core';
-import { OnosConfigAdminService } from './proto/onos-config-admin.service';
+import { OnosConfigAdminService } from '../onos-api/onos-config-admin.service';
 import {
     ModelInfo,
-} from './proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+} from '../onos-api/onos/config/admin/admin_pb';
 import { Observable, Subscription } from 'rxjs';
 import { ErrorCallback } from './device.service';
 

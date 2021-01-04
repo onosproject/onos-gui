@@ -30,7 +30,7 @@ import {
 } from 'gui2-fw-lib';
 import {
     Change,
-} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../../onos-api/onos/config/change/device/types_pb';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({

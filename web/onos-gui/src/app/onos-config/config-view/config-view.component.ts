@@ -24,7 +24,7 @@ import {
     SimpleChanges,
     ViewChild
 } from '@angular/core';
-import {OnosConfigDiagsService} from '../proto/onos-config-diags.service';
+import {OnosConfigDiagsService} from '../../onos-api/onos-config-diags.service';
 import {ModelTempIndexService} from './model-temp-index.service';
 import {HierarchyLayoutService} from './hierarchy-layout.service';
 import {ActivatedRoute} from '@angular/router';
@@ -35,26 +35,26 @@ import {
     ChangeValue,
     DeviceChange,
     TypedValue
-} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../../onos-api/onos/config/change/device/types_pb';
 import {SelectedLayer} from '../config-layers-panel/config-layers-panel.component';
 import {
     LayerSvgComponent,
     LayerType,
     PathDetails
 } from './layer-svg/layer-svg.component';
-import {ReadWritePath} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ReadWritePath} from '../../onos-api/onos/config/admin/admin_pb';
 import {Subscription} from 'rxjs';
 import {
     ListDeviceChangeResponse,
     OpStateResponse,
     Type
-} from '../proto/github.com/onosproject/onos-config/api/diags/diags_pb';
+} from '../../onos-api/onos/config/diags/diags_pb';
 import * as grpcWeb from 'grpc-web';
 import {ConnectivityService} from '../../connectivity.service';
 import {ModelService} from '../model.service';
-import {OnosConfigAdminService} from '../proto/onos-config-admin.service';
-import {Snapshot} from '../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
-import {Phase} from '../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {OnosConfigAdminService} from '../../onos-api/onos-config-admin.service';
+import {Snapshot} from '../../onos-api/onos/config/snapshot/device/types_pb';
+import {Phase} from '../../onos-api/onos/config/change/types_pb';
 
 export const OPSTATE = 'opstate';
 export const RWPATHS = 'rwpaths';

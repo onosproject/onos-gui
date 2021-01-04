@@ -1,7 +1,7 @@
 .PHONY: build
 
 ONOS_GUI_VERSION := latest
-ONOS_PROTOC_VERSION := v0.6.3
+ONOS_PROTOC_VERSION := v0.6.7
 
 build: # @HELP build the Web GUI and run all validations (default)
 build:

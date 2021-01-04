@@ -27,7 +27,7 @@ import {
     LogService,
     WebSocketService
 } from 'gui2-fw-lib';
-import {ModelInfo} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
+import {ModelInfo} from '../../onos-api/onos/config/admin/admin_pb';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({

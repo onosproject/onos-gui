@@ -18,19 +18,18 @@ import {Injectable} from '@angular/core';
 import {
     ChannelState,
     ConnectivityState,
-    Device, ListResponse,
+    Entity,
+    Object as EntityObject,
     Protocol,
     ProtocolState,
     ServiceState
-} from '../onos-topo/proto/github.com/onosproject/onos-topo/api/device/device_pb';
-import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
-import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
-import {DeviceChange} from './proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-import {ListDeviceChangeResponse} from './proto/github.com/onosproject/onos-config/api/diags/diags_pb';
-import {from, Observable, Subscriber, Subscription} from 'rxjs';
+} from '../onos-api/onos/topo/topo_pb';
+import {OnosConfigDiagsService} from '../onos-api/onos-config-diags.service';
+import {DeviceChange} from '../onos-api/onos/config/change/device/types_pb';
+import {from, Observable, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
-import {OnosConfigAdminService} from './proto/onos-config-admin.service';
-import {Snapshot} from './proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
+import {OnosConfigAdminService} from '../onos-api/onos-config-admin.service';
+import {Snapshot} from '../onos-api/onos/config/snapshot/device/types_pb';
 import {KeyValue} from '@angular/common';
 import * as grpcWeb from 'grpc-web';
 
@@ -51,7 +50,7 @@ export type ErrorCallback = (e: grpcWeb.Error) => void;
     providedIn: 'root'
 })
 export class DeviceService {
-    deviceList: Map<string, Device>; // Expect <dev-id:dev-ver> as key
+    entityList: Map<string, EntityObject>; // Expect <dev-id:dev-ver> as key
     deviceChangeMap: Map<string, DeviceChange>; // Expect <dev-id:dev-ver> as key
     deviceSnapshotMap: Map<string, Snapshot>; // Expect <dev-id:dev-ver> as key
     diags: OnosConfigDiagsService;
@@ -61,7 +60,7 @@ export class DeviceService {
 
     constructor(diags: OnosConfigDiagsService,
                 admin: OnosConfigAdminService) {
-        this.deviceList = new Map<string, Device>();
+        this.entityList = new Map<string, EntityObject>();
         this.deviceChangeMap = new Map<string, DeviceChange>();
         this.deviceChangesObs = from(this.deviceChangeMap).pipe(takeWhile<[string, DeviceChange]>((dcId, dc) => true));
         this.deviceSnapshotMap = new Map<string, Snapshot>();
@@ -70,55 +69,40 @@ export class DeviceService {
         this.admin = admin;
     }
 
-    static deviceSorterForwardAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+    static entitySorterForwardAlpha(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
         return a.key < b.key ? -1 : (a.key > b.key) ? 1 : 0;
     }
 
-    static deviceSorterReverseAlpha(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
+    static entitySorterReverseAlpha(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
         return a.key < b.key ? 1 : (a.key > b.key) ? -1 : 0;
     }
 
-    static deviceSorterForwardType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTypeVersion = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType());
-        const bTypeVersion = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType());
-        return  aTypeVersion < bTypeVersion ? -1 : (aTypeVersion > bTypeVersion) ? 1 : 0;
+    static entitySorterForwardKind(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
+        const aKind = DeviceService.calculateKind(a.key, a.value.getEntity().getKindId());
+        const bKind = DeviceService.calculateKind(b.key, b.value.getEntity().getKindId());
+        return  aKind < bKind ? 1 : (aKind > bKind) ? -1 : 0;
     }
 
-    static deviceSorterReverseType(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aTypeVersion = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType());
-        const bTypeVersion = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType());
-        return  aTypeVersion < bTypeVersion ? 1 : (aTypeVersion > bTypeVersion) ? -1 : 0;
+    static entitySorterReverseKind(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
+        const aKind = DeviceService.calculateKind(a.key, a.value.getEntity().getKindId());
+        const bKind = DeviceService.calculateKind(b.key, b.value.getEntity().getKindId());
+        return  aKind < bKind ? -1 : (aKind > bKind) ? 1 : 0;
     }
 
-    static deviceSorterForwardVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aVersionType = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType(), true);
-        const bVersionType = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType(), true);
-        return  aVersionType < bVersionType ? -1 : (aVersionType > bVersionType) ? 1 : 0;
-    }
-
-    static deviceSorterReverseVersion(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aVersionType = DeviceService.concatTypeOrVersion(a.key, a.value.getVersion(), a.value.getType(), true);
-        const bVersionType = DeviceService.concatTypeOrVersion(b.key, b.value.getVersion(), b.value.getType(), true);
-        return  aVersionType < bVersionType ? 1 : (aVersionType > bVersionType) ? -1 : 0;
-    }
-
-    static deviceSorterForwardStatus(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aStatus = DeviceService.calculateState(a.value.getProtocolsList());
-        const bStatus = DeviceService.calculateState(b.value.getProtocolsList());
+    static entitySorterForwardStatus(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
+        const aStatus = DeviceService.calculateState(a.value.getEntity().getProtocolsList());
+        const bStatus = DeviceService.calculateState(b.value.getEntity().getProtocolsList());
         return  aStatus < bStatus ? -1 : (aStatus > bStatus) ? 1 : 0;
     }
 
-    static deviceSorterReverseStatus(a: KeyValue<string, Device>, b: KeyValue<string, Device>): number {
-        const aStatus = DeviceService.calculateState(a.value.getProtocolsList());
-        const bStatus = DeviceService.calculateState(b.value.getProtocolsList());
+    static entitySorterReverseStatus(a: KeyValue<string, EntityObject>, b: KeyValue<string, EntityObject>): number {
+        const aStatus = DeviceService.calculateState(a.value.getEntity().getProtocolsList());
+        const bStatus = DeviceService.calculateState(b.value.getEntity().getProtocolsList());
         return  aStatus < bStatus ? 1 : (aStatus > bStatus) ? -1 : 0;
     }
 
-    private static concatTypeOrVersion(devid: string, version: string, type: string, forVersion?: boolean): string {
-        if (forVersion) {
-            return version + ':' + type + ':' + devid;
-        }
-        return type + ':' + version + ':' + devid;
+    private static calculateKind(devid: string, kind: string): string {
+        return kind + devid;
     }
 
     private static calculateState(protocolList: Array<ProtocolState>): number {
@@ -162,8 +146,8 @@ export class DeviceService {
         this.snapshotSub = this.admin.requestSnapshots('').subscribe(
     (s: Snapshot) => {
             console.log('List Snapshots response for', s.getId(), s.getSnapshotId(), s.getValuesList().length);
-            if (!this.deviceList.has(s.getId())) {
-                this.addDevice(s.getDeviceId(), s.getDeviceType(), s.getDeviceVersion(), false, errorCb);
+            if (!this.entityList.has(s.getId())) {
+                this.addEntity(s.getDeviceId(), s.getDeviceType(), s.getDeviceVersion(), false, errorCb);
             }
             this.deviceSnapshotMap.set(s.getId(), s);
             },
@@ -181,27 +165,39 @@ export class DeviceService {
         console.log('Stopped watching snapshots');
     }
 
-    addTopoDevice(device: Device) {
-        const nameVersion = device.getId() + ':' + device.getVersion();
-        if (!this.deviceList.has(nameVersion)) {
-            this.deviceList.set(nameVersion, device);
+    addTopoEntity(entity: EntityObject) {
+        const nameVersion = entity.getId() + ':' + entity.getAttributesMap().get('version');
+        if (!this.entityList.has(nameVersion)) {
+            if (entity.getType().valueOf() === 1) { // An entity - not Relationship or Kind
+                this.entityList.set(nameVersion, entity);
+                console.log('Adding topo entity', nameVersion, entity.getType());
+            }
         }
     }
 
-    addDevice(deviceId: string, deviceType: string, version: string, addDcSub: boolean, errCb: ErrorCallback): void {
-        const nameVersion = deviceId + ':' + version;
-        if (!this.deviceList.has(nameVersion)) {
-            const newDevice = new Device();
-            newDevice.setId(deviceId);
-            newDevice.setType(deviceType);
-            newDevice.setVersion(version);
-            this.deviceList.set(nameVersion, newDevice);
+    addEntity(entityId: string, deviceType: string, version: string, addDcSub: boolean, errCb: ErrorCallback): void {
+        const nameVersion = entityId + ':' + version;
+        if (!this.entityList.has(nameVersion)) {
+            const newEntityObject = new EntityObject();
+            newEntityObject.setId(entityId);
+            newEntityObject.setType(EntityObject.Type.ENTITY);
+            newEntityObject.getAttributesMap().set('version', version);
+            const newEntity = new Entity();
+            newEntity.setKindId(deviceType);
+            newEntityObject.setEntity(newEntity);
+            this.entityList.set(nameVersion, newEntityObject);
+            console.log('Adding config entity', nameVersion);
         }
     }
 
 
-    deviceStatusStyles(deviceKey: string): string[] {
-        const protocolList = this.deviceList.get(deviceKey).getProtocolsList();
+    deviceStatusStyles(entityKey: string): string[] {
+        const entityObj = this.entityList.get(entityKey);
+        if (entityObj === undefined || entityObj.getEntity() === undefined) {
+            console.log('Could not find key', entityKey);
+            return [];
+        }
+        const protocolList = entityObj.getEntity().getProtocolsList();
         const stateStyles = new Array<string>();
 
         protocolList.forEach((value: ProtocolState) => {

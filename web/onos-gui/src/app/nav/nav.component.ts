@@ -165,10 +165,6 @@ export class NavComponent implements OnInit {
             views: new Array<UiView>()
         } as NavSection;
         topoNavSection.views.push({
-            id: 'devices',
-            label: 'Devices'
-        } as UiView);
-        topoNavSection.views.push({
             id: 'entity',
             label: 'Entity'
         } as UiView);

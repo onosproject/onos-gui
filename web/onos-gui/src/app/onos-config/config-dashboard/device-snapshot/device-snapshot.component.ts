@@ -16,7 +16,7 @@
 
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DeviceService} from '../../device.service';
-import {Snapshot} from '../../proto/github.com/onosproject/onos-config/api/types/snapshot/device/types_pb';
+import {Snapshot} from '../../../onos-api/onos/config/snapshot/device/types_pb';
 
 @Component({
     selector: '[onos-device-snapshot]',

@@ -17,7 +17,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {ModelService} from './model.service';
-import {OnosConfigAdminService} from './proto/onos-config-admin.service';
+import {OnosConfigAdminService} from '../onos-api/onos-config-admin.service';
 import {GRPC_WEB_CONFIG_PROXY} from './onos-config.module';
 import {LoggedinService} from '../loggedin.service';
 

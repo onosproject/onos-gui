@@ -21,11 +21,11 @@
     <input type="button" *ngIf="canRollback" value="Rollback" (click)="rollbackChange()">
 </th>
 <td class="dev-change-cell"
-    *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion"
-    onos-device-change [deviceChangeId]="device.value.getId()"
-    [deviceVersion]="device.value.getVersion()"
+    *ngFor="let entity of deviceService.entityList | keyvalue:deviceSortCriterion"
+    onos-device-change [deviceChangeId]="entity.value.getId()"
+    [deviceVersion]="entity.value.getAttributesMap().get('version')"
     [networkChangeId]="networkChange.getId()"
-    [change]="getChangeByName(device.value.getId(), device.value.getVersion())"
+    [change]="getChangeByName(entity.value.getId(), entity.value.getAttributesMap().get('version'))"
     [state]="networkChange.getStatus()"
-    (selected)="itemSelected(networkChange.getId(), device.value.getId(), device.value.getVersion())">
+    (selected)="itemSelected(networkChange.getId(), entity.value.getId(), entity.value.getAttributesMap().get('version'))">
 </td>

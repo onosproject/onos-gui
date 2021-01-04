@@ -20,9 +20,6 @@ import {
     grpc_web_config_proxy,
     grpc_web_topo_proxy
 } from '../../environments/environment';
-import {OnosConfigDiagsService} from './proto/onos-config-diags.service';
-import {OnosConfigAdminService} from './proto/onos-config-admin.service';
-import {OnosConfigGnmiService} from './proto/onos-config-gnmi.service';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {OnosConfigRoutingModule} from './onos-config-routing.module';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
@@ -35,7 +32,6 @@ import {NetworkChangeComponent} from './config-dashboard/network-change/network-
 import {DeviceChangeComponent} from './config-dashboard/device-change/device-change.component';
 import {DeviceSnapshotComponent} from './config-dashboard/device-snapshot/device-snapshot.component';
 import {NetworkSnapshotComponent} from './config-dashboard/network-snapshot/network-snapshot.component';
-import {OnosTopoDeviceService} from '../onos-topo/proto/onos-topo-device.service';
 import {DeviceChangeDetailsComponent} from './device-change-details/device-change-details.component';
 import {ChangeStatusPipe} from './change-status.pipe';
 import {ConfigViewComponent} from './config-view/config-view.component';
@@ -46,9 +42,9 @@ import {ContainerSvgComponent} from './config-view/container-svg/container-svg.c
 import {LinkFilterPipe} from './config-view/link-filter.pipe';
 import {StringValueComponent} from './config-view/string-value/string-value.component';
 import {DeviceService} from './device.service';
-import {TopoDeviceService} from '../onos-topo/topodevice.service';
+import {TopoEntityService} from '../onos-topo/topo-entity.service';
 import {OrderModule} from 'ngx-order-pipe';
-import {LoggedinService} from '../loggedin.service';
+import {OnosApiModule} from '../onos-api/onos-api.module';
 
 const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config.proxy');
@@ -79,7 +75,8 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
         ReactiveFormsModule,
         OnosConfigRoutingModule,
         Gui2FwLibModule,
-        OrderModule
+        OrderModule,
+        OnosApiModule,
     ],
     providers: [
         {
@@ -91,22 +88,6 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
             useValue: grpc_web_config_proxy
         },
         {
-            provide: OnosConfigDiagsService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
-        },
-        {
-            provide: OnosConfigAdminService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
-        },
-        {
-            provide: OnosConfigGnmiService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
-        },
-        {
-            provide: OnosTopoDeviceService,
-            deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
-        },
-        {
             provide: ModelService,
             useClass: ModelService
         },
@@ -115,8 +96,8 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
             useClass: DeviceService
         },
         {
-            provide: TopoDeviceService,
-            useClass: TopoDeviceService
+            provide: TopoEntityService,
+            useClass: TopoEntityService
         }
     ],
     exports: [

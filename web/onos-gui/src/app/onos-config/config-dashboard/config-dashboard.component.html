@@ -20,12 +20,12 @@
         <th class="nw-ch-hdr"></th>
         <th class="device-hdr"
             [@deviceBorderFlash]="true"
-            [ngClass]="deviceService.deviceStatusStyles(device.key)"
-            [title]="deviceService.deviceStatusStyles(device.key)"
-            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
+            [ngClass]="deviceService.deviceStatusStyles(entity.key)"
+            [title]="deviceService.deviceStatusStyles(entity.key)"
+            *ngFor="let entity of deviceService.entityList | keyvalue:deviceSortCriterion">
             <a class='device-link'
-               [ngClass]="deviceService.deviceStatusStyles(device.key)"
-               [routerLink]="['/onos-config','configview', device.key ]">{{device.key}}</a>
+               [ngClass]="deviceService.deviceStatusStyles(entity.key)"
+               [routerLink]="['/onos-config','configview', entity.key ]">{{entity.key}}</a>
         </th>
     </tr>
     <tr>
@@ -53,9 +53,9 @@
     <tr>
         <th class="nw-cnt-hdr">Pending/Complete/Failed/Total<br>Change/Rollback</th>
         <td class="nw-cnt-row"
-            *ngFor="let device of deviceService.deviceList | keyvalue:deviceSortCriterion">
+            *ngFor="let entity of deviceService.entityList | keyvalue:deviceSortCriterion">
             <!-- the pre is required so that the newline in the string is not flattened -->
-            <pre id="nw-ch-counts">{{countChangesStates(device.value.getId(), device.value.getVersion())}}</pre>
+            <pre id="nw-ch-counts">{{countChangesStates(entity.value.getId(), entity.value.getAttributesMap().get('version'))}}</pre>
         </td>
     </tr>
     <tr class="control">

@@ -20,8 +20,8 @@ import {ModelTempIndexService} from './model-temp-index.service';
 import {
     ModelInfo,
     ReadWritePath
-} from '../proto/github.com/onosproject/onos-config/api/admin/admin_pb';
-import {ValueType} from '../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
+} from '../../onos-api/onos/config/admin/admin_pb';
+import {ValueType} from '../../onos-api/onos/config/change/device/types_pb';
 
 describe('ModelTempIndexService', () => {
     const pathArray: Array<ReadWritePath> = Array(2);

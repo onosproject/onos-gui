@@ -17,8 +17,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DeviceService} from '../../device.service';
 import {StatusUtil} from '../../status.util';
-import {Change} from '../../proto/github.com/onosproject/onos-config/api/types/change/device/types_pb';
-import {Status} from '../../proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {Change} from '../../../onos-api/onos/config/change/device/types_pb';
+import {Status} from '../../../onos-api/onos/config/change/types_pb';
 
 @Component({
     selector: '[onos-device-change]',

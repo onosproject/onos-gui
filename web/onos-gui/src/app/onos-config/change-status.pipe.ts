@@ -15,7 +15,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Status} from './proto/github.com/onosproject/onos-config/api/types/change/types_pb';
+import {Status} from '../onos-api/onos/config/change/types_pb';
 import {StatusUtil} from './status.util';
 
 @Pipe({
