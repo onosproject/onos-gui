@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {UelinksComponent} from './uelinks.component';
 
@@ -22,7 +22,7 @@ describe('UelinksComponent', () => {
     let component: UelinksComponent;
     let fixture: ComponentFixture<UelinksComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [UelinksComponent]
         })

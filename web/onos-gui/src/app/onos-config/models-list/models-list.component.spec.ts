@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ModelsListComponent } from './models-list.component';
 
@@ -22,7 +22,7 @@ describe('ModelsListComponent', () => {
   let component: ModelsListComponent;
   let fixture: ComponentFixture<ModelsListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ModelsListComponent ]
     })

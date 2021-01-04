@@ -15,7 +15,7 @@
  */
 
 import {ChangeValuePipe} from './change-value.pipe';
-import {async, TestBed} from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import {TypedValue} from '../onos-api/onos/config/change/device/types_pb';
 
 describe('ChangeValuePipe', () => {

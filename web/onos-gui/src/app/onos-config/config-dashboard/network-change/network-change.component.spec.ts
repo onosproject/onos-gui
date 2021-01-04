@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {NetworkChangeComponent} from './network-change.component';
 
@@ -22,7 +22,7 @@ describe('NetworkChangeComponent', () => {
     let component: NetworkChangeComponent;
     let fixture: ComponentFixture<NetworkChangeComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [NetworkChangeComponent]
         })

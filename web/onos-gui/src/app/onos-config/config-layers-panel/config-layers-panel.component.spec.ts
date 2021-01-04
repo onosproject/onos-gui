@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ConfigLayersPanelComponent} from './config-layers-panel.component';
 
@@ -22,7 +22,7 @@ describe('ConfigLayersPanelComponent', () => {
     let component: ConfigLayersPanelComponent;
     let fixture: ComponentFixture<ConfigLayersPanelComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ConfigLayersPanelComponent]
         })

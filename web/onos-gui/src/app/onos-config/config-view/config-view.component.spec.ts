@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {ConfigViewComponent} from './config-view.component';
 
@@ -22,7 +22,7 @@ describe('ConfigViewComponent', () => {
     let component: ConfigViewComponent;
     let fixture: ComponentFixture<ConfigViewComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ConfigViewComponent]
         })
