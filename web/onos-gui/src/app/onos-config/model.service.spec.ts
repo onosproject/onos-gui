@@ -18,8 +18,7 @@ import {TestBed} from '@angular/core/testing';
 
 import {ModelService} from './model.service';
 import {OnosConfigAdminService} from '../onos-api/onos-config-admin.service';
-import {GRPC_WEB_CONFIG_PROXY} from './onos-config.module';
-import {LoggedinService} from '../loggedin.service';
+import {GRPC_WEB_CONFIG_PROXY, ID_TOKEN} from './onos-config.module';
 
 describe('ModelService', () => {
 
@@ -30,11 +29,12 @@ describe('ModelService', () => {
                 useValue: 'http://localhost:8080'
             },
             {
-                provide: LoggedinService,
+                provide: ID_TOKEN,
+                useValue: localStorage.getItem('id_token')
             },
             {
                 provide: OnosConfigAdminService,
-                deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY]
+                deps: [ID_TOKEN, GRPC_WEB_CONFIG_PROXY]
             },
             {
                 provide: ModelService,

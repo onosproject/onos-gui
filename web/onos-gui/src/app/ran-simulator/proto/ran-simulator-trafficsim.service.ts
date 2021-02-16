@@ -28,7 +28,6 @@ import {
     SetNumberUEsResponse, ListUesRequest
 } from './github.com/onosproject/ran-simulator/api/trafficsim/trafficsim_pb';
 import * as grpcWeb from 'grpc-web';
-import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class RanSimulatorTrafficsimService {
@@ -36,7 +35,7 @@ export class RanSimulatorTrafficsimService {
     trafficClient: TrafficClient;
 
     constructor(
-        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private idToken: string,
         private ranSimulatorUrl: string
     ) {
         this.trafficClient = new TrafficClient(ranSimulatorUrl);
@@ -47,7 +46,7 @@ export class RanSimulatorTrafficsimService {
     requestGetMapLayout(): Observable<MapLayout> {
         const getMapLayoutObs = new Observable<MapLayout>( (observer: Subscriber<MapLayout>) => {
             const call = this.trafficClient.getMapLayout(new MapLayoutRequest(), {
-                Authorization: 'Bearer ' + this.loggedinService.idToken,
+                Authorization: 'Bearer ' + this.idToken,
             }, ((err, response) => {
                 if (err) {
                     observer.error(err);
@@ -69,7 +68,7 @@ export class RanSimulatorTrafficsimService {
         const req = new ListCellsRequest();
         req.setSubscribe(asStream);
         const stream = this.trafficClient.listCells(req, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
 
         const listTowersObs = new Observable<ListCellsResponse>((observer: Subscriber<ListCellsResponse>) => {
@@ -95,7 +94,7 @@ export class RanSimulatorTrafficsimService {
         routeReq.setSubscribe(asStream);
         routeReq.setWithoutreplay(false);
         const stream = this.trafficClient.listRoutes(routeReq, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
 
         const listRoutesObs = new Observable<ListRoutesResponse>((observer: Subscriber<ListRoutesResponse>) => {
@@ -119,7 +118,7 @@ export class RanSimulatorTrafficsimService {
         ueReq.setSubscribe(asStream);
         ueReq.setWithoutreplay(false);
         const stream = this.trafficClient.listUes(ueReq, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
 
         const listUesObs = new Observable<ListUesResponse>((observer: Subscriber<ListUesResponse>) => {
@@ -143,7 +142,7 @@ export class RanSimulatorTrafficsimService {
         req.setNumber(numUEs);
         const setNumUeObs = new Observable<SetNumberUEsResponse>((observer: Subscriber<SetNumberUEsResponse>) => {
             const call = this.trafficClient.setNumberUEs(req, {
-                Authorization: 'Bearer ' + this.loggedinService.idToken,
+                Authorization: 'Bearer ' + this.idToken,
             }, (err, resp) => {
                 if (err) {
                     observer.error(err);

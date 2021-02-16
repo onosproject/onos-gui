@@ -22,9 +22,9 @@ import {RouterModule} from '@angular/router';
 import {RanSimulatorTrafficsimService} from './proto/ran-simulator-trafficsim.service';
 import {grpc_web_sim_proxy} from '../../environments/environment';
 import {FormsModule} from '@angular/forms';
-import {LoggedinService} from '../loggedin.service';
 
 export const GRPC_WEB_SIM_PROXY = new InjectionToken<string>('grpc.web.sim.proxy');
+export const ID_TOKEN = new InjectionToken<string>('auth.local.idtoken');
 
 @NgModule({
     declarations: [MapviewComponent],
@@ -43,8 +43,12 @@ export const GRPC_WEB_SIM_PROXY = new InjectionToken<string>('grpc.web.sim.proxy
             useValue: grpc_web_sim_proxy
         },
         {
+            provide: ID_TOKEN,
+            useValue: localStorage.getItem('id_token')
+        },
+        {
             provide: RanSimulatorTrafficsimService,
-            deps: [LoggedinService, GRPC_WEB_SIM_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_SIM_PROXY],
         }
     ]
 })

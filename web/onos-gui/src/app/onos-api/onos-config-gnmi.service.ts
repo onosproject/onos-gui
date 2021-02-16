@@ -30,7 +30,6 @@ import {
     Extension,
     RegisteredExtension
 } from './gnmi_ext/gnmi_ext_pb';
-import {LoggedinService} from '../loggedin.service';
 
 type CapabilityCallback = (e: grpcWeb.Error, r: CapabilityResponse) => void;
 type GnmiGetCallback = (e: grpcWeb.Error, r: GetResponse) => void;
@@ -42,7 +41,7 @@ export class OnosConfigGnmiService {
     gnmiService: gNMIClient;
 
     constructor(
-        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private idToken: string,
         private onosConfigUrl: string
     ) {
         this.gnmiService = new gNMIClient(onosConfigUrl);
@@ -53,7 +52,7 @@ export class OnosConfigGnmiService {
         const capabilitiesRequest = new CapabilityRequest();
         console.log('capabilities Request sent to', this.onosConfigUrl);
         this.gnmiService.capabilities(capabilitiesRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         }, cb);
     }
 
@@ -65,7 +64,7 @@ export class OnosConfigGnmiService {
         wholeDeviceRequest.setPrefix(prefixPath);
         console.log('gNMI get Request sent to', this.onosConfigUrl, wholeDeviceRequest);
         this.gnmiService.get(wholeDeviceRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         }, cb);
     }
 
@@ -87,7 +86,7 @@ export class OnosConfigGnmiService {
         }
 
         this.gnmiService.set(gnmiSetRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         }, cb);
     }
 

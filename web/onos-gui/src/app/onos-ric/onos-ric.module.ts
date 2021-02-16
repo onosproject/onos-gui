@@ -22,9 +22,9 @@ import {UelinksComponent} from './uelinks/uelinks.component';
 import {OnosRicC1Service} from './proto/onos-ric-c1.service';
 import {Gui2FwLibModule} from 'gui2-fw-lib';
 import {CellDetailsComponent} from './celldetails/celldetails.component';
-import {LoggedinService} from '../loggedin.service';
 
 const GRPC_WEB_RIC_PROXY = new InjectionToken<string>('grpc.web.ric.proxy');
+export const ID_TOKEN = new InjectionToken<string>('auth.local.idtoken');
 
 @NgModule({
     declarations: [UelinksComponent, CellDetailsComponent],
@@ -43,8 +43,12 @@ const GRPC_WEB_RIC_PROXY = new InjectionToken<string>('grpc.web.ric.proxy');
             useValue: grpc_web_ric_proxy
         },
         {
+            provide: ID_TOKEN,
+            useValue: localStorage.getItem('id_token')
+        },
+        {
             provide: OnosRicC1Service,
-            deps: [LoggedinService, GRPC_WEB_RIC_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_RIC_PROXY],
         }
     ]
 })

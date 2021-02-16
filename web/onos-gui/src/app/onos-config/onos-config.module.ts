@@ -48,6 +48,7 @@ import {OnosApiModule} from '../onos-api/onos-api.module';
 
 const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config.proxy');
+export const ID_TOKEN = new InjectionToken<string>('auth.local.idtoken');
 
 @NgModule({
     declarations: [
@@ -86,6 +87,10 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
         {
             provide: GRPC_WEB_CONFIG_PROXY,
             useValue: grpc_web_config_proxy
+        },
+        {
+            provide: ID_TOKEN,
+            useValue: localStorage.getItem('id_token')
         },
         {
             provide: ModelService,
