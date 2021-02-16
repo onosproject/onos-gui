@@ -16,7 +16,7 @@
 
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-    <onos-mast [username]="loggedinService.username"></onos-mast>
+    <onos-mast [username]="idTokClaims.name"></onos-mast>
     <onos-nav></onos-nav>
     <onos-veil #veil></onos-veil>
     <div>{{ connectivity.setVeilDelegate(veil) }}</div>

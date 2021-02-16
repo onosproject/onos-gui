@@ -26,7 +26,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NavComponent} from './nav/nav.component';
 import {K8sClientService} from './k8sclient.service';
 import {kubernetes_api_proxy} from '../environments/environment';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import {OAuthModule, OAuthStorage} from 'angular-oauth2-oidc';
 
 @NgModule({
     declarations: [
@@ -47,7 +47,8 @@ import { OAuthModule } from 'angular-oauth2-oidc';
         {provide: LogService, useClass: ConsoleLoggerService},
         {provide: HttpClient, useClass: HttpClient},
         {provide: 'kubernetes_api_proxy', useValue: kubernetes_api_proxy},
-        {provide: K8sClientService, useClass: K8sClientService}
+        {provide: K8sClientService, useClass: K8sClientService},
+        {provide: OAuthStorage, useValue: localStorage},
     ],
     bootstrap: [OnosComponent]
 })

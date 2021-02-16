@@ -18,6 +18,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+import {AuthConfig} from 'angular-oauth2-oidc';
+
 export const environment = {
   production: false
 };
@@ -28,11 +30,17 @@ export const grpc_web_config_proxy = 'http://localhost:8082';
 export const grpc_web_ric_proxy = 'http://localhost:8083';
 export const grpc_web_sim_proxy = 'http://localhost:8084';
 
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+export const OIDC_AUTH_CLIENT_ID = 'onos-gui';
+export const OIDC_ISSUER = undefined;
+
+export const authConfig: AuthConfig = {
+    issuer: OIDC_ISSUER,
+    redirectUri: window.location.origin,
+    clientId: OIDC_AUTH_CLIENT_ID,
+    responseType: 'code',
+    requireHttps: false,
+    scope: 'openid profile email offline_access groups',
+    showDebugInformation: true,
+    timeoutFactor: 0.01,
+    strictDiscoveryDocumentValidation: true,
+};

@@ -18,7 +18,6 @@ import { Inject, Injectable } from '@angular/core';
 
 import { Observable, Subscriber } from 'rxjs';
 import * as grpcWeb from 'grpc-web';
-import { LoggedinService } from '../loggedin.service';
 import { TopoClient } from './onos/topo/TopoServiceClientPb';
 import {
     WatchRequest,
@@ -31,18 +30,18 @@ export class OnosTopoEntityService {
     topoServiceClient: TopoClient;
 
     constructor(
-        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private idToken: string,
         private onosTopoUrl: string
     ) {
         this.topoServiceClient = new TopoClient(onosTopoUrl);
 
-        console.log('Topo Entity Url', onosTopoUrl, loggedinService.email);
+        console.log('Topo Entity Url', onosTopoUrl);
     }
 
     requestListTopo(): Observable<WatchResponse> {
         const subscribeRequest = new WatchRequest();
         const stream = this.topoServiceClient.watch(subscribeRequest, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
         console.log('Topo entity data sent to', this.onosTopoUrl);
         const topoObs = new Observable<WatchResponse>((observer: Subscriber<WatchResponse>) => {

@@ -20,7 +20,6 @@ import {
     grpc_web_config_proxy,
     grpc_web_topo_proxy
 } from '../../environments/environment';
-import {LoggedinService} from '../loggedin.service';
 import {OnosConfigDiagsService} from './onos-config-diags.service';
 import {OnosTopoEntityService} from './onos-topo-entity.service';
 import {OnosConfigAdminService} from './onos-config-admin.service';
@@ -28,6 +27,7 @@ import {OnosConfigGnmiService} from './onos-config-gnmi.service';
 
 const GRPC_WEB_TOPO_PROXY = new InjectionToken<string>('grpc.web.topo.proxy');
 export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config.proxy');
+export const ID_TOKEN = new InjectionToken<string>('auth.local.idtoken');
 
 @NgModule({
     declarations: [
@@ -45,20 +45,24 @@ export const GRPC_WEB_CONFIG_PROXY = new InjectionToken<string>('grpc.web.config
             useValue: grpc_web_config_proxy
         },
         {
+            provide: ID_TOKEN,
+            useValue: localStorage.getItem('id_token')
+        },
+        {
             provide: OnosConfigDiagsService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosConfigAdminService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosConfigGnmiService,
-            deps: [LoggedinService, GRPC_WEB_CONFIG_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_CONFIG_PROXY],
         },
         {
             provide: OnosTopoEntityService,
-            deps: [LoggedinService, GRPC_WEB_TOPO_PROXY],
+            deps: [ID_TOKEN, GRPC_WEB_TOPO_PROXY],
         },
     ],
     exports: [

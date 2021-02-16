@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { OnosTopoEntityService } from './onos-topo-entity.service';
+import {OnosTopoEntityService} from './onos-topo-entity.service';
 
 describe('OnosTopoDeviceService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+    beforeEach(() => TestBed.configureTestingModule({}));
 
-  it('should be created', () => {
-    const service: OnosTopoEntityService = TestBed.inject(OnosTopoEntityService);
-    expect(service).toBeTruthy();
-  });
+    it('should be created', () => {
+        const service: OnosTopoEntityService = TestBed.inject(OnosTopoEntityService);
+        expect(service).toBeTruthy();
+    });
 });

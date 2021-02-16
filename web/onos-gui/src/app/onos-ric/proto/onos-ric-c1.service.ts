@@ -24,7 +24,6 @@ import {
     UELinkListRequest
 } from './github.com/onosproject/onos-ric/api/nb/c1-interface_pb';
 import * as grpcWeb from 'grpc-web';
-import {LoggedinService} from '../../loggedin.service';
 
 @Injectable()
 export class OnosRicC1Service {
@@ -32,7 +31,7 @@ export class OnosRicC1Service {
     c1InterfaceClient: C1InterfaceServiceClient;
 
     constructor(
-        @Inject('loggedinService') public loggedinService: LoggedinService,
+        private idToken: string,
         private onosRicUrl: string
     ) {
         this.c1InterfaceClient = new C1InterfaceServiceClient(onosRicUrl);
@@ -44,7 +43,7 @@ export class OnosRicC1Service {
         const req = new UELinkListRequest();
         req.setNoimsi(false);
         const stream = this.c1InterfaceClient.listUELinks(req, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
         const listUeLinksObs = new Observable<UELinkInfo>((observer: Subscriber<UELinkInfo>) => {
             stream.on('data', (uelink: UELinkInfo) => {
@@ -64,7 +63,7 @@ export class OnosRicC1Service {
     requestListStations(): Observable<StationInfo> {
         const req = new StationListRequest();
         const stream = this.c1InterfaceClient.listStations(req, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
         const listStationsObs = new Observable<StationInfo>((observer: Subscriber<StationInfo>) => {
             stream.on('data', (stationInfo: StationInfo) => {
@@ -85,7 +84,7 @@ export class OnosRicC1Service {
         const req = new StationLinkListRequest();
         // req.setEcgi(ecgi); Not implemented in onos-ric
         const stream = this.c1InterfaceClient.listStationLinks(req, {
-            Authorization: 'Bearer ' + this.loggedinService.idToken,
+            Authorization: 'Bearer ' + this.idToken,
         });
         const listStationLinksObs = new Observable<StationLinkInfo>((observer: Subscriber<StationLinkInfo>) => {
             stream.on('data', (stationLinkInfo: StationLinkInfo) => {

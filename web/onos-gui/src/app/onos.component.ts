@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FnService, IconService, KeysService, LogService} from 'gui2-fw-lib';
 import {ConnectivityService} from './connectivity.service';
 import {
     AuthConfig, OAuthService
 } from 'angular-oauth2-oidc';
 import {Meta} from '@angular/platform-browser';
-import {LoggedinService} from './loggedin.service';
+import {authConfig} from '../environments/environment';
 
-export const authConfig: AuthConfig = {
-    redirectUri: window.location.origin,
-    clientId: 'onos-gui',
-    responseType: 'code',
-    requireHttps: false,
-    scope: 'openid profile email offline_access',
-    dummyClientSecret: 'ZXhhbXBsZS1hcHAtc2VjcmV0',
-    showDebugInformation: true,
-    timeoutFactor: 0.01
-};
+const ID_TOKEN_CLAIMS_OBJ = 'id_token_claims_obj';
+
+export interface IdTokClaims {
+    at_hash: string;
+    aud: string;
+    email: string;
+    email_verified: boolean;
+    exp: number;
+    groups: string[];
+    iat: number;
+    iss: string;
+    name: string;
+    nonce: string;
+    sub: string;
+}
 
 @Component({
     selector: 'onos-root',
     templateUrl: './onos.component.html',
     styleUrls: ['./onos.component.css', './onos-theme.css']
 })
-export class OnosComponent {
+export class OnosComponent implements OnInit {
     title = 'onos-gui';
 
     constructor(
@@ -49,29 +54,33 @@ export class OnosComponent {
         protected is: IconService,
         public connectivity: ConnectivityService,
         private oauthService: OAuthService,
-        public loggedinService: LoggedinService,
         private meta: Meta,
     ) {
+        console.log('Constructed OnosComponent');
+
+    }
+
+    async ngOnInit(): Promise<boolean> {
         const issuerMeta = this.meta.getTag('name=openidcissuer');
-        this.is.loadIconDef('bird');
+        console.log('Starting onos.component with ', issuerMeta.content);
         if (issuerMeta.content !== undefined && issuerMeta.content !== '' && issuerMeta.content !== '$OPENIDCISSUER') {
             authConfig.issuer = issuerMeta.content;
-            this.oauthService.configure(authConfig);
-            this.oauthService.loadDiscoveryDocumentAndLogin().then(loggedIn => {
-                this.loggedinService.email = this.oauthService.getIdentityClaims()['email'];
-                this.loggedinService.username = this.oauthService.getIdentityClaims()['name'];
-                this.loggedinService.accessToken = this.oauthService.getIdToken();
-                this.loggedinService.idToken = this.oauthService.getAccessToken();
-                console.log('Logged in ', loggedIn, this.oauthService.hasValidIdToken(),
-                    'as', this.oauthService.getIdentityClaims()['name'],
-                    '(' + this.oauthService.getIdentityClaims()['email'] + ')');
-                return Promise.resolve();
-            });
-            console.log('Using OpenID Connect Provider issuer:', authConfig.issuer);
         }
-        console.log('Constructed OnosComponent');
-        // this.oauthService.events
-        //     .pipe(filter(e => e.type === 'token_received'))
-        //     .subscribe(_ => this.oauthService.loadUserProfile());
+        if (authConfig.issuer !== undefined) {
+
+            this.oauthService.configure(authConfig);
+
+            return await this.oauthService.loadDiscoveryDocumentAndLogin(
+                {customHashFragment: window.location.search}
+            );
+        }
+    }
+
+    get idTokClaims(): IdTokClaims {
+        const idTokClaims = localStorage.getItem(ID_TOKEN_CLAIMS_OBJ);
+        if (idTokClaims !== null) {
+            return JSON.parse(idTokClaims) as IdTokClaims;
+        }
+        return {} as IdTokClaims;
     }
 }
