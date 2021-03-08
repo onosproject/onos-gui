@@ -1,4 +1,3 @@
-// GENERATED CODE -- DO NOT EDIT!
 /**
  * @fileoverview gRPC-Web generated client stub for onos.topo
  * @enhanceable

@@ -132,28 +132,30 @@ export class LayerSvgComponent implements OnChanges {
             //             this.updatePending(pendingChanges, layerIdNew);
             //         }
             //     } else
-            if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
-                const layerIdSplit: string[] = this.layerId.split(':');
-                if (layerIdSplit.length !== 2) {
-                    console.warn('Error in handling layer name', this.layerId);
-                    return;
-                }
-                const model = this.models.modelInfoList
-                    .find((m) => m.getName() === layerIdSplit[0] && m.getVersion() === layerIdSplit[1]);
-                if (model) {
-                    console.log('Getting RW paths for', layerIdNew);
-                    for (const path of model.getReadWritePathList()) {
-                        this.addRwPath(path);
-                    }
-                    this.modelTempIdx.addModelInfo(model);
-                    this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
-                        this.addRwPath(ep);
-                    });
-                } else {
-                    console.warn('Could not find model', layerIdSplit[0], layerIdSplit[1]);
-                }
-
-            } else if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
+            // TODO: comment back in when the ConfigModel Registry proto supports giving paths
+            // if (this.layerType === LayerType.LAYERTYPE_RWPATHS) {
+            //     const layerIdSplit: string[] = this.layerId.split(':');
+            //     if (layerIdSplit.length !== 2) {
+            //         console.warn('Error in handling layer name', this.layerId);
+            //         return;
+            //     }
+            //     const model = this.models.modelInfoList
+            //         .find((m) => m.getName() === layerIdSplit[0] && m.getVersion() === layerIdSplit[1]);
+            //     if (model) {
+            //         console.log('Getting RW paths for', layerIdNew);
+            //         for (const path of model.getReadWritePathList()) {
+            //             this.addRwPath(path);
+            //         }
+            //         this.modelTempIdx.addModelInfo(model);
+            //         this.modelTempIdx.calculateExtraPaths().forEach((ep) => {
+            //             this.addRwPath(ep);
+            //         });
+            //     } else {
+            //         console.warn('Could not find model', layerIdSplit[0], layerIdSplit[1]);
+            //     }
+            //
+            // } else
+            if (this.layerType === LayerType.LAYERTYPE_ROPATHS) {
                 console.log('Display of Read Only Paths not yet supported');
             } else if (this.layerType === LayerType.LAYERTYPE_OPSTATE) {
                 // Do nothing - there will be no changes yet

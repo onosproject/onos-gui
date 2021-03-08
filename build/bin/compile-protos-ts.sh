@@ -32,6 +32,9 @@ protoc -I=$proto_imports --js_out=import_style=commonjs:$OUT_DIR/onos-api \
   gnmi/gnmi.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:$OUT_DIR/onos-api \
   --grpc-web_out=import_style=typescript,mode=grpcwebtext:$OUT_DIR/onos-api \
+  onos/configmodel/registry.proto
+protoc -I=$proto_imports --js_out=import_style=commonjs:$OUT_DIR/onos-api \
+  --grpc-web_out=import_style=typescript,mode=grpcwebtext:$OUT_DIR/onos-api \
   gnmi_ext/gnmi_ext.proto
 protoc -I=$proto_imports --js_out=import_style=commonjs:$OUT_DIR/onos-api \
   --grpc-web_out=import_style=typescript,mode=grpcwebtext:$OUT_DIR/onos-api \

@@ -1,4 +1,3 @@
-// GENERATED CODE -- DO NOT EDIT!
 /**
  * @fileoverview gRPC-Web generated client stub for gnmi
  * @enhanceable
@@ -12,7 +11,7 @@ import * as grpcWeb from 'grpc-web';
 
 import * as google_protobuf_any_pb from 'google-protobuf/google/protobuf/any_pb';
 import * as google_protobuf_descriptor_pb from 'google-protobuf/google/protobuf/descriptor_pb';
-import * as github_com_openconfig_gnmi_proto_gnmi_ext_gnmi_ext_pb from '../gnmi_ext/gnmi_ext_pb';
+// import * as github_com_openconfig_gnmi_proto_gnmi_ext_gnmi_ext_pb from '../github.com/openconfig/gnmi/proto/gnmi_ext/gnmi_ext_pb';
 
 import {
   CapabilityRequest,

@@ -25,6 +25,7 @@ export const grpc_web_config_proxy = 'http://' + window.location.host + '/onos-c
 export const grpc_web_topo_proxy = 'http://' + window.location.host + '/onos-topo';
 export const grpc_web_ric_proxy = 'http://' + window.location.host + '/onos-ric';
 export const grpc_web_sim_proxy = 'http://' + window.location.host + '/ran-simulator';
+export const grpc_web_modelregistry_proxy = 'http://' + window.location.host + '/model-registry';
 
 export const OIDC_AUTH_CLIENT_ID = 'onos-gui';
 export const OIDC_ISSUER = undefined;

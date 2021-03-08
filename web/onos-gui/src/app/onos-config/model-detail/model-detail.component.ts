@@ -27,8 +27,8 @@ import {
     LogService,
     WebSocketService
 } from 'gui2-fw-lib';
-import {ModelInfo} from '../../onos-api/onos/config/admin/admin_pb';
 import {animate, state, style, transition, trigger} from '@angular/animations';
+import {ConfigModel, ConfigModule} from '../../onos-api/onos/configmodel/registry_pb';
 
 @Component({
     selector: 'onos-model-detail',
@@ -56,7 +56,7 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class ModelDetailComponent extends DetailsPanelBaseImpl implements OnInit, OnChanges {
     @Input() id: string; // Has to be repeated from base class
     // Output closeEvent is inherited
-    @Input() modelInfo: ModelInfo;
+    @Input() configModel: ConfigModel;
 
     constructor(
         protected fs: FnService,
@@ -76,7 +76,7 @@ export class ModelDetailComponent extends DetailsPanelBaseImpl implements OnInit
     ngOnChanges(changes: SimpleChanges) {
         if (changes['id']) {
             this.closed = false;
-            this.detailsData = this.modelInfo;
+            this.detailsData = this.configModel;
         }
     }
 }

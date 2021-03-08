@@ -15,17 +15,15 @@
  */
 
 import { Injectable } from '@angular/core';
-import { OnosConfigAdminService } from '../onos-api/onos-config-admin.service';
-import {
-    ModelInfo,
-} from '../onos-api/onos/config/admin/admin_pb';
 import { Observable, Subscription } from 'rxjs';
 import { ErrorCallback } from './device.service';
+import {ConfigModelRegistryService} from '../onos-api/config-model-registry.service';
+import {ConfigModel, ListModelsResponse} from '../onos-api/onos/configmodel/registry_pb';
 
 
 @Injectable()
 export class ModelService {
-    modelInfoList: ModelInfo[] = [];
+    modelInfoList: ConfigModel[] = [];
     modelInfoSub: Subscription;
     sortParams = {
         firstColName: 'name',
@@ -33,14 +31,14 @@ export class ModelService {
         firstCriteriaDir: 0
     };
 
-    constructor(private configAdminService: OnosConfigAdminService) {
+    constructor(private configModelRegistryService: ConfigModelRegistryService) {
     }
 
-    static modelSorterForward(a: ModelInfo, b: ModelInfo): number {
+    static modelSorterForward(a: ConfigModel, b: ConfigModel): number {
         return a < b ? -1 : (a > b) ? 1 : 0;
     }
 
-    static modelSorterReverse(a: ModelInfo, b: ModelInfo): number {
+    static modelSorterReverse(a: ConfigModel, b: ConfigModel): number {
         return a < b ? 1 : (a > b) ? -1 : 0;
     }
 
@@ -66,21 +64,20 @@ export class ModelService {
     loadModelList(errCb: ErrorCallback): void {
         this.close();
         this.modelInfoList.length = 0;
-        this.modelInfoSub = this.configAdminService.requestListRegisteredModels().subscribe(
-            (modelInfo: ModelInfo) => {
-                modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
-                modelInfo['name'] = modelInfo.getName(); // To make it selectable
-                modelInfo['module'] = modelInfo.getModule(); // To make it selectable
-                modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
-                modelInfo['numropaths'] = modelInfo.getReadOnlyPathList().length; // For display
-                modelInfo['numrwpaths'] = modelInfo.getReadWritePathList().length; // For display
-                modelInfo['numyangs'] = modelInfo.getModelDataList().length; // For display
-                this.modelInfoList.push(modelInfo);
-                console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion(), modelInfo.getModule(),
-                    modelInfo['numropaths'], modelInfo['numrwpaths'], modelInfo['numyangs']);
+        this.modelInfoSub = this.configModelRegistryService.requestList().subscribe(
+            (listModelsResponse: ListModelsResponse) => {
+                listModelsResponse.getModelsList().forEach((modelInfo: ConfigModel) => {
+                    modelInfo['id'] = modelInfo.getName() + modelInfo.getVersion(); // To make it selectable
+                    modelInfo['name'] = modelInfo.getName(); // To make it selectable
+                    modelInfo['module'] = undefined; // To make it selectable
+                    modelInfo['version'] = modelInfo.getVersion(); // To make it searchable by version
+                    modelInfo['numyangs'] = modelInfo.getModulesList().length; // For display
+                    this.modelInfoList.push(modelInfo);
+                    console.log('Model info loaded', modelInfo.getName(), modelInfo.getVersion());
+                });
             },
             (error) => {
-                console.log('Error on subscribe to registered models', error);
+                console.log('Error on list of Config Model Registry', error);
                 errCb(error);
             });
     }

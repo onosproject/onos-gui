@@ -37,17 +37,17 @@
                             <tr>
                                 <td class="label" width="110">Module :</td>
                                 <td class="value"
-                                    width="80">{{detailsData?.getModule()}}</td>
+                                    width="80">{{detailsData?.getName()}}</td>
                             </tr>
                             <tr>
                                 <td class="label" width="110"># Read Write Paths :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.numrwpaths}}</td>
+<!--                                <td class="value"-->
+<!--                                    width="80">{{detailsData?.numrwpaths}}</td>-->
                             </tr>
                             <tr>
                                 <td class="label" width="110"># Read Only Paths :</td>
-                                <td class="value"
-                                    width="80">{{detailsData?.numropaths}}</td>
+<!--                                <td class="value"-->
+<!--                                    width="80">{{detailsData?.numropaths}}</td>-->
                             </tr>
                             </tbody>
                         </table>
@@ -62,14 +62,16 @@
                 <thead>
                 <tr>
                     <th>Model</th>
-                    <th>Version</th>
+                    <th>File</th>
+                    <th>Revision</th>
                     <th>Organization</th>
                 </tr>
                 </thead>
                 <tbody id="yang-list">
-                <tr *ngFor="let md of detailsData?.getModelDataList()">
+                <tr *ngFor="let md of detailsData?.getModulesList()">
                     <td>{{md.getName()}}</td>
-                    <td>{{md.getVersion()}}</td>
+                    <td>{{md.getFile()}}</td>
+                    <td>{{md.getRevision()}}</td>
                     <td>{{md.getOrganization()}}</td>
                 </tr>
                 </tbody>
