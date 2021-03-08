@@ -18,7 +18,7 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ModelService } from '../model.service';
 import {
     FnService, IconService,
-    LogService, NameInputResult, SortDir, TableAnnots,
+    LogService, NameInputResult, TableAnnots,
     TableBaseImpl, TableFilter,
     WebSocketService
 } from 'gui2-fw-lib';

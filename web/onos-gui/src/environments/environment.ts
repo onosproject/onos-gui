@@ -29,6 +29,7 @@ export const grpc_web_topo_proxy = 'http://localhost:8081';
 export const grpc_web_config_proxy = 'http://localhost:8082';
 export const grpc_web_ric_proxy = 'http://localhost:8083';
 export const grpc_web_sim_proxy = 'http://localhost:8084';
+export const grpc_web_modelregistry_proxy = 'http://localhost:8085';
 
 export const OIDC_AUTH_CLIENT_ID = 'onos-gui';
 export const OIDC_ISSUER = undefined;

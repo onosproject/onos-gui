@@ -51,9 +51,9 @@
                     <th colId="version" (click)="onSortCol('version')">Version
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('version')"></onos-icon>
                     </th>
-                    <th colId="module" (click)="onSortCol('module')">Module
-                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('module')"></onos-icon>
-                    </th>
+<!--                    <th colId="module" (click)="onSortCol('module')">Module-->
+<!--                        <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('module')"></onos-icon>-->
+<!--                    </th>-->
                     <th colId="numrwpaths" (click)="onSortCol('numrwpaths')"># RW Paths
                         <onos-icon classes="active-sort" [iconSize]="10" [iconId]="sortIcon('numrwpaths')">
                         </onos-icon>
@@ -77,16 +77,19 @@
                     [ngClass]="{selected: model.id === selId, 'data-change': isChanged(model.id)}">
                     <td>{{ model.name }}</td>
                     <td>{{ model.version }}</td>
-                    <td>{{ model.getModule() }}</td>
-                    <td>{{ model.numrwpaths }}</td>
-                    <td>{{ model.numropaths }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+<!--                    <td>{{ model.getModule() }}</td>-->
+<!--                    <td>{{ model.numrwpaths }}</td>-->
+<!--                    <td>{{ model.numropaths }}</td>-->
                     <td>{{ model.numyangs }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <onos-model-detail class="floatpanels" id="{{selId}}" 
-    [modelInfo]="selectedChange"
+    <onos-model-detail class="floatpanels" id="{{selId}}"
+                       [configModel]="selectedChange"
         (closeEvent)="deselectRow($event)"></onos-model-detail>
 </div>

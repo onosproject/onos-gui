@@ -304,21 +304,22 @@ export class ConfigViewComponent implements OnInit, OnChanges, OnDestroy {
                 this.hierarchy.recalculate();
                 this.snapshotSub.unsubscribe();
             }
-        } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
-            const model = this.models.modelInfoList
-                .find((m) => m.getName() === this.type && m.getVersion() === this.version);
-            if (model && event.madeVisible) {
-                model.getReadWritePathList().forEach((rw) => {
-                    this.hierarchy.ensureNode(rw.getPath(), this.type + ':' + this.version);
-                });
-                this.hierarchy.recalculate();
-            } else if (!event.madeVisible) {
-                this.hierarchy.removeLayer(this.type + ':' + this.version);
-                this.hierarchy.recalculate();
-            } else {
-                console.warn('No model', this.type, this.version, 'found');
-            }
-            this.rwPathVisible = event.madeVisible;
+        // TODO: Add back in when we have the list of RW paths available in the ConfigModel Registry proto
+        // } else if (event.layerType === LayerType.LAYERTYPE_RWPATHS) {
+        //     const model = this.models.modelInfoList
+        //         .find((m) => m.getName() === this.type && m.getVersion() === this.version);
+        //     if (model && event.madeVisible) {
+        //         model.getReadWritePathList().forEach((rw) => {
+        //             this.hierarchy.ensureNode(rw.getPath(), this.type + ':' + this.version);
+        //         });
+        //         this.hierarchy.recalculate();
+        //     } else if (!event.madeVisible) {
+        //         this.hierarchy.removeLayer(this.type + ':' + this.version);
+        //         this.hierarchy.recalculate();
+        //     } else {
+        //         console.warn('No model', this.type, this.version, 'found');
+        //     }
+        //     this.rwPathVisible = event.madeVisible;
         } else if (event.madeVisible && !this.changeIdsVisible.includes(event.layerName)) {
             // For regular "Network Change" layers
             // Update the hierarchy with newly visible nodes
