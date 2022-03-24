@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Deploying and running onos-gui with Helm
 
 This guide deploys `onos-gui` through it's [Helm] chart and assumes you have a [Kubernetes] cluster running 

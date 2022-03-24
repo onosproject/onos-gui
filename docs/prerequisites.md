@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # GUI Development Prerequisites
 This document provides an overview of the tools and packages needed to work on and to build onos-gui.
 Developers are expected to have these tools installed on the machine where the project is built.

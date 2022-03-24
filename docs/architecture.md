@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # onos-gui Architecture
 The GUI is architected as a Cloud Native application to be run on Kubernetes
 accessing the back end modules through gRPC (and in the case of the Config GUI
