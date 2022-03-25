@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Configuration GUI
 The configuration GUI reflects configuration changes made in to onos-config.
 

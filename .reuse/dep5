@@ -1,0 +1,10 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: VERSION .gitreview  go.mod go.sum *.json *.png *.ico *.jpg *.woff* \\
+       web/onos-gui/src/rs/nav/uiextensions \\
+       web/onos-gui/src/app/onos-api/** \\
+       web/onos-gui/src/app/onos-ric/** \\
+       web/onos-gui/src/app/onos-topo/** \\
+       web/onos-gui/src/app/ran-simulator/**
+Copyright: 2021 Open Networking Foundation
+License: Apache-2.0

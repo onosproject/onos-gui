@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # RAN GUI
 The RAN GUI demonstrates the `onos-ric` micro-service and the accompanying `ran-simulator`.
 

@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # onos-config view
 
 **onos-config** view is a set of Angular components for displaying and editing
