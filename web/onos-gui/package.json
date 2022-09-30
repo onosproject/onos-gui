@@ -22,7 +22,7 @@
     "@angular/router": "11.0.5",
     "angular-oauth2-oidc": "~10.0.3",
     "core-js": "~3.6.5",
-    "d3": "~5.16.0",
+    "d3": "~7.6.1",
     "google-protobuf": "~3.12.4",
     "grpc-web": "~1.2.0",
     "gui2-fw-lib": "^2.3.5",
